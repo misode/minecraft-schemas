@@ -1,1 +1,13 @@
-{}
+{
+    "the_end": "末地",
+    "the_nether": "下界",
+    "overworld": "主世界",
+    "type": "类型",
+    "true": "是",
+    "remove": "移除",
+    "false": "否",
+    "condition.random_chance": "随机几率",
+    "condition": "条件",
+    "chance": "几率",
+    "add": "增加"
+}

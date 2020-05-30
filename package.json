@@ -1,9 +1,10 @@
 {
   "name": "minecraft-schemas",
-  "description": "",
-  "version": "0.1.0",
-  "main": "src/index.ts",
+  "description": "schemas to parse and render JSON structures",
+  "version": "0.1.1",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "test": "ts-mocha src/**/*.test.ts"
   },
   "keywords": [],

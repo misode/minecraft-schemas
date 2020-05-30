@@ -1,0 +1,25 @@
+{
+  "name": "minecraft-schemas",
+  "description": "",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "ts-mocha src/**/*.test.ts"
+  },
+  "keywords": [],
+  "author": "Misode",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/misode/minecraft-schemas.git"
+  },
+  "devDependencies": {
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^14.0.6",
+    "@types/power-assert": "^1.5.3",
+    "mocha": "^7.2.0",
+    "power-assert": "^1.6.1",
+    "ts-mocha": "^7.0.0",
+    "typescript": "^3.9.3"
+  }
+}

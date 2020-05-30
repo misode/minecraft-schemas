@@ -3,13 +3,16 @@
     "target": "es2018",
     "module": "commonjs",
     "declaration": true,
-    "outDir": "dist",
+    "outDir": "lib",
     "strict": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "src", "app"
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

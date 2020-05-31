@@ -1,5 +1,6 @@
 export * from './model/DataModel'
 export * from './model/Path'
+export * from './minecraft/nodes/JsonNode'
 export * from './minecraft/nodes/RangeNode'
 export * from './minecraft/nodes/ResourceNode'
 export * from './minecraft/schemas/Condition'

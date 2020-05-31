@@ -8,6 +8,7 @@ import { RangeNode } from '../nodes/RangeNode';
 import { MapNode } from '../../nodes/MapNode';
 import { StringNode } from '../../nodes/StringNode';
 import { ReferenceNode } from '../../nodes/ReferenceNode';
+import { JsonNode } from '../nodes/JsonNode';
 import { SCHEMAS, COLLECTIONS } from '../../Registries';
 
 import './Predicates'
@@ -18,8 +19,8 @@ SCHEMAS.register('advancement', new ObjectNode({
       item: new ResourceNode(COLLECTIONS.get('items')),
       nbt: new StringNode()
     }),
-    title: new StringNode(),
-    description: new StringNode(),
+    title: new JsonNode(),
+    description: new JsonNode(),
     background: new StringNode(),
     frame: new EnumNode(['task', 'challenge', 'goal']),
     show_toast: new BooleanNode(),

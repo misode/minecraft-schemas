@@ -7,6 +7,7 @@ import { ListNode } from '../../nodes/ListNode';
 import { RangeNode } from '../nodes/RangeNode';
 import { StringNode } from '../../nodes/StringNode';
 import { ReferenceNode } from '../../nodes/ReferenceNode';
+import { JsonNode } from '../nodes/JsonNode';
 import { SCHEMAS, COLLECTIONS } from '../../Registries';
 
 import './Condition'
@@ -201,14 +202,14 @@ SCHEMAS.register('loot-function', new ObjectNode({
     'set_lore': {
       entity: new EnumNode(COLLECTIONS.get('entity-sources')),
       lore: new ListNode(
-        new StringNode()
+        new JsonNode()
       ),
       replace: new BooleanNode(),
       ...conditions
     },
     'set_name': {
       entity: new EnumNode(COLLECTIONS.get('entity-sources')),
-      name: new StringNode(),
+      name: new JsonNode(),
       ...conditions
     },
     'set_nbt': {

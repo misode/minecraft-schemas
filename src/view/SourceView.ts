@@ -1,5 +1,6 @@
 import { DataModel, ModelListener } from '../model/DataModel'
 import { Path } from '../model/Path'
+import { AbstractView } from './AbstractView'
 
 type SourceViewOptions = {
   indentation?: number | string,
@@ -10,9 +11,7 @@ type SourceViewOptions = {
  * JSON representation view of the model.
  * Renders the result in a <textarea>.
  */
-export class SourceView implements ModelListener {
-  model: DataModel
-  target: HTMLElement
+export class SourceView extends AbstractView {
   options?: SourceViewOptions
 
   /**
@@ -21,12 +20,13 @@ export class SourceView implements ModelListener {
    * @param options optional options for the view
    */
   constructor(model: DataModel, target: HTMLElement, options?: SourceViewOptions) {
-    this.model = model
-    this.target = target
+    super(model, target)
     this.options = options
-    model.addListener(this)
   }
 
+  /**
+   * @override
+   */
   render() {
     const transformed = this.model.schema.transform(new Path([], this.model), this.model.data, this)
     const textarea = document.createElement('textarea')
@@ -39,13 +39,5 @@ export class SourceView implements ModelListener {
     })
     this.target.innerHTML = ''
     this.target.appendChild(textarea)
-  }
-
-  /**
-   * Re-renders the view
-   * @override
-   */
-  invalidated() {
-    this.render()
   }
 }

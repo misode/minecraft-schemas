@@ -24,10 +24,22 @@ export class DataModel {
   }
 
   /**
-   * @param listener the listener to notify when the model is invalidated
+   * Adds a listener to notify when the model is invalidated
+   * @param listener the listener to be notified
    */
   addListener(listener: ModelListener) {
     this.listeners.push(listener)
+  }
+
+  /**
+   * Removes a listener from this model
+   * @param listener the listener to be removed
+   */
+  removeListener(listener: ModelListener) {
+    const index = this.listeners.indexOf(listener)
+    if (index > -1) {
+      this.listeners.splice(index, 1)
+    }
   }
 
   /**

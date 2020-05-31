@@ -1,5 +1,6 @@
 import { DataModel, ModelListener } from '../model/DataModel'
 import { Path } from '../model/Path'
+import { AbstractView } from './AbstractView'
 
 type Registry = {
   [id: string]: (el: Element) => void
@@ -20,9 +21,7 @@ export function getId() {
 /**
  * DOM representation view of the model.
  */
-export class TreeView implements ModelListener {
-  model: DataModel
-  target: HTMLElement
+export class TreeView extends AbstractView {
   registry: Registry = {}
 
   /**
@@ -30,9 +29,7 @@ export class TreeView implements ModelListener {
    * @param target DOM element to render the view
    */
   constructor(model: DataModel, target: HTMLElement) {
-    this.model = model
-    this.target = target
-    model.addListener(this)
+    super(model, target)
   }
 
   /**
@@ -79,6 +76,9 @@ export class TreeView implements ModelListener {
     return this.registerEvent('click', callback)
   }
 
+  /**
+   * @override
+   */
   render() {
     this.target.innerHTML = this.model.schema.render(
       new Path(), this.model.data, this, {hideLabel: true})
@@ -87,13 +87,5 @@ export class TreeView implements ModelListener {
       if (element !== null) this.registry[id](element)
     }
     this.registry = {}
-  }
-
-  /**
-   * Re-renders the view
-   * @override
-   */
-  invalidated(model: DataModel) {
-    this.render()
   }
 }

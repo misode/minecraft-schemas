@@ -9,7 +9,7 @@ import { StringNode } from '../../nodes/StringNode';
 import { ReferenceNode } from '../../nodes/ReferenceNode';
 import { SCHEMAS, COLLECTIONS } from '../../Registries';
 
-import './Predicates'
+import './Condition'
 
 const conditions = {
   conditions: new ListNode(
@@ -58,7 +58,7 @@ SCHEMAS.register('loot-entry', new ObjectNode({
     enable: path => path.pop().get()?.length > 1
       && !['alternatives', 'group', 'sequence'].includes(path.push('type').get())
   }),
-  [Switch]: 'type',
+  [Switch]: path => path.push('type').get(),
   [Case]: {
     'alternatives': {
       children: new ListNode(
@@ -100,7 +100,7 @@ SCHEMAS.register('loot-entry', new ObjectNode({
 
 SCHEMAS.register('loot-function', new ObjectNode({
   function: new EnumNode(COLLECTIONS.get('loot-functions'), {default: () => 'set_count'}),
-  [Switch]: 'function',
+  [Switch]: path => path.push('function').get(),
   [Case]: {
     'apply_bonus': {
       enchantment: new EnumNode(COLLECTIONS.get('enchantments')),
@@ -217,7 +217,10 @@ SCHEMAS.register('loot-function', new ObjectNode({
     },
     'set_stew_effect': {
       effects: new ListNode(
-        new ReferenceNode('potion-effect')
+        new ObjectNode({
+          type: new StringNode(),
+          duration: new RangeNode()
+        })
       ),
       ...conditions
     }

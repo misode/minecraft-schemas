@@ -3,6 +3,7 @@ import { TreeView } from '../view/TreeView'
 import { Path } from '../model/Path'
 import { IObject } from './ObjectNode'
 import { locale } from '../Registries'
+import { SourceView } from '../view/SourceView'
 
 export type IMap = {
   [name: string]: IObject
@@ -29,11 +30,11 @@ export class MapNode extends AbstractNode<IMap> {
     this.values = values
   }
 
-  transform(path: Path, value: IMap) {
+  transform(path: Path, value: IMap, view: SourceView) {
     if (value === undefined) return undefined
     let res: any = {}
     Object.keys(value).forEach(f =>
-      res[f] = this.values.transform(path.push(f), value[f])
+      res[f] = this.values.transform(path.push(f), value[f], view)
     )
     return this.transformMod(res);
   }

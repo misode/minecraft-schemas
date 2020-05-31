@@ -2,6 +2,7 @@ import { AbstractNode, NodeMods, RenderOptions, INode } from './AbstractNode'
 import { TreeView } from '../view/TreeView'
 import { Path } from '../model/Path'
 import { SCHEMAS } from '../Registries'
+import { SourceView } from '../view/SourceView'
 
 export interface AnyNodeMods extends NodeMods<any> {
   [name: string]: any
@@ -30,8 +31,8 @@ export class ReferenceNode extends AbstractNode<any> {
     return this.reference().default(value)
   }
 
-  transform(path: Path, value: any) {
-    return this.reference()?.transform(path, value)
+  transform(path: Path, value: any, view: SourceView) {
+    return this.reference()?.transform(path, value, view)
   }
 
   render(path: Path, value: any, view: TreeView, options?: RenderOptions) {

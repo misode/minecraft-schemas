@@ -4,6 +4,7 @@ import { TreeView } from '../view/TreeView'
 import { Path } from '../model/Path'
 import { IObject } from './ObjectNode'
 import { locale } from '../Registries'
+import { SourceView } from '../view/SourceView'
 
 /**
  * List node where children can be added and removed from
@@ -22,10 +23,10 @@ export class ListNode extends AbstractNode<IObject[]> {
     this.children = values
   }
 
-  transform(path: Path, value: IObject[]) {
+  transform(path: Path, value: IObject[], view: SourceView) {
     if (!(value instanceof Array)) return undefined
     const res = value.map((obj, index) => 
-      this.children.transform(path.push(index), obj)
+      this.children.transform(path.push(index), obj, view)
     )
     return this.transformMod(res)
   }

@@ -28,7 +28,7 @@ export class SourceView implements ModelListener {
   }
 
   render() {
-    const transformed = this.model.schema.transform(new Path([], this.model), this.model.data)
+    const transformed = this.model.schema.transform(new Path([], this.model), this.model.data, this)
     const textarea = document.createElement('textarea')
     textarea.style.width = 'calc(100% - 6px)'
     textarea.rows = this.options?.rows ?? 20

@@ -14,7 +14,7 @@ import './Predicates'
 
 SCHEMAS.register('condition', new ObjectNode({
   condition: new ResourceNode(COLLECTIONS.get('conditions'), {default: () => 'random_chance'}),
-  [Switch]: 'condition',
+  [Switch]: path => path.push('condition').get(),
   [Case]: {
     'alternative': {
       terms: new ListNode(

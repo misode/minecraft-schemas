@@ -1,13 +1,14 @@
 import { DataModel } from '../model/DataModel'
 import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
+import { SourceView } from '../view/SourceView'
 
 /**
  * Schema node that supports some standard transformations
  */
 export interface INode<T> {
   default: (value?: T) => T | undefined
-  transform: (path: Path, value: T) => any
+  transform: (path: Path, value: T, view: SourceView) => any
   enabled: (path: Path, model: DataModel) => boolean
   render: (path: Path, value: T, view: TreeView, options?: RenderOptions) => string
   renderRaw: (path: Path, value: T, view: TreeView, options?: RenderOptions) => string
@@ -93,7 +94,7 @@ export abstract class AbstractNode<T> implements INode<T> {
    * Transforms the data model to the final output format
    * @param 
    */
-  transform(path: Path, value: T) {
+  transform(path: Path, value: T, view: SourceView) {
     if (!this.enabled(path)) return undefined
     if (value === undefined && this.force()) value = this.default(value)!
     return this.transformMod(value)

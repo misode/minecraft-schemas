@@ -2,6 +2,8 @@ import { NodeMods, INode, NodeChildren, AbstractNode, RenderOptions } from './Ab
 import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { locale } from '../Registries'
+import { SourceView } from '../view/SourceView'
+import { DataModel } from '../model/DataModel'
 
 export const Switch = Symbol('switch')
 export const Case = Symbol('case')
@@ -17,7 +19,7 @@ export type IObject = {
 export type FilteredChildren = {
   [name: string]: INode<any>
   /** The field to filter on */
-  [Switch]?: string
+  [Switch]?: (path: Path) => any
   /** Map of filter values to node fields */
   [Case]?: NestedNodeChildren
 }
@@ -34,7 +36,7 @@ export interface ObjectNodeMods extends NodeMods<object> {
 export class ObjectNode extends AbstractNode<IObject> {
   fields: NodeChildren
   cases: NestedNodeChildren
-  filter?: string
+  filter?: (path: Path) => any
   collapse?: boolean
 
   /**
@@ -52,13 +54,12 @@ export class ObjectNode extends AbstractNode<IObject> {
     this.filter = _switch
   }
 
-  transform(path: Path, value: IObject) {
+  transform(path: Path, value: IObject, view: SourceView) {
     if (value === undefined) return undefined
-    const activeCase = this.filter ? this.cases[value[this.filter]] : {};
-    const activeFields = {...this.fields, ...activeCase}
+    const activeFields = this.getActiveFields(path, view.model)
     let res: any = {}
     Object.keys(activeFields).forEach(f => {
-      return res[f] = activeFields[f].transform(path.push(f), value[f])
+      return res[f] = activeFields[f].transform(path.push(f), value[f], view)
     })
     return this.transformMod(res);
   }
@@ -87,11 +88,17 @@ export class ObjectNode extends AbstractNode<IObject> {
 
   renderFields(path: Path, value: IObject, view: TreeView) {
     value = value ?? {}
-    const activeCase = this.filter ? this.cases[value[this.filter]] : {};
-    const activeFields = {...this.fields, ...activeCase}
+    const activeFields = this.getActiveFields(path,view.model)
     return Object.keys(activeFields).map(f => {
       return activeFields[f].render(path.push(f), value[f], view)
     }).join('')
+  }
+
+  getActiveFields(path: Path, model: DataModel) {
+    if (this.filter === undefined) return this.fields 
+    const switchValue = this.filter(path.withModel(model))
+    const activeCase = this.cases[switchValue]
+    return {...this.fields, ...activeCase}
   }
 
   getClassName() {

@@ -86,6 +86,7 @@ export class TreeView implements ModelListener {
       const element = this.target.querySelector(`[data-id="${id}"]`)
       if (element !== null) this.registry[id](element)
     }
+    this.registry = {}
   }
 
   /**

@@ -4,6 +4,7 @@ import { TreeView } from '../view/TreeView'
 import { locale } from '../Registries'
 import { SourceView } from '../view/SourceView'
 import { DataModel } from '../model/DataModel'
+import { Errors } from '../model/Errors'
 
 export const Switch = Symbol('switch')
 export const Case = Symbol('case')
@@ -103,5 +104,28 @@ export class ObjectNode extends AbstractNode<IObject> {
 
   getClassName() {
     return 'object-node'
+  }
+
+  validate(path: Path, value: any, errors: Errors) {
+    if (value === null || typeof value !== 'object') {
+      return errors.add(path, 'error.expected_object')
+    }
+    const activeFields = this.getActiveFields(path, path.getModel()!)
+    const activeKeys = Object.keys(activeFields)
+    let allValid = true
+    Object.keys(value).forEach(k => {
+      if (!activeKeys.includes(k)) {
+        if (this.filter) {
+          const switchValue = this.filter(path)
+          errors.add(path.push(k), 'error.invalid_filtered_key', k, switchValue)
+        } else {
+          errors.add(path.push(k), 'error.invalid_key', k)
+        }
+        allValid = false
+      } else if (!activeFields[k].validate(path.push(k), value[k], errors)) {
+        allValid = false
+      }
+    })
+    return allValid
   }
 }

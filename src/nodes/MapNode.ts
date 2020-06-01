@@ -4,6 +4,7 @@ import { Path } from '../model/Path'
 import { IObject } from './ObjectNode'
 import { locale } from '../Registries'
 import { SourceView } from '../view/SourceView'
+import { Errors } from '../model/Errors'
 
 export type IMap = {
   [name: string]: IObject
@@ -66,5 +67,21 @@ export class MapNode extends AbstractNode<IMap> {
 
   getClassName() {
     return 'map-node'
+  }
+
+  validate(path: Path, value: any, errors: Errors) {
+    if (value === null || typeof value !== 'object') {
+      return errors.add(path, 'error.expected_object')
+    }
+    let allValid = true
+    Object.keys(value).forEach(k => {
+      if (!this.keys.validate(path, k, errors)) {
+        allValid = false
+      }
+      if (!this.values.validate(path.push(k), value[k], errors)) {
+        allValid = false
+      }
+    })
+    return allValid
   }
 }

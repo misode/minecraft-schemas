@@ -3,6 +3,7 @@ import { DataModel } from '../model/DataModel'
 import { TreeView } from '../view/TreeView'
 import { Path } from '../model/Path'
 import { locale } from '../Registries'
+import { Errors } from '../model/Errors'
 
 /**
  * Enum node that shows a list of options to choose from
@@ -43,5 +44,15 @@ export class EnumNode extends AbstractNode<string> implements StateNode<string> 
 
   getClassName() {
     return 'enum-node'
+  }
+
+  validate(path: Path, value: any, errors: Errors) {
+    if (typeof value !== 'string') {
+      return errors.add(path, 'error.expected_string')
+    }
+    if (!this.options.includes(value)) {
+      return errors.add(path, 'error.invalid_enum_option')
+    }
+    return true
   }
 }

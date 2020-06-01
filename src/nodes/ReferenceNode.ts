@@ -3,6 +3,7 @@ import { TreeView } from '../view/TreeView'
 import { Path } from '../model/Path'
 import { SCHEMAS } from '../Registries'
 import { SourceView } from '../view/SourceView'
+import { Errors } from '../model/Errors'
 
 export interface AnyNodeMods extends NodeMods<any> {
   [name: string]: any
@@ -45,5 +46,9 @@ export class ReferenceNode extends AbstractNode<any> {
 
   getClassName() {
     return ''
+  }
+
+  validate(path: Path, value: any, errors: Errors) {
+    return this.reference()?.validate(path, value, errors)
   }
 }

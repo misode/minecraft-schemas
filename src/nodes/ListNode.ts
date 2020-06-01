@@ -5,6 +5,7 @@ import { Path } from '../model/Path'
 import { IObject } from './ObjectNode'
 import { locale } from '../Registries'
 import { SourceView } from '../view/SourceView'
+import { Errors } from '../model/Errors'
 
 /**
  * List node where children can be added and removed from
@@ -60,5 +61,18 @@ export class ListNode extends AbstractNode<IObject[]> {
 
   getClassName() {
     return 'list-node'
+  }
+
+  validate(path: Path, value: any, errors: Errors) {
+    if (!(value instanceof Array)) {
+      return errors.add(path, 'error.expected_list')
+    }
+    let allValid = true
+    value.forEach((obj, index) => {
+      if (this.children.validate(path.push(index), obj, errors)) {
+        allValid = false
+      }
+    })
+    return allValid
   }
 }

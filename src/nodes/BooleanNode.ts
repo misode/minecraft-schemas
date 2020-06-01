@@ -2,6 +2,7 @@ import { AbstractNode, NodeMods, RenderOptions } from './AbstractNode';
 import { Path } from '../model/Path';
 import { TreeView } from '../view/TreeView';
 import { locale } from '../Registries';
+import { Errors } from '../model/Errors';
 
 /**
  * Boolean node with two buttons for true/false
@@ -33,5 +34,12 @@ export class BooleanNode extends AbstractNode<boolean> {
 
   getClassName() {
     return 'boolean-node'
+  }
+
+  validate(path: Path, value: any, errors: Errors) {
+    if (typeof value !== 'boolean' || value === undefined) {
+      return errors.add(path, 'error.expected_boolean')
+    }
+    return true
   }
 }

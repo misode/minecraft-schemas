@@ -2,6 +2,7 @@ import { DataModel } from '../model/DataModel'
 import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { SourceView } from '../view/SourceView'
+import { Errors } from '../model/Errors'
 
 /**
  * Schema node that supports some standard transformations
@@ -12,6 +13,7 @@ export interface INode<T> {
   enabled: (path: Path, model: DataModel) => boolean
   render: (path: Path, value: T, view: TreeView, options?: RenderOptions) => string
   renderRaw: (path: Path, value: T, view: TreeView, options?: RenderOptions) => string
+  validate: (path: Path, value: any, errors: Errors) => boolean
 }
 
 export interface StateNode<T> extends INode<T> {
@@ -147,4 +149,12 @@ export abstract class AbstractNode<T> implements INode<T> {
    * The CSS classname used in the wrapped <div>
    */
   abstract getClassName(): string
+  
+  /**
+   * Validates the model using this schema
+   * @param value value to be validated
+   */
+  validate(path: Path, value: any, errors: Errors) {
+    return true
+  }
 }

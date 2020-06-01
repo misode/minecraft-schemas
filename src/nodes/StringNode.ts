@@ -3,6 +3,7 @@ import { Path } from '../model/Path'
 import { DataModel } from '../model/DataModel'
 import { TreeView } from '../view/TreeView'
 import { locale } from '../Registries'
+import { Errors } from '../model/Errors'
 
 export interface StringNodeMods extends NodeMods<string> {
   /** Whether the string can also be empty */
@@ -39,5 +40,12 @@ export class StringNode extends AbstractNode<string> implements StateNode<string
 
   getClassName() {
     return 'string-node'
+  }
+
+  validate(path: Path, value: any, errors: Errors) {
+    if (typeof value !== 'string') {
+      return errors.add(path, 'error.expected_string')
+    }
+    return true
   }
 } 

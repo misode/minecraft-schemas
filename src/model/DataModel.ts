@@ -1,5 +1,6 @@
 import { Path } from './Path'
 import { INode } from '../nodes/AbstractNode'
+import { Errors } from './Errors'
 
 export interface ModelListener {
   invalidated(model: DataModel): void
@@ -13,6 +14,7 @@ export class DataModel {
   schema: INode<any>
   /** A list of listeners that want to be notified when the model is invalidated */
   listeners: ModelListener[]
+  valid: boolean
 
   /**
    * @param schema node to use as schema for this model
@@ -21,6 +23,8 @@ export class DataModel {
     this.schema = schema
     this.data = schema.default()
     this.listeners = []
+    this.valid = false
+    this.validate()
   }
 
   /**
@@ -46,6 +50,7 @@ export class DataModel {
    * Force notify all listeners that the model is invalidated
    */
   invalidate() {
+    this.validate()
     this.listeners.forEach(listener => listener.invalidated(this))
   }
 
@@ -99,5 +104,23 @@ export class DataModel {
     }
 
     this.invalidate()
+  }
+
+  /**
+   * Uses the schema to check whether the data is valid
+   * @returns list of errors in case the data is invalid
+   */
+  validate() {
+    const path = new Path().withModel(this)
+    const errors = new Errors()
+    this.valid = this.schema.validate(path, this.data, errors)
+    return errors
+  }
+
+  /**
+   * Whether the current data is valid according to the schema
+   */
+  isValid() {
+    return this.valid
   }
 }

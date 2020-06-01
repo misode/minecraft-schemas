@@ -3,6 +3,7 @@ import { Path } from '../model/Path'
 import { DataModel } from '../model/DataModel'
 import { TreeView } from '../view/TreeView'
 import { locale } from '../Registries'
+import { Errors } from '../model/Errors'
 
 export interface NumberNodeMods extends NodeMods<number> {
   /** Whether numbers should be converted to integers on input */
@@ -52,5 +53,21 @@ export class NumberNode extends AbstractNode<number> implements StateNode<number
 
   getClassName() {
     return 'number-node'
+  }
+
+  validate(path: Path, value: any, errors: Errors) {
+    if (typeof value !== 'number') {
+      return errors.add(path, 'error.expected_number')
+    }
+    if (this.integer && !Number.isInteger(value)) {
+      return errors.add(path, 'error.expected_integer')
+    }
+    if (value < this.min) {
+      return errors.add(path, 'error.invalid_range.smaller', value, this.min)
+    }
+    if (value > this.max) {
+      return errors.add(path, 'error.invalid_range.larger', value, this.max)
+    }
+    return true
   }
 }

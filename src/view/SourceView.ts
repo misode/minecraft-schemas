@@ -13,14 +13,16 @@ type SourceViewOptions = {
  */
 export class SourceView extends AbstractView {
   options?: SourceViewOptions
+  target: HTMLTextAreaElement
 
   /**
    * @param model data model this view represents and listens to
    * @param target DOM element to render the view
    * @param options optional options for the view
    */
-  constructor(model: DataModel, target: HTMLElement, options?: SourceViewOptions) {
+  constructor(model: DataModel, target: HTMLTextAreaElement, options?: SourceViewOptions) {
     super(model, target)
+    this.target = target
     this.options = options
   }
 
@@ -29,15 +31,10 @@ export class SourceView extends AbstractView {
    */
   render() {
     const transformed = this.model.schema.transform(new Path([], this.model), this.model.data, this)
-    const textarea = document.createElement('textarea')
-    textarea.style.width = 'calc(100% - 6px)'
-    textarea.rows = this.options?.rows ?? 20
-    textarea.textContent = JSON.stringify(transformed, null, this.options?.indentation)
-    textarea.addEventListener('change', evt => {
-      const parsed = JSON.parse(textarea.value)
+    this.target.textContent = JSON.stringify(transformed, null, this.options?.indentation)
+    this.target.addEventListener('change', evt => {
+      const parsed = JSON.parse(this.target.value)
       this.model.reset(parsed)
     })
-    this.target.innerHTML = ''
-    this.target.appendChild(textarea)
   }
 }

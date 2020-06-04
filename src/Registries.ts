@@ -9,7 +9,7 @@ export interface Registry<T> {
 /**
  * Registry for schemas
  */
-class SchemaRegistry implements Registry<INode<any>> {
+export class SchemaRegistry implements Registry<INode<any>> {
   private registry: { [id: string]: INode<any> } = {}
 
   register(id: string, node: INode<any>) {
@@ -28,7 +28,7 @@ class SchemaRegistry implements Registry<INode<any>> {
 /**
  * Registry for collections
  */
-class CollectionRegistry implements Registry<string[]> {
+export class CollectionRegistry implements Registry<string[]> {
   private registry: { [id: string]: string[] } = {}
 
   register(id: string, list: string[]) {
@@ -51,7 +51,7 @@ export interface Locale {
   [key: string]: string
 }
 
-class LocaleRegistry implements Registry<Locale> {
+export class LocaleRegistry implements Registry<Locale> {
   private registry: { [id: string]: Locale } = {}
   language: string = ''
 
@@ -89,7 +89,7 @@ export const LOCALES = new LocaleRegistry()
  *    If a path is given, it finds the longest match at the end.
  * @returns undefined if the key isn't found for the selected language
  */
-export const locale = (key: string | Path) => {
+export const locale = (key: string | Path): string => {
   if (typeof key === 'string') {
     return LOCALES.getLocale(key) ?? key
   }
@@ -99,5 +99,5 @@ export const locale = (key: string | Path) => {
     if (locale !== undefined) return locale
     path.shift()
   }
-  return key.last()
+  return key.last().toString()
 }

@@ -28,18 +28,15 @@ export class StringNode extends AbstractNode<string> implements StateNode<string
     return el.querySelector('input')!.value
   }
 
-  updateModel(el: Element, path: Path, model: DataModel) {
-    const value = this.getState(el)
-    model.set(path, this.allowEmpty || value !== '' ? value : undefined)
-  }
-
-  renderRaw(path: Path, value: string, view: TreeView, options?: RenderOptions) {
-    return `${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-      <input value="${value ?? ''}">`
-  }
-
-  getClassName() {
-    return 'string-node'
+  render(path: Path, value: string, view: TreeView, options?: RenderOptions) {
+    const id = view.registerChange(el => {
+      const value = (el as HTMLInputElement).value
+      view.model.set(path, this.allowEmpty || value !== '' ? value : undefined)
+    })
+    return `<div clas="node string-node">
+      ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+      <input data-id="${id}" value="${value ?? ''}">
+    </div>`
   }
 
   validate(path: Path, value: any, errors: Errors) {

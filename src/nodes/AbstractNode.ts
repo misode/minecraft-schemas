@@ -12,7 +12,6 @@ export interface INode<T> {
   transform: (path: Path, value: T, view: SourceView) => any
   enabled: (path: Path, model: DataModel) => boolean
   render: (path: Path, value: T, view: TreeView, options?: RenderOptions) => string
-  renderRaw: (path: Path, value: T, view: TreeView, options?: RenderOptions) => string
   validate: (path: Path, value: any, errors: Errors) => boolean
 }
 
@@ -64,27 +63,6 @@ export abstract class AbstractNode<T> implements INode<T> {
   }
 
   /**
-   * Runs when the element is mounted to the DOM
-   * @param el mounted element
-   * @param path data path that this node represents
-   * @param view corresponding tree view where this was mounted
-   */
-  mounted(el: Element, path: Path, view: TreeView) {
-    el.addEventListener('change', evt => {
-      this.updateModel(el, path, view.model)
-      evt.stopPropagation()
-    })
-  }
-
-  /**
-   * Runs when the DOM element 'change' event is called
-   * @param el mounted element
-   * @param path data path that this node represents
-   * @param model corresponding model
-   */
-  updateModel(el: Element, path: Path, model: DataModel) {}
-
-  /**
    * The default value of this node
    * @param value optional original value
    */
@@ -117,25 +95,6 @@ export abstract class AbstractNode<T> implements INode<T> {
   }
 
   /**
-   * Wraps and renders the node
-   * @param path location 
-   * @param value data used at 
-   * @param view tree view context, containing the model
-   * @param options optional render options
-   * @returns string HTML wrapped representation of this node using the given data
-   */
-  render(path: Path, value: T, view: TreeView, options?: RenderOptions): string {
-    if (!this.enabled(path, view.model)) return ''
-    
-    const id = view.register(el => {
-      this.mounted(el, path, view)
-    })
-    return `<div data-id="${id}" class="node ${this.getClassName()}">
-      ${this.renderRaw(path, value, view, options)}
-    </div>`
-  }
-
-  /**
    * Renders the node and handles events to update the model
    * @param path 
    * @param value 
@@ -143,13 +102,8 @@ export abstract class AbstractNode<T> implements INode<T> {
    * @param options optional render options
    * @returns string HTML representation of this node using the given data
    */
-  abstract renderRaw(path: Path, value: T, view: TreeView, options?: RenderOptions): string
+  abstract render(path: Path, value: T, view: TreeView, options?: RenderOptions): string
 
-  /**
-   * The CSS classname used in the wrapped <div>
-   */
-  abstract getClassName(): string
-  
   /**
    * Validates the model using this schema
    * @param value value to be validated

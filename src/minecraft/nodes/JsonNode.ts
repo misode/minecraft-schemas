@@ -9,22 +9,19 @@ export class JsonNode extends AbstractNode<any> {
     super(mods)
   }
 
-  updateModel(el: Element, path: Path, model: DataModel) {
-    const value = el.querySelector('input')!.value
-    try {
-      model.set(path, JSON.parse(value))
-    } catch (e) {
-      model.set(path, value || undefined)
-    }
-  }
-
-  renderRaw(path: Path, value: any, view: TreeView, options?: RenderOptions) {
+  render(path: Path, value: any, view: TreeView, options?: RenderOptions) {
     const stringified = (JSON.stringify(value) ?? '').replace(/"/g, '&quot;')
-    return `${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-      <input value="${stringified ?? ''}">`
-  }
-
-  getClassName() {
-    return 'json-node'
+    const id = view.registerChange(el => {
+      const value = el.querySelector('input')!.value
+      try {
+        view.model.set(path, JSON.parse(value))
+      } catch (e) {
+        view.model.set(path, value || undefined)
+      }
+    })
+    return `<div class="node json-node">
+      ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+      <input data-id="${id}" value="${stringified ?? ''}">
+    </div>`
   }
 }

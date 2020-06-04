@@ -28,16 +28,23 @@ export class ResourceNode extends EnumNode {
     }
   }
 
-  renderRaw(path: Path, value: string, view: TreeView, options?: RenderOptions) {
+  render(path: Path, value: string, view: TreeView, options?: RenderOptions) {
     if (this.additional) {
+      const inputId = view.register(el => {
+        (el as HTMLInputElement).value = value ?? ''
+        el.addEventListener('change', evt => {
+          view.model.set(path, this.getState(el))
+          evt.stopPropagation()
+        })
+      })
       const id = `datalist-${getId()}`
       return `${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-      <input list=${id} value="${value ?? ''}">
+      <input list=${id} data-id="${inputId}" value="${value ?? ''}">
       <datalist id=${id}>${this.options.map(o => 
         `<option value="${o}">${locale(path.push(o))}</option>`
       ).join('')}</datalist>`
     } else {
-      return super.renderRaw(path, value, view, options)
+      return super.render(path, value, view, options)
     }
   }
 

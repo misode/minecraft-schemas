@@ -18,22 +18,20 @@ export class BooleanNode extends AbstractNode<boolean> {
       ...mods})
   }
 
-  renderRaw(path: Path, value: boolean, view: TreeView, options?: RenderOptions) {
+  render(path: Path, value: boolean, view: TreeView, options?: RenderOptions) {
     const falseButton = view.registerClick(el => {
       view.model.set(path, !this.force() && value === false ? undefined : false)
     })
     const trueButton = view.registerClick(el => {
       view.model.set(path, !this.force() && value === true ? undefined : true)
     })
-    return `${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+    return `<div class="node boolean-node">
+      ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
       <button${value === false ? ' style="font-weight: bold"' : ' '} 
         data-id="${falseButton}">${locale('false')}</button>
       <button${value === true ? ' style="font-weight: bold"' : ' '} 
-        data-id="${trueButton}">${locale('true')}</button>`
-  }
-
-  getClassName() {
-    return 'boolean-node'
+        data-id="${trueButton}">${locale('true')}</button>
+    </div>`
   }
 
   validate(path: Path, value: any, errors: Errors) {

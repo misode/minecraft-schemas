@@ -46,11 +46,7 @@ export class RangeNode extends AbstractNode<IRange> implements StateNode<IRange>
     }
   }
 
-  updateModel(el: Element, path: Path, model: DataModel) {
-    model.set(path, this.getState(el))
-  }
-
-  renderRaw(path: Path, value: IRange, view: TreeView, options?: RenderOptions) {
+  render(path: Path, value: IRange, view: TreeView, options?: RenderOptions) {
     let curType = ''
     let input = ''
     if (value === undefined || typeof value === 'number') {
@@ -69,7 +65,10 @@ export class RangeNode extends AbstractNode<IRange> implements StateNode<IRange>
         <label>${locale('range.max')}</label>
         <input value=${value.max === undefined ? '' : value.max}>`
     }
-    const id = view.register(el => {
+    const id = view.registerChange(el => {
+      view.model.set(path, this.getState(el))
+    })
+    const selectId = view.register(el => {
       (el as HTMLInputElement).value = curType
       el.addEventListener('change', evt => {
         const target = (el as HTMLInputElement).value
@@ -79,17 +78,15 @@ export class RangeNode extends AbstractNode<IRange> implements StateNode<IRange>
         evt.stopPropagation()
       })
     })
-    return `${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-      <select data-id="${id}">
+    return `<div class="node range-node" data-id="${id}">
+      ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+      <select data-id="${selectId}">
         <option value="exact">${locale('range.exact')}</option>
         <option value="range">${locale('range.range')}</option>
         <option value="binomial">${locale('range.binomial')}</option>
       </select>
-      ${input}`
-  }
-
-  getClassName() {
-    return 'range-node'
+      ${input}
+    </div>`
   }
 
   static isExact(v?: IRange) {

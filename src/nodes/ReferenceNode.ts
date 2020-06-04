@@ -40,14 +40,6 @@ export class ReferenceNode extends AbstractNode<any> {
     return this.reference()?.render(path, value, view, {...this.options, ...options})
   }
 
-  renderRaw(path: Path, value: any, view: TreeView, options?: RenderOptions) {
-    return this.reference()?.renderRaw(path, value, view, {...this.options, ...options})
-  }
-
-  getClassName() {
-    return ''
-  }
-
   validate(path: Path, value: any, errors: Errors) {
     return this.reference()?.validate(path, value, errors)
   }

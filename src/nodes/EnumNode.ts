@@ -28,22 +28,22 @@ export class EnumNode extends AbstractNode<string> implements StateNode<string> 
     return el.querySelector('select')!.value
   }
 
-  updateModel(el: Element, path: Path, model: DataModel) {
-    model.set(path, this.getState(el))
-  }
-
-  renderRaw(path: Path, value: string, view: TreeView, options?: RenderOptions) {
-    const id = view.register(el => (el as HTMLInputElement).value = value)
-    return `${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-    <select data-id=${id}>
-      ${this.options.map(o => 
-        `<option value="${o}">${locale(path.push(o))}</option>`
-      ).join('')}
-    </select>`
-  }
-
-  getClassName() {
-    return 'enum-node'
+  render(path: Path, value: string, view: TreeView, options?: RenderOptions) {
+    const selectId = view.register(el => {
+      (el as HTMLInputElement).value = value
+      el.addEventListener('change', evt => {
+        view.model.set(path, (el as HTMLInputElement).value)
+        evt.stopPropagation()
+      })
+    })
+    return `<div class="node enum-node">
+      ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+      <select data-id=${selectId}>
+        ${this.options.map(o => 
+          `<option value="${o}">${locale(path.push(o))}</option>`
+        ).join('')}
+      </select>
+    </div>`
   }
 
   validate(path: Path, value: any, errors: Errors) {

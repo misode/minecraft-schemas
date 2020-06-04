@@ -40,19 +40,21 @@ export class MapNode extends AbstractNode<IMap> {
     return this.transformMod(res);
   }
 
-  renderRaw(path: Path, value: IMap, view: TreeView) {
+  render(path: Path, value: IMap, view: TreeView) {
     value = value ?? []
     const button = view.registerClick(el => {
       const key = this.keys.getState(el.parentElement!)
       view.model.set(path.push(key), this.values.default())
     })
-    return `<label>${locale(path)}:</label>
-    ${this.keys.renderRaw(path, '', view, {hideLabel: true, syncModel: false})}
-    <button data-id="${button}">${locale('add')}</button>
-    <div class="map-fields">
-      ${Object.keys(value).map(key => {
-        return this.renderEntry(path.push(key), value[key], view)
-      }).join('')}
+    return `<div class="node map-node">
+      <label>${locale(path)}:</label>
+      ${this.keys.render(path, '', view, {hideLabel: true, syncModel: false})}
+      <button data-id="${button}">${locale('add')}</button>
+      <div class="map-fields">
+        ${Object.keys(value).map(key => {
+          return this.renderEntry(path.push(key), value[key], view)
+        }).join('')}
+      </div>
     </div>`
   }
 
@@ -63,10 +65,6 @@ export class MapNode extends AbstractNode<IMap> {
     return `<div class="map-entry"><button data-id="${button}">${locale('remove')}</button>
       ${this.values.render(path, value, view)}
     </div>`
-  }
-
-  getClassName() {
-    return 'map-node'
   }
 
   validate(path: Path, value: any, errors: Errors) {

@@ -35,24 +35,22 @@ export class NumberNode extends AbstractNode<number> implements StateNode<number
   }
 
   getState(el: Element) {
-    const value = el.querySelector('input')!.value
+    const value = (el as HTMLInputElement).value
     const parsed = this.integer ? parseInt(value) : parseFloat(value)
     if (parsed < this.min) return this.min
     if (parsed > this.max) return this.max
     return parsed
   }
 
-  updateModel(el: Element, path: Path, model: DataModel) {
-    model.set(path, this.getState(el))
-  }
-
-  renderRaw(path: Path, value: number, view: TreeView, options?: RenderOptions) {
-    return `${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-      <input value="${value ?? ''}">`
-  }
-
-  getClassName() {
-    return 'number-node'
+  render(path: Path, value: number, view: TreeView, options?: RenderOptions) {
+    const id = view.registerChange(el => {
+      const value = this.getState(el)
+      view.model.set(path, this.getState(el))
+    })
+    return `<div class="node number-node">
+      ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+      <input data-id="${id}" value="${value ?? ''}">
+    </div>`
   }
 
   validate(path: Path, value: any, errors: Errors) {

@@ -69,6 +69,13 @@ export class Path implements Iterable<PathElement> {
     return this.model?.get(this)
   }
 
+  /**
+   * Sets the value to the model if it was attached
+   */
+  set(value: any) {
+    this.model?.set(this, value)
+  }
+
   toString(): string {
     return `[${this.arr.map(e => e.toString()).join(', ')}]`
   }

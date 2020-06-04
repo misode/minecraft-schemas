@@ -32,21 +32,19 @@ export class ListNode extends AbstractNode<IObject[]> {
     return this.transformMod(res)
   }
 
-  updateModel(el: Element, path: Path, model: DataModel) {
-    model.set(path, el.querySelector('select')?.value)
-  }
-
-  renderRaw(path: Path, value: IObject[], view: TreeView) {
+  render(path: Path, value: IObject[], view: TreeView) {
     value = value || []
     const button = view.registerClick(el => {
       view.model.set(path, [...value, this.children.default()])
     })
-    return `<label>${locale(path)}:</label>
-    <button data-id="${button}">${locale('add')}</button>
-    <div class="list-fields">
-      ${value.map((obj, index) => {
-        return this.renderEntry(path.push(index), obj, view)
-      }).join('')}
+    return `<div class="node list-node">
+      <label>${locale(path)}:</label>
+      <button data-id="${button}">${locale('add')}</button>
+      <div class="list-fields">
+        ${value.map((obj, index) => {
+          return this.renderEntry(path.push(index), obj, view)
+        }).join('')}
+      </div>
     </div>`
   }
 

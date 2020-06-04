@@ -65,24 +65,30 @@ export class ObjectNode extends AbstractNode<IObject> {
     return this.transformMod(res);
   }
 
-  renderRaw(path: Path, value: IObject, view: TreeView, options?: RenderOptions) {
+  render(path: Path, value: IObject, view: TreeView, options?: RenderOptions) {
     if (options?.hideLabel) {
       return this.renderFields(path, value, view)
     } else if (this.collapse || options?.collapse) {
       if (value === undefined) {
         const id = view.registerClick(() => view.model.set(path, this.default()))
-        return `<label class="collapse closed" data-id="${id}">${locale(path)}</label>`
+        return `<div class="node object-node">
+          <label class="collapse closed" data-id="${id}">${locale(path)}</label>
+        </div>`
       } else {
         const id = view.registerClick(() => view.model.set(path, undefined))
-        return `<label class="collapse open" data-id="${id}">${locale(path)}</label>
-        <div class="object-fields">
-        ${this.renderFields(path, value, view)}
+        return `<div class="node object-node">
+          <label class="collapse open" data-id="${id}">${locale(path)}</label>
+          <div class="object-fields">
+            ${this.renderFields(path, value, view)}
+          </div>
         </div>`
       }
     } else {
-      return `<label>${locale(path)}</label>
-      <div class="object-fields">
-      ${this.renderFields(path, value, view)}
+      return `<div class="node object-node">
+        <label>${locale(path)}</label>
+        <div class="object-fields">
+          ${this.renderFields(path, value, view)}
+        </div>
       </div>`
     }
   }
@@ -91,6 +97,7 @@ export class ObjectNode extends AbstractNode<IObject> {
     value = value ?? {}
     const activeFields = this.getActiveFields(path,view.model)
     return Object.keys(activeFields).map(f => {
+      if (!activeFields[f].enabled(path.push(f), view.model)) return ''
       return activeFields[f].render(path.push(f), value[f], view)
     }).join('')
   }
@@ -100,10 +107,6 @@ export class ObjectNode extends AbstractNode<IObject> {
     const switchValue = this.filter(path.withModel(model))
     const activeCase = this.cases[switchValue]
     return {...this.fields, ...activeCase}
-  }
-
-  getClassName() {
-    return 'object-node'
   }
 
   validate(path: Path, value: any, errors: Errors) {

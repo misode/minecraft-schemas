@@ -1,4 +1,4 @@
-import { AbstractNode, NodeMods, INode, StateNode } from './AbstractNode'
+import { AbstractNode, NodeMods, INode, StringLikeNode } from './AbstractNode'
 import { TreeView } from '../view/TreeView'
 import { Path } from '../model/Path'
 import { IObject } from './ObjectNode'
@@ -14,7 +14,7 @@ export type IMap = {
  * Map nodes similar to list nodes, but a string key is required to add children
  */
 export class MapNode extends AbstractNode<IMap> {
-  protected keys: StateNode<string>
+  protected keys: StringLikeNode
   protected values: INode<any>
 
   /**
@@ -23,7 +23,7 @@ export class MapNode extends AbstractNode<IMap> {
    * @param values node used for the map values
    * @param mods optional node modifiers
    */
-  constructor(keys: StateNode<string>, values: INode<any>, mods?: NodeMods<IMap>) {
+  constructor(keys: StringLikeNode, values: INode<any>, mods?: NodeMods<IMap>) {
     super({
       default: () => ({}),
       ...mods})
@@ -48,7 +48,7 @@ export class MapNode extends AbstractNode<IMap> {
     })
     return `<div class="node map-node">
       <label>${locale(path)}:</label>
-      ${this.keys.render(path, '', view, {hideLabel: true, syncModel: false})}
+      ${this.keys.renderRaw(path)}
       <button data-id="${button}">${locale('add')}</button>
       <div class="map-fields">
         ${Object.keys(value).map(key => {

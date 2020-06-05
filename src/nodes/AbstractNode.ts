@@ -15,8 +15,9 @@ export interface INode<T> {
   validate: (path: Path, value: any, errors: Errors) => boolean
 }
 
-export interface StateNode<T> extends INode<T> {
-  getState: (el: Element) => T
+export interface StringLikeNode extends INode<string> {
+  getState: (el: Element) => string
+  renderRaw: (path: Path) => string
 }
 
 export type RenderOptions = {

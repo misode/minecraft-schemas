@@ -47,8 +47,4 @@ export class ResourceNode extends EnumNode {
       return super.render(path, value, view, options)
     }
   }
-
-  getClassName() {
-    return 'enum-node'
-  }
 }

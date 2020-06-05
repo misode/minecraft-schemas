@@ -1,4 +1,4 @@
-import { AbstractNode, NodeMods, RenderOptions, StateNode } from './AbstractNode'
+import { AbstractNode, NodeMods, RenderOptions, StringLikeNode } from './AbstractNode'
 import { DataModel } from '../model/DataModel'
 import { TreeView } from '../view/TreeView'
 import { Path } from '../model/Path'
@@ -8,7 +8,7 @@ import { Errors } from '../model/Errors'
 /**
  * Enum node that shows a list of options to choose from
  */
-export class EnumNode extends AbstractNode<string> implements StateNode<string> {
+export class EnumNode extends AbstractNode<string> implements StringLikeNode {
   protected options: string[]
   static className = 'enum-node'
 
@@ -44,6 +44,14 @@ export class EnumNode extends AbstractNode<string> implements StateNode<string> 
         ).join('')}
       </select>
     </div>`
+  }
+
+  renderRaw(path: Path) {
+    return `<select>
+      ${this.options.map(o => 
+        `<option value="${o}">${locale(path.push(o))}</option>`
+      ).join('')}
+    </select>`
   }
 
   validate(path: Path, value: any, errors: Errors) {

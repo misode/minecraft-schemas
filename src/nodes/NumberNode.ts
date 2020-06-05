@@ -1,4 +1,4 @@
-import { AbstractNode, NodeMods, RenderOptions, StateNode } from './AbstractNode'
+import { AbstractNode, NodeMods, RenderOptions } from './AbstractNode'
 import { Path } from '../model/Path'
 import { DataModel } from '../model/DataModel'
 import { TreeView } from '../view/TreeView'
@@ -17,7 +17,7 @@ export interface NumberNodeMods extends NodeMods<number> {
 /**
  * Configurable number node with one text field
  */
-export class NumberNode extends AbstractNode<number> implements StateNode<number> {
+export class NumberNode extends AbstractNode<number> {
   integer: boolean
   min: number
   max: number
@@ -44,7 +44,6 @@ export class NumberNode extends AbstractNode<number> implements StateNode<number
 
   render(path: Path, value: number, view: TreeView, options?: RenderOptions) {
     const id = view.registerChange(el => {
-      const value = this.getState(el)
       view.model.set(path, this.getState(el))
     })
     return `<div class="node number-node">

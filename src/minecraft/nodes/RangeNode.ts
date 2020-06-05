@@ -1,4 +1,4 @@
-import { AbstractNode, NodeMods, RenderOptions, StateNode } from '../../nodes/AbstractNode'
+import { AbstractNode, NodeMods, RenderOptions } from '../../nodes/AbstractNode'
 import { Path } from '../../model/Path'
 import { DataModel } from '../../model/DataModel'
 import { TreeView } from '../../view/TreeView'
@@ -12,7 +12,7 @@ export interface RangeNodeMods extends NodeMods<IRange> {
   integer?: boolean
 }
 
-export class RangeNode extends AbstractNode<IRange> implements StateNode<IRange> {
+export class RangeNode extends AbstractNode<IRange> {
   integer: boolean
 
   constructor(mods?: RangeNodeMods) {

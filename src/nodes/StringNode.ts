@@ -1,4 +1,4 @@
-import { AbstractNode, NodeMods, RenderOptions, StateNode } from './AbstractNode'
+import { AbstractNode, NodeMods, RenderOptions, StringLikeNode } from './AbstractNode'
 import { Path } from '../model/Path'
 import { DataModel } from '../model/DataModel'
 import { TreeView } from '../view/TreeView'
@@ -13,7 +13,7 @@ export interface StringNodeMods extends NodeMods<string> {
 /**
  * Simple string node with one text field
  */
-export class StringNode extends AbstractNode<string> implements StateNode<string> {
+export class StringNode extends AbstractNode<string> implements StringLikeNode {
   allowEmpty: boolean
 
   /**
@@ -37,6 +37,10 @@ export class StringNode extends AbstractNode<string> implements StateNode<string
       ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
       <input data-id="${id}" value="${value ?? ''}">
     </div>`
+  }
+
+  renderRaw() {
+    return `<input>`
   }
 
   validate(path: Path, value: any, errors: Errors) {

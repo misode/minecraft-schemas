@@ -13,7 +13,6 @@ export class Errors implements Iterable<PathError> {
   private errors: PathError[] = []
 
   add(path: Path, error: string, ...params: any): false {
-    console.log('params: ', params)
     this.errors.push({ path, error, params })
     return false
   }

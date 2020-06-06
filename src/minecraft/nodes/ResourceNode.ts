@@ -22,7 +22,7 @@ export class ResourceNode extends EnumNode {
 
   getState(el: Element) {
     if (this.additional) {
-      return el.querySelector('input')!.value
+      return (el as HTMLInputElement).value
     } else {
       return super.getState(el)
     }

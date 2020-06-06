@@ -12,7 +12,7 @@ export class JsonNode extends AbstractNode<any> {
   render(path: Path, value: any, view: TreeView, options?: RenderOptions) {
     const stringified = (JSON.stringify(value) ?? '').replace(/"/g, '&quot;')
     const id = view.registerChange(el => {
-      const value = el.querySelector('input')!.value
+      const value = (el as HTMLInputElement).value
       try {
         view.model.set(path, JSON.parse(value))
       } catch (e) {

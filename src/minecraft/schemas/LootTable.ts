@@ -228,6 +228,7 @@ SCHEMAS.register('loot-function', new ObjectNode({
     }
   }
 }, {
+  category: 'function',
   default: () => ({
     function: 'set_count',
     count: 1

@@ -27,7 +27,8 @@ export type FilteredChildren = {
 
 export interface ObjectNodeMods extends NodeMods<object> {
   /** Whether the object can be collapsed. Necessary when recursively nesting. */
-  collapse?: boolean
+  collapse?: boolean,
+  category?: string
 }
 
 /**
@@ -39,6 +40,7 @@ export class ObjectNode extends AbstractNode<IObject> {
   cases: NestedNodeChildren
   filter?: (path: Path) => any
   collapse?: boolean
+  category?: string
 
   /**
    * @param fields children containing the optional switch and case
@@ -48,7 +50,8 @@ export class ObjectNode extends AbstractNode<IObject> {
     super({
       default: () => ({}),
       ...mods})
-    this.collapse = mods?.collapse ?? false
+    this.collapse = mods?.collapse
+    this.category = mods?.category
     const {[Switch]: _switch, [Case]: _case, ..._fields} = fields
     this.fields = _fields
     this.cases = _case ?? {}
@@ -76,7 +79,7 @@ export class ObjectNode extends AbstractNode<IObject> {
         </div>`
       } else {
         const id = view.registerClick(() => view.model.set(path, undefined))
-        return `<div class="node object-node">
+        return `<div class="node object-node"${this.category ? `data-category="${this.category}"` : ''}>
           <div class="node-header">
             <label class="collapse open" data-id="${id}">${locale(path)}</label>
           </div>
@@ -86,7 +89,7 @@ export class ObjectNode extends AbstractNode<IObject> {
         </div>`
       }
     } else {
-      return `<div class="node object-node">
+      return `<div class="node object-node"${this.category ? `data-category="${this.category}"` : ''}>
         ${options?.hideLabel ? `
           ${options?.removeId ? `<div class="node-header">
             <button class="remove" data-id="${options?.removeId}"></button>

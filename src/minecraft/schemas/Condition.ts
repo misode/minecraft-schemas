@@ -88,6 +88,7 @@ SCHEMAS.register('condition', new ObjectNode({
     }
   }
 }, {
+  category: 'predicate',
   default: () => ({
     condition: 'random_chance',
     chance: 0.5

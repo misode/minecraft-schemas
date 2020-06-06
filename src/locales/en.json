@@ -14,6 +14,12 @@
   "range.max": "Max",
   "range.n": "n",
   "range.p": "p",
+  "pools.entry": "Pool",
+  "functions.entry": "Function",
+  "conditions.entry": "Condition",
+  "entries.entry": "Entry",
+  "terms.entry": "Terms",
+  "term": "Term",
   "overworld": "Overworld",
   "the_nether": "The Nether",
   "the_end": "The End"

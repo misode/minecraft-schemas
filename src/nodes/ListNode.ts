@@ -55,7 +55,7 @@ export class ListNode extends AbstractNode<IObject[]> {
       view.model.set(path, undefined)
     })
     return `<div class="node-entry">
-      ${this.children.render(path, value, view, { hideLabel: true, removeId: button })}
+      ${this.children.render(path, value, view, { hideLabel: true, removeId: button, removeLabel: locale(path.push('entry')) })}
     </div>`
   }
 

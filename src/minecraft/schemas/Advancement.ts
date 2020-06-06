@@ -219,6 +219,8 @@ SCHEMAS.register('advancement-criteria', new ObjectNode({
       }
     }
   })
+}, {
+  category: 'predicate'
 }))
 
 export const AdvancementSchema = SCHEMAS.get('advancement')

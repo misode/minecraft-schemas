@@ -25,6 +25,7 @@ export type RenderOptions = {
   syncModel?: boolean
   collapse?: boolean
   removeId?: string
+  removeLabel?: string
 }
 
 export type NodeChildren = {

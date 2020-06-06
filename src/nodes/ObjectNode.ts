@@ -92,7 +92,7 @@ export class ObjectNode extends AbstractNode<IObject> {
       return `<div class="node object-node"${this.category ? `data-category="${this.category}"` : ''}>
         ${options?.hideLabel ? `
           ${options?.removeId ? `<div class="node-header">
-            <button class="remove" data-id="${options?.removeId}"></button>
+            <button class="remove" data-id="${options?.removeId}">${options?.removeLabel}</button>
           </div>` : ``}
         ` : `
           <div class="node-header">

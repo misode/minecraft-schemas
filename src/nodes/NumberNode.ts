@@ -46,7 +46,8 @@ export class NumberNode extends AbstractNode<number> {
     const id = view.registerChange(el => {
       view.model.set(path, this.getState(el))
     })
-    return `<div class="node number-node">
+    return `<div class="node number-node node-header">
+      ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
       ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
       <input data-id="${id}" value="${value ?? ''}">
     </div>`

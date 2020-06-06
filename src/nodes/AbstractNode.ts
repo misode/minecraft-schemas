@@ -24,6 +24,7 @@ export type RenderOptions = {
   hideLabel?: boolean
   syncModel?: boolean
   collapse?: boolean
+  removeId?: string
 }
 
 export type NodeChildren = {
@@ -44,8 +45,6 @@ export interface NodeMods<T> {
 
 /**
  * Basic implementation of the nodes
- * 
- * h
  */
 export abstract class AbstractNode<T> implements INode<T> {
   defaultMod: IDefault<T>

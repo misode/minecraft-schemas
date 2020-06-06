@@ -33,7 +33,8 @@ export class StringNode extends AbstractNode<string> implements StringLikeNode {
       const value = (el as HTMLInputElement).value
       view.model.set(path, this.allowEmpty || value !== '' ? value : undefined)
     })
-    return `<div clas="node string-node">
+    return `<div class="node string-node node-header">
+      ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
       ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
       <input data-id="${id}" value="${value ?? ''}">
     </div>`

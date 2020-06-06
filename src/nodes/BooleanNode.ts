@@ -25,11 +25,12 @@ export class BooleanNode extends AbstractNode<boolean> {
     const trueButton = view.registerClick(el => {
       view.model.set(path, !this.force() && value === true ? undefined : true)
     })
-    return `<div class="node boolean-node">
+    return `<div class="node boolean-node node-header">
+      ${options?.removeId ? `<button data-id="${options?.removeId}"></button>` : ``}
       ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-      <button${value === false ? ' style="font-weight: bold"' : ' '} 
+      <button${value === false ? ' class="selected"' : ' '} 
         data-id="${falseButton}">${locale('false')}</button>
-      <button${value === true ? ' style="font-weight: bold"' : ' '} 
+      <button${value === true ? ' class="selected"' : ' '} 
         data-id="${trueButton}">${locale('true')}</button>
     </div>`
   }

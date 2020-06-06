@@ -38,11 +38,13 @@ export class ResourceNode extends EnumNode {
         })
       })
       const id = `datalist-${getId()}`
-      return `${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-      <input list=${id} data-id="${inputId}" value="${value ?? ''}">
-      <datalist id=${id}>${this.options.map(o => 
-        `<option value="${o}">${locale(path.push(o))}</option>`
-      ).join('')}</datalist>`
+      return `<div class="node node-header">
+        ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+        <input list=${id} data-id="${inputId}" value="${value ?? ''}">
+        <datalist id=${id}>${this.options.map(o => 
+          `<option value="${o}">${locale(path.push(o))}</option>`
+        ).join('')}</datalist>
+      </div>`
     } else {
       return super.render(path, value, view, options)
     }

@@ -38,9 +38,11 @@ export class ListNode extends AbstractNode<IObject[]> {
       view.model.set(path, [...value, this.children.default()])
     })
     return `<div class="node list-node">
-      <label>${locale(path)}:</label>
-      <button data-id="${button}">${locale('add')}</button>
-      <div class="list-fields">
+      <div class="node-header">
+        <label>${locale(path)}</label>
+        <button class="add" data-id="${button}"></button>
+      </div>
+      <div class="node-body">
         ${value.map((obj, index) => {
           return this.renderEntry(path.push(index), obj, view)
         }).join('')}
@@ -52,13 +54,9 @@ export class ListNode extends AbstractNode<IObject[]> {
     const button = view.registerClick(el => {
       view.model.set(path, undefined)
     })
-    return `<div class="list-entry"><button data-id="${button}">${locale('remove')}</button>
-      ${this.children.render(path, value, view, {hideLabel: true})}
+    return `<div class="node-entry">
+      ${this.children.render(path, value, view, { hideLabel: true, removeId: button })}
     </div>`
-  }
-
-  getClassName() {
-    return 'list-node'
   }
 
   validate(path: Path, value: any, errors: Errors) {

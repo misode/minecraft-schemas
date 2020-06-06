@@ -66,27 +66,37 @@ export class ObjectNode extends AbstractNode<IObject> {
   }
 
   render(path: Path, value: IObject, view: TreeView, options?: RenderOptions) {
-    if (options?.hideLabel) {
-      return this.renderFields(path, value, view)
-    } else if (this.collapse || options?.collapse) {
+    if (this.collapse || options?.collapse) {
       if (value === undefined) {
         const id = view.registerClick(() => view.model.set(path, this.default()))
         return `<div class="node object-node">
-          <label class="collapse closed" data-id="${id}">${locale(path)}</label>
+          <div class="node-header">
+            <label class="collapse closed" data-id="${id}">${locale(path)}</label>
+          </div>
         </div>`
       } else {
         const id = view.registerClick(() => view.model.set(path, undefined))
         return `<div class="node object-node">
-          <label class="collapse open" data-id="${id}">${locale(path)}</label>
-          <div class="object-fields">
+          <div class="node-header">
+            <label class="collapse open" data-id="${id}">${locale(path)}</label>
+          </div>
+          <div class="node-body">
             ${this.renderFields(path, value, view)}
           </div>
         </div>`
       }
     } else {
       return `<div class="node object-node">
-        <label>${locale(path)}</label>
-        <div class="object-fields">
+        ${options?.hideLabel ? `
+          ${options?.removeId ? `<div class="node-header">
+            <button class="remove" data-id="${options?.removeId}"></button>
+          </div>` : ``}
+        ` : `
+          <div class="node-header">
+            ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
+            <label>${locale(path)}</label>
+          </div>`}
+        <div class="node-body">
           ${this.renderFields(path, value, view)}
         </div>
       </div>`

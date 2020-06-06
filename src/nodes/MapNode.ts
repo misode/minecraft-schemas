@@ -47,10 +47,12 @@ export class MapNode extends AbstractNode<IMap> {
       view.model.set(path.push(key), this.values.default())
     })
     return `<div class="node map-node">
-      <label>${locale(path)}:</label>
-      ${this.keys.renderRaw(path)}
-      <button data-id="${button}">${locale('add')}</button>
-      <div class="map-fields">
+      <div class="node-header">
+        <label>${locale(path)}</label>
+        ${this.keys.renderRaw(path)}
+        <button class="add" data-id="${button}"></button>
+      </div>
+      <div class="node-body">
         ${Object.keys(value).map(key => {
           return this.renderEntry(path.push(key), value[key], view)
         }).join('')}
@@ -62,8 +64,8 @@ export class MapNode extends AbstractNode<IMap> {
     const button = view.registerClick(el => {
       view.model.set(path, undefined)
     })
-    return `<div class="map-entry"><button data-id="${button}">${locale('remove')}</button>
-      ${this.values.render(path, value, view)}
+    return `<div class="node-entry">
+      ${this.values.render(path, value, view, { removeId: button })}
     </div>`
   }
 

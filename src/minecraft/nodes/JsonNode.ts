@@ -19,7 +19,7 @@ export class JsonNode extends AbstractNode<any> {
         view.model.set(path, value || undefined)
       }
     })
-    return `<div class="node json-node">
+    return `<div class="node json-node node-header">
       ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
       <input data-id="${id}" value="${stringified ?? ''}">
     </div>`

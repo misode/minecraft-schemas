@@ -31,7 +31,8 @@ SCHEMAS.register('loot-table', new ObjectNode({
       rolls: new RangeNode(),
       entries: new ListNode(
         new ReferenceNode('loot-entry')
-      )
+      ),
+      ...functionsAndConditions
     })
   ),
   ...functionsAndConditions

@@ -7,6 +7,13 @@
   "remove": "Remove",
   "true": "True",
   "type": "Type",
+  "range.exact": "Exact",
+  "range.range": "Range",
+  "range.binomial": "Binomial",
+  "range.min": "Min",
+  "range.max": "Max",
+  "range.n": "n",
+  "range.p": "p",
   "overworld": "Overworld",
   "the_nether": "The Nether",
   "the_end": "The End"

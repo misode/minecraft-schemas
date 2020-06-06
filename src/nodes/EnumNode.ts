@@ -36,7 +36,8 @@ export class EnumNode extends AbstractNode<string> implements StringLikeNode {
         evt.stopPropagation()
       })
     })
-    return `<div class="node enum-node">
+    return `<div class="node enum-node node-header">
+      ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
       ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
       <select data-id=${selectId}>
         ${this.options.map(o => 

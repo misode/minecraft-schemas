@@ -17,6 +17,10 @@ export class Errors implements Iterable<PathError> {
     return false
   }
 
+  clear() {
+    this.errors = []
+  }
+
   count() {
     return this.errors.length
   }

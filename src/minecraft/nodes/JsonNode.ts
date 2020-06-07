@@ -20,6 +20,7 @@ export class JsonNode extends AbstractNode<any> {
       }
     })
     return `<div class="node json-node node-header">
+      ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
       ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
       <input data-id="${id}" value="${stringified ?? ''}">
     </div>`

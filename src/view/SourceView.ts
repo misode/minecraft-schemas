@@ -1,4 +1,4 @@
-import { DataModel, ModelListener } from '../model/DataModel'
+import { DataModel } from '../model/DataModel'
 import { Path } from '../model/Path'
 import { AbstractView } from './AbstractView'
 
@@ -24,6 +24,7 @@ export class SourceView extends AbstractView {
     super(model, target)
     this.target = target
     this.options = options
+    this.target.addEventListener('change', evt => this.updateModel())
   }
 
   /**
@@ -31,10 +32,11 @@ export class SourceView extends AbstractView {
    */
   render() {
     const transformed = this.model.schema.transform(new Path([], this.model), this.model.data, this)
-    this.target.textContent = JSON.stringify(transformed, null, this.options?.indentation)
-    this.target.addEventListener('change', evt => {
-      const parsed = JSON.parse(this.target.value)
-      this.model.reset(parsed)
-    })
+    this.target.value = JSON.stringify(transformed, null, this.options?.indentation)
+  }
+
+  updateModel() {
+    const parsed = JSON.parse(this.target.value)
+    this.model.reset(parsed)
   }
 }

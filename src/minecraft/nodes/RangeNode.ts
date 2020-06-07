@@ -79,6 +79,7 @@ export class RangeNode extends AbstractNode<IRange> {
       })
     })
     return `<div class="node range-node node-header" data-id="${id}">
+      ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
       ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
       <select data-id="${selectId}">
         <option value="exact">${locale('range.exact')}</option>

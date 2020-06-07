@@ -60,7 +60,7 @@ export class EnumNode extends AbstractNode<string> implements StringLikeNode {
       return errors.add(path, 'error.expected_string')
     }
     if (!this.options.includes(value)) {
-      return errors.add(path, 'error.invalid_enum_option')
+      return errors.add(path, 'error.invalid_enum_option', value)
     }
     return true
   }

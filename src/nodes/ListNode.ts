@@ -65,7 +65,7 @@ export class ListNode extends AbstractNode<IObject[]> {
     }
     let allValid = true
     value.forEach((obj, index) => {
-      if (this.children.validate(path.push(index), obj, errors)) {
+      if (!this.children.validate(path.push(index), obj, errors)) {
         allValid = false
       }
     })

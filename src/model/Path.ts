@@ -77,7 +77,10 @@ export class Path implements Iterable<PathElement> {
   }
 
   toString(): string {
-    return `[${this.arr.map(e => e.toString()).join(', ')}]`
+    return this.arr
+      .map(e => (typeof e === 'string') ? `.${e}` : `[${e}]`)
+      .join('')
+      .slice(1)
   }
 
   *[Symbol.iterator]() {

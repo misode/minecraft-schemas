@@ -39,6 +39,7 @@ export class ResourceNode extends EnumNode {
       })
       const id = `datalist-${getId()}`
       return `<div class="node node-header">
+        ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
         ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
         <input list=${id} data-id="${inputId}" value="${value ?? ''}">
         <datalist id=${id}>${this.options.map(o => 

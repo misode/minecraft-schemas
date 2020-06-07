@@ -2,7 +2,7 @@ import { ModelListener, DataModel } from "../model/DataModel";
 
 export interface IView extends ModelListener {
   render: () => void
-  setModel: (mode: DataModel) => void
+  setModel: (model: DataModel) => void
 }
 
 export abstract class AbstractView implements IView {

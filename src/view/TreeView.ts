@@ -1,4 +1,4 @@
-import { DataModel, ModelListener } from '../model/DataModel'
+import { DataModel } from '../model/DataModel'
 import { Path } from '../model/Path'
 import { AbstractView } from './AbstractView'
 

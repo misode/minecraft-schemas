@@ -15,6 +15,7 @@ export class DataModel {
   /** A list of listeners that want to be notified when the model is invalidated */
   listeners: ModelListener[]
   valid: boolean
+  errors: Errors
 
   /**
    * @param schema node to use as schema for this model
@@ -24,6 +25,7 @@ export class DataModel {
     this.data = schema.default()
     this.listeners = []
     this.valid = false
+    this.errors = new Errors()
     this.validate()
   }
 
@@ -112,15 +114,7 @@ export class DataModel {
    */
   validate() {
     const path = new Path().withModel(this)
-    const errors = new Errors()
-    this.valid = this.schema.validate(path, this.data, errors)
-    return errors
-  }
-
-  /**
-   * Whether the current data is valid according to the schema
-   */
-  isValid() {
-    return this.valid
+    this.errors.clear()
+    this.valid = this.schema.validate(path, this.data, this.errors)
   }
 }

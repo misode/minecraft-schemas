@@ -1,6 +1,6 @@
 {
   "name": "minecraft-schemas",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Schemas to parse and render JSON structures",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

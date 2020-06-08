@@ -15,19 +15,19 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
     ...Base,
     default: () => false,
     render(path: Path, value: boolean, view: TreeView, options?: RenderOptions) {
-      const falseButton = view.registerClick(el => {
+      const onFalse = view.registerClick(el => {
         view.model.set(path, !config?.radio && value === false ? undefined : false)
       })
-      const trueButton = view.registerClick(el => {
+      const onTrue = view.registerClick(el => {
         view.model.set(path, !config?.radio && value === true ? undefined : true)
       })
       return `<div class="node boolean-node node-header">
         ${options?.removeId ? `<button data-id="${options?.removeId}"></button>` : ``}
         ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
         <button${value === false ? ' class="selected"' : ' '} 
-          data-id="${falseButton}">${locale('false')}</button>
+          data-id="${onFalse}">${locale('false')}</button>
         <button${value === true ? ' class="selected"' : ' '} 
-          data-id="${trueButton}">${locale('true')}</button>
+          data-id="${onTrue}">${locale('true')}</button>
       </div>`
     },
     validate(path, value, errors) {

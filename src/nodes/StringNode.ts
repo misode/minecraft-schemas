@@ -10,14 +10,14 @@ export const StringNode = (): INode<string> => {
     ...Base,
     default: () => '',
     render(path, value, view, options) {
-      const id = view.registerChange(el => {
+      const onChange = view.registerChange(el => {
         const value = (el as HTMLInputElement).value
         view.model.set(path, value)
       })
       return `<div class="node string-node node-header">
         ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
         ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-        <input data-id="${id}" value="${value ?? ''}">
+        <input data-id="${onChange}" value="${value ?? ''}">
       </div>`
     },
     validate(path, value, errors) {

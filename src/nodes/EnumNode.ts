@@ -7,17 +7,17 @@ export const EnumNode = (values: string[]): INode<string> => {
   return {
     ...Base,
     render(path, value, view, options) {
-      const selectId = view.register(el => {
-        (el as HTMLInputElement).value = value
+      const select = view.register(el => {
+        (el as HTMLSelectElement).value = value
         el.addEventListener('change', evt => {
-          view.model.set(path, (el as HTMLInputElement).value)
+          view.model.set(path, (el as HTMLSelectElement).value)
           evt.stopPropagation()
         })
       })
       return `<div class="node enum-node node-header">
         ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
         ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-        <select data-id=${selectId}>
+        <select data-id=${select}>
           ${values.map(o => 
             `<option value="${o}">${locale(path.push(o))}</option>`
           ).join('')}

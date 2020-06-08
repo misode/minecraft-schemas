@@ -11,15 +11,6 @@ export type IMap = {
  * Map nodes similar to list nodes, but a string key is required to add children
  */
 export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
-  const renderEntry = (path: Path, value: IMap, view: TreeView) => {
-    const button = view.registerClick(el => {
-      view.model.set(path, undefined)
-    })
-    return `<div class="node-entry">
-      ${children.render(path, value, view, { removeId: button })}
-    </div>`
-  }
-
   return {
     ...Base,
     transform(path, value, view) {
@@ -31,8 +22,7 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
       return res;
     },
     render(path, value, view) {
-      value = value ?? []
-      const button = view.registerClick(el => {
+      const onAdd = view.registerClick(el => {
         const key = keys.getState(el.parentElement!)
         view.model.set(path.push(key), children.default())
       })
@@ -40,12 +30,14 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
         <div class="node-header">
           <label>${locale(path)}</label>
           ${keys.renderRaw(path)}
-          <button class="add" data-id="${button}"></button>
+          <button class="add" data-id="${onAdd}"></button>
         </div>
         <div class="node-body">
-          ${Object.keys(value).map(key => {
-            return renderEntry(path.push(key), value[key], view)
-          }).join('')}
+          ${Object.keys(value ?? []).map(key => `<div class="node-entry">
+            ${children.render(path.push(key), value ?? [], view, {
+              removeId: view.registerClick(el => view.model.set(path.push(key), undefined))
+            })}
+          </div>`).join('')}
         </div>
       </div>`
     },

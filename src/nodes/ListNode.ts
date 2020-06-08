@@ -5,16 +5,7 @@ import { locale } from '../Registries'
 
 export const ListNode = (children: INode): INode<any[]> => {
   const renderEntry = (path: Path, value: any, view: TreeView) => {
-    const button = view.registerClick(el => {
-      view.model.set(path, undefined)
-    })
-    return `<div class="node-entry">
-      ${children.render(path, value, view, {
-        hideLabel: true,
-        removeId: button,
-        removeLabel: locale(path.push('entry'))
-      })}
-    </div>`
+    return 
   }
 
   return ({
@@ -26,19 +17,22 @@ export const ListNode = (children: INode): INode<any[]> => {
       )
     },
     render(path, value, view) {
-      value = value || []
-      const button = view.registerClick(el => {
+      value = value ?? []
+      const onAdd = view.registerClick(el => {
         view.model.set(path, [...value, children.default()])
       })
       return `<div class="node list-node">
         <div class="node-header">
           <label>${locale(path)}</label>
-          <button class="add" data-id="${button}"></button>
+          <button class="add" data-id="${onAdd}"></button>
         </div>
         <div class="node-body">
-          ${value.map((obj, index) => {
-            return renderEntry(path.push(index), obj, view)
-          }).join('')}
+          ${(value ?? []).map((obj, index) => `<div class="node-entry">
+            ${children.render(path.push(index), obj, view, {
+              removeId: view.registerClick(el => view.model.set(path.push(index), undefined)),
+              removeLabel: locale(path.push('entry'))
+            })}
+          </div>`).join('')}
         </div>
       </div>`
     },

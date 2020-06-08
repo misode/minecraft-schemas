@@ -64,41 +64,33 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
       return res
     },
     render(path, value, view, options) {
-      if (config?.collapse || options?.collapse) {
-        if (value === undefined) {
-          const id = view.registerClick(() => view.model.set(path, this.default()))
-          return `<div class="node object-node">
-            <div class="node-header">
-              <label class="collapse closed" data-id="${id}">${locale(path)}</label>
-            </div>
-          </div>`
-        } else {
-          const id = view.registerClick(() => view.model.set(path, undefined))
-          return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
-            <div class="node-header">
-              <label class="collapse open" data-id="${id}">${locale(path)}</label>
-            </div>
-            <div class="node-body">
-              ${renderFields(path, value, view)}
-            </div>
-          </div>`
-        }
-      } else {
-        return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
-          ${options?.hideLabel ? `
-            ${options?.removeId ? `<div class="node-header">
-              <button class="remove" data-id="${options?.removeId}">${options?.removeLabel}</button>
-            </div>` : ``}
-          ` : `
-            <div class="node-header">
-              ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
+      return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
+        ${options?.hideLabel ? `` : `<div class="node-header">
+          ${options?.removeId ? `
+            <button class="remove" data-id="${options?.removeId}">
+              ${options?.removeLabel ? options?.removeLabel : ''}
+            </button>
+          ` : ``}
+          ${options?.removeLabel ? `` : `
+            ${options?.collapse || config?.collapse ? value === undefined ? `
+              <label class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, this.default()))}">
+                ${locale(path)}
+              </label>
+            `: `
+              <label class="collapse open" data-id="${view.registerClick(() => view.model.set(path, undefined))}">
+                ${locale(path)}
+              </label>
+            ` : `
               <label>${locale(path)}</label>
-            </div>`}
+            `}
+          `}
+        </div>`}
+        ${(options?.collapse || config?.collapse) && value === undefined ? `` : `
           <div class="node-body">
             ${renderFields(path, value, view)}
           </div>
-        </div>`
-      }
+        `}
+      </div>`
     },
     validate(path, value, errors) {
       if (value === null || typeof value !== 'object') {

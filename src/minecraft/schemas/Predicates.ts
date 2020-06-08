@@ -1,132 +1,132 @@
 import { ObjectNode } from '../../nodes/ObjectNode';
-import { ResourceNode } from '../nodes/ResourceNode';
+import { Resource } from '../nodes/Resource';
 import { EnumNode } from '../../nodes/EnumNode';
 import { ListNode } from '../../nodes/ListNode';
 import { RangeNode } from '../nodes/RangeNode';
 import { StringNode } from '../../nodes/StringNode';
-import { ReferenceNode } from '../../nodes/ReferenceNode';
+import { Reference } from '../../nodes/Reference';
 import { BooleanNode } from '../../nodes/BooleanNode';
 import { MapNode } from '../../nodes/MapNode';
 import { SCHEMAS, COLLECTIONS } from '../../Registries';
 
 import './Collections'
 
-SCHEMAS.register('item-predicate', new ObjectNode({
-  item: new ResourceNode(COLLECTIONS.get('items')),
-  tag: new StringNode(),
-  count: new RangeNode(),
-  durability: new RangeNode(),
-  potion: new StringNode(),
-  nbt: new StringNode(),
-  enchantments: new ListNode(
-    new ReferenceNode('enchantment-predicate')
+SCHEMAS.register('item-predicate', ObjectNode({
+  item: Resource(EnumNode(COLLECTIONS.get('items'))),
+  tag: StringNode(),
+  count: RangeNode(),
+  durability: RangeNode(),
+  potion: StringNode(),
+  nbt: StringNode(),
+  enchantments: ListNode(
+    Reference('enchantment-predicate')
   )
 }))
 
-SCHEMAS.register('enchantment-predicate', new ObjectNode({
-  enchantment: new ResourceNode(COLLECTIONS.get('enchantments')),
-  levels: new RangeNode()
+SCHEMAS.register('enchantment-predicate', ObjectNode({
+  enchantment: Resource(EnumNode(COLLECTIONS.get('enchantments'))),
+  levels: RangeNode()
 }))
 
-SCHEMAS.register('block-predicate', new ObjectNode({
-  block: new ResourceNode(COLLECTIONS.get('blocks')),
-  tag: new StringNode(),
-  nbt: new StringNode(),
-  state: new MapNode(
-    new StringNode(),
-    new StringNode()
+SCHEMAS.register('block-predicate', ObjectNode({
+  block: Resource(EnumNode(COLLECTIONS.get('blocks'))),
+  tag: StringNode(),
+  nbt: StringNode(),
+  state: MapNode(
+    StringNode(),
+    StringNode()
   )
 }))
 
-SCHEMAS.register('fluid-predicate', new ObjectNode({
-  fluid: new ResourceNode(COLLECTIONS.get('fluids')),
-  tag: new StringNode(),
-  nbt: new StringNode(),
-  state: new MapNode(
-    new StringNode(),
-    new StringNode()
+SCHEMAS.register('fluid-predicate', ObjectNode({
+  fluid: Resource(EnumNode(COLLECTIONS.get('fluids'))),
+  tag: StringNode(),
+  nbt: StringNode(),
+  state: MapNode(
+    StringNode(),
+    StringNode()
   )
 }))
 
-SCHEMAS.register('location-predicate', new ObjectNode({
-  position: new ObjectNode({
-    x: new RangeNode(),
-    y: new RangeNode(),
-    z: new RangeNode()
+SCHEMAS.register('location-predicate', ObjectNode({
+  position: ObjectNode({
+    x: RangeNode(),
+    y: RangeNode(),
+    z: RangeNode()
   }, {collapse: true}),
-  biome: new ResourceNode(COLLECTIONS.get('biomes')),
-  feature: new EnumNode(COLLECTIONS.get('structures')),
-  dimension: new ResourceNode(COLLECTIONS.get('dimensions'), {additional: true}),
-  light: new ObjectNode({
-    light: new RangeNode()
+  biome: Resource(EnumNode(COLLECTIONS.get('biomes'))),
+  feature: EnumNode(COLLECTIONS.get('structures')),
+  dimension: Resource(StringNode()),
+  light: ObjectNode({
+    light: RangeNode()
   }),
-  smokey: new BooleanNode(),
-  block: new ReferenceNode('block-predicate', {collapse: true}),
-  fluid: new ReferenceNode('fluid-predicate', {collapse: true})
+  smokey: BooleanNode(),
+  block: Reference('block-predicate', {collapse: true}),
+  fluid: Reference('fluid-predicate', {collapse: true})
 }))
 
-SCHEMAS.register('statistic-predicate', new ObjectNode({
-  type: new EnumNode(COLLECTIONS.get('statistic-types')),
-  stat: new StringNode(),
-  value: new RangeNode()
+SCHEMAS.register('statistic-predicate', ObjectNode({
+  type: EnumNode(COLLECTIONS.get('statistic-types')),
+  stat: StringNode(),
+  value: RangeNode()
 }))
 
-SCHEMAS.register('player-predicate', new ObjectNode({
-  gamemode: new EnumNode(COLLECTIONS.get('gamemodes')),
-  level: new RangeNode(),
-  advancements: new MapNode(
-    new StringNode(),
-    new BooleanNode()
+SCHEMAS.register('player-predicate', ObjectNode({
+  gamemode: EnumNode(COLLECTIONS.get('gamemodes')),
+  level: RangeNode(),
+  advancements: MapNode(
+    StringNode(),
+    BooleanNode()
   ),
-  recipes: new MapNode(
-    new StringNode(),
-    new BooleanNode()
+  recipes: MapNode(
+    StringNode(),
+    BooleanNode()
   ),
-  stats: new ListNode(
-    new ReferenceNode('statistic-predicate')
+  stats: ListNode(
+    Reference('statistic-predicate')
   )
 }))
 
-SCHEMAS.register('status-effect-predicate', new ObjectNode({
-  amplifier: new RangeNode(),
-  duration: new RangeNode(),
-  ambient: new BooleanNode(),
-  visible: new BooleanNode()
+SCHEMAS.register('status-effect-predicate', ObjectNode({
+  amplifier: RangeNode(),
+  duration: RangeNode(),
+  ambient: BooleanNode(),
+  visible: BooleanNode()
 }))
 
-SCHEMAS.register('distance-predicate', new ObjectNode({
-  x: new RangeNode(),
-  y: new RangeNode(),
-  z: new RangeNode(),
-  absolute: new RangeNode(),
-  horizontal: new RangeNode()
+SCHEMAS.register('distance-predicate', ObjectNode({
+  x: RangeNode(),
+  y: RangeNode(),
+  z: RangeNode(),
+  absolute: RangeNode(),
+  horizontal: RangeNode()
 }))
 
-SCHEMAS.register('entity-predicate', new ObjectNode({
-  type: new StringNode(),
-  nbt: new StringNode(),
-  team: new StringNode(),
-  location: new ReferenceNode('location-predicate', {collapse: true}),
-  distance: new ReferenceNode('distance-predicate', {collapse: true}),
-  flags: new ObjectNode({
-    is_on_fire: new BooleanNode(),
-    is_sneaking: new BooleanNode(),
-    is_sprinting: new BooleanNode(),
-    is_swimming: new BooleanNode(),
-    is_baby: new BooleanNode()
+SCHEMAS.register('entity-predicate', ObjectNode({
+  type: StringNode(),
+  nbt: StringNode(),
+  team: StringNode(),
+  location: Reference('location-predicate', {collapse: true}),
+  distance: Reference('distance-predicate', {collapse: true}),
+  flags: ObjectNode({
+    is_on_fire: BooleanNode(),
+    is_sneaking: BooleanNode(),
+    is_sprinting: BooleanNode(),
+    is_swimming: BooleanNode(),
+    is_baby: BooleanNode()
   }, {collapse: true}),
-  equipment: new MapNode(
-    new EnumNode(COLLECTIONS.get('slots')),
-    new ReferenceNode('item-predicate')
+  equipment: MapNode(
+    EnumNode(COLLECTIONS.get('slots')),
+    Reference('item-predicate')
   ),
-  vehicle: new ReferenceNode('entity-predicate', {collapse: true}),
-  targeted_entity: new ReferenceNode('entity-predicate', {collapse: true}),
-  player: new ReferenceNode('player-predicate', {collapse: true}),
-  fishing_hook: new ObjectNode({
-    in_open_water: new BooleanNode()
+  vehicle: Reference('entity-predicate', {collapse: true}),
+  targeted_entity: Reference('entity-predicate', {collapse: true}),
+  player: Reference('player-predicate', {collapse: true}),
+  fishing_hook: ObjectNode({
+    in_open_water: BooleanNode()
   }),
-  effects: new MapNode(
-    new ResourceNode(COLLECTIONS.get('status-effects')),
-    new ReferenceNode('status-effect-predicate')
+  effects: MapNode(
+    Resource(EnumNode(COLLECTIONS.get('status-effects'))),
+    Reference('status-effect-predicate')
   )
 }))

@@ -1,13 +1,15 @@
-import { NodeMods, INode, NodeChildren, AbstractNode, RenderOptions } from './AbstractNode'
+import { INode, Base } from './Node'
 import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { locale } from '../Registries'
-import { SourceView } from '../view/SourceView'
 import { DataModel } from '../model/DataModel'
-import { Errors } from '../model/Errors'
 
 export const Switch = Symbol('switch')
 export const Case = Symbol('case')
+
+export type NodeChildren = {
+  [name: string]: INode
+}
 
 export type NestedNodeChildren = {
   [name: string]: NodeChildren
@@ -18,130 +20,107 @@ export type IObject = {
 }
 
 export type FilteredChildren = {
-  [name: string]: INode<any>
+  [name: string]: INode
   /** The field to filter on */
   [Switch]?: (path: Path) => any
   /** Map of filter values to node fields */
   [Case]?: NestedNodeChildren
 }
 
-export interface ObjectNodeMods extends NodeMods<object> {
-  /** Whether the object can be collapsed. Necessary when recursively nesting. */
+type ObjectConfig = {
   collapse?: boolean,
   category?: string
 }
 
-/**
- * Object node containing fields with different types.
- * Has the ability to filter fields based on a switch field.
- */
-export class ObjectNode extends AbstractNode<IObject> {
-  fields: NodeChildren
-  cases: NestedNodeChildren
-  filter?: (path: Path) => any
-  collapse?: boolean
-  category?: string
+export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INode<IObject> => {
+  const {[Switch]: filter, [Case]: cases, ...defaultFields} = fields
 
-  /**
-   * @param fields children containing the optional switch and case
-   * @param mods optional node modifiers
-   */
-  constructor(fields: FilteredChildren, mods?: ObjectNodeMods) {
-    super({
-      default: () => ({}),
-      ...mods})
-    this.collapse = mods?.collapse
-    this.category = mods?.category
-    const {[Switch]: _switch, [Case]: _case, ..._fields} = fields
-    this.fields = _fields
-    this.cases = _case ?? {}
-    this.filter = _switch
+  const getActiveFields = (path: Path, model: DataModel) => {
+    if (filter === undefined) return defaultFields 
+    const switchValue = filter(path.withModel(model))
+    const activeCase = cases![switchValue]
+    return {...defaultFields, ...activeCase}
   }
 
-  transform(path: Path, value: IObject, view: SourceView) {
-    if (value === undefined) return undefined
-    const activeFields = this.getActiveFields(path, view.model)
-    let res: any = {}
-    Object.keys(activeFields).forEach(f => {
-      return res[f] = activeFields[f].transform(path.push(f), value[f], view)
-    })
-    return this.transformMod(res);
-  }
-
-  render(path: Path, value: IObject, view: TreeView, options?: RenderOptions) {
-    if (this.collapse || options?.collapse) {
-      if (value === undefined) {
-        const id = view.registerClick(() => view.model.set(path, this.default()))
-        return `<div class="node object-node">
-          <div class="node-header">
-            <label class="collapse closed" data-id="${id}">${locale(path)}</label>
-          </div>
-        </div>`
-      } else {
-        const id = view.registerClick(() => view.model.set(path, undefined))
-        return `<div class="node object-node"${this.category ? `data-category="${this.category}"` : ''}>
-          <div class="node-header">
-            <label class="collapse open" data-id="${id}">${locale(path)}</label>
-          </div>
-          <div class="node-body">
-            ${this.renderFields(path, value, view)}
-          </div>
-        </div>`
-      }
-    } else {
-      return `<div class="node object-node"${this.category ? `data-category="${this.category}"` : ''}>
-        ${options?.hideLabel ? `
-          ${options?.removeId ? `<div class="node-header">
-            <button class="remove" data-id="${options?.removeId}">${options?.removeLabel}</button>
-          </div>` : ``}
-        ` : `
-          <div class="node-header">
-            ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-            <label>${locale(path)}</label>
-          </div>`}
-        <div class="node-body">
-          ${this.renderFields(path, value, view)}
-        </div>
-      </div>`
-    }
-  }
-
-  renderFields(path: Path, value: IObject, view: TreeView) {
+  const renderFields = (path: Path, value: IObject, view: TreeView) => {
     value = value ?? {}
-    const activeFields = this.getActiveFields(path,view.model)
+    const activeFields = getActiveFields(path, view.model)
     return Object.keys(activeFields).map(f => {
       if (!activeFields[f].enabled(path.push(f), view.model)) return ''
       return activeFields[f].render(path.push(f), value[f], view)
     }).join('')
   }
 
-  getActiveFields(path: Path, model: DataModel) {
-    if (this.filter === undefined) return this.fields 
-    const switchValue = this.filter(path.withModel(model))
-    const activeCase = this.cases[switchValue]
-    return {...this.fields, ...activeCase}
-  }
-
-  validate(path: Path, value: any, errors: Errors) {
-    if (value === null || typeof value !== 'object') {
-      return errors.add(path, 'error.expected_object')
-    }
-    const activeFields = this.getActiveFields(path, path.getModel()!)
-    const activeKeys = Object.keys(activeFields)
-    let allValid = true
-    Object.keys(value).forEach(k => {
-      if (!activeKeys.includes(k)) {
-        if (this.filter) {
-          const switchValue = this.filter(path)
-          errors.add(path.push(k), 'error.invalid_filtered_key', k, switchValue)
+  return ({
+    ...Base,
+    default: () => ({}),
+    transform(path, value, view) {
+      if (value === undefined) return undefined
+      let res: any = {}
+      const activeFields = getActiveFields(path, view.model)
+      Object.keys(activeFields).forEach(f => {
+        return res[f] = activeFields[f].transform(path.push(f), value[f], view)
+      })
+      return res
+    },
+    render(path, value, view, options) {
+      if (config?.collapse || options?.collapse) {
+        if (value === undefined) {
+          const id = view.registerClick(() => view.model.set(path, this.default()))
+          return `<div class="node object-node">
+            <div class="node-header">
+              <label class="collapse closed" data-id="${id}">${locale(path)}</label>
+            </div>
+          </div>`
         } else {
-          errors.add(path.push(k), 'error.invalid_key', k)
+          const id = view.registerClick(() => view.model.set(path, undefined))
+          return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
+            <div class="node-header">
+              <label class="collapse open" data-id="${id}">${locale(path)}</label>
+            </div>
+            <div class="node-body">
+              ${renderFields(path, value, view)}
+            </div>
+          </div>`
         }
-        allValid = false
-      } else if (!activeFields[k].validate(path.push(k), value[k], errors)) {
-        allValid = false
+      } else {
+        return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
+          ${options?.hideLabel ? `
+            ${options?.removeId ? `<div class="node-header">
+              <button class="remove" data-id="${options?.removeId}">${options?.removeLabel}</button>
+            </div>` : ``}
+          ` : `
+            <div class="node-header">
+              ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
+              <label>${locale(path)}</label>
+            </div>`}
+          <div class="node-body">
+            ${renderFields(path, value, view)}
+          </div>
+        </div>`
       }
-    })
-    return allValid
-  }
+    },
+    validate(path, value, errors) {
+      if (value === null || typeof value !== 'object') {
+        return errors.add(path, 'error.expected_object')
+      }
+      const activeFields = getActiveFields(path, path.getModel()!)
+      const activeKeys = Object.keys(activeFields)
+      let allValid = true
+      Object.keys(value).forEach(k => {
+        if (!activeKeys.includes(k)) {
+          if (filter) {
+            const switchValue = filter(path)
+            errors.add(path.push(k), 'error.invalid_filtered_key', k, switchValue)
+          } else {
+            errors.add(path.push(k), 'error.invalid_key', k)
+          }
+          allValid = false
+        } else if (!activeFields[k].validate(path.push(k), value[k], errors)) {
+          allValid = false
+        }
+      })
+      return allValid
+    }
+  })
 }

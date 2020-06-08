@@ -1,87 +1,68 @@
-import { AbstractNode, NodeMods, INode, StringLikeNode } from './AbstractNode'
+import { INode, Base } from './Node'
 import { TreeView } from '../view/TreeView'
 import { Path } from '../model/Path'
-import { IObject } from './ObjectNode'
 import { locale } from '../Registries'
-import { SourceView } from '../view/SourceView'
-import { Errors } from '../model/Errors'
 
 export type IMap = {
-  [name: string]: IObject
+  [name: string]: any
 }
 
 /**
  * Map nodes similar to list nodes, but a string key is required to add children
  */
-export class MapNode extends AbstractNode<IMap> {
-  protected keys: StringLikeNode
-  protected values: INode<any>
-
-  /**
-   * 
-   * @param keys node used for the string key
-   * @param values node used for the map values
-   * @param mods optional node modifiers
-   */
-  constructor(keys: StringLikeNode, values: INode<any>, mods?: NodeMods<IMap>) {
-    super({
-      default: () => ({}),
-      ...mods})
-    this.keys = keys
-    this.values = values
-  }
-
-  transform(path: Path, value: IMap, view: SourceView) {
-    if (value === undefined) return undefined
-    let res: any = {}
-    Object.keys(value).forEach(f =>
-      res[f] = this.values.transform(path.push(f), value[f], view)
-    )
-    return this.transformMod(res);
-  }
-
-  render(path: Path, value: IMap, view: TreeView) {
-    value = value ?? []
-    const button = view.registerClick(el => {
-      const key = this.keys.getState(el.parentElement!)
-      view.model.set(path.push(key), this.values.default())
-    })
-    return `<div class="node map-node">
-      <div class="node-header">
-        <label>${locale(path)}</label>
-        ${this.keys.renderRaw(path)}
-        <button class="add" data-id="${button}"></button>
-      </div>
-      <div class="node-body">
-        ${Object.keys(value).map(key => {
-          return this.renderEntry(path.push(key), value[key], view)
-        }).join('')}
-      </div>
-    </div>`
-  }
-
-  private renderEntry(path: Path, value: IObject, view: TreeView) {
+export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
+  const renderEntry = (path: Path, value: IMap, view: TreeView) => {
     const button = view.registerClick(el => {
       view.model.set(path, undefined)
     })
     return `<div class="node-entry">
-      ${this.values.render(path, value, view, { removeId: button })}
+      ${children.render(path, value, view, { removeId: button })}
     </div>`
   }
 
-  validate(path: Path, value: any, errors: Errors) {
-    if (value === null || typeof value !== 'object') {
-      return errors.add(path, 'error.expected_object')
+  return {
+    ...Base,
+    transform(path, value, view) {
+      if (value === undefined) return undefined
+      let res: any = {}
+      Object.keys(value).forEach(f =>
+        res[f] = children.transform(path.push(f), value[f], view)
+      )
+      return res;
+    },
+    render(path, value, view) {
+      value = value ?? []
+      const button = view.registerClick(el => {
+        const key = keys.getState(el.parentElement!)
+        view.model.set(path.push(key), children.default())
+      })
+      return `<div class="node map-node">
+        <div class="node-header">
+          <label>${locale(path)}</label>
+          ${keys.renderRaw(path)}
+          <button class="add" data-id="${button}"></button>
+        </div>
+        <div class="node-body">
+          ${Object.keys(value).map(key => {
+            return renderEntry(path.push(key), value[key], view)
+          }).join('')}
+        </div>
+      </div>`
+    },
+    validate(path, value, errors) {
+      if (value === null || typeof value !== 'object') {
+        return errors.add(path, 'error.expected_object')
+      }
+      let allValid = true
+      Object.keys(value).forEach(k => {
+        if (!keys.validate(path, k, errors)) {
+          allValid = false
+        }
+        if (!children.validate(path.push(k), value[k], errors)) {
+          allValid = false
+        }
+      })
+      return allValid
     }
-    let allValid = true
-    Object.keys(value).forEach(k => {
-      if (!this.keys.validate(path, k, errors)) {
-        allValid = false
-      }
-      if (!this.values.validate(path.push(k), value[k], errors)) {
-        allValid = false
-      }
-    })
-    return allValid
   }
 }

@@ -1,5 +1,6 @@
+import { Mod } from '../../nodes/Node';
 import { EnumNode } from '../../nodes/EnumNode';
-import { ResourceNode } from '../nodes/ResourceNode';
+import { Resource } from '../nodes/Resource';
 import { NumberNode } from '../../nodes/NumberNode';
 import { BooleanNode } from '../../nodes/BooleanNode';
 import { ObjectNode, Switch, Case } from '../../nodes/ObjectNode';
@@ -7,104 +8,104 @@ import { ListNode } from '../../nodes/ListNode';
 import { RangeNode } from '../nodes/RangeNode';
 import { MapNode } from '../../nodes/MapNode';
 import { StringNode } from '../../nodes/StringNode';
-import { ReferenceNode } from '../../nodes/ReferenceNode';
+import { Reference } from '../../nodes/Reference';
 import { SCHEMAS, COLLECTIONS } from '../../Registries';
 
-SCHEMAS.register('dimension', new ObjectNode({
-  type: new StringNode(),
-  generator: new ObjectNode({
-    type: new EnumNode(['noise', 'flat', 'debug']),
-    seed: new NumberNode({ integer: true }),
+SCHEMAS.register('dimension', Mod(ObjectNode({
+  type: StringNode(),
+  generator: ObjectNode({
+    type: EnumNode(['noise', 'flat', 'debug']),
+    seed: NumberNode({ integer: true }),
     [Switch]: path => path.push('type').get(),
     [Case]: {
       'noise': {
-        biome_source: new ObjectNode({
-          type: new EnumNode(['fixed', 'multi_noise', 'checkerboard', 'vanilla_layered', 'the_end']),
-          seed: new NumberNode({ integer: true }),
+        biome_source: ObjectNode({
+          type: EnumNode(['fixed', 'multi_noise', 'checkerboard', 'vanilla_layered', 'the_end']),
+          seed: NumberNode({ integer: true }),
           [Switch]: path => path.push('type').get(),
           [Case]: {
             'fixed': {
-              biome: new EnumNode(COLLECTIONS.get('biomes'))
+              biome: EnumNode(COLLECTIONS.get('biomes'))
             },
             'multi_noise': {
-              preset: new EnumNode(['nether']),
-              biomes: new ListNode(
-                new ReferenceNode('generator-biome')
+              preset: EnumNode(['nether']),
+              biomes: ListNode(
+                Reference('generator-biome')
               )
             },
             'checkerboard': {
-              biomes: new ListNode(
-                new EnumNode(COLLECTIONS.get('biomes'))
+              biomes: ListNode(
+                EnumNode(COLLECTIONS.get('biomes'))
               )
             },
             'vanilla_layered': {
-              large_biomes: new BooleanNode()
+              large_biomes: BooleanNode()
             }
           }
         }, {
           category: 'predicate'
         }),
-        settings: new ObjectNode({
-          bedrock_roof_position: new NumberNode({ integer: true }),
-          bedrock_floor_position: new NumberNode({ integer: true }),
-          sea_level: new NumberNode({ integer: true }),
-          disable_mob_generation: new BooleanNode(),
-          default_block: new ObjectNode({
-            Name: new StringNode(),
-            Properties: new MapNode(
-              new StringNode(),
-              new StringNode()
+        settings: ObjectNode({
+          bedrock_roof_position: NumberNode({ integer: true }),
+          bedrock_floor_position: NumberNode({ integer: true }),
+          sea_level: NumberNode({ integer: true }),
+          disable_mob_generation: BooleanNode(),
+          default_block: ObjectNode({
+            Name: StringNode(),
+            Properties: MapNode(
+              StringNode(),
+              StringNode()
             )
           }),
-          default_fluid: new ObjectNode({
-            Name: new StringNode(),
-            Properties: new MapNode(
-              new StringNode(),
-              new StringNode({default: () => ""})
+          default_fluid: ObjectNode({
+            Name: StringNode(),
+            Properties: MapNode(
+              StringNode(),
+              {...StringNode(), default: () => ""}
             )
           }),
-          noise: new ObjectNode({
-            density_factor: new NumberNode(),
-            density_offset: new NumberNode(),
-            simplex_surface_noise: new BooleanNode(),
-            random_density_offset: new BooleanNode(),
-            island_noise_override: new BooleanNode(),
-            amplified: new BooleanNode(),
-            size_horizontal: new NumberNode({ integer: true }),
-            size_vertical: new NumberNode({ integer: true }),
-            height: new NumberNode({ integer: true }),
-            sampling: new ObjectNode({
-              xz_scale: new NumberNode(),
-              y_scale: new NumberNode(),
-              xz_factor: new NumberNode(),
-              y_factor: new NumberNode()
+          noise: ObjectNode({
+            density_factor: NumberNode(),
+            density_offset: NumberNode(),
+            simplex_surface_noise: BooleanNode(),
+            random_density_offset: BooleanNode(),
+            island_noise_override: BooleanNode(),
+            amplified: BooleanNode(),
+            size_horizontal: NumberNode({ integer: true }),
+            size_vertical: NumberNode({ integer: true }),
+            height: NumberNode({ integer: true }),
+            sampling: ObjectNode({
+              xz_scale: NumberNode(),
+              y_scale: NumberNode(),
+              xz_factor: NumberNode(),
+              y_factor: NumberNode()
             }),
-            bottom_slide: new ObjectNode({
-              target: new NumberNode({ integer: true }),
-              size: new NumberNode({ integer: true }),
-              offset: new NumberNode({ integer: true })
+            bottom_slide: ObjectNode({
+              target: NumberNode({ integer: true }),
+              size: NumberNode({ integer: true }),
+              offset: NumberNode({ integer: true })
             }),
-            top_slide: new ObjectNode({
-              target: new NumberNode({ integer: true }),
-              size: new NumberNode({ integer: true }),
-              offset: new NumberNode({ integer: true })
+            top_slide: ObjectNode({
+              target: NumberNode({ integer: true }),
+              size: NumberNode({ integer: true }),
+              offset: NumberNode({ integer: true })
             })
           }, { collapse: true }),
-          structures: new ReferenceNode('generator-structures')
+          structures: Reference('generator-structures')
         }, { collapse: true })
       },
       'flat': {
-        settings: new ObjectNode({
-          biome: new EnumNode(COLLECTIONS.get('biomes')),
-          layers: new ListNode(
-            new ReferenceNode('generator-layer')
+        settings: ObjectNode({
+          biome: EnumNode(COLLECTIONS.get('biomes')),
+          layers: ListNode(
+            Reference('generator-layer')
           ),
-          structures: new ReferenceNode('generator-structures')
+          structures: Reference('generator-structures')
         }, { collapse: true })
       }
     }
   })
-}, {
+}), {
   default: () => ({
     generator: {
       type: 'noise',
@@ -117,16 +118,16 @@ SCHEMAS.register('dimension', new ObjectNode({
   })
 }))
 
-SCHEMAS.register('generator-biome', new ObjectNode({
-  biome: new EnumNode(COLLECTIONS.get('biomes')),
-  parameters: new ObjectNode({
-    altitude: new NumberNode(),
-    temperature: new NumberNode(),
-    humidity: new NumberNode(),
-    weirdness: new NumberNode(),
-    offset: new NumberNode()
+SCHEMAS.register('generator-biome', Mod(ObjectNode({
+  biome: EnumNode(COLLECTIONS.get('biomes')),
+  parameters: ObjectNode({
+    altitude: NumberNode(),
+    temperature: NumberNode(),
+    humidity: NumberNode(),
+    weirdness: NumberNode(),
+    offset: NumberNode()
   })
-}, {
+}), {
   default: () => ({
     biome: 'plains',
     parameters: {
@@ -139,21 +140,21 @@ SCHEMAS.register('generator-biome', new ObjectNode({
   })
 }))
 
-SCHEMAS.register('generator-structures', new ObjectNode({
-  stronghold: new ObjectNode({
-    distance: new NumberNode({ integer: true }),
-    spread: new NumberNode({ integer: true }),
-    count: new NumberNode({ integer: true })
+SCHEMAS.register('generator-structures', ObjectNode({
+  stronghold: ObjectNode({
+    distance: NumberNode({ integer: true }),
+    spread: NumberNode({ integer: true }),
+    count: NumberNode({ integer: true })
   }, {
     collapse: true
   }),
-  structures: new MapNode(
-    new EnumNode(COLLECTIONS.get('structures')),
-    new ObjectNode({
-      spacing: new NumberNode({ integer: true }),
-      separation: new NumberNode({ integer: true }),
-      salt: new NumberNode({ integer: true })
-    }, {
+  structures: MapNode(
+    EnumNode(COLLECTIONS.get('structures')),
+    Mod(ObjectNode({
+      spacing: NumberNode({ integer: true }),
+      separation: NumberNode({ integer: true }),
+      salt: NumberNode({ integer: true })
+    }), {
       default: () => ({
         spacing: 10,
         separation: 5,
@@ -163,25 +164,25 @@ SCHEMAS.register('generator-structures', new ObjectNode({
   )
 }))
 
-SCHEMAS.register('generator-layer', new ObjectNode({
-  block: new ResourceNode(COLLECTIONS.get('blocks')),
-  height: new NumberNode({ integer: true })
-}, {
+SCHEMAS.register('generator-layer', Mod(ObjectNode({
+  block: Resource(EnumNode(COLLECTIONS.get('blocks'))),
+  height: NumberNode({ integer: true })
+}), {
   default: () => ({
     block: 'stone',
     height: 1
   })
 }))
 
-SCHEMAS.register('dimension-type', new ObjectNode({
-  ultrawarm: new BooleanNode(),
-  natural: new BooleanNode(),
-  shrunk: new BooleanNode(),
-  ambient_light: new NumberNode(),
-  fixed_time: new NumberNode({ integer: true }),
-  has_skylight: new BooleanNode(),
-  has_ceiling: new BooleanNode()
-}, {
+SCHEMAS.register('dimension-type', Mod(ObjectNode({
+  ultrawarm: BooleanNode(),
+  natural: BooleanNode(),
+  shrunk: BooleanNode(),
+  ambient_light: NumberNode(),
+  fixed_time: NumberNode({ integer: true }),
+  has_skylight: BooleanNode(),
+  has_ceiling: BooleanNode()
+}), {
   default: () => ({
     ultrawarm: false,
     natural: true,

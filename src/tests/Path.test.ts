@@ -21,18 +21,18 @@ describe('Path Tests', () => {
   describe('Model Tests', () => {
     it('should attach the model', () => {
       const path = new Path()
-      const schema = new StringNode()
+      const schema = StringNode()
       const model = new DataModel(schema)
       const pathWithModel = path.withModel(model)
       assert(pathWithModel.getModel() === model)
     })
     it('should get a path from the model', () => {
       const path = new Path()
-      const schema = new ObjectNode({
-        foo: new StringNode()
-      }, {
+      const schema = {...ObjectNode({
+          foo: StringNode()
+        }),
         default: () => ({ foo: 'value' })
-      })
+      }
       const model = new DataModel(schema)
       const pathWithModel = path.withModel(model)
       assert(pathWithModel.push('foo').get() === 'value')

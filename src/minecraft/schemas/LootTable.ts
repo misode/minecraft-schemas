@@ -1,42 +1,44 @@
+import { Mod } from '../../nodes/Node';
+import { Path } from '../../model/Path';
 import { EnumNode } from '../../nodes/EnumNode';
-import { ResourceNode } from '../nodes/ResourceNode';
+import { Resource } from '../nodes/Resource';
 import { NumberNode } from '../../nodes/NumberNode';
 import { BooleanNode } from '../../nodes/BooleanNode';
 import { ObjectNode, Switch, Case } from '../../nodes/ObjectNode';
 import { ListNode } from '../../nodes/ListNode';
 import { RangeNode } from '../nodes/RangeNode';
 import { StringNode } from '../../nodes/StringNode';
-import { ReferenceNode } from '../../nodes/ReferenceNode';
+import { Reference } from '../../nodes/Reference';
 import { JsonNode } from '../nodes/JsonNode';
 import { SCHEMAS, COLLECTIONS } from '../../Registries';
 
 import './Condition'
 
 const conditions = {
-  conditions: new ListNode(
-    new ReferenceNode('condition')
+  conditions: ListNode(
+    Reference('condition')
   )
 }
 
 const functionsAndConditions = {
-  functions: new ListNode(
-    new ReferenceNode('loot-function')
+  functions: ListNode(
+    Reference('loot-function')
   ),
   ...conditions
 }
 
-SCHEMAS.register('loot-table', new ObjectNode({
-  pools: new ListNode(
-    new ObjectNode({
-      rolls: new RangeNode(),
-      entries: new ListNode(
-        new ReferenceNode('loot-entry')
+SCHEMAS.register('loot-table', Mod(ObjectNode({
+  pools: ListNode(
+    ObjectNode({
+      rolls: RangeNode(),
+      entries: ListNode(
+        Reference('loot-entry')
       ),
       ...functionsAndConditions
     })
   ),
   ...functionsAndConditions
-}, {
+}), {
   default: () => ({
     pools: [
       {
@@ -52,182 +54,180 @@ SCHEMAS.register('loot-table', new ObjectNode({
   })
 }))
 
-SCHEMAS.register('loot-entry', new ObjectNode({
-  type: new EnumNode(COLLECTIONS.get('loot-entries'), {default: () => 'item'}),
-  weight: new NumberNode({
-    integer: true,
-    min: 1,
-    enable: path => path.pop().get()?.length > 1
+SCHEMAS.register('loot-entry', ObjectNode({
+  type: Resource(EnumNode(COLLECTIONS.get('loot-entries'))),
+  weight: Mod(NumberNode({ integer: true, min: 1 }), {
+    enable: (path: Path) => path.pop().get()?.length > 1
       && !['alternatives', 'group', 'sequence'].includes(path.push('type').get())
   }),
   [Switch]: path => path.push('type').get(),
   [Case]: {
     'alternatives': {
-      children: new ListNode(
-        new ReferenceNode('loot-entry')
+      children: ListNode(
+        Reference('loot-entry')
       ),
       ...functionsAndConditions
     },
     'dynamic': {
-      name: new StringNode(),
+      name: StringNode(),
       ...functionsAndConditions
     },
     'group': {
-      children: new ListNode(
-        new ReferenceNode('loot-entry')
+      children: ListNode(
+        Reference('loot-entry')
       ),
       ...functionsAndConditions
     },
     'item': {
-      name: new StringNode(),
+      name: StringNode(),
       ...functionsAndConditions
     },
     'loot_table': {
-      name: new StringNode(),
+      name: StringNode(),
       ...functionsAndConditions
     },
     'sequence': {
-      children: new ListNode(
-        new ReferenceNode('loot-entry')
+      children: ListNode(
+        Reference('loot-entry')
       ),
       ...functionsAndConditions
     },
     'tag': {
-      name: new StringNode(),
-      expand: new BooleanNode(),
+      name: StringNode(),
+      expand: BooleanNode(),
       ...functionsAndConditions
     }
   }
 }))
 
-SCHEMAS.register('loot-function', new ObjectNode({
-  function: new EnumNode(COLLECTIONS.get('loot-functions'), {default: () => 'set_count'}),
+SCHEMAS.register('loot-function', Mod(ObjectNode({
+  function: Resource(EnumNode(COLLECTIONS.get('loot-functions'))),
   [Switch]: path => path.push('function').get(),
   [Case]: {
     'apply_bonus': {
-      enchantment: new EnumNode(COLLECTIONS.get('enchantments')),
-      formula: new EnumNode([
+      enchantment: EnumNode(COLLECTIONS.get('enchantments')),
+      formula: EnumNode([
         'uniform_bonus_count',
         'binomial_with_bonus_count',
         'ore_drops'
       ]),
-      parameters: new ObjectNode({
-        bonusMultiplier: new NumberNode({
-          enable: path => path.pop().push('formula').get() === 'uniform_bonus_count'
+      parameters: Mod(ObjectNode({
+        bonusMultiplier: Mod(NumberNode(), {
+          enable: (path: Path) => path.pop().push('formula').get() === 'uniform_bonus_count'
         }),
-        extra: new NumberNode({
-          enable: path => path.pop().push('formula').get() === 'binomial_with_bonus_count'
+        extra: Mod(NumberNode(), {
+          enable: (path: Path) => path.pop().push('formula').get() === 'binomial_with_bonus_count'
         }),
-        probability: new NumberNode({
-          enable: path => path.pop().push('formula').get() === 'binomial_with_bonus_count'
+        probability: Mod(NumberNode(), {
+          enable: (path: Path) => path.pop().push('formula').get() === 'binomial_with_bonus_count'
         })
-      }, {
-        enable: path => path.push('formula').get() !== 'ore_drops'
+      }), {
+        enable: (path: Path) => path.push('formula').get() !== 'ore_drops'
       }),
       ...conditions
     },
     'copy_name': {
-      source: new EnumNode(COLLECTIONS.get('copy-sources')),
+      source: EnumNode(COLLECTIONS.get('copy-sources')),
       ...conditions
     },
     'copy_nbt': {
-      source: new EnumNode(COLLECTIONS.get('copy-sources')),
-      ops: new ListNode(
-        new ObjectNode({
-          source: new StringNode(),
-          target: new StringNode(),
-          op: new EnumNode(['replace', 'append', 'merge'])
+      source: EnumNode(COLLECTIONS.get('copy-sources')),
+      ops: ListNode(
+        ObjectNode({
+          source: StringNode(),
+          target: StringNode(),
+          op: EnumNode(['replace', 'append', 'merge'])
         })
       ),
       ...conditions
     },
     'copy_state': {
-      block: new ResourceNode(COLLECTIONS.get('blocks')),
-      properties: new ListNode(
-        new StringNode()
+      block: Resource(EnumNode(COLLECTIONS.get('blocks'))),
+      properties: ListNode(
+        StringNode()
       ),
       ...conditions
     },
     'enchant_randomly': {
-      enchantments: new ListNode(
-        new EnumNode(COLLECTIONS.get('enchantments'))
+      enchantments: ListNode(
+        EnumNode(COLLECTIONS.get('enchantments'))
       ),
       ...conditions
     },
     'enchant_with_levels': {
-      levels: new RangeNode(),
-      treasure: new BooleanNode(),
+      levels: RangeNode(),
+      treasure: BooleanNode(),
       ...conditions
     },
     'exploration_map': {
-      destination: new EnumNode(COLLECTIONS.get('structures')),
-      decoration: new EnumNode(COLLECTIONS.get('map-decorations')),
-      zoom: new NumberNode({integer: true}),
-      search_radius: new NumberNode({integer: true}),
-      skip_existing_chunks: new BooleanNode(),
+      destination: EnumNode(COLLECTIONS.get('structures')),
+      decoration: EnumNode(COLLECTIONS.get('map-decorations')),
+      zoom: NumberNode({integer: true}),
+      search_radius: NumberNode({integer: true}),
+      skip_existing_chunks: BooleanNode(),
       ...conditions
     },
     'fill_player_head': {
-      entity: new EnumNode(COLLECTIONS.get('entity-sources')),
+      entity: EnumNode(COLLECTIONS.get('entity-sources')),
       ...conditions
     },
     'limit_count': {
-      limit: new RangeNode(),
+      limit: RangeNode(),
       ...conditions
     },
     'looting_enchant': {
-      count: new RangeNode(),
-      limit: new NumberNode({integer: true}),
+      count: RangeNode(),
+      limit: NumberNode({integer: true}),
       ...conditions
     },
     'set_attributes': {
-      modifiers: new ListNode(
-        new ReferenceNode('attribute-modifier')
+      modifiers: ListNode(
+        Reference('attribute-modifier')
       ),
       ...conditions
     },
     'set_contents': {
-      entries: new ListNode(
-        new ReferenceNode('loot-entry')
+      entries: ListNode(
+        Reference('loot-entry')
       ),
       ...conditions
     },
     'set_count': {
-      count: new RangeNode(),
+      count: RangeNode(),
       ...conditions
     },
     'set_damage': {
-      damage: new RangeNode(),
+      damage: RangeNode(),
       ...conditions
     },
     'set_lore': {
-      entity: new EnumNode(COLLECTIONS.get('entity-sources')),
-      lore: new ListNode(
-        new JsonNode()
+      entity: EnumNode(COLLECTIONS.get('entity-sources')),
+      lore: ListNode(
+        JsonNode()
       ),
-      replace: new BooleanNode(),
+      replace: BooleanNode(),
       ...conditions
     },
     'set_name': {
-      entity: new EnumNode(COLLECTIONS.get('entity-sources')),
-      name: new JsonNode(),
+      entity: EnumNode(COLLECTIONS.get('entity-sources')),
+      name: JsonNode(),
       ...conditions
     },
     'set_nbt': {
-      tag: new StringNode(),
+      tag: StringNode(),
       ...conditions
     },
     'set_stew_effect': {
-      effects: new ListNode(
-        new ObjectNode({
-          type: new StringNode(),
-          duration: new RangeNode()
+      effects: ListNode(
+        ObjectNode({
+          type: StringNode(),
+          duration: RangeNode()
         })
       ),
       ...conditions
     }
   }
-}, {
+}), {
   category: 'function',
   default: () => ({
     function: 'set_count',
@@ -235,17 +235,17 @@ SCHEMAS.register('loot-function', new ObjectNode({
   })
 }))
 
-SCHEMAS.register('attribute-modifier', new ObjectNode({
-  attribute: new EnumNode(COLLECTIONS.get('attributes')),
-  name: new StringNode(),
-  amount: new RangeNode(),
-  operation: new EnumNode([
+SCHEMAS.register('attribute-modifier', ObjectNode({
+  attribute: EnumNode(COLLECTIONS.get('attributes')),
+  name: StringNode(),
+  amount: RangeNode(),
+  operation: EnumNode([
     'addition',
     'multiply_base',
     'multiply_total'
   ]),
-  slot: new ListNode(
-    new EnumNode(COLLECTIONS.get('slots'))
+  slot: ListNode(
+    EnumNode(COLLECTIONS.get('slots'))
   )
 }))
 

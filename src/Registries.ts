@@ -1,4 +1,4 @@
-import { INode } from './nodes/AbstractNode'
+import { INode } from './nodes/Node'
 import { Path } from './model/Path'
 
 export interface Registry<T> {
@@ -9,10 +9,10 @@ export interface Registry<T> {
 /**
  * Registry for schemas
  */
-export class SchemaRegistry implements Registry<INode<any>> {
-  private registry: { [id: string]: INode<any> } = {}
+export class SchemaRegistry implements Registry<INode> {
+  private registry: { [id: string]: INode } = {}
 
-  register(id: string, node: INode<any>) {
+  register(id: string, node: INode) {
     this.registry[id] = node
   }
 

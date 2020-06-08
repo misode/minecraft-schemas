@@ -1,5 +1,5 @@
 import { Path } from './Path'
-import { INode } from '../nodes/AbstractNode'
+import { INode } from '../nodes/Node'
 import { Errors } from './Errors'
 
 export interface ModelListener {
@@ -11,7 +11,7 @@ export interface ModelListener {
  */
 export class DataModel {
   data: any
-  schema: INode<any>
+  schema: INode
   /** A list of listeners that want to be notified when the model is invalidated */
   listeners: ModelListener[]
   valid: boolean
@@ -20,7 +20,7 @@ export class DataModel {
   /**
    * @param schema node to use as schema for this model
    */
-  constructor(schema: INode<any>) {
+  constructor(schema: INode) {
     this.schema = schema
     this.data = schema.default()
     this.listeners = []

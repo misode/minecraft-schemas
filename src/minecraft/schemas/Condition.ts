@@ -1,5 +1,6 @@
+import { Mod } from '../../nodes/Node';
 import { EnumNode } from '../../nodes/EnumNode';
-import { ResourceNode } from '../nodes/ResourceNode';
+import { Resource } from '../nodes/Resource';
 import { NumberNode } from '../../nodes/NumberNode';
 import { BooleanNode } from '../../nodes/BooleanNode';
 import { ObjectNode, Switch, Case } from '../../nodes/ObjectNode';
@@ -7,88 +8,87 @@ import { ListNode } from '../../nodes/ListNode';
 import { RangeNode } from '../nodes/RangeNode';
 import { MapNode } from '../../nodes/MapNode';
 import { StringNode } from '../../nodes/StringNode';
-import { ReferenceNode } from '../../nodes/ReferenceNode';
+import { Reference } from '../../nodes/Reference';
 import { SCHEMAS, COLLECTIONS } from '../../Registries';
 
 import './Predicates'
 
-SCHEMAS.register('condition', new ObjectNode({
-  condition: new ResourceNode(COLLECTIONS.get('conditions'), {default: () => 'random_chance'}),
+SCHEMAS.register('condition', Mod(ObjectNode({
+  condition: Resource(Mod(EnumNode(COLLECTIONS.get('conditions')), {default: () => 'random_chance'})),
   [Switch]: path => path.push('condition').get(),
   [Case]: {
     'alternative': {
-      terms: new ListNode(
-        new ReferenceNode('condition')
+      terms: ListNode(
+        Reference('condition')
       )
     },
     'block_state_property': {
-      block: new ResourceNode(COLLECTIONS.get('blocks')),
-      properties: new MapNode(
-        new StringNode(),
-        new StringNode()
+      block: Resource(EnumNode(COLLECTIONS.get('blocks'))),
+      properties: MapNode(
+        StringNode(),
+        StringNode()
       )
     },
     'damage_source_properties': {
-      predicate: new ReferenceNode('damage-source-predicate')
+      predicate: Reference('damage-source-predicate')
     },
     'entity_properties': {
-      entity: new EnumNode(COLLECTIONS.get('entity-sources'), 'this'),
-      predicate: new ReferenceNode('entity-predicate')
+      entity: Mod(EnumNode(COLLECTIONS.get('entity-sources')), {default: () => 'this'}),
+      predicate: Reference('entity-predicate')
     },
     'entity_scores': {
-      entity: new EnumNode(COLLECTIONS.get('entity-sources'), 'this'),
-      scores: new MapNode(
-        new StringNode(),
-        new RangeNode()
+      entity: Mod(EnumNode(COLLECTIONS.get('entity-sources')), {default: () => 'this'}),
+      scores: MapNode(
+        StringNode(),
+        RangeNode()
       )
     },
     'inverted': {
-      term: new ReferenceNode('condition')
+      term: Reference('condition')
     },
     'killed_by_player': {
-      inverse: new BooleanNode()
+      inverse: BooleanNode()
     },
     'location_check': {
-      offsetX: new NumberNode({integer: true}),
-      offsetY: new NumberNode({integer: true}),
-      offsetZ: new NumberNode({integer: true}),
-      predicate: new ReferenceNode('location-predicate')
+      offsetX: NumberNode({integer: true}),
+      offsetY: NumberNode({integer: true}),
+      offsetZ: NumberNode({integer: true}),
+      predicate: Reference('location-predicate')
     },
     'match_tool': {
-      predicate: new ReferenceNode('item-predicate')
+      predicate: Reference('item-predicate')
     },
     'random_chance': {
-      chance: new NumberNode({min: 0, max: 1})
+      chance: NumberNode({min: 0, max: 1})
     },
     'random_chance_with_looting': {
-      chance: new NumberNode({min: 0, max: 1}),
-      looting_multiplier: new NumberNode()
+      chance: NumberNode({min: 0, max: 1}),
+      looting_multiplier: NumberNode()
     },
     'requirements': {
-      terms: new ListNode(
-        new ReferenceNode('condition')
+      terms: ListNode(
+        Reference('condition')
       ),
     },
     'reference': {
-      name: new StringNode()
+      name: StringNode()
     },
     'table_bonus': {
-      enchantment: new ResourceNode(COLLECTIONS.get('enchantments')),
-      chances: new ListNode(
-        new NumberNode({min: 0, max: 1})
+      enchantment: Resource(EnumNode(COLLECTIONS.get('enchantments'))),
+      chances: ListNode(
+        NumberNode({min: 0, max: 1})
       )
     },
     'time_check': {
-      value: new RangeNode(),
-      period: new NumberNode()
+      value: RangeNode(),
+      period: NumberNode()
     },
     'weather_check': {
-      raining: new BooleanNode(),
-      thrundering: new BooleanNode()
+      raining: BooleanNode(),
+      thrundering: BooleanNode()
     }
   }
-}, {
-  category: 'predicate',
+}, { category: 'predicate' }), {
   default: () => ({
     condition: 'random_chance',
     chance: 0.5

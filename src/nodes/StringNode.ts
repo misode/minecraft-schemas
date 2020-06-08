@@ -1,53 +1,36 @@
-import { AbstractNode, NodeMods, RenderOptions, StringLikeNode } from './AbstractNode'
+import { INode, Base, RenderOptions } from './Node'
 import { Path } from '../model/Path'
-import { DataModel } from '../model/DataModel'
-import { TreeView } from '../view/TreeView'
 import { locale } from '../Registries'
-import { Errors } from '../model/Errors'
-
-export interface StringNodeMods extends NodeMods<string> {
-  /** Whether the string can also be empty */
-  allowEmpty?: boolean
-}
 
 /**
  * Simple string node with one text field
  */
-export class StringNode extends AbstractNode<string> implements StringLikeNode {
-  allowEmpty: boolean
-
-  /**
-   * @param mods optional node modifiers
-   */
-  constructor(mods?: StringNodeMods) {
-    super(mods)
-    this.allowEmpty = mods?.allowEmpty ?? false
-  }
-
-  getState(el: Element) {
-    return el.querySelector('input')!.value
-  }
-
-  render(path: Path, value: string, view: TreeView, options?: RenderOptions) {
-    const id = view.registerChange(el => {
-      const value = (el as HTMLInputElement).value
-      view.model.set(path, this.allowEmpty || value !== '' ? value : undefined)
-    })
-    return `<div class="node string-node node-header">
-      ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-      ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-      <input data-id="${id}" value="${value ?? ''}">
-    </div>`
-  }
-
-  renderRaw() {
-    return `<input>`
-  }
-
-  validate(path: Path, value: any, errors: Errors) {
-    if (typeof value !== 'string') {
-      return errors.add(path, 'error.expected_string')
+export const StringNode = (): INode<string> => {
+  return {
+    ...Base,
+    default: () => '',
+    render(path, value, view, options) {
+      const id = view.registerChange(el => {
+        const value = (el as HTMLInputElement).value
+        view.model.set(path, value)
+      })
+      return `<div class="node string-node node-header">
+        ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
+        ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+        <input data-id="${id}" value="${value ?? ''}">
+      </div>`
+    },
+    validate(path, value, errors) {
+      if (typeof value !== 'string') {
+        return errors.add(path, 'error.expected_string')
+      }
+      return true
+    },
+    getState(el: HTMLElement) {
+      return el.getElementsByTagName('input')[0].value
+    },
+    renderRaw(path: Path) {
+      return `<input>`
     }
-    return true
   }
-} 
+}

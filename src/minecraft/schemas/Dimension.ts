@@ -14,31 +14,31 @@ import { SCHEMAS, COLLECTIONS } from '../../Registries';
 SCHEMAS.register('dimension', Mod(ObjectNode({
   type: StringNode(),
   generator: ObjectNode({
-    type: EnumNode(['noise', 'flat', 'debug']),
+    type: Resource(EnumNode(['noise', 'flat', 'debug'])),
     seed: NumberNode({ integer: true }),
     [Switch]: path => path.push('type').get(),
     [Case]: {
-      'noise': {
+      'minecraft:noise': {
         biome_source: ObjectNode({
-          type: EnumNode(['fixed', 'multi_noise', 'checkerboard', 'vanilla_layered', 'the_end']),
+          type: Resource(EnumNode('biome_source')),
           seed: NumberNode({ integer: true }),
           [Switch]: path => path.push('type').get(),
           [Case]: {
-            'fixed': {
-              biome: EnumNode(COLLECTIONS.get('biomes'))
+            'minecraft:fixed': {
+              biome: EnumNode('biome')
             },
-            'multi_noise': {
+            'minecraft:multi_noise': {
               preset: EnumNode(['nether']),
               biomes: ListNode(
                 Reference('generator-biome')
               )
             },
-            'checkerboard': {
+            'minecraft:checkerboard': {
               biomes: ListNode(
-                EnumNode(COLLECTIONS.get('biomes'))
+                EnumNode('biome')
               )
             },
-            'vanilla_layered': {
+            'minecraft:vanilla_layered': {
               large_biomes: BooleanNode()
             }
           }
@@ -94,9 +94,9 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
           structures: Reference('generator-structures')
         }, { collapse: true })
       },
-      'flat': {
+      'minecraft:flat': {
         settings: ObjectNode({
-          biome: EnumNode(COLLECTIONS.get('biomes')),
+          biome: EnumNode('biome'),
           layers: ListNode(
             Reference('generator-layer')
           ),
@@ -119,7 +119,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('generator-biome', Mod(ObjectNode({
-  biome: EnumNode(COLLECTIONS.get('biomes')),
+  biome: EnumNode('biome'),
   parameters: ObjectNode({
     altitude: NumberNode(),
     temperature: NumberNode(),
@@ -149,7 +149,7 @@ SCHEMAS.register('generator-structures', ObjectNode({
     collapse: true
   }),
   structures: MapNode(
-    EnumNode(COLLECTIONS.get('structures')),
+    EnumNode('structure_feature'),
     Mod(ObjectNode({
       spacing: NumberNode({ integer: true }),
       separation: NumberNode({ integer: true }),
@@ -165,7 +165,7 @@ SCHEMAS.register('generator-structures', ObjectNode({
 }))
 
 SCHEMAS.register('generator-layer', Mod(ObjectNode({
-  block: Resource(EnumNode(COLLECTIONS.get('blocks'))),
+  block: Resource(EnumNode('block')),
   height: NumberNode({ integer: true })
 }), {
   default: () => ({

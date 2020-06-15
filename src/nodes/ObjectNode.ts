@@ -36,7 +36,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
   const {[Switch]: filter, [Case]: cases, ...defaultFields} = fields
 
   const getActiveFields = (path: Path, model: DataModel) => {
-    if (filter === undefined) return defaultFields 
+    if (filter === undefined) return defaultFields
     const switchValue = filter(path.withModel(model))
     const activeCase = cases![switchValue]
     return {...defaultFields, ...activeCase}
@@ -46,7 +46,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
     value = value ?? {}
     const activeFields = getActiveFields(path, view.model)
     return Object.keys(activeFields).map(f => {
-      if (!activeFields[f].enabled(path.push(f), view.model)) return ''
+      if (!activeFields[f].enabled(path, view.model)) return ''
       return activeFields[f].render(path.push(f), value[f], view)
     }).join('')
   }
@@ -94,11 +94,13 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
     },
     validate(path, value, errors) {
       if (value === null || typeof value !== 'object') {
-        return errors.add(path, 'error.expected_object')
+        errors.add(path, 'error.expected_object')
+        return value
       }
       const activeFields = getActiveFields(path, path.getModel()!)
       const activeKeys = Object.keys(activeFields)
-      let allValid = true
+      console.warn(activeFields)
+      let res: any = {}
       Object.keys(value).forEach(k => {
         if (!activeKeys.includes(k)) {
           if (filter) {
@@ -107,12 +109,12 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
           } else {
             errors.add(path.push(k), 'error.invalid_key', k)
           }
-          allValid = false
-        } else if (!activeFields[k].validate(path.push(k), value[k], errors)) {
-          allValid = false
+          res[k] = value[k]
+        } else {
+          res[k] = activeFields[k].validate(path.push(k), value[k], errors)
         }
       })
-      return allValid
+      return res
     }
   })
 }

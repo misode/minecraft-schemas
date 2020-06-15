@@ -22,9 +22,9 @@ export const StringNode = (): INode<string> => {
     },
     validate(path, value, errors) {
       if (typeof value !== 'string') {
-        return errors.add(path, 'error.expected_string')
+        errors.add(path, 'error.expected_string')
       }
-      return true
+      return value
     },
     getState(el: HTMLElement) {
       return el.getElementsByTagName('input')[0].value

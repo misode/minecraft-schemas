@@ -38,15 +38,12 @@ export const ListNode = (children: INode): INode<any[]> => {
     },
     validate(path, value, errors) {
       if (!(value instanceof Array)) {
-        return errors.add(path, 'error.expected_list')
+        errors.add(path, 'error.expected_list')
+        return value
       }
-      let allValid = true
-      value.forEach((obj, index) => {
-        if (!children.validate(path.push(index), obj, errors)) {
-          allValid = false
-        }
-      })
-      return allValid
+      return value.map((obj, index) =>
+        children.validate(path.push(index), obj, errors)
+      )
     }
   })
 }

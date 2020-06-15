@@ -22,7 +22,6 @@ export interface INode<T = any> {
 
   /**
    * Transforms the data model to the final output format
-   * @param 
    */
   transform: (path: Path, value: T, view: SourceView) => any
 
@@ -47,7 +46,7 @@ export interface INode<T = any> {
    * Validates the model using this schema
    * @param value value to be validated
    */
-  validate: (path: Path, value: any, errors: Errors) => boolean
+  validate: (path: Path, value: any, errors: Errors) => any
 
   [custom: string]: any
 }
@@ -57,7 +56,7 @@ export const Base: INode = ({
   transform: (_, v) => v,
   enabled: () => true,
   render: () => '',
-  validate: () => true
+  validate: (_, v) => v
 })
 
 export const Mod = (node: INode, mods: Partial<INode>): INode => ({

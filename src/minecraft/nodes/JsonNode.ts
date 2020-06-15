@@ -7,7 +7,7 @@ export const JsonNode = (): INode<any> => {
     default: () => '',
     render(path, value, view, options) {
       const stringified = (JSON.stringify(value) ?? '').replace(/"/g, '&quot;')
-      const id = view.registerChange(el => {
+      const onChange = view.registerChange(el => {
         const value = (el as HTMLInputElement).value
         try {
           view.model.set(path, JSON.parse(value))
@@ -18,7 +18,7 @@ export const JsonNode = (): INode<any> => {
       return `<div class="node json-node node-header">
         ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
         ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
-        <input data-id="${id}" value="${stringified ?? ''}">
+        <input data-id="${onChange}" value="${stringified ?? ''}">
       </div>`
     }
   }

@@ -14,83 +14,83 @@ import { SCHEMAS, COLLECTIONS } from '../../Registries';
 import './Predicates'
 
 SCHEMAS.register('condition', Mod(ObjectNode({
-  condition: Resource(Mod(EnumNode(COLLECTIONS.get('conditions')), {default: () => 'random_chance'})),
+  condition: Resource(Mod(EnumNode('loot_condition_type'), {default: () => 'random_chance'})),
   [Switch]: path => path.push('condition').get(),
   [Case]: {
-    'alternative': {
+    'minecraft:alternative': {
       terms: ListNode(
         Reference('condition')
       )
     },
-    'block_state_property': {
-      block: Resource(EnumNode(COLLECTIONS.get('blocks'))),
+    'minecraft:block_state_property': {
+      block: Resource(EnumNode('block')),
       properties: MapNode(
         StringNode(),
         StringNode()
       )
     },
-    'damage_source_properties': {
+    'minecraft:damage_source_properties': {
       predicate: Reference('damage-source-predicate')
     },
-    'entity_properties': {
-      entity: Mod(EnumNode(COLLECTIONS.get('entity-sources')), {default: () => 'this'}),
+    'minecraft:entity_properties': {
+      entity: Mod(EnumNode('entity_source'), {default: () => 'this'}),
       predicate: Reference('entity-predicate')
     },
-    'entity_scores': {
-      entity: Mod(EnumNode(COLLECTIONS.get('entity-sources')), {default: () => 'this'}),
+    'minecraft:entity_scores': {
+      entity: Mod(EnumNode('entity_source'), {default: () => 'this'}),
       scores: MapNode(
         StringNode(),
         RangeNode()
       )
     },
-    'inverted': {
+    'minecraft:inverted': {
       term: Reference('condition')
     },
-    'killed_by_player': {
+    'minecraft:killed_by_player': {
       inverse: BooleanNode()
     },
-    'location_check': {
+    'minecraft:location_check': {
       offsetX: NumberNode({integer: true}),
       offsetY: NumberNode({integer: true}),
       offsetZ: NumberNode({integer: true}),
       predicate: Reference('location-predicate')
     },
-    'match_tool': {
+    'minecraft:match_tool': {
       predicate: Reference('item-predicate')
     },
-    'random_chance': {
+    'minecraft:random_chance': {
       chance: NumberNode({min: 0, max: 1})
     },
-    'random_chance_with_looting': {
+    'minecraft:random_chance_with_looting': {
       chance: NumberNode({min: 0, max: 1}),
       looting_multiplier: NumberNode()
     },
-    'requirements': {
+    'minecraft:requirements': {
       terms: ListNode(
         Reference('condition')
       ),
     },
-    'reference': {
+    'minecraft:reference': {
       name: StringNode()
     },
-    'table_bonus': {
-      enchantment: Resource(EnumNode(COLLECTIONS.get('enchantments'))),
+    'minecraft:table_bonus': {
+      enchantment: Resource(EnumNode('enchantment')),
       chances: ListNode(
         NumberNode({min: 0, max: 1})
       )
     },
-    'time_check': {
+    'minecraft:time_check': {
       value: RangeNode(),
       period: NumberNode()
     },
-    'weather_check': {
+    'minecraft:weather_check': {
       raining: BooleanNode(),
       thrundering: BooleanNode()
     }
   }
 }, { category: 'predicate' }), {
   default: () => ({
-    condition: 'random_chance',
+    condition: 'minecraft:random_chance',
     chance: 0.5
   })
 }))

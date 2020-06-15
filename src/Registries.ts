@@ -99,5 +99,5 @@ export const locale = (key: string | Path): string => {
     if (locale !== undefined) return locale
     path.shift()
   }
-  return key.last().toString()
+  return key.last().toString().replace(/^minecraft:/, '')
 }

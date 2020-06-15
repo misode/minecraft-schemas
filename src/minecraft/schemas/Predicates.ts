@@ -12,7 +12,7 @@ import { SCHEMAS, COLLECTIONS } from '../../Registries';
 import './Collections'
 
 SCHEMAS.register('item-predicate', ObjectNode({
-  item: Resource(EnumNode(COLLECTIONS.get('items'))),
+  item: Resource(EnumNode('item')),
   tag: StringNode(),
   count: RangeNode(),
   durability: RangeNode(),
@@ -24,12 +24,12 @@ SCHEMAS.register('item-predicate', ObjectNode({
 }))
 
 SCHEMAS.register('enchantment-predicate', ObjectNode({
-  enchantment: Resource(EnumNode(COLLECTIONS.get('enchantments'))),
+  enchantment: Resource(EnumNode('enchantment')),
   levels: RangeNode()
 }))
 
 SCHEMAS.register('block-predicate', ObjectNode({
-  block: Resource(EnumNode(COLLECTIONS.get('blocks'))),
+  block: Resource(EnumNode('block')),
   tag: StringNode(),
   nbt: StringNode(),
   state: MapNode(
@@ -39,7 +39,7 @@ SCHEMAS.register('block-predicate', ObjectNode({
 }))
 
 SCHEMAS.register('fluid-predicate', ObjectNode({
-  fluid: Resource(EnumNode(COLLECTIONS.get('fluids'))),
+  fluid: Resource(EnumNode('fluid')),
   tag: StringNode(),
   nbt: StringNode(),
   state: MapNode(
@@ -54,8 +54,8 @@ SCHEMAS.register('location-predicate', ObjectNode({
     y: RangeNode(),
     z: RangeNode()
   }, {collapse: true}),
-  biome: Resource(EnumNode(COLLECTIONS.get('biomes'))),
-  feature: EnumNode(COLLECTIONS.get('structures')),
+  biome: Resource(EnumNode('biome')),
+  feature: EnumNode('structure_feature'),
   dimension: Resource(StringNode()),
   light: ObjectNode({
     light: RangeNode()
@@ -66,13 +66,13 @@ SCHEMAS.register('location-predicate', ObjectNode({
 }))
 
 SCHEMAS.register('statistic-predicate', ObjectNode({
-  type: EnumNode(COLLECTIONS.get('statistic-types')),
+  type: EnumNode('stat_type'),
   stat: StringNode(),
   value: RangeNode()
 }))
 
 SCHEMAS.register('player-predicate', ObjectNode({
-  gamemode: EnumNode(COLLECTIONS.get('gamemodes')),
+  gamemode: EnumNode('gamemode'),
   level: RangeNode(),
   advancements: MapNode(
     StringNode(),
@@ -116,7 +116,7 @@ SCHEMAS.register('entity-predicate', ObjectNode({
     is_baby: BooleanNode()
   }, {collapse: true}),
   equipment: MapNode(
-    EnumNode(COLLECTIONS.get('slots')),
+    EnumNode('slot'),
     Reference('item-predicate')
   ),
   vehicle: Reference('entity-predicate', {collapse: true}),
@@ -126,7 +126,7 @@ SCHEMAS.register('entity-predicate', ObjectNode({
     in_open_water: BooleanNode()
   }),
   effects: MapNode(
-    Resource(EnumNode(COLLECTIONS.get('status-effects'))),
+    Resource(EnumNode('mob_effect')),
     Reference('status-effect-predicate')
   )
 }))

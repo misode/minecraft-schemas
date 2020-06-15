@@ -32,9 +32,9 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
     },
     validate(path, value, errors) {
       if (typeof value !== 'boolean' || value === undefined) {
-        return errors.add(path, 'error.expected_boolean')
+        errors.add(path, 'error.expected_boolean')
       }
-      return true
+      return value
     }
   }
 }

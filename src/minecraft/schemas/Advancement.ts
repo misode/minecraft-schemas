@@ -18,7 +18,7 @@ import './Predicates'
 SCHEMAS.register('advancement', Mod(ObjectNode({
   display: ObjectNode({
     icon: ObjectNode({
-      item: Resource(EnumNode(COLLECTIONS.get('items'))),
+      item: Resource(EnumNode('item')),
       nbt: StringNode()
     }),
     title: JsonNode(),
@@ -53,84 +53,84 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('advancement-criteria', ObjectNode({
-  trigger: Resource(EnumNode(COLLECTIONS.get('advancement-triggers'))),
+  trigger: Resource(EnumNode('advancement_trigger')),
   conditions: ObjectNode({
     player: Mod(Reference('entity-predicate', { collapse: true }), {
-      enable: (path: Path) => path.push('trigger').get() !== 'impossible'
+      enabled: (path: Path) => path.push('trigger').get() !== 'impossible'
     }),
     [Switch]: path => path.pop().push('trigger').get(),
     [Case]: {
-      'bee_nest_destroyed': {
-        block: Resource(EnumNode(COLLECTIONS.get('blocks'))),
+      'minecraft:bee_nest_destroyed': {
+        block: Resource(EnumNode('block')),
         num_bees_inside: NumberNode({integer: true}),
         item: Reference('item-predicate', {collapse: true})
       },
-      'bred_animals': {
+      'minecraft:bred_animals': {
         parent: Reference('entity-predicate', {collapse: true}),
         partner: Reference('entity-predicate', {collapse: true}),
         child: Reference('entity-predicate', {collapse: true})
       },
-      'brewed_potion': {
+      'minecraft:brewed_potion': {
         potion: StringNode()
       },
-      'changed_dimension': {
+      'minecraft:changed_dimension': {
         from: Resource(StringNode()),
         to: Resource(StringNode())
       },
-      'channeled_lightning': {
+      'minecraft:channeled_lightning': {
         victims: ListNode(
           Reference('entity-predicate')
         )
       },
-      'construct_beacon': {
+      'minecraft:construct_beacon': {
         level: RangeNode()
       },
-      'consume_item': {
+      'minecraft:consume_item': {
         item: Reference('item-predicate', {collapse: true})
       },
-      'cured_zombie_villager': {
+      'minecraft:cured_zombie_villager': {
         villager: Reference('entity-predicate', {collapse: true}),
         zombie: Reference('entity-predicate', {collapse: true})
       },
-      'effects_changed': {
+      'minecraft:effects_changed': {
         effects: MapNode(
-          EnumNode(COLLECTIONS.get('status-effects')),
+          EnumNode('mob_effect'),
           ObjectNode({
             amplifier: RangeNode(),
             duration: RangeNode()
           })
         )
       },
-      'enter_block': {
-        block: Resource(EnumNode(COLLECTIONS.get('blocks'))),
+      'minecraft:enter_block': {
+        block: Resource(EnumNode('block')),
         state: MapNode(
           StringNode(),
           StringNode()
         )
       },
-      'enchanted_item': {
+      'minecraft:enchanted_item': {
         levels: RangeNode(),
         item: Reference('item-predicate', {collapse: true})
       },
-      'entity_hurt_player': {
+      'minecraft:entity_hurt_player': {
         entity: Reference('entity-predicate', {collapse: true}),
         damage: Reference('damage-predicate', {collapse: true})
       },
-      'entity_killed_player': {
+      'minecraft:entity_killed_player': {
         entity: Reference('entity-predicate', {collapse: true}),
         killing_blow: Reference('damage-source-predicate', {collapse: true})
       },
-      'filled_bucket': {
+      'minecraft:filled_bucket': {
         item: Reference('item-predicate', {collapse: true})
       },
-      'fishing_rod_hooked': {
+      'minecraft:fishing_rod_hooked': {
         entity: Reference('entity-predicate', {collapse: true}),
         item: Reference('item-predicate', {collapse: true})
       },
-      'hero_of_the_village': {
+      'minecraft:hero_of_the_village': {
         location: Reference('location-predicate', {collapse: true})
       },
-      'inventory_changed': {
+      'minecraft:inventory_changed': {
         slots: ObjectNode({
           empty: RangeNode(),
           occupied: RangeNode(),
@@ -140,33 +140,33 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
           Reference('item-predicate')
         )
       },
-      'item_durability_changed': {
+      'minecraft:item_durability_changed': {
         delta: RangeNode(),
         durability: RangeNode(),
         item: Reference('item-predicate', {collapse: true})
       },
-      'item_used_on_block': {
+      'minecraft:item_used_on_block': {
         item: Reference('item-predicate', {collapse: true}),
         location: Reference('location-predicate', {collapse: true})
       },
-      'killed_by_crossbow': {
+      'minecraft:killed_by_crossbow': {
         unique_entity_types: RangeNode(),
         victims: ListNode(
           Reference('entity-predicate')
         )
       },
-      'levitation': {
+      'minecraft:levitation': {
         distance: RangeNode(),
         duration: RangeNode()
       },
-      'location': {
+      'minecraft:location': {
         location: Reference('location-predicate', {collapse: true})
       },
-      'nether_travel': {
+      'minecraft:nether_travel': {
         distance: RangeNode()
       },
-      'placed_block': {
-        block: Resource(EnumNode(COLLECTIONS.get('blocks'))),
+      'minecraft:placed_block': {
+        block: Resource(EnumNode('block')),
         state: MapNode(
           StringNode(),
           StringNode()
@@ -174,48 +174,48 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         item: Reference('item-predicate', {collapse: true}),
         location: Reference('location-predicate', {collapse: true})
       },
-      'player_generates_container_loot': {
+      'minecraft:player_generates_container_loot': {
         loot_table: StringNode()
       },
-      'player_hurt_entity': {
+      'minecraft:player_hurt_entity': {
         damage: Reference('damage-predicate', {collapse: true}),
         entity: Reference('entity-predicate', {collapse: true})
       },
-      'player_killed_player': {
+      'minecraft:player_killed_player': {
         killing_blow: Reference('damage-source-predicate', {collapse: true})
       },
-      'recipe_unlocked': {
+      'minecraft:recipe_unlocked': {
         recipe: StringNode()
       },
-      'slept_in_bed': {
+      'minecraft:slept_in_bed': {
         location: Reference('location-predicate', {collapse: true})
       },
-      'slide_down_block': {
-        block: Resource(EnumNode(COLLECTIONS.get('blocks')))
+      'minecraft:slide_down_block': {
+        block: Resource(EnumNode('blocks'))
       },
-      'shot_crossbow': {
+      'minecraft:shot_crossbow': {
         item: Reference('item-predicate', {collapse: true})
       },
-      'summoned_entity': {
+      'minecraft:summoned_entity': {
         entity: Reference('entity-predicate', {collapse: true})
       },
-      'tame_animal': {
+      'minecraft:tame_animal': {
         entity: Reference('entity-predicate', {collapse: true})
       },
-      'thrown_item_picked_up_by_entity': {
+      'minecraft:thrown_item_picked_up_by_entity': {
         entity: Reference('entity-predicate', {collapse: true}),
         item: Reference('item-predicate', {collapse: true})
       },
-      'used_ender_eye': {
+      'minecraft:used_ender_eye': {
         distance: RangeNode()
       },
-      'used_totem': {
+      'minecraft:used_totem': {
         item: Reference('item-predicate', {collapse: true})
       },
-      'villager_trade': {
+      'minecraft:villager_trade': {
         item: Reference('item-predicate', {collapse: true})
       },
-      'voluntary_exile': {
+      'minecraft:voluntary_exile': {
         location: Reference('location-predicate', {collapse: true})
       }
     }

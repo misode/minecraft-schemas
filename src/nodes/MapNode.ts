@@ -34,7 +34,7 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
         </div>
         <div class="node-body">
           ${Object.keys(value ?? []).map(key => `<div class="node-entry">
-            ${children.render(path.push(key), value ?? [], view, {
+            ${children.render(path.push(key), value[key], view, {
               removeId: view.registerClick(el => view.model.set(path.push(key), undefined))
             })}
           </div>`).join('')}
@@ -43,18 +43,15 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
     },
     validate(path, value, errors) {
       if (value === null || typeof value !== 'object') {
-        return errors.add(path, 'error.expected_object')
+        errors.add(path, 'error.expected_object')
+        return value
       }
-      let allValid = true
+      let res: any = {}
       Object.keys(value).forEach(k => {
-        if (!keys.validate(path, k, errors)) {
-          allValid = false
-        }
-        if (!children.validate(path.push(k), value[k], errors)) {
-          allValid = false
-        }
+        keys.validate(path, k, errors)
+        res[k] = children.validate(path.push(k), value[k], errors)
       })
-      return allValid
+      return res
     }
   }
 }

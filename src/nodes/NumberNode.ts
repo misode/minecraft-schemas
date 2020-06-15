@@ -34,18 +34,18 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
     },
     validate(path, value, errors) {
       if (typeof value !== 'number') {
-        return errors.add(path, 'error.expected_number')
+        errors.add(path, 'error.expected_number')
       }
       if (integer && !Number.isInteger(value)) {
-        return errors.add(path, 'error.expected_integer')
+        errors.add(path, 'error.expected_integer')
       }
       if (value < min) {
-        return errors.add(path, 'error.invalid_range.smaller', value, min)
+        errors.add(path, 'error.invalid_range.smaller', value, min)
       }
       if (value > max) {
-        return errors.add(path, 'error.invalid_range.larger', value, max)
+        errors.add(path, 'error.invalid_range.larger', value, max)
       }
-      return true
+      return value
     }
   }
 }

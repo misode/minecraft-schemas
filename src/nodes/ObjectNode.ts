@@ -86,7 +86,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
             `}
           `}
         </div>`}
-        ${typeof value !== 'object' || (options?.collapse || config?.collapse) && value === undefined ? `` : `
+        ${(typeof value !== 'object' && value !== undefined) || ((options?.collapse || config?.collapse) && value === undefined) ? `` : `
           <div class="node-body">
             ${renderFields(path, value, view)}
           </div>

@@ -1,6 +1,6 @@
 import { INode, Base } from './Node'
 import { Path } from '../model/Path'
-import { locale, COLLECTIONS } from '../Registries'
+import { COLLECTIONS } from '../Registries'
 
 export const EnumNode = (values: string[] | string): INode<string> => {
   const getValues = (typeof values === 'string') ?
@@ -17,12 +17,12 @@ export const EnumNode = (values: string[] | string): INode<string> => {
           evt.stopPropagation()
         })
       })
-      return `<div class="node enum-node node-header">
+      return `<div class="node enum-node node-header" ${path.error()}>
         ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
         <select data-id=${select}>
           ${getValues().map(o => 
-            `<option value="${o}">${locale(path.push(o))}</option>`
+            `<option value="${o}">${path.push(o).locale()}</option>`
           ).join('')}
         </select>
       </div>`
@@ -30,8 +30,7 @@ export const EnumNode = (values: string[] | string): INode<string> => {
     validate(path, value, errors) {
       if (typeof value !== 'string') {
         errors.add(path, 'error.expected_string')
-      }
-      if (!getValues().includes(value)) {
+      } else if (!getValues().includes(value)) {
         errors.add(path, 'error.invalid_enum_option', value)
       }
       return value
@@ -39,7 +38,7 @@ export const EnumNode = (values: string[] | string): INode<string> => {
     renderRaw(path: Path) {
       return `<select>
         ${getValues().map(v => 
-          `<option value="${v}">${locale(path.push(v))}</option>`
+          `<option value="${v}">${path.push(v).locale()}</option>`
         ).join('')}
       </select>`
     },

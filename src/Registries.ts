@@ -1,5 +1,4 @@
 import { INode } from './nodes/Node'
-import { Path } from './model/Path'
 
 export interface Registry<T> {
   register(id: string, value: T): void
@@ -66,10 +65,7 @@ export class LocaleRegistry implements Registry<Locale> {
 
   get(id: string) {
     const locale = this.registry[id]
-    if (locale === undefined) {
-      console.warn(`Tried to access locale "${id}", but that doesn't exist`)
-    }
-    return locale ?? []
+    return locale ?? {}
   }
 
   getLocale(key: string) {
@@ -84,20 +80,18 @@ export const LOCALES = new LocaleRegistry()
 /**
  * Gets the locale of a key from the locale registry.
  * 
- * @param key string or path that refers to a locale ID.
- *    If a string is given, an exact match is required.
- *    If a path is given, it finds the longest match at the end.
- * @returns undefined if the key isn't found for the selected language
+ * @param key string that refers to a locale ID.
+ * @param params optional parameters
+ * @returns the key itself if it isn't found for the selected language
  */
-export const locale = (key: string | Path): string => {
-  if (typeof key === 'string') {
-    return LOCALES.getLocale(key) ?? key
-  }
-  let path = key.getArray().filter(e => (typeof e === 'string'))
-  while (path.length > 0) {
-    const locale = LOCALES.getLocale(path.join('.'))
-    if (locale !== undefined) return locale
-    path.shift()
-  }
-  return key.last().toString().replace(/^minecraft:/, '')
+export const locale = (key: string, params: string[] = []) => {
+  let value = LOCALES.getLocale(key)
+  if (value === undefined) value = LOCALES.get('en')[key]
+  if (value === undefined) value = key
+
+  value = value.replace(/%\d+%/g, match => {
+    const index = parseInt(match.slice(1, -1))
+    return params[index] ?? match
+  })
+  return value
 }

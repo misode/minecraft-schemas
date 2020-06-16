@@ -17,6 +17,11 @@ export class Errors implements Iterable<PathError> {
     return false
   }
 
+  get(path: Path, exact = false): PathError[] {
+    return exact ? this.errors.filter(e => e.path.equals(path))
+      : this.errors.filter(e => e.path.inside(path))
+  }
+
   clear() {
     this.errors = []
   }

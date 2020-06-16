@@ -1,5 +1,4 @@
 import { INode, Base } from './Node'
-import { locale } from '../Registries'
 
 type NumberNodeConfig = {
   /** Whether only integers are allowed */
@@ -22,27 +21,22 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
       const onChange = view.registerChange(el => {
         const value = (el as HTMLInputElement).value
         let parsed = integer ? parseInt(value) : parseFloat(value)
-        if (parsed < min) parsed = min
-        if (parsed > max) parsed = max
         view.model.set(path, parsed)
       })
-      return `<div class="node number-node node-header">
+      return `<div class="node number-node node-header" ${path.error()}>
         ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
         <input data-id="${onChange}" value="${value ?? ''}">
       </div>`
     },
     validate(path, value, errors) {
       if (typeof value !== 'number') {
         errors.add(path, 'error.expected_number')
-      }
-      if (integer && !Number.isInteger(value)) {
+      } else if (integer && !Number.isInteger(value)) {
         errors.add(path, 'error.expected_integer')
-      }
-      if (value < min) {
+      } else if (value < min) {
         errors.add(path, 'error.invalid_range.smaller', value, min)
-      }
-      if (value > max) {
+      } else if (value > max) {
         errors.add(path, 'error.invalid_range.larger', value, max)
       }
       return value

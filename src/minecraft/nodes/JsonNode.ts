@@ -1,5 +1,4 @@
 import { INode, Base } from '../../nodes/Node'
-import { locale } from '../../Registries'
 
 export const JsonNode = (): INode<any> => {
   return {
@@ -15,9 +14,9 @@ export const JsonNode = (): INode<any> => {
           view.model.set(path, value || undefined)
         }
       })
-      return `<div class="node json-node node-header">
+      return `<div class="node json-node node-header" ${path.error()}>
         ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
         <input data-id="${onChange}" value="${stringified ?? ''}">
       </div>`
     }

@@ -1,7 +1,6 @@
 import { INode, Base } from './Node'
 import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
-import { locale } from '../Registries'
 import { DataModel } from '../model/DataModel'
 
 export const Switch = Symbol('switch')
@@ -55,7 +54,9 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
     ...Base,
     default: () => ({}),
     transform(path, value, view) {
-      if (value === undefined) return undefined
+      if (value === undefined || value === null || typeof value !== 'object') {
+        return value
+      }
       let res: any = {}
       const activeFields = getActiveFields(path, view.model)
       Object.keys(activeFields).forEach(f => {
@@ -65,7 +66,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
     },
     render(path, value, view, options) {
       return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
-        ${options?.hideLabel ? `` : `<div class="node-header">
+        ${options?.hideLabel ? `` : `<div class="node-header" ${path.error()}>
           ${options?.removeId ? `
             <button class="remove" data-id="${options?.removeId}">
               ${options?.removeLabel ? options?.removeLabel : ''}
@@ -74,18 +75,18 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
           ${options?.removeLabel ? `` : `
             ${options?.collapse || config?.collapse ? value === undefined ? `
               <label class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, this.default()))}">
-                ${locale(path)}
+                ${path.locale()}
               </label>
             `: `
               <label class="collapse open" data-id="${view.registerClick(() => view.model.set(path, undefined))}">
-                ${locale(path)}
+                ${path.locale()}
               </label>
             ` : `
-              <label>${locale(path)}</label>
+              <label>${path.locale()}</label>
             `}
           `}
         </div>`}
-        ${(options?.collapse || config?.collapse) && value === undefined ? `` : `
+        ${typeof value !== 'object' || (options?.collapse || config?.collapse) && value === undefined ? `` : `
           <div class="node-body">
             ${renderFields(path, value, view)}
           </div>
@@ -99,20 +100,9 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
       }
       const activeFields = getActiveFields(path, path.getModel()!)
       const activeKeys = Object.keys(activeFields)
-      console.warn(activeFields)
       let res: any = {}
       Object.keys(value).forEach(k => {
-        if (!activeKeys.includes(k)) {
-          if (filter) {
-            const switchValue = filter(path)
-            errors.add(path.push(k), 'error.invalid_filtered_key', k, switchValue)
-          } else {
-            errors.add(path.push(k), 'error.invalid_key', k)
-          }
-          res[k] = value[k]
-        } else {
-          res[k] = activeFields[k].validate(path.push(k), value[k], errors)
-        }
+        res[k] = activeKeys.includes(k) ? activeFields[k].validate(path.push(k), value[k], errors) : value[k]
       })
       return res
     }

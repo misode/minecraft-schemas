@@ -1,6 +1,5 @@
 import { INode, Base, RenderOptions } from './Node'
 import { Path } from '../model/Path'
-import { locale } from '../Registries'
 
 /**
  * Simple string node with one text field
@@ -14,9 +13,9 @@ export const StringNode = (): INode<string> => {
         const value = (el as HTMLInputElement).value
         view.model.set(path, value)
       })
-      return `<div class="node string-node node-header">
+      return `<div class="node string-node node-header" ${path.error()}>
         ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
         <input data-id="${onChange}" value="${value ?? ''}">
       </div>`
     },

@@ -71,9 +71,9 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
           evt.stopPropagation()
         })
       })
-      return `<div class="node range-node node-header" data-id="${id}">
+      return `<div class="node range-node node-header" data-id="${id}" ${path.error()}>
         ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
         <select data-id="${selectId}">
           <option value="exact">${locale('range.exact')}</option>
           <option value="range">${locale('range.range')}</option>

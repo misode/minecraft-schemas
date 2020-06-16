@@ -44,6 +44,9 @@ export interface INode<T = any> {
   
   /**
    * Validates the model using this schema
+   * 
+   * When encountering an invalid value, it should either silently repair it
+   * or add an error and retain the original value
    * @param value value to be validated
    */
   validate: (path: Path, value: any, errors: Errors) => any

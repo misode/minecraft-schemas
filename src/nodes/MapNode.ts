@@ -1,7 +1,4 @@
 import { INode, Base } from './Node'
-import { TreeView } from '../view/TreeView'
-import { Path } from '../model/Path'
-import { locale } from '../Registries'
 
 export type IMap = {
   [name: string]: any
@@ -28,7 +25,7 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
       })
       return `<div class="node map-node">
         <div class="node-header">
-          <label>${locale(path)}</label>
+          <label>${path.locale()}</label>
           ${keys.renderRaw(path)}
           <button class="add" data-id="${onAdd}"></button>
         </div>

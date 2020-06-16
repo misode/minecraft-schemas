@@ -18,18 +18,27 @@ export function getId() {
   return Array.from(arr, dec2hex).join('')
 }
 
+type TreeViewOptions = {
+  showErrors?: boolean
+  observer?: (el: HTMLElement) => void
+}
+
 /**
  * DOM representation view of the model.
  */
 export class TreeView extends AbstractView {
   registry: Registry = {}
+  showErrors: boolean
+  observer: (el: HTMLElement) => void
 
   /**
    * @param model data model this view represents and listens to
    * @param target DOM element to render the view
    */
-  constructor(model: DataModel, target: HTMLElement) {
+  constructor(model: DataModel, target: HTMLElement, options?: TreeViewOptions) {
     super(model, target)
+    this.showErrors = options?.showErrors ?? false
+    this.observer = options?.observer ?? (() => {})
   }
 
   /**
@@ -87,5 +96,6 @@ export class TreeView extends AbstractView {
       if (element !== null) this.registry[id](element)
     }
     this.registry = {}
+    this.observer(this.target)
   }
 }

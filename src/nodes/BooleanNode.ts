@@ -21,9 +21,9 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
       const onTrue = view.registerClick(el => {
         view.model.set(path, !config?.radio && value === true ? undefined : true)
       })
-      return `<div class="node boolean-node node-header">
+      return `<div class="node boolean-node node-header" ${path.error()}>
         ${options?.removeId ? `<button data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${locale(path)}</label>`}
+        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
         <button${value === false ? ' class="selected"' : ' '} 
           data-id="${onFalse}">${locale('false')}</button>
         <button${value === true ? ' class="selected"' : ' '} 

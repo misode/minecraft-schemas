@@ -1,4 +1,12 @@
 {
+  "error.expected_string": "Expected a string",
+  "error.expected_boolean": "Expected a boolean",
+  "error.expected_object": "Expected an object",
+  "error.expected_number": "Expected a number",
+  "error.expected_integer": "Expected an integer",
+  "error.invalid_enum_option": "Invalid option \"%0%\"",
+  "error.invalid_range.smaller": "Value %0% is smaller than minimum %1%",
+  "error.invalid_range.larger": "Value %0% is larger than maximum %1%",
   "add": "Add",
   "chance": "Chance",
   "condition": "Condition",

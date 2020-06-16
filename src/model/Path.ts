@@ -1,4 +1,5 @@
 import { DataModel } from './DataModel'
+import { LOCALES } from '../Registries'
 
 export type PathElement = (string | number)
 
@@ -74,6 +75,56 @@ export class Path implements Iterable<PathElement> {
    */
   set(value: any) {
     this.model?.set(this, value)
+  }
+
+  /**
+   * Gets the locale of a key from the locale registry.
+   * 
+   * @param key string or path that refers to a locale ID.
+   *    If a string is given, an exact match is required.
+   *    If a path is given, it finds the longest match at the end.
+   * @returns undefined if the key isn't found for the selected language
+   */
+  locale = (): string => {
+    let path = this.arr.filter(e => (typeof e === 'string'))
+    while (path.length > 0) {
+      const locale = LOCALES.getLocale(path.join('.'))
+      if (locale !== undefined) return locale
+      path.shift()
+    }
+    path = this.arr.filter(e => (typeof e === 'string'))
+    while (path.length > 0) {
+      const locale = LOCALES.get('en')[path.join('.')]
+      if (locale !== undefined) return locale
+      path.shift()
+    }
+    return this.last().toString().replace(/^minecraft:/, '')
+  }
+
+  /**
+   * Gets the error inside this path if the model is attached
+   * @returns a html attribute containing the error message
+   */
+  error() {
+    const errors = this.model?.errors.get(this, true) ?? []
+    if (errors.length === 0) return ''
+    return `data-error="${errors[0].error}"`
+  }
+
+  /**
+   * Checks path equality
+   * @param other path to compare
+   */
+  equals(other: Path) {
+    return other.arr.length === this.arr.length && other.arr.every((v, i) => v === this.arr[i])
+  }
+
+  /**
+   * Checks if this path is inside another path
+   * @param other parent path where this path should be inside
+   */
+  inside(other: Path) {
+    return other.arr.every((v, i) => v === this.arr[i])
   }
 
   toString(): string {

@@ -27,6 +27,7 @@ type TreeViewOptions = {
  * DOM representation view of the model.
  */
 export class TreeView extends AbstractView {
+  target: HTMLElement
   registry: Registry = {}
   showErrors: boolean
   observer: (el: HTMLElement) => void
@@ -36,7 +37,8 @@ export class TreeView extends AbstractView {
    * @param target DOM element to render the view
    */
   constructor(model: DataModel, target: HTMLElement, options?: TreeViewOptions) {
-    super(model, target)
+    super(model)
+    this.target = target
     this.showErrors = options?.showErrors ?? false
     this.observer = options?.observer ?? (() => {})
   }

@@ -6,6 +6,10 @@ export interface ModelListener {
   invalidated(model: DataModel): void
 }
 
+type DataModelOptions = {
+  historyMax?: number
+}
+
 /**
  * Holding the data linked to a given schema
  */
@@ -15,16 +19,22 @@ export class DataModel {
   /** A list of listeners that want to be notified when the model is invalidated */
   listeners: ModelListener[]
   errors: Errors
+  history: string[]
+  historyIndex: number
+  historyMax: number
 
   /**
    * @param schema node to use as schema for this model
    */
-  constructor(schema: INode) {
+  constructor(schema: INode, options?: DataModelOptions) {
     this.schema = schema
     this.data = schema.default()
     this.listeners = []
     this.errors = new Errors()
     this.validate()
+    this.history = [JSON.stringify(this.data)]
+    this.historyIndex = 0
+    this.historyMax = options?.historyMax ?? 50
   }
 
   /**
@@ -47,10 +57,29 @@ export class DataModel {
   }
 
   /**
-   * Force notify all listeners that the model is invalidated
+   * Validates the model, updates the history and 
+   * notifies all listeners that the model is invalidated
    */
   invalidate() {
     this.validate()
+
+    const newHistory = JSON.stringify(this.data)
+    if (this.history[this.historyIndex] !== newHistory) {
+      this.historyIndex += 1
+      this.history.splice(this.historyIndex, this.historyMax, newHistory)
+      if (this.history.length > this.historyMax) {
+        this.history.splice(0, 1)
+        this.historyIndex -= 1
+      }
+    }
+
+    this.silentInvalidate()
+  }
+
+  /**
+   * Notifies all listeners that the model is invalidated
+   */
+  silentInvalidate() {
     this.listeners.forEach(listener => listener.invalidated(this))
   }
 
@@ -110,6 +139,30 @@ export class DataModel {
     }
 
     this.invalidate()
+  }
+
+  /**
+   * Go one step back in history
+   */
+  undo() {
+    if (this.historyIndex > 0) {
+      this.historyIndex -= 1
+      this.data = JSON.parse(this.history[this.historyIndex])
+      this.validate()
+      this.silentInvalidate()
+    }
+  }
+
+  /**
+   * Go one step forward in history.
+   */
+  redo() {
+    if (this.historyIndex < this.history.length - 1) {
+      this.historyIndex += 1
+      this.data = JSON.parse(this.history[this.historyIndex])
+      this.validate()
+      this.silentInvalidate()
+    }
   }
 
   /**

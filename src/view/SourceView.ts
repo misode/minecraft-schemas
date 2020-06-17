@@ -21,7 +21,7 @@ export class SourceView extends AbstractView {
    * @param options optional options for the view
    */
   constructor(model: DataModel, target: HTMLTextAreaElement, options?: SourceViewOptions) {
-    super(model, target)
+    super(model)
     this.target = target
     this.options = options
     this.target.addEventListener('change', evt => this.updateModel())

@@ -7,15 +7,12 @@ export interface IView extends ModelListener {
 
 export abstract class AbstractView implements IView {
   model: DataModel
-  target: HTMLElement
 
   /**
    * @param model data model this view represents and listens to
-   * @param target DOM element to render the view
    */
-  constructor(model: DataModel, target: HTMLElement) {
+  constructor(model: DataModel) {
     this.model = model
-    this.target = target
     model.addListener(this)
   }
 

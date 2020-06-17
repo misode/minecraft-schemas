@@ -70,7 +70,7 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
   default: () => ({
     criteria: {
       requirement: {
-        trigger: 'location'
+        trigger: 'minecraft:location'
       }
     }
   })

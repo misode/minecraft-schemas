@@ -1,4 +1,4 @@
-import { Mod } from '../../nodes/Node';
+import { Mod, Force } from '../../nodes/Node';
 import { EnumNode } from '../../nodes/EnumNode';
 import { Resource } from '../nodes/Resource';
 import { NumberNode } from '../../nodes/NumberNode';
@@ -13,14 +13,14 @@ import { SCHEMAS, COLLECTIONS } from '../../Registries';
 
 import './Predicates'
 
-SCHEMAS.register('condition', Mod(ObjectNode({
-  condition: Resource(Mod(EnumNode('loot_condition_type'), {default: () => 'random_chance'})),
-  [Switch]: path => path.push('condition').get(),
+SCHEMAS.register('condition', ObjectNode({
+  condition: Resource(EnumNode('loot_condition_type', 'minecraft:random_chance')),
+  [Switch]: path => path.push('condition'),
   [Case]: {
     'minecraft:alternative': {
-      terms: ListNode(
+      terms: Force(ListNode(
         Reference('condition')
-      )
+      ))
     },
     'minecraft:block_state_property': {
       block: Resource(EnumNode('block')),
@@ -33,18 +33,18 @@ SCHEMAS.register('condition', Mod(ObjectNode({
       predicate: Reference('damage-source-predicate')
     },
     'minecraft:entity_properties': {
-      entity: Mod(EnumNode('entity_source'), {default: () => 'this'}),
+      entity: EnumNode('entity_source', 'this'),
       predicate: Reference('entity-predicate')
     },
     'minecraft:entity_scores': {
-      entity: Mod(EnumNode('entity_source'), {default: () => 'this'}),
+      entity: EnumNode('entity_source', 'this'),
       scores: MapNode(
         StringNode(),
         RangeNode()
       )
     },
     'minecraft:inverted': {
-      term: Reference('condition')
+      term: Force(Reference('condition'))
     },
     'minecraft:killed_by_player': {
       inverse: BooleanNode()
@@ -59,7 +59,7 @@ SCHEMAS.register('condition', Mod(ObjectNode({
       predicate: Reference('item-predicate')
     },
     'minecraft:random_chance': {
-      chance: NumberNode({min: 0, max: 1})
+      chance: Force(NumberNode({min: 0, max: 1}))
     },
     'minecraft:random_chance_with_looting': {
       chance: NumberNode({min: 0, max: 1}),
@@ -71,16 +71,16 @@ SCHEMAS.register('condition', Mod(ObjectNode({
       ),
     },
     'minecraft:reference': {
-      name: StringNode()
+      name: Force(StringNode())
     },
     'minecraft:table_bonus': {
-      enchantment: Resource(EnumNode('enchantment')),
-      chances: ListNode(
+      enchantment: Force(Resource(EnumNode('enchantment'))),
+      chances: Force(ListNode(
         NumberNode({min: 0, max: 1})
-      )
+      ))
     },
     'minecraft:time_check': {
-      value: RangeNode(),
+      value: Force(RangeNode()),
       period: NumberNode()
     },
     'minecraft:weather_check': {
@@ -88,11 +88,6 @@ SCHEMAS.register('condition', Mod(ObjectNode({
       thrundering: BooleanNode()
     }
   }
-}, { category: 'predicate' }), {
-  default: () => ({
-    condition: 'minecraft:random_chance',
-    chance: 0.5
-  })
-}))
+}, { category: 'predicate' }))
 
 export const ConditionSchema = SCHEMAS.get('condition')

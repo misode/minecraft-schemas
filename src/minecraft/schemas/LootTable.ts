@@ -1,4 +1,4 @@
-import { Mod } from '../../nodes/Node';
+import { Mod, Force } from '../../nodes/Node';
 import { Path } from '../../model/Path';
 import { EnumNode } from '../../nodes/EnumNode';
 import { Resource } from '../nodes/Resource';
@@ -10,7 +10,7 @@ import { RangeNode } from '../nodes/RangeNode';
 import { StringNode } from '../../nodes/StringNode';
 import { Reference } from '../../nodes/Reference';
 import { JsonNode } from '../nodes/JsonNode';
-import { SCHEMAS, COLLECTIONS } from '../../Registries';
+import { SCHEMAS } from '../../Registries';
 
 import './Condition'
 
@@ -28,39 +28,32 @@ const functionsAndConditions = {
 }
 
 SCHEMAS.register('loot-table', Mod(ObjectNode({
-  pools: ListNode(
+  pools: Force(ListNode(
     ObjectNode({
-      rolls: RangeNode(),
+      rolls: Force(RangeNode()),
       entries: ListNode(
         Reference('loot-entry')
       ),
       ...functionsAndConditions
     })
-  ),
+  )),
   ...functionsAndConditions
 }), {
   default: () => ({
-    pools: [
-      {
-        rolls: 1,
-        entries: [
-          {
-            type: 'minecraft:item',
-            name: 'minecraft:stone'
-          }
-        ]
-      }
-    ]
+    pools: [{
+      rolls: 1,
+      entries: [{}]
+    }]
   })
 }))
 
 SCHEMAS.register('loot-entry', ObjectNode({
-  type: Resource(EnumNode('loot_pool_entry_type')),
+  type: Resource(EnumNode('loot_pool_entry_type', 'minecraft:item')),
   weight: Mod(NumberNode({ integer: true, min: 1 }), {
     enabled: (path: Path) => path.pop().get()?.length > 1
       && !['minecraft:alternatives', 'minecraft:group', 'minecraft:sequence'].includes(path.push('type').get())
   }),
-  [Switch]: path => path.push('type').get(),
+  [Switch]: path => path.push('type'),
   [Case]: {
     'minecraft:alternatives': {
       children: ListNode(
@@ -69,7 +62,7 @@ SCHEMAS.register('loot-entry', ObjectNode({
       ...functionsAndConditions
     },
     'minecraft:dynamic': {
-      name: StringNode(),
+      name: Force(StringNode()),
       ...functionsAndConditions
     },
     'minecraft:group': {
@@ -79,11 +72,11 @@ SCHEMAS.register('loot-entry', ObjectNode({
       ...functionsAndConditions
     },
     'minecraft:item': {
-      name: Resource(EnumNode('item')),
+      name: Force(Resource(EnumNode('item'))),
       ...functionsAndConditions
     },
     'minecraft:loot_table': {
-      name: StringNode(),
+      name: Force(StringNode()),
       ...functionsAndConditions
     },
     'minecraft:sequence': {
@@ -93,24 +86,24 @@ SCHEMAS.register('loot-entry', ObjectNode({
       ...functionsAndConditions
     },
     'minecraft:tag': {
-      name: StringNode(),
+      name: Force(StringNode()),
       expand: BooleanNode(),
       ...functionsAndConditions
     }
   }
 }))
 
-SCHEMAS.register('loot-function', Mod(ObjectNode({
-  function: Resource(EnumNode('loot_function_type')),
-  [Switch]: path => path.push('function').get(),
+SCHEMAS.register('loot-function', ObjectNode({
+  function: Resource(EnumNode('loot_function_type', 'minecraft:set_count')),
+  [Switch]: path => path.push('function'),
   [Case]: {
     'minecraft:apply_bonus': {
-      enchantment: EnumNode('enchantment'),
+      enchantment: Force(EnumNode('enchantment')),
       formula: Resource(EnumNode([
         'minecraft:uniform_bonus_count',
         'minecraft:binomial_with_bonus_count',
         'minecraft:ore_drops'
-      ])),
+      ], 'minecraft:uniform_bonus_count')),
       parameters: Mod(ObjectNode({
         bonusMultiplier: Mod(NumberNode(), {
           enabled: (path: Path) => path.pop().push('formula').get() === 'minecraft:uniform_bonus_count'
@@ -127,11 +120,11 @@ SCHEMAS.register('loot-function', Mod(ObjectNode({
       ...conditions
     },
     'minecraft:copy_name': {
-      source: EnumNode('copy_source'),
+      source: EnumNode('copy_source', 'this'),
       ...conditions
     },
     'minecraft:copy_nbt': {
-      source: EnumNode('copy_source'),
+      source: EnumNode('copy_source', 'this'),
       ops: ListNode(
         ObjectNode({
           source: StringNode(),
@@ -155,13 +148,13 @@ SCHEMAS.register('loot-function', Mod(ObjectNode({
       ...conditions
     },
     'minecraft:enchant_with_levels': {
-      levels: RangeNode(),
+      levels: Force(RangeNode()),
       treasure: BooleanNode(),
       ...conditions
     },
     'minecraft:exploration_map': {
-      destination: EnumNode('structure_feature'),
-      decoration: EnumNode('map_decoration'),
+      destination: Force(EnumNode('structure_feature')),
+      decoration: Force(EnumNode('map_decoration')),
       zoom: NumberNode({integer: true}),
       search_radius: NumberNode({integer: true}),
       skip_existing_chunks: BooleanNode(),
@@ -227,13 +220,7 @@ SCHEMAS.register('loot-function', Mod(ObjectNode({
       ...conditions
     }
   }
-}), {
-  category: 'function',
-  default: () => ({
-    function: 'minecraft:set_count',
-    count: 1
-  })
-}))
+}, { category: 'function' }))
 
 SCHEMAS.register('attribute-modifier', ObjectNode({
   attribute: EnumNode('attribute'),

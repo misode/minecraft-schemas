@@ -2,6 +2,7 @@ import { INode, Base } from './Node'
 import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { DataModel } from '../model/DataModel'
+import { Errors } from '../model/Errors'
 
 export const Switch = Symbol('switch')
 export const Case = Symbol('case')
@@ -21,7 +22,7 @@ export type IObject = {
 export type FilteredChildren = {
   [name: string]: INode
   /** The field to filter on */
-  [Switch]?: (path: Path) => any
+  [Switch]?: (path: Path) => Path
   /** Map of filter values to node fields */
   [Case]?: NestedNodeChildren
 }
@@ -34,9 +35,9 @@ type ObjectConfig = {
 export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INode<IObject> => {
   const {[Switch]: filter, [Case]: cases, ...defaultFields} = fields
 
-  const getActiveFields = (path: Path, model: DataModel) => {
+  const getActiveFields = (path: Path, model: DataModel): NodeChildren => {
     if (filter === undefined) return defaultFields
-    const switchValue = filter(path.withModel(model))
+    const switchValue = filter(path.withModel(model)).get()
     const activeCase = cases![switchValue]
     return {...defaultFields, ...activeCase}
   }
@@ -94,14 +95,26 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
       </div>`
     },
     validate(path, value, errors) {
-      if (value === null || typeof value !== 'object') {
+      value = value ?? {}
+      if (typeof value !== 'object') {
         errors.add(path, 'error.expected_object')
         return value
       }
-      const activeFields = getActiveFields(path, path.getModel()!)
+      let res: any = {};
+      let activeFields = defaultFields
+      if (filter) {
+        const filterPath = filter(path)
+        let switchValue = filterPath.get()
+        if (path.equals(filterPath)) {
+          const filterField = filterPath.last()
+          defaultFields[filterField].validate(path.push(filterField), value[filterField], new Errors())
+        }  
+        activeFields = {...activeFields, ...cases![switchValue]}
+      }
       const activeKeys = Object.keys(activeFields)
-      let res: any = {}
-      Object.keys(value).forEach(k => {
+      const forcedKeys = activeKeys.filter(k => activeFields[k].force())
+      const keys = new Set([...forcedKeys, ...Object.keys(value)])
+      keys.forEach(k => {
         res[k] = activeKeys.includes(k) ? activeFields[k].validate(path.push(k), value[k], errors) : value[k]
       })
       return res

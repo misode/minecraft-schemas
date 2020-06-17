@@ -31,7 +31,12 @@ export interface INode<T = any> {
    * @param model
    */
   enabled: (path: Path, model: DataModel) => boolean
-  
+
+  /**
+   * Determines whether the node should always have a value present
+   */
+  force: () => boolean
+
   /**
    * Renders the node and handles events to update the model
    * @param path 
@@ -58,10 +63,15 @@ export const Base: INode = ({
   default: () => undefined,
   transform: (_, v) => v,
   enabled: () => true,
+  force: () => false,
   render: () => '',
   validate: (_, v) => v
 })
 
 export const Mod = (node: INode, mods: Partial<INode>): INode => ({
   ...node, ...mods
+})
+
+export const Force = (node: INode): INode => ({
+  ...node, force: () => true
 })

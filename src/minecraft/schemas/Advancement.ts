@@ -1,5 +1,5 @@
 import { Path } from '../../model/Path';
-import { Mod } from '../../nodes/Node';
+import { Mod, Force } from '../../nodes/Node';
 import { EnumNode } from '../../nodes/EnumNode';
 import { Resource } from '../nodes/Resource';
 import { NumberNode } from '../../nodes/NumberNode';
@@ -11,18 +11,18 @@ import { MapNode } from '../../nodes/MapNode';
 import { StringNode } from '../../nodes/StringNode';
 import { Reference } from '../../nodes/Reference';
 import { JsonNode } from '../nodes/JsonNode';
-import { SCHEMAS, COLLECTIONS } from '../../Registries';
+import { SCHEMAS } from '../../Registries';
 
 import './Predicates'
 
 SCHEMAS.register('advancement', Mod(ObjectNode({
   display: ObjectNode({
-    icon: ObjectNode({
-      item: Resource(EnumNode('item')),
+    icon: Force(ObjectNode({
+      item: Force(Resource(EnumNode('item'))),
       nbt: StringNode()
-    }),
-    title: JsonNode(),
-    description: JsonNode(),
+    })),
+    title: Force(JsonNode()),
+    description: Force(JsonNode()),
     background: StringNode(),
     frame: EnumNode(['task', 'challenge', 'goal']),
     show_toast: BooleanNode(),
@@ -33,6 +33,11 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
   criteria: MapNode(
     StringNode(),
     Reference('advancement-criteria')
+  ),
+  requirements: ListNode(
+    ListNode(
+      StringNode()
+    )
   ),
   rewards: ObjectNode({
     function: StringNode(),
@@ -53,12 +58,12 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('advancement-criteria', ObjectNode({
-  trigger: Resource(EnumNode('advancement_trigger')),
+  trigger: Force(Resource(EnumNode('advancement_trigger'))),
   conditions: ObjectNode({
     player: Mod(Reference('entity-predicate', { collapse: true }), {
       enabled: (path: Path) => path.push('trigger').get() !== 'impossible'
     }),
-    [Switch]: path => path.pop().push('trigger').get(),
+    [Switch]: path => path.pop().push('trigger'),
     [Case]: {
       'minecraft:bee_nest_destroyed': {
         block: Resource(EnumNode('block')),
@@ -191,7 +196,7 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         location: Reference('location-predicate', {collapse: true})
       },
       'minecraft:slide_down_block': {
-        block: Resource(EnumNode('blocks'))
+        block: Resource(EnumNode('block'))
       },
       'minecraft:shot_crossbow': {
         item: Reference('item-predicate', {collapse: true})

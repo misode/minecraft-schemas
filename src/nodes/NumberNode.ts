@@ -13,6 +13,7 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
   const integer = config?.integer ?? false
   const min = config?.min ?? -Infinity
   const max = config?.max ?? Infinity
+  const between = config?.min !== undefined && config?.max !== undefined
 
   return {
     ...Base,
@@ -30,10 +31,13 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
       </div>`
     },
     validate(path, value, errors) {
+      console.log()
       if (typeof value !== 'number') {
         errors.add(path, 'error.expected_number')
       } else if (integer && !Number.isInteger(value)) {
         errors.add(path, 'error.expected_integer')
+      } else if (between && (value < min || value > max)) {
+        errors.add(path, 'error.expected_number_between', min, max)
       } else if (value < min) {
         errors.add(path, 'error.invalid_range.smaller', value, min)
       } else if (value > max) {

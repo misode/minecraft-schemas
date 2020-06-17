@@ -81,6 +81,12 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
         </select>
         ${input}
       </div>`
+    },
+    validate(path, value, errors) {
+      if (typeof value !== 'number' && typeof value !== 'object') {
+        errors.add(path, 'error.expected_range')
+      }
+      return value
     }
   }
 }

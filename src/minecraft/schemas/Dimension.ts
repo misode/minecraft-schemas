@@ -1,41 +1,40 @@
-import { Mod } from '../../nodes/Node';
+import { Mod, Force } from '../../nodes/Node';
 import { EnumNode } from '../../nodes/EnumNode';
 import { Resource } from '../nodes/Resource';
 import { NumberNode } from '../../nodes/NumberNode';
 import { BooleanNode } from '../../nodes/BooleanNode';
 import { ObjectNode, Switch, Case } from '../../nodes/ObjectNode';
 import { ListNode } from '../../nodes/ListNode';
-import { RangeNode } from '../nodes/RangeNode';
 import { MapNode } from '../../nodes/MapNode';
 import { StringNode } from '../../nodes/StringNode';
 import { Reference } from '../../nodes/Reference';
-import { SCHEMAS, COLLECTIONS } from '../../Registries';
+import { SCHEMAS } from '../../Registries';
 
-SCHEMAS.register('dimension', Mod(ObjectNode({
-  type: StringNode(),
-  generator: ObjectNode({
-    type: Resource(EnumNode(['noise', 'flat', 'debug'])),
-    seed: NumberNode({ integer: true }),
-    [Switch]: path => path.push('type').get(),
+SCHEMAS.register('dimension', ObjectNode({
+  type: Force(StringNode()),
+  generator: Force(ObjectNode({
+    type: Resource(EnumNode(['minecraft:noise', 'minecraft:flat', 'minecraft:debug'], 'minecraft:noise')),
+    seed: Force(NumberNode({ integer: true })),
+    [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:noise': {
-        biome_source: ObjectNode({
-          type: Resource(EnumNode('biome_source')),
-          seed: NumberNode({ integer: true }),
-          [Switch]: path => path.push('type').get(),
+        biome_source: Force(ObjectNode({
+          type: Resource(EnumNode('biome_source', 'minecraft:multi_noise')),
+          seed: Force(NumberNode({ integer: true })),
+          [Switch]: path => path.push('type'),
           [Case]: {
             'minecraft:fixed': {
-              biome: EnumNode('biome')
+              biome: EnumNode('biome', 'minecraft:plains')
             },
             'minecraft:multi_noise': {
               preset: EnumNode(['nether']),
-              biomes: ListNode(
+              biomes: Force(ListNode(
                 Reference('generator-biome')
-              )
+              ))
             },
             'minecraft:checkerboard': {
               biomes: ListNode(
-                EnumNode('biome')
+                EnumNode('biome', 'minecraft:plains')
               )
             },
             'minecraft:vanilla_layered': {
@@ -44,7 +43,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
           }
         }, {
           category: 'predicate'
-        }),
+        })),
         settings: ObjectNode({
           bedrock_roof_position: NumberNode({ integer: true }),
           bedrock_floor_position: NumberNode({ integer: true }),
@@ -97,39 +96,28 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
       'minecraft:flat': {
         settings: ObjectNode({
           biome: EnumNode('biome'),
-          layers: ListNode(
+          layers: Force(ListNode(
             Reference('generator-layer')
-          ),
+          )),
           structures: Reference('generator-structures')
         }, { collapse: true })
       }
     }
-  })
-}), {
-  default: () => ({
-    generator: {
-      type: 'noise',
-      seed: 0,
-      biome_source: {
-        type: 'multi_noise',
-        seed: 0
-      }
-    }
-  })
+  }))
 }))
 
 SCHEMAS.register('generator-biome', Mod(ObjectNode({
-  biome: EnumNode('biome'),
+  biome: Force(EnumNode('biome')),
   parameters: ObjectNode({
-    altitude: NumberNode(),
-    temperature: NumberNode(),
-    humidity: NumberNode(),
-    weirdness: NumberNode(),
-    offset: NumberNode()
+    altitude: Force(NumberNode({ min: -1, max: 1 })),
+    temperature: Force(NumberNode({ min: -1, max: 1 })),
+    humidity: Force(NumberNode({ min: -1, max: 1 })),
+    weirdness: Force(NumberNode({ min: -1, max: 1 })),
+    offset: Force(NumberNode({ min: -1, max: 1 }))
   })
 }), {
   default: () => ({
-    biome: 'plains',
+    biome: 'minecraft:plains',
     parameters: {
       altitude: 0,
       temperature: 0,
@@ -165,8 +153,8 @@ SCHEMAS.register('generator-structures', ObjectNode({
 }))
 
 SCHEMAS.register('generator-layer', Mod(ObjectNode({
-  block: Resource(EnumNode('block')),
-  height: NumberNode({ integer: true })
+  block: Force(Resource(EnumNode('block'))),
+  height: Force(NumberNode({ min: 1, integer: true }))
 }), {
   default: () => ({
     block: 'stone',

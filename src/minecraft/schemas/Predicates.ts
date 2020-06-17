@@ -10,6 +10,7 @@ import { MapNode } from '../../nodes/MapNode';
 import { SCHEMAS, COLLECTIONS } from '../../Registries';
 
 import './Collections'
+import { Force } from '../../nodes/Node';
 
 SCHEMAS.register('item-predicate', ObjectNode({
   item: Resource(EnumNode('item')),
@@ -66,9 +67,9 @@ SCHEMAS.register('location-predicate', ObjectNode({
 }))
 
 SCHEMAS.register('statistic-predicate', ObjectNode({
-  type: EnumNode('stat_type'),
-  stat: StringNode(),
-  value: RangeNode()
+  type: EnumNode('stat_type', 'minecraft:custom'),
+  stat: Force(StringNode()),
+  value: Force(RangeNode())
 }))
 
 SCHEMAS.register('player-predicate', ObjectNode({

@@ -19,6 +19,12 @@ export const JsonNode = (): INode<any> => {
         ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
         <input data-id="${onChange}" value="${stringified ?? ''}">
       </div>`
+    },
+    validate(path, value, errors) {
+      if (value == undefined) {
+        errors.add(path, 'error.expected_json')
+      }
+      return value
     }
   }
 }

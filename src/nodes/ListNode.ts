@@ -3,10 +3,6 @@ import { TreeView } from '../view/TreeView'
 import { Path } from '../model/Path'
 
 export const ListNode = (children: INode): INode<any[]> => {
-  const renderEntry = (path: Path, value: any, view: TreeView) => {
-    return 
-  }
-
   return ({
     ...Base,
     transform(path, value, view) {
@@ -15,7 +11,7 @@ export const ListNode = (children: INode): INode<any[]> => {
         children.transform(path.push(index), obj, view)
       )
     },
-    render(path, value, view) {
+    render(path, value, view, options) {
       value = value ?? []
       const onAdd = view.registerClick(el => {
         if (!(value instanceof Array)) value = []
@@ -23,6 +19,11 @@ export const ListNode = (children: INode): INode<any[]> => {
       })
       return `<div class="node list-node">
         <div class="node-header" ${path.error()}>
+          ${options?.removeId ? `
+            <button class="remove" data-id="${options?.removeId}">
+              ${options?.removeLabel ? options?.removeLabel : ''}
+            </button>
+          ` : ``}
           <label>${path.locale()}</label>
           <button class="add" data-id="${onAdd}"></button>
         </div>
@@ -38,6 +39,7 @@ export const ListNode = (children: INode): INode<any[]> => {
       </div>`
     },
     validate(path, value, errors) {
+      value = value ?? []
       if (!(value instanceof Array)) {
         errors.add(path, 'error.expected_list')
         return value

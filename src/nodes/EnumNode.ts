@@ -2,13 +2,19 @@ import { INode, Base } from './Node'
 import { Path } from '../model/Path'
 import { COLLECTIONS } from '../Registries'
 
-export const EnumNode = (values: string[] | string): INode<string> => {
+export const EnumNode = (values: string[] | string, defaultValue?: string): INode<string> => {
   const getValues = (typeof values === 'string') ?
     () => COLLECTIONS.get(values) :
     () => values
 
   return {
     ...Base,
+    default() {
+      return defaultValue ?? ''
+    },
+    force() {
+      return defaultValue !== undefined
+    },
     render(path, value, view, options) {
       const select = view.register(el => {
         (el as HTMLSelectElement).value = value
@@ -28,6 +34,9 @@ export const EnumNode = (values: string[] | string): INode<string> => {
       </div>`
     },
     validate(path, value, errors) {
+      if (value === undefined && defaultValue !== undefined) {
+        return defaultValue
+      }
       if (typeof value !== 'string') {
         errors.add(path, 'error.expected_string')
       } else if (!getValues().includes(value)) {

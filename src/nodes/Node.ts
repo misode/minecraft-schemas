@@ -10,6 +10,7 @@ export type RenderOptions = {
   collapse?: boolean
   removeId?: string
   removeLabel?: string
+  inject?: string
 }
 
 export interface INode<T = any> {

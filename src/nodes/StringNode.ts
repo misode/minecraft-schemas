@@ -15,6 +15,7 @@ export const StringNode = (): INode<string> => {
       return `<div class="node string-node node-header" ${path.error()}>
         ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
         ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
+        ${options?.inject ?? ''}
         <input data-id="${onChange}" value="${value ?? ''}">
       </div>`
     },

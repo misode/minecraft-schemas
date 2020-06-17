@@ -1,6 +1,4 @@
 import { INode, Base } from './Node'
-import { TreeView } from '../view/TreeView'
-import { Path } from '../model/Path'
 
 export const ListNode = (children: INode): INode<any[]> => {
   return ({
@@ -25,6 +23,7 @@ export const ListNode = (children: INode): INode<any[]> => {
             </button>
           ` : ``}
           <label>${path.locale()}</label>
+          ${options?.inject ?? ''}
           <button class="add" data-id="${onAdd}"></button>
         </div>
         ${!(value instanceof Array) ? `` :

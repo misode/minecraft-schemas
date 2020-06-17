@@ -7,7 +7,7 @@ import { StringNode } from '../../nodes/StringNode';
 import { Reference } from '../../nodes/Reference';
 import { BooleanNode } from '../../nodes/BooleanNode';
 import { MapNode } from '../../nodes/MapNode';
-import { SCHEMAS, COLLECTIONS } from '../../Registries';
+import { SCHEMAS } from '../../Registries';
 
 import './Collections'
 import { Force } from '../../nodes/Node';

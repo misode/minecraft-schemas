@@ -98,7 +98,7 @@ export class Path implements Iterable<PathElement> {
       if (locale !== undefined) return locale
       path.shift()
     }
-    return this.last().toString().replace(/^minecraft:/, '')
+    return (this.last() ?? '').toString().replace(/^minecraft:/, '')
   }
 
   /**
@@ -131,7 +131,7 @@ export class Path implements Iterable<PathElement> {
     return this.arr
       .map(e => (typeof e === 'string') ? `.${e}` : `[${e}]`)
       .join('')
-      .slice(1)
+      .replace(/^\./, '')
   }
 
   *[Symbol.iterator]() {

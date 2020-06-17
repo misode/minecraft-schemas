@@ -1,4 +1,4 @@
-import { Mod, Force } from '../../nodes/Node';
+import { Force } from '../../nodes/Node';
 import { EnumNode } from '../../nodes/EnumNode';
 import { Resource } from '../nodes/Resource';
 import { NumberNode } from '../../nodes/NumberNode';
@@ -9,9 +9,14 @@ import { RangeNode } from '../nodes/RangeNode';
 import { MapNode } from '../../nodes/MapNode';
 import { StringNode } from '../../nodes/StringNode';
 import { Reference } from '../../nodes/Reference';
-import { SCHEMAS, COLLECTIONS } from '../../Registries';
+import { ObjectOrList } from '../../nodes/ChoiceNode';
+import { SCHEMAS } from '../../Registries';
 
 import './Predicates'
+
+SCHEMAS.register('predicate', ObjectOrList(
+  Reference('condition')
+))
 
 SCHEMAS.register('condition', ObjectNode({
   condition: Resource(EnumNode('loot_condition_type', 'minecraft:random_chance')),
@@ -90,4 +95,4 @@ SCHEMAS.register('condition', ObjectNode({
   }
 }, { category: 'predicate' }))
 
-export const ConditionSchema = SCHEMAS.get('condition')
+export const ConditionSchema = SCHEMAS.get('predicate')

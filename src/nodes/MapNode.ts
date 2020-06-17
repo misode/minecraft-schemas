@@ -18,7 +18,7 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
       )
       return res;
     },
-    render(path, value, view) {
+    render(path, value, view, options) {
       const onAdd = view.registerClick(el => {
         const key = keys.getState(el.parentElement!)
         view.model.set(path.push(key), children.default())
@@ -26,6 +26,7 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
       return `<div class="node map-node">
         <div class="node-header">
           <label>${path.locale()}</label>
+          ${options?.inject ?? ''}
           ${keys.renderRaw(path, view)}
           <button class="add" data-id="${onAdd}"></button>
         </div>

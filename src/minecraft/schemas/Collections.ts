@@ -35,6 +35,7 @@ COLLECTIONS.register('advancement_trigger', [
   'minecraft:slide_down_block',
   'minecraft:summoned_entity',
   'minecraft:tame_animal',
+  'minecraft:target_hit',
   'minecraft:tick',
   'minecraft:thrown_item_picked_up_by_entity',
   'minecraft:used_ender_eye',

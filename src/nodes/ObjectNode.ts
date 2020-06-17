@@ -27,12 +27,12 @@ export type FilteredChildren = {
   [Case]?: NestedNodeChildren
 }
 
-type ObjectConfig = {
+type ObjectNodeConfig = {
   collapse?: boolean,
   category?: string
 }
 
-export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INode<IObject> => {
+export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig): INode<IObject> => {
   const {[Switch]: filter, [Case]: cases, ...defaultFields} = fields
 
   const getActiveFields = (path: Path, model: DataModel): NodeChildren => {
@@ -86,6 +86,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectConfig): INo
               <label>${path.locale()}</label>
             `}
           `}
+          ${options?.inject ?? ''}
         </div>`}
         ${(typeof value !== 'object' && value !== undefined) || ((options?.collapse || config?.collapse) && value === undefined) ? `` : `
           <div class="node-body">

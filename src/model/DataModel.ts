@@ -83,6 +83,13 @@ export class DataModel {
    * @param value new data at the specified path
    */
   set(path: Path, value: any) {
+    console.log('Set', path.toString(), JSON.stringify(value))
+
+    if (path.getArray().length === 0) {
+      this.reset(value)
+      return
+    }
+
     let node = this.data;
     for (let index of path.pop()) {
       if (node[index] === undefined) {
@@ -91,7 +98,6 @@ export class DataModel {
       node = node[index]
     }
 
-    console.log('Set', path.toString(), JSON.stringify(value))
 
     if (value === undefined || (typeof value === 'number' && isNaN(value))) {
       if (typeof path.last() === 'number') {

@@ -50,19 +50,19 @@ SCHEMAS.register('condition', ObjectNode({
       inverse: BooleanNode()
     },
     'minecraft:location_check': {
-      offsetX: NumberNode({integer: true}),
-      offsetY: NumberNode({integer: true}),
-      offsetZ: NumberNode({integer: true}),
+      offsetX: NumberNode({ integer: true }),
+      offsetY: NumberNode({ integer: true }),
+      offsetZ: NumberNode({ integer: true }),
       predicate: Reference('location-predicate')
     },
     'minecraft:match_tool': {
       predicate: Reference('item-predicate')
     },
     'minecraft:random_chance': {
-      chance: Force(NumberNode({min: 0, max: 1}))
+      chance: Force(NumberNode({ min: 0, max: 1 }))
     },
     'minecraft:random_chance_with_looting': {
-      chance: NumberNode({min: 0, max: 1}),
+      chance: NumberNode({ min: 0, max: 1 }),
       looting_multiplier: NumberNode()
     },
     'minecraft:requirements': {
@@ -76,7 +76,7 @@ SCHEMAS.register('condition', ObjectNode({
     'minecraft:table_bonus': {
       enchantment: Force(Resource(EnumNode('enchantment'))),
       chances: Force(ListNode(
-        NumberNode({min: 0, max: 1})
+        NumberNode({ min: 0, max: 1 })
       ))
     },
     'minecraft:time_check': {

@@ -26,7 +26,7 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
       return `<div class="node map-node">
         <div class="node-header">
           <label>${path.locale()}</label>
-          ${keys.renderRaw(path)}
+          ${keys.renderRaw(path, view)}
           <button class="add" data-id="${onAdd}"></button>
         </div>
         <div class="node-body">

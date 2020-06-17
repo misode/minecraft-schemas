@@ -25,6 +25,7 @@
   "range.max": "Max",
   "range.n": "n",
   "range.p": "p",
+  "unset": "Unset",
   "pools.entry": "Pool",
   "functions.entry": "Function",
   "conditions.entry": "Condition",

@@ -13,7 +13,7 @@ import './Collections'
 import { Force } from '../../nodes/Node';
 
 SCHEMAS.register('item-predicate', ObjectNode({
-  item: Resource(EnumNode('item')),
+  item: Resource(EnumNode('item', { search: true })),
   tag: StringNode(),
   count: RangeNode(),
   durability: RangeNode(),
@@ -25,12 +25,12 @@ SCHEMAS.register('item-predicate', ObjectNode({
 }))
 
 SCHEMAS.register('enchantment-predicate', ObjectNode({
-  enchantment: Resource(EnumNode('enchantment')),
+  enchantment: Resource(EnumNode('enchantment', { search: true })),
   levels: RangeNode()
 }))
 
 SCHEMAS.register('block-predicate', ObjectNode({
-  block: Resource(EnumNode('block')),
+  block: Resource(EnumNode('block', { search: true })),
   tag: StringNode(),
   nbt: StringNode(),
   state: MapNode(
@@ -40,7 +40,7 @@ SCHEMAS.register('block-predicate', ObjectNode({
 }))
 
 SCHEMAS.register('fluid-predicate', ObjectNode({
-  fluid: Resource(EnumNode('fluid')),
+  fluid: Resource(EnumNode('fluid', { search: true })),
   tag: StringNode(),
   nbt: StringNode(),
   state: MapNode(
@@ -54,16 +54,16 @@ SCHEMAS.register('location-predicate', ObjectNode({
     x: RangeNode(),
     y: RangeNode(),
     z: RangeNode()
-  }, {collapse: true}),
-  biome: Resource(EnumNode('biome')),
-  feature: EnumNode('structure_feature'),
-  dimension: Resource(StringNode()),
+  }, { collapse: true }),
+  biome: Resource(EnumNode('biome', { search: true })),
+  feature: Resource(EnumNode('structure_feature', { search: true })),
+  dimension: Resource(EnumNode('dimension', { search: true, additional: true })),
   light: ObjectNode({
     light: RangeNode()
   }),
   smokey: BooleanNode(),
-  block: Reference('block-predicate', {collapse: true}),
-  fluid: Reference('fluid-predicate', {collapse: true})
+  block: Reference('block-predicate', { collapse: true }),
+  fluid: Reference('fluid-predicate', { collapse: true })
 }))
 
 SCHEMAS.register('statistic-predicate', ObjectNode({
@@ -107,27 +107,27 @@ SCHEMAS.register('entity-predicate', ObjectNode({
   type: StringNode(),
   nbt: StringNode(),
   team: StringNode(),
-  location: Reference('location-predicate', {collapse: true}),
-  distance: Reference('distance-predicate', {collapse: true}),
+  location: Reference('location-predicate', { collapse: true }),
+  distance: Reference('distance-predicate', { collapse: true }),
   flags: ObjectNode({
     is_on_fire: BooleanNode(),
     is_sneaking: BooleanNode(),
     is_sprinting: BooleanNode(),
     is_swimming: BooleanNode(),
     is_baby: BooleanNode()
-  }, {collapse: true}),
+  }, { collapse: true }),
   equipment: MapNode(
-    EnumNode('slot'),
+    EnumNode('slot', 'mainhand'),
     Reference('item-predicate')
   ),
-  vehicle: Reference('entity-predicate', {collapse: true}),
-  targeted_entity: Reference('entity-predicate', {collapse: true}),
-  player: Reference('player-predicate', {collapse: true}),
+  vehicle: Reference('entity-predicate', { collapse: true }),
+  targeted_entity: Reference('entity-predicate', { collapse: true }),
+  player: Reference('player-predicate', { collapse: true }),
   fishing_hook: ObjectNode({
     in_open_water: BooleanNode()
   }),
   effects: MapNode(
-    Resource(EnumNode('mob_effect')),
+    Resource(EnumNode('mob_effect', { search: true })),
     Reference('status-effect-predicate')
   )
 }))

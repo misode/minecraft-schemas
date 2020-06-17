@@ -72,6 +72,10 @@ export const Mod = (node: INode, mods: Partial<INode>): INode => ({
   ...node, ...mods
 })
 
-export const Force = (node: INode): INode => ({
-  ...node, force: () => true
-})
+export function Force<T>(node: INode<T>, defaultValue?: T): INode {
+  return {
+    ...node,
+    force: () => true,
+    default: () => defaultValue ? defaultValue : node.default()
+  }
+}

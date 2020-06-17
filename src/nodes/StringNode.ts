@@ -1,5 +1,4 @@
-import { INode, Base, RenderOptions } from './Node'
-import { Path } from '../model/Path'
+import { INode, Base } from './Node'
 
 /**
  * Simple string node with one text field
@@ -28,7 +27,7 @@ export const StringNode = (): INode<string> => {
     getState(el: HTMLElement) {
       return el.getElementsByTagName('input')[0].value
     },
-    renderRaw(path: Path) {
+    renderRaw() {
       return `<input>`
     }
   }

@@ -72,7 +72,7 @@ SCHEMAS.register('loot-entry', ObjectNode({
       ...functionsAndConditions
     },
     'minecraft:item': {
-      name: Force(Resource(EnumNode('item'))),
+      name: Force(Resource(EnumNode('item', { search: true }))),
       ...functionsAndConditions
     },
     'minecraft:loot_table': {
@@ -155,8 +155,8 @@ SCHEMAS.register('loot-function', ObjectNode({
     'minecraft:exploration_map': {
       destination: Force(EnumNode('structure_feature')),
       decoration: Force(EnumNode('map_decoration')),
-      zoom: NumberNode({integer: true}),
-      search_radius: NumberNode({integer: true}),
+      zoom: NumberNode({ integer: true }),
+      search_radius: NumberNode({ integer: true }),
       skip_existing_chunks: BooleanNode(),
       ...conditions
     },
@@ -170,7 +170,7 @@ SCHEMAS.register('loot-function', ObjectNode({
     },
     'minecraft:looting_enchant': {
       count: RangeNode(),
-      limit: NumberNode({integer: true}),
+      limit: NumberNode({ integer: true }),
       ...conditions
     },
     'minecraft:set_attributes': {
@@ -186,7 +186,7 @@ SCHEMAS.register('loot-function', ObjectNode({
       ...conditions
     },
     'minecraft:set_count': {
-      count: RangeNode(),
+      count: Force(RangeNode()),
       ...conditions
     },
     'minecraft:set_damage': {

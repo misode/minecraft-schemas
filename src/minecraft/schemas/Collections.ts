@@ -44,9 +44,15 @@ COLLECTIONS.register('advancement_trigger', [
 ])
 
 COLLECTIONS.register('dimension', [
-  'overworld',
-  'the_nether',
-  'the_end'
+  'minecraft:overworld',
+  'minecraft:the_nether',
+  'minecraft:the_end'
+])
+
+COLLECTIONS.register('dimension_type', [
+  'minecraft:overworld',
+  'minecraft:the_nether',
+  'minecraft:the_end'
 ])
 
 COLLECTIONS.register('slot', [

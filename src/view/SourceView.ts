@@ -1,6 +1,5 @@
 import { DataModel, ModelListener } from '../model/DataModel'
 import { Path } from '../model/Path'
-import { IView } from './View'
 
 type SourceViewOptions = {
   indentation?: number | string,
@@ -11,7 +10,7 @@ type SourceViewOptions = {
  * JSON representation view of the model.
  * Renders the result in a <textarea>.
  */
-export class SourceView implements ModelListener, IView {
+export class SourceView implements ModelListener {
   options?: SourceViewOptions
   target: HTMLTextAreaElement
   model: DataModel
@@ -29,12 +28,6 @@ export class SourceView implements ModelListener, IView {
     this.target.addEventListener('change', evt => this.updateModel())
   }
 
-  setModel(newModel: DataModel) {
-    this.model.removeListener(this)
-    this.model = newModel
-    this.model.addListener(this)
-  }
-
   invalidated() {
     const transformed = this.model.schema.transform(new Path([], this.model), this.model.data, this)
     this.target.value = JSON.stringify(transformed, null, this.options?.indentation)
@@ -43,9 +36,9 @@ export class SourceView implements ModelListener, IView {
   updateModel() {
     try {
       const parsed = JSON.parse(this.target.value)
-      this.model.reset(parsed)
+      this.model!.reset(parsed)
     } catch (err) {
-      this.model.error(new Path(['JSON']), err.message)
+      this.model!.error(new Path(['JSON']), err.message)
     }
   }
 }

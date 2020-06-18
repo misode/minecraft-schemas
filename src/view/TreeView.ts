@@ -1,6 +1,5 @@
 import { DataModel, ModelListener } from '../model/DataModel'
 import { Path } from '../model/Path'
-import { IView } from './View'
 
 type Registry = {
   [id: string]: (el: Element) => void
@@ -26,7 +25,7 @@ type TreeViewOptions = {
 /**
  * DOM representation view of the model.
  */
-export class TreeView implements ModelListener, IView  {
+export class TreeView implements ModelListener {
   model: DataModel
   target: HTMLElement
   registry: Registry = {}
@@ -40,14 +39,9 @@ export class TreeView implements ModelListener, IView  {
   constructor(model: DataModel, target: HTMLElement, options?: TreeViewOptions) {
     this.model = model
     this.target = target
+    this.model.addListener(this)
     this.showErrors = options?.showErrors ?? false
     this.observer = options?.observer ?? (() => {})
-  }
-
-  setModel(newModel: DataModel) {
-    this.model.removeListener(this)
-    this.model = newModel
-    this.model.addListener(this)
   }
 
   /**

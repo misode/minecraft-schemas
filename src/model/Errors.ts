@@ -1,6 +1,6 @@
 import { Path } from "./Path";
 
-type PathError = {
+export type PathError = {
   path: Path,
   error: string,
   params?: any[]
@@ -20,6 +20,10 @@ export class Errors implements Iterable<PathError> {
   get(path: Path, exact = false): PathError[] {
     return exact ? this.errors.filter(e => e.path.equals(path))
       : this.errors.filter(e => e.path.inside(path))
+  }
+
+  getAll() :PathError[] {
+    return this.errors
   }
 
   clear() {

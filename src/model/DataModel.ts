@@ -2,8 +2,9 @@ import { Path } from './Path'
 import { INode } from '../nodes/Node'
 import { Errors } from './Errors'
 
-export interface ModelListener {
-  invalidated(model: DataModel): void
+export type ModelListener = {
+  invalidated?(model: DataModel): void
+  errors?(errors: Errors): void
 }
 
 type DataModelOptions = {
@@ -80,7 +81,10 @@ export class DataModel {
    * Notifies all listeners that the model is invalidated
    */
   silentInvalidate() {
-    this.listeners.forEach(listener => listener.invalidated(this))
+    this.listeners.forEach(l => {
+      if (l.invalidated) l.invalidated(this)
+      if (l.errors) l.errors(this.errors)
+    })
   }
 
   /**
@@ -172,5 +176,13 @@ export class DataModel {
     const path = new Path().withModel(this)
     this.errors.clear()
     this.data = this.schema.validate(path, this.data, this.errors)
+  }
+
+  error(path: Path, error: string, ...params: any) {
+    const tempErrors = new Errors()
+    tempErrors.add(path, error, params)
+    this.listeners.forEach(l => {
+      if (l.errors) l.errors(tempErrors)
+    })
   }
 }

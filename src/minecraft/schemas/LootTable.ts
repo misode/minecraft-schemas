@@ -30,7 +30,8 @@ const functionsAndConditions = {
 SCHEMAS.register('loot-table', Mod(ObjectNode({
   pools: Force(ListNode(
     ObjectNode({
-      rolls: Force(RangeNode()),
+      rolls: Force(RangeNode({ allowBinomial: true, integer: true, min: 1 })),
+      bonus_rolls: RangeNode({ allowBinomial: true }),
       entries: ListNode(
         Reference('loot-entry')
       ),
@@ -148,7 +149,7 @@ SCHEMAS.register('loot-function', ObjectNode({
       ...conditions
     },
     'minecraft:enchant_with_levels': {
-      levels: Force(RangeNode()),
+      levels: Force(RangeNode({ allowBinomial: true })),
       treasure: BooleanNode(),
       ...conditions
     },
@@ -169,7 +170,7 @@ SCHEMAS.register('loot-function', ObjectNode({
       ...conditions
     },
     'minecraft:looting_enchant': {
-      count: RangeNode(),
+      count: RangeNode({ allowBinomial: true }),
       limit: NumberNode({ integer: true }),
       ...conditions
     },
@@ -186,24 +187,24 @@ SCHEMAS.register('loot-function', ObjectNode({
       ...conditions
     },
     'minecraft:set_count': {
-      count: Force(RangeNode()),
+      count: Force(RangeNode({ allowBinomial: true })),
       ...conditions
     },
     'minecraft:set_damage': {
-      damage: RangeNode(),
+      damage: Force(RangeNode({ allowBinomial: true })),
       ...conditions
     },
     'minecraft:set_lore': {
-      entity: EnumNode('entity_sources'),
-      lore: ListNode(
+      entity: Force(EnumNode('entity_sources')),
+      lore: Force(ListNode(
         JsonNode()
-      ),
+      )),
       replace: BooleanNode(),
       ...conditions
     },
     'minecraft:set_name': {
-      entity: EnumNode('entity_sources'),
-      name: JsonNode(),
+      entity: Force(EnumNode('entity_sources')),
+      name: Force(JsonNode()),
       ...conditions
     },
     'minecraft:set_nbt': {
@@ -225,7 +226,7 @@ SCHEMAS.register('loot-function', ObjectNode({
 SCHEMAS.register('attribute-modifier', ObjectNode({
   attribute: EnumNode('attribute'),
   name: StringNode(),
-  amount: RangeNode(),
+  amount: RangeNode({ allowBinomial: true }),
   operation: EnumNode(['addition', 'multiply_base', 'multiply_total']),
   slot: ListNode(
     EnumNode('slot')

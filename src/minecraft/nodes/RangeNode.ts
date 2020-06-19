@@ -1,5 +1,6 @@
 import { INode, Base } from '../../nodes/Node'
 import { locale } from '../../Registries'
+import { NumberNode } from '../../nodes/NumberNode'
 
 export type IRange = number
   | { min?: number, max?: number, type?: 'uniform' }
@@ -8,27 +9,33 @@ export type IRange = number
 type RangeNodeConfig = {
   /** Whether only integers are allowed */
   integer?: boolean
+  /** If specified, number will be capped at this minimum */
+  min?: number
+  /** If specified, number will be capped at this maximum */
+  max?: number
+  /** Whether binomials are allowed */
+  allowBinomial?: boolean
+  /** If true, only ranges are allowed */
+  forceRange?: boolean
 }
 
 export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
-  const parseNumber = (str: string): number => {
-    return config?.integer ? parseInt(str) : parseFloat(str)
-  }
+  const numberNode = NumberNode(config)
   const getState = (el: Element): IRange => {
-    const type = el.querySelector('select')!.value
+    const type = (config?.forceRange) ? 'range' : el.querySelector('select')!.value
     if (type === 'exact') {
-      return parseNumber(el.querySelector('input')!.value)
+      return Number(el.querySelector('input')?.value || undefined)
     }
     if (type === 'range') {
-      const min = parseNumber(el.querySelectorAll('input')[0].value)
-      const max = parseNumber(el.querySelectorAll('input')[1].value)
+      const min = Number(el.querySelectorAll('input')[0]?.value || undefined)
+      const max = Number(el.querySelectorAll('input')[1]?.value || undefined)
       return {
         min: isNaN(min) ? undefined : min,
         max: isNaN(max) ? undefined : max
       }
     }
-    const n = parseInt(el.querySelectorAll('input')[0].value)
-    const p = parseFloat(el.querySelectorAll('input')[1].value)
+    const n = Number(el.querySelectorAll('input')[0]?.value || undefined)
+    const p = Number(el.querySelectorAll('input')[1]?.value || undefined)
     return {
       type: 'binomial',
       n: isNaN(n) ? undefined : n,
@@ -38,7 +45,7 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
 
   return {
     ...Base,
-    default: () => 0,
+    default: () => (config?.forceRange) ? {} : 0,
     render(path, value, view, options) {
       let curType = ''
       let input = ''
@@ -71,20 +78,43 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
           evt.stopPropagation()
         })
       })
-      return `<div class="node range-node node-header" data-id="${id}" ${path.error()}>
+      return `<div class="node range-node node-header" data-id="${id}" ${path.error(false)}>
         ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
         ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
-        <select data-id="${selectId}">
+        ${config?.forceRange ? `` : `<select data-id="${selectId}">
           <option value="exact">${locale('range.exact')}</option>
           <option value="range">${locale('range.range')}</option>
-          <option value="binomial">${locale('range.binomial')}</option>
-        </select>
+          ${config?.allowBinomial ? `
+            <option value="binomial">${locale('range.binomial')}</option>
+          ` : ``}
+        </select>`}
         ${input}
       </div>`
     },
-    validate(path, value, errors) {
+    validate(path, value, errors, options) {
       if (typeof value !== 'number' && typeof value !== 'object') {
         errors.add(path, 'error.expected_range')
+        return value
+      }
+      if (value === undefined || typeof value === 'number') {
+        if (config?.forceRange) {
+          errors.add(path, 'error.invalid_exact')
+        }
+        numberNode.validate(path, value, errors, options)
+      } else if (value.type === 'binomial') {
+        if (config?.allowBinomial) {
+          NumberNode({ min: 0, integer: true }).validate(path.push('n'), value.n, errors, options)
+          NumberNode({ min: 0, max: 1 }).validate(path.push('p'), value.p, errors, options)
+        } else {
+          errors.add(path, 'error.invalid_binomial')
+        }
+      } else {
+        if (value.min !== undefined) {
+          numberNode.validate(path.push('min'), value.min, errors, options)
+        }
+        if (value.max !== undefined) {
+          numberNode.validate(path.push('max'), value.max, errors, options)
+        }
       }
       return value
     }

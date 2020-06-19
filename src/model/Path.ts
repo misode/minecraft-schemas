@@ -105,8 +105,8 @@ export class Path implements Iterable<PathElement> {
    * Gets the error inside this path if the model is attached
    * @returns a html attribute containing the error message
    */
-  error() {
-    const errors = this.model?.errors.get(this, true) ?? []
+  error(exact = true) {
+    const errors = this.model?.errors.get(this, exact) ?? []
     if (errors.length === 0) return ''
     return `data-error="${errors[0].error}"`
   }

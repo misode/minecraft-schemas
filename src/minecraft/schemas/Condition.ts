@@ -45,7 +45,7 @@ SCHEMAS.register('condition', ObjectNode({
       entity: EnumNode('entity_source', 'this'),
       scores: MapNode(
         StringNode(),
-        RangeNode()
+        RangeNode({ forceRange: true })
       )
     },
     'minecraft:inverted': {

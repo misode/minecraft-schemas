@@ -14,6 +14,8 @@
   "error.invalid_empty_string": "String cannot be empty",
   "error.invalid_empty_list": "List cannot be empty",
   "error.invalid_pattern": "String is not a valid %0%",
+  "error.invalid_binomial": "Range cannot use the binomial type",
+  "error.invalid_exact": "Range cannot use the constant type",
   "pattern": "pattern",
   "add": "Add",
   "chance": "Chance",

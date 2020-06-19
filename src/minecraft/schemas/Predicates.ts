@@ -131,3 +131,24 @@ SCHEMAS.register('entity-predicate', ObjectNode({
     Reference('status-effect-predicate')
   )
 }))
+
+SCHEMAS.register('damage-source-predicate', ObjectNode({
+  is_explosion: BooleanNode(),
+  is_fire: BooleanNode(),
+  is_magic: BooleanNode(),
+  is_projectile: BooleanNode(),
+  is_lightning: BooleanNode(),
+  bypasses_armor: BooleanNode(),
+  bypasses_invulnerability: BooleanNode(),
+  bypasses_magic: BooleanNode(),
+  source_entity: Reference('entity-predicate', { collapse: true }),
+  direct_entity: Reference('entity-predicate', { collapse: true })
+}))
+
+SCHEMAS.register('damage-predicate', ObjectNode({
+  dealt: RangeNode(),
+  taken: RangeNode(),
+  blocked: BooleanNode(),
+  source_entity: Reference('entity-predicate', { collapse: true }),
+  type: Reference('damage-source-predicate', { collapse: true })
+}))

@@ -42,8 +42,8 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
         ${this.renderRaw(path, view, inputId)}
       </div>`
     },
-    validate(path, value, errors) {
-      if (value === undefined && defaultValue !== undefined) {
+    validate(path, value, errors, options) {
+      if (options.loose && value === undefined && defaultValue !== undefined) {
         return defaultValue
       }
       if (typeof value !== 'string') {

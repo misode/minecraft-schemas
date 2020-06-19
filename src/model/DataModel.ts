@@ -32,7 +32,7 @@ export class DataModel {
     this.data = schema.default()
     this.listeners = []
     this.errors = new Errors()
-    this.validate()
+    this.validate(true)
     this.history = [JSON.stringify(this.data)]
     this.historyIndex = 0
     this.historyMax = options?.historyMax ?? 50
@@ -58,12 +58,10 @@ export class DataModel {
   }
 
   /**
-   * Validates the model, updates the history and 
-   * notifies all listeners that the model is invalidated
+   * Updates the history and notifies all
+   * listeners that the model is invalidated
    */
   invalidate() {
-    this.validate()
-
     const newHistory = JSON.stringify(this.data)
     if (this.history[this.historyIndex] !== newHistory) {
       this.historyIndex += 1
@@ -91,8 +89,9 @@ export class DataModel {
    * Resets the full data and notifies listeners
    * @param value new model data
    */
-  reset(value: any) {
+  reset(value: any, loose?: boolean) {
     this.data = value
+    this.validate(loose)
     this.invalidate()
   }
 
@@ -119,7 +118,7 @@ export class DataModel {
     console.log('Set', path.toString(), JSON.stringify(value))
 
     if (path.getArray().length === 0) {
-      this.reset(value)
+      this.reset(value, true)
       return
     }
 
@@ -142,6 +141,7 @@ export class DataModel {
       node[path.last()] = value
     }
 
+    this.validate(true)
     this.invalidate()
   }
 
@@ -152,7 +152,7 @@ export class DataModel {
     if (this.historyIndex > 0) {
       this.historyIndex -= 1
       this.data = JSON.parse(this.history[this.historyIndex])
-      this.validate()
+      this.validate(false)
       this.silentInvalidate()
     }
   }
@@ -164,7 +164,7 @@ export class DataModel {
     if (this.historyIndex < this.history.length - 1) {
       this.historyIndex += 1
       this.data = JSON.parse(this.history[this.historyIndex])
-      this.validate()
+      this.validate(false)
       this.silentInvalidate()
     }
   }
@@ -172,10 +172,10 @@ export class DataModel {
   /**
    * Uses the schema to check whether the data is valid
    */
-  validate() {
+  validate(loose?: boolean) {
     const path = new Path().withModel(this)
     this.errors.clear()
-    this.data = this.schema.validate(path, this.data, this.errors)
+    this.data = this.schema.validate(path, this.data, this.errors, { loose })
   }
 
   error(path: Path, error: string, ...params: any) {

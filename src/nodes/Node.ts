@@ -13,6 +13,10 @@ export type RenderOptions = {
   inject?: string
 }
 
+export type ValidationOptions = {
+  loose?: boolean
+}
+
 export interface INode<T = any> {
 
   /**
@@ -55,7 +59,7 @@ export interface INode<T = any> {
    * or add an error and retain the original value
    * @param value value to be validated
    */
-  validate: (path: Path, value: any, errors: Errors) => any
+  validate: (path: Path, value: any, errors: Errors, options: ValidationOptions) => any
 
   [custom: string]: any
 }

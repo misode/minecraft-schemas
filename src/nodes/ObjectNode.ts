@@ -95,8 +95,10 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         `}
       </div>`
     },
-    validate(path, value, errors) {
-      value = value ?? {}
+    validate(path, value, errors, options) {
+      if (options.loose && value === undefined) {
+        value = {}
+      }
       if (typeof value !== 'object') {
         errors.add(path, 'error.expected_object')
         return value
@@ -107,7 +109,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         let switchValue = filterPath.get()
         if (path.equals(filterPath.pop())) {
           const filterField = filterPath.last()
-          switchValue = defaultFields[filterField].validate(path.push(filterField), value[filterField], new Errors())
+          switchValue = defaultFields[filterField].validate(path.push(filterField), value[filterField], new Errors(), options)
         }
         activeFields = {...activeFields, ...cases![switchValue]}
       }
@@ -117,7 +119,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       let res: any = {};
       keys.forEach(k => {
         if (activeKeys.includes(k)) {
-          const newValue = activeFields[k].validate(path.push(k), value[k], errors)
+          const newValue = activeFields[k].validate(path.push(k), value[k], errors, options)
           if (newValue !== undefined) {
             res[k] = newValue
           }

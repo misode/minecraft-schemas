@@ -39,15 +39,15 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
         </div>
       </div>`
     },
-    validate(path, value, errors) {
+    validate(path, value, errors, options) {
       if (value === null || typeof value !== 'object') {
         errors.add(path, 'error.expected_object')
         return value
       }
       let res: any = {}
       Object.keys(value).forEach(k => {
-        keys.validate(path, k, errors)
-        res[k] = children.validate(path.push(k), value[k], errors)
+        keys.validate(path, k, errors, options)
+        res[k] = children.validate(path.push(k), value[k], errors, options)
       })
       return res
     }

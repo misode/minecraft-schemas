@@ -36,9 +36,9 @@ export class SourceView implements ModelListener {
   updateModel() {
     try {
       const parsed = JSON.parse(this.target.value)
-      this.model!.reset(parsed)
+      this.model.reset(parsed)
     } catch (err) {
-      this.model!.error(new Path(['JSON']), err.message)
+      this.model.error(new Path(['JSON']), err.message)
     }
   }
 }

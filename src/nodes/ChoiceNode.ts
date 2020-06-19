@@ -44,12 +44,12 @@ export const ChoiceNode = (choices: Choice[]): INode<any> => {
 
       return choice[1]?.render(path, value, view, {...options, hideLabel: false, inject: inject})
     },
-    validate(path, value, errors) {
+    validate(path, value, errors, options) {
       const choice = activeChoice(value)
       if (choice === undefined) {
         return value
       }
-      return choice[1].validate(path, value, errors)
+      return choice[1].validate(path, value, errors, options)
     }
   }
 }

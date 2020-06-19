@@ -37,14 +37,16 @@ export const ListNode = (children: INode): INode<any[]> => {
         </div>`}
       </div>`
     },
-    validate(path, value, errors) {
-      value = value ?? []
+    validate(path, value, errors, options) {
+      if (options.loose && value === undefined) {
+        return []
+      }
       if (!(value instanceof Array)) {
         errors.add(path, 'error.expected_list')
         return value
       }
       return value.map((obj, index) =>
-        children.validate(path.push(index), obj, errors)
+        children.validate(path.push(index), obj, errors, options)
       )
     }
   })

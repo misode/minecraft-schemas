@@ -2,6 +2,7 @@
   "error.expected_string": "Expected a string",
   "error.expected_boolean": "Expected a boolean",
   "error.expected_object": "Expected an object",
+  "error.expected_list": "Expected a list",
   "error.expected_number": "Expected a number",
   "error.expected_integer": "Expected an integer",
   "error.expected_json": "Expected JSON",

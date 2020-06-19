@@ -101,22 +101,29 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         errors.add(path, 'error.expected_object')
         return value
       }
-      let res: any = {};
       let activeFields = defaultFields
       if (filter) {
         const filterPath = filter(path)
         let switchValue = filterPath.get()
-        if (path.equals(filterPath)) {
+        if (path.equals(filterPath.pop())) {
           const filterField = filterPath.last()
-          defaultFields[filterField].validate(path.push(filterField), value[filterField], new Errors())
-        }  
+          switchValue = defaultFields[filterField].validate(path.push(filterField), value[filterField], new Errors())
+        }
         activeFields = {...activeFields, ...cases![switchValue]}
       }
       const activeKeys = Object.keys(activeFields)
       const forcedKeys = activeKeys.filter(k => activeFields[k].force())
       const keys = new Set([...forcedKeys, ...Object.keys(value)])
+      let res: any = {};
       keys.forEach(k => {
-        res[k] = activeKeys.includes(k) ? activeFields[k].validate(path.push(k), value[k], errors) : value[k]
+        if (activeKeys.includes(k)) {
+          const newValue = activeFields[k].validate(path.push(k), value[k], errors)
+          if (newValue !== undefined) {
+            res[k] = newValue
+          }
+        } else {
+          res[k] = value[k]
+        }
       })
       return res
     }

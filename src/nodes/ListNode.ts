@@ -1,6 +1,10 @@
 import { INode, Base } from './Node'
 
-export const ListNode = (children: INode): INode<any[]> => {
+type ListNodeConfig = {
+  allowEmpty?: boolean
+}
+
+export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]> => {
   return ({
     ...Base,
     transform(path, value, view) {
@@ -44,6 +48,13 @@ export const ListNode = (children: INode): INode<any[]> => {
       if (!(value instanceof Array)) {
         errors.add(path, 'error.expected_list')
         return value
+      }
+      if (!config?.allowEmpty && value.length === 0) {
+        if (options.loose) {
+          return undefined
+        } else {
+          errors.add(path, 'error.invalid_empty_list')
+        }
       }
       return value.map((obj, index) =>
         children.validate(path.push(index), obj, errors, options)

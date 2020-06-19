@@ -28,6 +28,7 @@ export type FilteredChildren = {
 }
 
 type ObjectNodeConfig = {
+  allowEmpty?: boolean,
   collapse?: boolean,
   category?: string
 }
@@ -127,6 +128,11 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
           res[k] = value[k]
         }
       })
+      if (!config?.allowEmpty && Object.keys(res).length === 0 && !config?.collapse) {
+        if (options.loose) {
+          return undefined
+        }
+      }
       return res
     }
   })

@@ -1,9 +1,16 @@
 import { INode, Base } from './Node'
+import { locale } from '../Registries'
+
+type StringNodeConfig = {
+  allowEmpty?: boolean
+  pattern?: RegExp,
+  patternError?: string
+}
 
 /**
  * Simple string node with one text field
  */
-export const StringNode = (): INode<string> => {
+export const StringNode = (config?: StringNodeConfig): INode<string> => {
   return {
     ...Base,
     default: () => '',
@@ -19,9 +26,20 @@ export const StringNode = (): INode<string> => {
         <input data-id="${onChange}" value="${value ?? ''}">
       </div>`
     },
-    validate(path, value, errors) {
+    validate(path, value, errors, options) {
       if (typeof value !== 'string') {
         errors.add(path, 'error.expected_string')
+        return value
+      }
+      if (!config?.allowEmpty && value.length === 0) {
+        if (options.loose) {
+          return undefined
+        } else {
+          errors.add(path, 'error.invalid_empty_string')
+        }
+      }
+      if (config?.pattern && !value.match(config.pattern)) {
+        errors.add(path, 'error.invalid_pattern', locale(config.patternError ?? 'pattern'))
       }
       return value
     },

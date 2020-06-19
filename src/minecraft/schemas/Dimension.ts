@@ -28,9 +28,9 @@ SCHEMAS.register('dimension', ObjectNode({
             },
             'minecraft:multi_noise': {
               preset: EnumNode(['nether']),
-              biomes: Force(ListNode(
+              biomes: ListNode(
                 Reference('generator-biome')
-              ))
+              )
             },
             'minecraft:checkerboard': {
               biomes: ListNode(
@@ -41,9 +41,7 @@ SCHEMAS.register('dimension', ObjectNode({
               large_biomes: BooleanNode()
             }
           }
-        }, {
-          category: 'predicate'
-        })),
+        }, { category: 'predicate' })),
         settings: ObjectNode({
           bedrock_roof_position: NumberNode({ integer: true }),
           bedrock_floor_position: NumberNode({ integer: true }),
@@ -60,7 +58,7 @@ SCHEMAS.register('dimension', ObjectNode({
             Name: StringNode(),
             Properties: MapNode(
               StringNode(),
-              { ...StringNode(), default: () => "" }
+              StringNode()
             )
           }),
           noise: ObjectNode({
@@ -95,7 +93,7 @@ SCHEMAS.register('dimension', ObjectNode({
       },
       'minecraft:flat': {
         settings: ObjectNode({
-          biome: EnumNode('biome'),
+          biome: Resource(EnumNode('biome')),
           layers: Force(ListNode(
             Reference('generator-layer')
           )),
@@ -107,7 +105,7 @@ SCHEMAS.register('dimension', ObjectNode({
 }))
 
 SCHEMAS.register('generator-biome', Mod(ObjectNode({
-  biome: Force(EnumNode('biome')),
+  biome: Force(Resource(EnumNode('biome'))),
   parameters: ObjectNode({
     altitude: Force(NumberNode({ min: -1, max: 1 })),
     temperature: Force(NumberNode({ min: -1, max: 1 })),

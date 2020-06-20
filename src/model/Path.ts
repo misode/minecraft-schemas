@@ -118,7 +118,8 @@ export class Path {
       if (locale !== undefined) return locale
       path.shift()
     }
-    return (this.localeArr[this.localeArr.length - 1] ?? '')
+    return this.localeArr.slice(-5).join('.')
+    // return (this.localeArr[this.localeArr.length - 1] ?? '')
   }
 
   /**

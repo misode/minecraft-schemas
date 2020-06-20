@@ -41,7 +41,7 @@ SCHEMAS.register('dimension', ObjectNode({
               large_biomes: BooleanNode()
             }
           }
-        }, { category: 'predicate' })),
+        }, { category: 'predicate', disableSwitchContext: true })),
         settings: ObjectNode({
           bedrock_roof_position: NumberNode({ integer: true }),
           bedrock_floor_position: NumberNode({ integer: true }),
@@ -101,8 +101,8 @@ SCHEMAS.register('dimension', ObjectNode({
         }, { collapse: true })
       }
     }
-  }))
-}))
+  }, { disableSwitchContext: true }))
+}, { context: 'dimension' }))
 
 SCHEMAS.register('generator-biome', Mod(ObjectNode({
   biome: Force(Resource(EnumNode('biome'))),

@@ -66,7 +66,7 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
     ),
     experience: NumberNode({ integer: true })
   }, { collapse: true }),
-}), {
+}, { context: 'advancement' }), {
   default: () => ({
     criteria: {
       requirement: {

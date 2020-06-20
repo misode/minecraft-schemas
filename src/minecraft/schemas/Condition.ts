@@ -93,6 +93,6 @@ SCHEMAS.register('condition', ObjectNode({
       thrundering: BooleanNode()
     }
   }
-}, { category: 'predicate' }))
+}, { category: 'predicate', context: 'condition' }))
 
 export const ConditionSchema = SCHEMAS.get('predicate')

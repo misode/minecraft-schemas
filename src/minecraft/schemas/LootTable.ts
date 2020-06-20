@@ -221,7 +221,7 @@ SCHEMAS.register('loot-function', ObjectNode({
       ...conditions
     }
   }
-}, { category: 'function' }))
+}, { category: 'function', context: 'function' }))
 
 SCHEMAS.register('attribute-modifier', ObjectNode({
   attribute: EnumNode('attribute'),
@@ -231,6 +231,6 @@ SCHEMAS.register('attribute-modifier', ObjectNode({
   slot: ListNode(
     EnumNode('slot')
   )
-}))
+}, { context: 'attribute_modifier' }))
 
 export const LootTableSchema = SCHEMAS.get('loot-table')

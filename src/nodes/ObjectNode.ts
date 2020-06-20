@@ -31,6 +31,7 @@ type ObjectNodeConfig = {
   allowEmpty?: boolean,
   collapse?: boolean,
   context?: string,
+  disableSwitchContext?: boolean,
   category?: string
 }
 
@@ -54,8 +55,8 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     return Object.keys(activeFields).map(k => {
       if (!activeFields[k].enabled(path, view.model)) return ''
       const pathWithContext = (config?.context) ?
-        path.localePush(config.context) : path
-      const pathWithFilter = switchValue && filteredKeys.includes(k) ?
+        new Path(path.getArray(), [config.context], path.getModel()) : path
+      const pathWithFilter = !config?.disableSwitchContext && switchValue && filteredKeys.includes(k) ?
         pathWithContext.localePush(switchValue) : pathWithContext
       return activeFields[k].render(pathWithFilter.push(k), value[k], view)
     }).join('')

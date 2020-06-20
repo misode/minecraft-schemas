@@ -1,4 +1,4 @@
-import { INode, Base, RenderOptions } from './Node'
+import { INode, Base, NodeOptions } from './Node'
 import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { locale } from '../Registries'
@@ -14,7 +14,7 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
   return {
     ...Base,
     default: () => false,
-    render(path: Path, value: boolean, view: TreeView, options?: RenderOptions) {
+    render(path: Path, value: boolean, view: TreeView, options?: NodeOptions) {
       const onFalse = view.registerClick(el => {
         view.model.set(path, !config?.radio && value === false ? undefined : false)
       })
@@ -22,8 +22,8 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
         view.model.set(path, !config?.radio && value === true ? undefined : true)
       })
       return `<div class="node boolean-node node-header" ${path.error()}>
-        ${options?.removeId ? `<button data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
+        ${options?.prepend ?? ''}
+        <label>${path.locale()}</label>
         ${options?.inject ?? ''}
         <button${value === false ? ' class="selected"' : ' '} 
           data-id="${onFalse}">${locale('false')}</button>

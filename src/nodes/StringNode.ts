@@ -20,8 +20,8 @@ export const StringNode = (config?: StringNodeConfig): INode<string> => {
         view.model.set(path, value)
       })
       return `<div class="node string-node node-header" ${path.error()}>
-        ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
+        ${options?.prepend ?? ''}
+        <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}
         <input data-id="${onChange}" value="${value ?? ''}">
       </div>`

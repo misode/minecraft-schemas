@@ -25,14 +25,13 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
         view.model.set(path, parsed)
       })
       return `<div class="node number-node node-header" ${path.error()}>
-        ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
+        ${options?.prepend ?? ''}
+        <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}
         <input data-id="${onChange}" value="${value ?? ''}">
       </div>`
     },
     validate(path, value, errors) {
-      console.log()
       if (typeof value !== 'number') {
         errors.add(path, 'error.expected_number')
       } else if (integer && !Number.isInteger(value)) {

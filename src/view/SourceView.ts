@@ -29,16 +29,18 @@ export class SourceView implements ModelListener {
   }
 
   invalidated() {
-    const transformed = this.model.schema.transform(new Path([], this.model), this.model.data, this)
+    const transformed = this.model.schema.transform(new Path().withModel(this.model), this.model.data, this)
     this.target.value = JSON.stringify(transformed, null, this.options?.indentation)
   }
 
   updateModel() {
+    let parsed = {}
     try {
-      const parsed = JSON.parse(this.target.value)
-      this.model.reset(parsed)
+      parsed = JSON.parse(this.target.value)
     } catch (err) {
-      this.model.error(new Path(['JSON']), err.message)
+      this.model.error(new Path().push('JSON'), err.message)
+      return
     }
+    this.model.reset(parsed)
   }
 }

@@ -36,8 +36,8 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
         })
       })
       return `<div class="node enum-node node-header" ${path.error()}>
-        ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
+        ${options?.prepend ?? ''}
+        <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}
         ${this.renderRaw(path, view, inputId)}
       </div>`

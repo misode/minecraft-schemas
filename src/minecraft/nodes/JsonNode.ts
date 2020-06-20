@@ -15,8 +15,9 @@ export const JsonNode = (): INode<any> => {
         }
       })
       return `<div class="node json-node node-header" ${path.error()}>
-        ${options?.removeId ? `<button class="remove" data-id="${options?.removeId}"></button>` : ``}
-        ${options?.hideLabel ? `` : `<label>${path.locale()}</label>`}
+        ${options?.prepend ?? ''}
+        <label>${options?.label ?? path.locale()}</label>
+        ${options?.inject ?? ''}
         <input data-id="${onChange}" value="${stringified ?? ''}">
       </div>`
     },

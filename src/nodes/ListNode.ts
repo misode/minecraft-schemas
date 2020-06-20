@@ -1,4 +1,5 @@
 import { INode, Base } from './Node'
+import { locale } from '../Registries'
 
 type ListNodeConfig = {
   allowEmpty?: boolean
@@ -21,23 +22,22 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
       })
       return `<div class="node list-node">
         <div class="node-header" ${path.error()}>
-          ${options?.removeId ? `
-            <button class="remove" data-id="${options?.removeId}">
-              ${options?.removeLabel ? options?.removeLabel : ''}
-            </button>
-          ` : ``}
-          <label>${path.locale()}</label>
+          ${options?.prepend ?? ''}
+          <label>${options?.label ?? path.locale()}</label>
           ${options?.inject ?? ''}
           <button class="add" data-id="${onAdd}"></button>
         </div>
         ${!(value instanceof Array) ? `` :
           `<div class="node-body">
-          ${(value ?? []).map((obj, index) => `<div class="node-entry">
-            ${children.render(path.push(index), obj, view, {
-              removeId: view.registerClick(el => view.model.set(path.push(index), undefined)),
-              removeLabel: path.push('entry').locale()
+          ${(value ?? []).map((obj, index) => {
+            const removeId = view.registerClick(el => view.model.set(path.push(index), undefined))
+            return `<div class="node-entry">
+            ${children.render(path.push(index).localePush('entry'), obj, view, {
+              prepend: `<button class="remove" data-id="${removeId}"></button>`,
+              label: path.localePush('entry').locale()
             })}
-          </div>`).join('')}
+          </div>`
+          }).join('')}
         </div>`}
       </div>`
     },

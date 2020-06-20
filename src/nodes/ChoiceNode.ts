@@ -1,4 +1,4 @@
-import { INode, Base, RenderOptions } from './Node'
+import { INode, Base, NodeOptions } from './Node'
 import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { ListNode } from './ListNode'
@@ -30,7 +30,14 @@ export const ChoiceNode = (choices: Choice[]): INode<any> => {
   return {
     ...Base,
     default: () => choices[0][1].default(),
-    render(path: Path, value: any, view: TreeView, options?: RenderOptions) {
+    transform(path, value, view) {
+      const choice = activeChoice(value)
+      if (choice === undefined) {
+        return value
+      }
+      return choice[1].transform(path, value, view)
+    },
+    render(path, value, view, options) {
       const choice = activeChoice(value) ?? choices[0]
       let inject = choices.map(c => {
         if (c[0] === choice[0]) {
@@ -42,7 +49,12 @@ export const ChoiceNode = (choices: Choice[]): INode<any> => {
         return `<button data-id="${buttonId}">${path.push(c[0]).locale()}</button>`
       }).join('')
 
-      return choice[1]?.render(path, value, view, {...options, hideLabel: false, inject: inject})
+      return choice[1]?.render(path, value, view, {
+        ...options,
+        label: options?.hideHeader ? '' : undefined,
+        hideHeader: false,
+        inject
+      })
     },
     validate(path, value, errors, options) {
       const choice = activeChoice(value)

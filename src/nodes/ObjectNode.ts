@@ -30,6 +30,7 @@ export type FilteredChildren = {
 type ObjectNodeConfig = {
   allowEmpty?: boolean,
   collapse?: boolean,
+  context?: string,
   category?: string
 }
 
@@ -38,17 +39,25 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
 
   const getActiveFields = (path: Path, model: DataModel): NodeChildren => {
     if (filter === undefined) return defaultFields
-    const switchValue = filter(path.withModel(model)).get()
+    const switchValue = filter(path).get()
     const activeCase = cases![switchValue]
     return {...defaultFields, ...activeCase}
   }
 
   const renderFields = (path: Path, value: IObject, view: TreeView) => {
     value = value ?? {}
-    const activeFields = getActiveFields(path, view.model)
-    return Object.keys(activeFields).map(f => {
-      if (!activeFields[f].enabled(path, view.model)) return ''
-      return activeFields[f].render(path.push(f), value[f], view)
+    const filterPath = filter ? filter(path) : new Path()
+    const switchValue = filterPath.get()
+    const caseFields = filter ? cases![switchValue] : {}
+    const activeFields = filter ? {...defaultFields, ...caseFields} : defaultFields
+    const filteredKeys = caseFields ? Object.keys(caseFields) : []
+    return Object.keys(activeFields).map(k => {
+      if (!activeFields[k].enabled(path, view.model)) return ''
+      const pathWithContext = (config?.context) ?
+        path.localePush(config.context) : path
+      const pathWithFilter = switchValue && filteredKeys.includes(k) ?
+        pathWithContext.localePush(switchValue) : pathWithContext
+      return activeFields[k].render(pathWithFilter.push(k), value[k], view)
     }).join('')
   }
 
@@ -68,25 +77,15 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     },
     render(path, value, view, options) {
       return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
-        ${options?.hideLabel ? `` : `<div class="node-header" ${path.error()}>
-          ${options?.removeId ? `
-            <button class="remove" data-id="${options?.removeId}">
-              ${options?.removeLabel ? options?.removeLabel : ''}
-            </button>
-          ` : ``}
-          ${options?.removeLabel ? `` : `
-            ${options?.collapse || config?.collapse ? value === undefined ? `
-              <label class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, this.default()))}">
-                ${path.locale()}
-              </label>
+        ${options?.hideHeader ? '' : `<div class="node-header" ${path.error()}>
+          ${options?.prepend ? options.prepend : `
+            ${(options?.collapse || config?.collapse) ? value === undefined ? `
+              <button class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, this.default()))}"></button>
             `: `
-              <label class="collapse open" data-id="${view.registerClick(() => view.model.set(path, undefined))}">
-                ${path.locale()}
-              </label>
-            ` : `
-              <label>${path.locale()}</label>
-            `}
+              <button class="collapse open" data-id="${view.registerClick(() => view.model.set(path, undefined))}"></button>
+            ` : ``}
           `}
+          <label>${options?.label ?? path.locale()}</label>
           ${options?.inject ?? ''}
         </div>`}
         ${(typeof value !== 'object' && value !== undefined) || ((options?.collapse || config?.collapse) && value === undefined) ? `` : `
@@ -128,7 +127,8 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
           res[k] = value[k]
         }
       })
-      if (!config?.allowEmpty && Object.keys(res).length === 0 && !config?.collapse) {
+      if (!config?.allowEmpty && Object.keys(res).length === 0
+        && !(config?.collapse || options.collapse)) {
         if (options.loose) {
           return undefined
         }

@@ -1,37 +1,39 @@
 import { DataModel } from './DataModel'
 import { LOCALES } from '../Registries'
 
-export type PathElement = (string | number)
+export type PathElement = number | string
 
 /**
  * Immutable helper class to represent a path in data
- * @implements {Iterable<PathElement>}
  */
-export class Path implements Iterable<PathElement> {
-  private arr: PathElement[]
+export class Path {
+  modelArr: PathElement[]
+  localeArr: string[]
   model?: DataModel
 
   /**
-   * @param arr Initial array of path elements. Empty if not given
+   * @param modelArr Initial array of path model elements. Empty if not given
+   * @param localeArr Initial array of path locale elements. Empty if not given
    * @param model Model attached to this path
    */
-  constructor(arr?: PathElement[], model?: DataModel) {
-    this.arr = arr ?? []
+  constructor(modelArr?: PathElement[], localeArr?: string[], model?: DataModel) {
+    this.modelArr = modelArr ?? []
+    this.localeArr = localeArr ?? []
     this.model = model
   }
 
   /**
-   * The last element of this path
+   * The last model element of this path
    */
   last(): PathElement {
-    return this.arr[this.arr.length - 1]
+    return this.modelArr[this.modelArr.length - 1]
   }
 
   /**
-   * A new path with the last element removed
+   * A new path with the last model element removed
    */
   pop(): Path {
-    return new Path(this.arr.slice(0, -1), this.model)
+    return new Path(this.modelArr.slice(0, -1), this.localeArr, this.model)
   }
 
   /**
@@ -39,15 +41,33 @@ export class Path implements Iterable<PathElement> {
    * @param element element to push at the end of the array
    */
   push(element: PathElement): Path {
-    return new Path([...this.arr, element], this.model)
+    return this.modelPush(element).localePush(element)
+  }
+
+  /**
+   * Push an element exclusivly to the model array
+   * @param element 
+   */
+  modelPush(element: PathElement) {
+    return new Path([...this.modelArr, element], [...this.localeArr], this.model)
+  }
+
+  /**
+   * Push an element exclusivly to the locale array
+   * @param element 
+   */
+  localePush(element: PathElement) {
+    if (typeof element === 'number') return this.copy()
+    const newElement = element.startsWith('minecraft:') ? element.slice(10) : element
+    return new Path([...this.modelArr], [...this.localeArr, newElement], this.model)
   }
 
   copy(): Path {
-    return new Path([...this.arr], this.model)
+    return new Path([...this.modelArr], [...this.localeArr], this.model)
   }
 
   getArray(): PathElement[] {
-    return this.arr
+    return this.modelArr
   }
 
   /**
@@ -55,7 +75,7 @@ export class Path implements Iterable<PathElement> {
    * @param model 
    */
   withModel(model: DataModel): Path {
-    return new Path([...this.arr], model)
+    return new Path([...this.modelArr], [...this.localeArr], model)
   }
 
   getModel(): DataModel | undefined {
@@ -86,19 +106,19 @@ export class Path implements Iterable<PathElement> {
    * @returns undefined if the key isn't found for the selected language
    */
   locale = (): string => {
-    let path = this.arr.filter(e => (typeof e === 'string'))
+    let path = this.localeArr.slice(-5)
     while (path.length > 0) {
       const locale = LOCALES.getLocale(path.join('.'))
       if (locale !== undefined) return locale
       path.shift()
     }
-    path = this.arr.filter(e => (typeof e === 'string'))
+    path = this.localeArr.slice(-5)
     while (path.length > 0) {
       const locale = LOCALES.get('en')[path.join('.')]
       if (locale !== undefined) return locale
       path.shift()
     }
-    return (this.last() ?? '').toString().replace(/^minecraft:/, '')
+    return (this.localeArr[this.localeArr.length - 1] ?? '')
   }
 
   /**
@@ -116,7 +136,8 @@ export class Path implements Iterable<PathElement> {
    * @param other path to compare
    */
   equals(other: Path) {
-    return other.arr.length === this.arr.length && other.arr.every((v, i) => v === this.arr[i])
+    return other.modelArr.length === this.modelArr.length
+      && other.modelArr.every((v, i) => v === this.modelArr[i])
   }
 
   /**
@@ -124,19 +145,17 @@ export class Path implements Iterable<PathElement> {
    * @param other parent path where this path should be inside
    */
   inside(other: Path) {
-    return other.arr.every((v, i) => v === this.arr[i])
+    return other.modelArr.every((v, i) => v === this.modelArr[i])
   }
 
   toString(): string {
-    return this.arr
+    return this.modelArr
       .map(e => (typeof e === 'string') ? `.${e}` : `[${e}]`)
       .join('')
       .replace(/^\./, '')
   }
 
-  *[Symbol.iterator]() {
-    for (const e of this.arr) {
-      yield e
-    }
+  forEach(fn: (value: PathElement, index: number, array: PathElement[]) => void, thisArg?: any) {
+    return this.modelArr.forEach(fn, thisArg)
   }
 }

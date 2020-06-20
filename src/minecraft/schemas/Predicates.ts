@@ -22,12 +22,12 @@ SCHEMAS.register('item-predicate', ObjectNode({
   enchantments: ListNode(
     Reference('enchantment-predicate')
   )
-}))
+}, {context: 'item'}))
 
 SCHEMAS.register('enchantment-predicate', ObjectNode({
   enchantment: Resource(EnumNode('enchantment', { search: true })),
   levels: RangeNode()
-}))
+}, {context: 'enchantment'}))
 
 SCHEMAS.register('block-predicate', ObjectNode({
   block: Resource(EnumNode('block', { search: true })),
@@ -37,7 +37,7 @@ SCHEMAS.register('block-predicate', ObjectNode({
     StringNode(),
     StringNode()
   )
-}))
+}, {context: 'block'}))
 
 SCHEMAS.register('fluid-predicate', ObjectNode({
   fluid: Resource(EnumNode('fluid', { search: true })),
@@ -47,7 +47,7 @@ SCHEMAS.register('fluid-predicate', ObjectNode({
     StringNode(),
     StringNode()
   )
-}))
+}, {context: 'fluid'}))
 
 SCHEMAS.register('location-predicate', ObjectNode({
   position: ObjectNode({
@@ -64,7 +64,7 @@ SCHEMAS.register('location-predicate', ObjectNode({
   smokey: BooleanNode(),
   block: Reference('block-predicate', { collapse: true }),
   fluid: Reference('fluid-predicate', { collapse: true })
-}))
+}, {context: 'location'}))
 
 SCHEMAS.register('statistic-predicate', ObjectNode({
   type: EnumNode('stat_type', 'minecraft:custom'),
@@ -86,14 +86,14 @@ SCHEMAS.register('player-predicate', ObjectNode({
   stats: ListNode(
     Reference('statistic-predicate')
   )
-}))
+}, {context: 'player'}))
 
 SCHEMAS.register('status-effect-predicate', ObjectNode({
   amplifier: RangeNode(),
   duration: RangeNode(),
   ambient: BooleanNode(),
   visible: BooleanNode()
-}))
+}, {context: 'status_effect'}))
 
 SCHEMAS.register('distance-predicate', ObjectNode({
   x: RangeNode(),
@@ -101,7 +101,7 @@ SCHEMAS.register('distance-predicate', ObjectNode({
   z: RangeNode(),
   absolute: RangeNode(),
   horizontal: RangeNode()
-}))
+}, {context: 'distance'}))
 
 SCHEMAS.register('entity-predicate', ObjectNode({
   type: StringNode(),
@@ -130,7 +130,7 @@ SCHEMAS.register('entity-predicate', ObjectNode({
     Resource(EnumNode('mob_effect', { search: true })),
     Reference('status-effect-predicate')
   )
-}))
+}, {context: 'entity'}))
 
 SCHEMAS.register('damage-source-predicate', ObjectNode({
   is_explosion: BooleanNode(),
@@ -143,7 +143,7 @@ SCHEMAS.register('damage-source-predicate', ObjectNode({
   bypasses_magic: BooleanNode(),
   source_entity: Reference('entity-predicate', { collapse: true }),
   direct_entity: Reference('entity-predicate', { collapse: true })
-}))
+}, {context: 'damage_source'}))
 
 SCHEMAS.register('damage-predicate', ObjectNode({
   dealt: RangeNode(),
@@ -151,4 +151,4 @@ SCHEMAS.register('damage-predicate', ObjectNode({
   blocked: BooleanNode(),
   source_entity: Reference('entity-predicate', { collapse: true }),
   type: Reference('damage-source-predicate', { collapse: true })
-}))
+}, {context: 'damage'}))

@@ -4,16 +4,12 @@ import { TreeView } from '../view/TreeView'
 import { SourceView } from '../view/SourceView'
 import { Errors } from '../model/Errors'
 
-export type RenderOptions = {
-  hideLabel?: boolean
-  syncModel?: boolean
+export type NodeOptions = {
+  hideHeader?: boolean
   collapse?: boolean
-  removeId?: string
-  removeLabel?: string
+  prepend?: string
+  label?: string
   inject?: string
-}
-
-export type ValidationOptions = {
   loose?: boolean
 }
 
@@ -50,7 +46,7 @@ export interface INode<T = any> {
    * @param options optional render options
    * @returns string HTML representation of this node using the given data
    */
-  render: (path: Path, value: T, view: TreeView, options?: RenderOptions) => string
+  render: (path: Path, value: T, view: TreeView, options?: NodeOptions) => string
   
   /**
    * Validates the model using this schema
@@ -59,7 +55,7 @@ export interface INode<T = any> {
    * or add an error and retain the original value
    * @param value value to be validated
    */
-  validate: (path: Path, value: any, errors: Errors, options: ValidationOptions) => any
+  validate: (path: Path, value: any, errors: Errors, options: NodeOptions) => any
 
   [custom: string]: any
 }

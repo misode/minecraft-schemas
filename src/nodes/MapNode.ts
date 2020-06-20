@@ -1,4 +1,5 @@
 import { INode, Base } from './Node'
+import { locale } from '../Registries'
 
 export type IMap = {
   [name: string]: any
@@ -25,17 +26,21 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
       })
       return `<div class="node map-node">
         <div class="node-header">
-          <label>${path.locale()}</label>
+          ${options?.prepend ?? ''}
+          <label>${options?.label ?? path.locale()}</label>
           ${options?.inject ?? ''}
           ${keys.renderRaw(path, view)}
           <button class="add" data-id="${onAdd}"></button>
         </div>
         <div class="node-body">
-          ${Object.keys(value ?? []).map(key => `<div class="node-entry">
-            ${children.render(path.push(key), value[key], view, {
-              removeId: view.registerClick(el => view.model.set(path.push(key), undefined))
+          ${Object.keys(value ?? []).map(key => {
+            const removeId = view.registerClick(el => view.model.set(path.push(key), undefined))
+            return `<div class="node-entry">
+            ${children.render(path.modelPush(key), value[key], view, {
+              prepend: `<button class="remove" data-id="${removeId}"></button>`,
+              label: key
             })}
-          </div>`).join('')}
+          </div>`}).join('')}
         </div>
       </div>`
     },

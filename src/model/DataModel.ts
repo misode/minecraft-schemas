@@ -102,10 +102,10 @@ export class DataModel {
    */
   get(path: Path) {
     let node = this.data;
-    for (let index of path) {
+    path.forEach(e => {
       if (node === undefined) return node
-      node = node[index]
-    }
+      node = node[e]
+    })
     return node
   }
 
@@ -123,13 +123,12 @@ export class DataModel {
     }
 
     let node = this.data;
-    for (let index of path.pop()) {
-      if (node[index] === undefined) {
-        node[index] = {}
+    path.pop().forEach(e => {
+      if (node[e] === undefined) {
+        node[e] = {}
       }
-      node = node[index]
-    }
-
+      node = node[e]
+    })
 
     if (value === undefined || (typeof value === 'number' && isNaN(value))) {
       if (typeof path.last() === 'number') {
@@ -175,7 +174,7 @@ export class DataModel {
   validate(loose?: boolean) {
     const path = new Path().withModel(this)
     this.errors.clear()
-    this.data = this.schema.validate(path, this.data, this.errors, { loose })
+    this.data = this.schema.validate(path, this.data, this.errors, { loose }) ?? {}
   }
 
   error(path: Path, error: string, ...params: any) {

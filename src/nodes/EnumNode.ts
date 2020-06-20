@@ -54,7 +54,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
       return value
     },
     renderRaw(path: Path, view: TreeView, inputId?: string) {
-      const values = getValues()
+      const valuesList = getValues()
       inputId = inputId ?? view.register(el => {
         (el as HTMLSelectElement).value = defaultValue ?? ''
       })
@@ -62,15 +62,17 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
         const datalistId = getId()
         return `<input list="${datalistId}" data-id="${inputId}">
         <datalist id="${datalistId}">
-          ${values.map(v => 
+          ${valuesList.map(v => 
             `<option value="${v}">`
           ).join('')}
         </datalist>`
       }
+      const pathWithContext = (typeof values === 'string') ?
+        new Path(path.getArray(), [values], path.getModel()) : path
       return `<select data-id="${inputId}">
         ${defaultValue ? `` : `<option value="">${locale('unset')}</option>`}
-        ${values.map(v =>
-          `<option value="${v}">${path.push(v).locale()}</option>`
+        ${valuesList.map(v =>
+          `<option value="${v}">${pathWithContext.push(v).locale()}</option>`
         ).join('')}
       </select>`
     },

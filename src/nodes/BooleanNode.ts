@@ -23,7 +23,7 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
       })
       return `<div class="node boolean-node node-header" ${path.error()}>
         ${options?.prepend ?? ''}
-        <label>${path.locale()}</label>
+        <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}
         <button${value === false ? ' class="selected"' : ' '} 
           data-id="${onFalse}">${locale('false')}</button>

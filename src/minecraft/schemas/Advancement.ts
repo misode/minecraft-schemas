@@ -87,7 +87,7 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
     [Switch]: path => path.pop().push('trigger'),
     [Case]: {
       'minecraft:bee_nest_destroyed': {
-        block: Resource(EnumNode('block')),
+        block: Resource(EnumNode('block', { search: true })),
         num_bees_inside: NumberNode({ integer: true }),
         item: Reference('item-predicate', { collapse: true })
       },
@@ -128,7 +128,7 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         )
       },
       'minecraft:enter_block': {
-        block: Resource(EnumNode('block')),
+        block: Resource(EnumNode('block', { search: true })),
         state: MapNode(
           StringNode(),
           StringNode()
@@ -159,7 +159,7 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         slots: ObjectNode({
           empty: RangeNode(),
           occupied: RangeNode(),
-          fill: RangeNode()
+          full: RangeNode()
         }),
         items: ListNode(
           Reference('item-predicate')
@@ -191,7 +191,7 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         distance: RangeNode()
       },
       'minecraft:placed_block': {
-        block: Resource(EnumNode('block')),
+        block: Resource(EnumNode('block', { search: true })),
         state: MapNode(
           StringNode(),
           StringNode()
@@ -206,7 +206,7 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         damage: Reference('damage-predicate', { collapse: true }),
         entity: PredicateChoice(Reference('entity-predicate', { collapse: true }))
       },
-      'minecraft:player_killed_player': {
+      'minecraft:player_killed_entity': {
         entity: PredicateChoice(Reference('entity-predicate', { collapse: true })),
         killing_blow: Reference('damage-source-predicate', { collapse: true })
       },
@@ -217,7 +217,7 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         location: Reference('location-predicate', { collapse: true })
       },
       'minecraft:slide_down_block': {
-        block: Resource(EnumNode('block'))
+        block: Resource(EnumNode('block', { search: true }))
       },
       'minecraft:shot_crossbow': {
         item: Reference('item-predicate', { collapse: true })
@@ -229,9 +229,9 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         entity: PredicateChoice(Reference('entity-predicate', { collapse: true }))
       },
       'minecraft:target_hit': {
-        signal_strength: RangeNode({ integer: true }),
         projectile: PredicateChoice(Reference('entity-predicate', { collapse: true })),
-        shooter: PredicateChoice(Reference('entity-predicate', { collapse: true }))
+        shooter: PredicateChoice(Reference('entity-predicate', { collapse: true })),
+        signal_strength: RangeNode({ integer: true })
       },
       'minecraft:thrown_item_picked_up_by_entity': {
         entity: Reference('entity-predicate', { collapse: true }),
@@ -244,15 +244,14 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         item: Reference('item-predicate', { collapse: true })
       },
       'minecraft:villager_trade': {
+        villager: Reference('entity-predicate', { collapse: true }),
         item: Reference('item-predicate', { collapse: true })
       },
       'minecraft:voluntary_exile': {
         location: Reference('location-predicate', { collapse: true })
       }
     }
-  })
-}, {
-  category: 'predicate'
-}))
+  }, { context: 'criterion' })
+}, { category: 'predicate', context: 'criterion' }))
 
 export const AdvancementSchema = SCHEMAS.get('advancement')

@@ -98,14 +98,14 @@ SCHEMAS.register('dimension', ObjectNode({
             Reference('generator-layer')
           )),
           structures: Reference('generator-structures')
-        }, { collapse: true })
+        })
       }
     }
   }, { disableSwitchContext: true }))
 }, { context: 'dimension' }))
 
 SCHEMAS.register('generator-biome', Mod(ObjectNode({
-  biome: Force(Resource(EnumNode('biome'))),
+  biome: Force(Resource(EnumNode('biome', { search: true }))),
   parameters: ObjectNode({
     altitude: Force(NumberNode({ min: -1, max: 1 })),
     temperature: Force(NumberNode({ min: -1, max: 1 })),
@@ -113,7 +113,7 @@ SCHEMAS.register('generator-biome', Mod(ObjectNode({
     weirdness: Force(NumberNode({ min: -1, max: 1 })),
     offset: Force(NumberNode({ min: -1, max: 1 }))
   })
-}), {
+}, { context: 'generator_biome' }), {
   default: () => ({
     biome: 'minecraft:plains',
     parameters: {
@@ -140,7 +140,7 @@ SCHEMAS.register('generator-structures', ObjectNode({
       spacing: NumberNode({ integer: true }),
       separation: NumberNode({ integer: true }),
       salt: NumberNode({ integer: true })
-    }), {
+    }, { context: 'generator_structure' }), {
       default: () => ({
         spacing: 10,
         separation: 5,
@@ -151,7 +151,7 @@ SCHEMAS.register('generator-structures', ObjectNode({
 }))
 
 SCHEMAS.register('generator-layer', Mod(ObjectNode({
-  block: Force(Resource(EnumNode('block'))),
+  block: Force(Resource(EnumNode('block', { search: true }))),
   height: Force(NumberNode({ min: 1, integer: true }))
 }), {
   default: () => ({
@@ -161,15 +161,15 @@ SCHEMAS.register('generator-layer', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('dimension-type', Mod(ObjectNode({
-  ultrawarm: Force(BooleanNode({radio: true})),
-  natural: Force(BooleanNode({radio: true})),
-  shrunk: Force(BooleanNode({radio: true})),
-  piglin_safe: Force(BooleanNode({radio: true})),
-  respawn_anchor_works: Force(BooleanNode({radio: true})),
-  bed_works: Force(BooleanNode({radio: true})),
-  has_raids: Force(BooleanNode({radio: true})),
-  has_skylight: Force(BooleanNode({radio: true})),
-  has_ceiling: Force(BooleanNode({radio: true})),
+  ultrawarm: Force(BooleanNode({ radio: true })),
+  natural: Force(BooleanNode({ radio: true })),
+  shrunk: Force(BooleanNode({ radio: true })),
+  piglin_safe: Force(BooleanNode({ radio: true })),
+  respawn_anchor_works: Force(BooleanNode({ radio: true })),
+  bed_works: Force(BooleanNode({ radio: true })),
+  has_raids: Force(BooleanNode({ radio: true })),
+  has_skylight: Force(BooleanNode({ radio: true })),
+  has_ceiling: Force(BooleanNode({ radio: true })),
   ambient_light: Force(NumberNode()),
   fixed_time: NumberNode({ integer: true }),
   logical_height: Force(NumberNode({ integer: true })),
@@ -177,8 +177,8 @@ SCHEMAS.register('dimension-type', Mod(ObjectNode({
     'minecraft:infiniburn_overworld',
     'minecraft:infiniburn_nether',
     'minecraft:infiniburn_end'
-  ], {search: true, additional: true}))
-}), {
+  ], { search: true, additional: true }))
+}, { context: 'dimension_type' }), {
   default: () => ({
     ultrawarm: false,
     natural: true,
@@ -191,7 +191,7 @@ SCHEMAS.register('dimension-type', Mod(ObjectNode({
     has_ceiling: false,
     ambient_light: 0,
     logical_height: 256,
-    infiniburn: 'infiniburn_overworld',
+    infiniburn: 'minecraft:infiniburn_overworld',
   })
 }))
 

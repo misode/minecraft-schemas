@@ -10,10 +10,15 @@ type Choice = [
   INode<any>,
   (old: any) => any
 ]
+
+type ChoiceNodeConfig = {
+  context?: string
+}
+
 /**
  * Node that allows multiple types
  */
-export const ChoiceNode = (choices: Choice[]): INode<any> => {
+export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<any> => {
   const isValid = (choice: ChoiceType, value: any) => {
     switch(choice) {
       case 'list': return value instanceof Array
@@ -39,17 +44,19 @@ export const ChoiceNode = (choices: Choice[]): INode<any> => {
     },
     render(path, value, view, options) {
       const choice = activeChoice(value) ?? choices[0]
+      const pathWithContext = (config?.context) ?
+        new Path(path.getArray(), [config.context], path.getModel()) : path
       let inject = choices.map(c => {
         if (c[0] === choice[0]) {
-          return `<button class="selected" disabled>${path.push(c[0]).locale()}</button>`
+          return `<button class="selected" disabled>${pathWithContext.push(c[0]).locale()}</button>`
         }
         const buttonId = view.registerClick(el => {
           view.model.set(path, c[2](value))
         })
-        return `<button data-id="${buttonId}">${path.push(c[0]).locale()}</button>`
+        return `<button data-id="${buttonId}">${pathWithContext.push(c[0]).locale()}</button>`
       }).join('')
 
-      return choice[1]?.render(path, value, view, {
+      return choice[1]?.render(pathWithContext, value, view, {
         ...options,
         label: options?.hideHeader ? '' : undefined,
         hideHeader: false,
@@ -66,9 +73,9 @@ export const ChoiceNode = (choices: Choice[]): INode<any> => {
   }
 }
 
-export const ObjectOrList = (node: INode<any>): INode<any> => {
+export const ObjectOrList = (node: INode<any>, config?: ChoiceNodeConfig): INode<any> => {
   return ChoiceNode([
     [ 'object', node, v => v[0] ],
     [ 'list', ListNode(node), v => [v] ]
-  ])
+  ], config)
 }

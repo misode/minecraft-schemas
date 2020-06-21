@@ -15,7 +15,7 @@ import { SCHEMAS } from '../../Registries';
 import './Predicates'
 
 SCHEMAS.register('predicate', ObjectOrList(
-  Reference('condition')
+  Reference('condition'), { context: 'condition' }
 ))
 
 SCHEMAS.register('condition', ObjectNode({
@@ -90,7 +90,7 @@ SCHEMAS.register('condition', ObjectNode({
     },
     'minecraft:weather_check': {
       raining: BooleanNode(),
-      thrundering: BooleanNode()
+      thundering: BooleanNode()
     }
   }
 }, { category: 'predicate', context: 'condition' }))

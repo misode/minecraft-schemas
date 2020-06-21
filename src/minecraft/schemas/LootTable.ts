@@ -36,10 +36,10 @@ SCHEMAS.register('loot-table', Mod(ObjectNode({
         Reference('loot-entry')
       ),
       ...functionsAndConditions
-    })
+    }, { context: 'loot_pool' })
   )),
   ...functionsAndConditions
-}), {
+}, { context: 'loot_table' }), {
   default: () => ({
     pools: [{
       rolls: 1,
@@ -92,7 +92,7 @@ SCHEMAS.register('loot-entry', ObjectNode({
       ...functionsAndConditions
     }
   }
-}))
+}, { context: 'loot_entry' }))
 
 SCHEMAS.register('loot-function', ObjectNode({
   function: Resource(EnumNode('loot_function_type', 'minecraft:set_count')),
@@ -128,10 +128,10 @@ SCHEMAS.register('loot-function', ObjectNode({
       source: EnumNode('copy_source', 'this'),
       ops: ListNode(
         ObjectNode({
-          source: StringNode(),
-          target: StringNode(),
+          source: Force(StringNode()),
+          target: Force(StringNode()),
           op: EnumNode(['replace', 'append', 'merge'])
-        })
+        }, { context: 'nbt_operation' })
       ),
       ...conditions
     },
@@ -194,8 +194,12 @@ SCHEMAS.register('loot-function', ObjectNode({
       damage: Force(RangeNode({ allowBinomial: true })),
       ...conditions
     },
+    'minecraft:set_loot_table': {
+      name: Force(StringNode()),
+      seed: NumberNode({ integer: true })
+    },
     'minecraft:set_lore': {
-      entity: Force(EnumNode('entity_sources')),
+      entity: Force(EnumNode('entity_source', 'this')),
       lore: Force(ListNode(
         JsonNode()
       )),
@@ -203,12 +207,12 @@ SCHEMAS.register('loot-function', ObjectNode({
       ...conditions
     },
     'minecraft:set_name': {
-      entity: Force(EnumNode('entity_sources')),
+      entity: Force(EnumNode('entity_source', 'this')),
       name: Force(JsonNode()),
       ...conditions
     },
     'minecraft:set_nbt': {
-      tag: StringNode(),
+      tag: Force(StringNode()),
       ...conditions
     },
     'minecraft:set_stew_effect': {

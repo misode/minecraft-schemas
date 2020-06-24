@@ -68,6 +68,10 @@ export class LocaleRegistry implements Registry<Locale> {
     return locale ?? {}
   }
 
+  has(id: string) {
+    return this.registry[id] !== undefined
+  }
+
   getLocale(key: string) {
     return this.get(this.language)[key]
   }

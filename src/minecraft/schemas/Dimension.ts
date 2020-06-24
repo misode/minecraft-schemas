@@ -10,17 +10,17 @@ import { StringNode } from '../../nodes/StringNode';
 import { Reference } from '../../nodes/Reference';
 import { SCHEMAS } from '../../Registries';
 
-SCHEMAS.register('dimension', ObjectNode({
+SCHEMAS.register('dimension', Mod(ObjectNode({
   type: Force(EnumNode('dimension_type', { search: true, additional: true })),
   generator: Force(ObjectNode({
     type: Resource(EnumNode(['minecraft:noise', 'minecraft:flat', 'minecraft:debug'], 'minecraft:noise')),
-    seed: Force(NumberNode({ integer: true })),
+    seed: NumberNode({ integer: true }),
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:noise': {
         biome_source: Force(ObjectNode({
           type: Resource(EnumNode('biome_source', 'minecraft:multi_noise')),
-          seed: Force(NumberNode({ integer: true })),
+          seed: NumberNode({ integer: true }),
           [Switch]: path => path.push('type'),
           [Case]: {
             'minecraft:fixed': {
@@ -102,7 +102,11 @@ SCHEMAS.register('dimension', ObjectNode({
       }
     }
   }, { disableSwitchContext: true }))
-}, { context: 'dimension' }))
+}, { context: 'dimension' }), {
+  default: () => ({
+    type: 'minecraft:overworld'
+  })
+}))
 
 SCHEMAS.register('generator-biome', Mod(ObjectNode({
   biome: Force(Resource(EnumNode('biome', { search: true }))),

@@ -1,4 +1,4 @@
-import { INode } from '../../nodes/Node'
+import { INode } from './Node'
 
 export const Resource = (node: INode<string>): INode<string> => ({
   ...node,

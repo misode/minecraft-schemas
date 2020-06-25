@@ -1,4 +1,4 @@
-import { INode, Base } from '../../nodes/Node'
+import { INode, Base } from './Node'
 
 export const JsonNode = (): INode<any> => {
   return {

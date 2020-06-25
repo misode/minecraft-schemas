@@ -1,6 +1,6 @@
-import { INode, Base } from '../../nodes/Node'
-import { locale } from '../../Registries'
-import { NumberNode } from '../../nodes/NumberNode'
+import { INode, Base } from './Node'
+import { locale } from '../Registries'
+import { NumberNode } from './NumberNode'
 
 export type IRange = number
   | { min?: number, max?: number, type?: 'uniform' }

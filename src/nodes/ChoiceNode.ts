@@ -1,6 +1,5 @@
-import { INode, Base, NodeOptions } from './Node'
+import { INode, Base } from './Node'
 import { Path } from '../model/Path'
-import { TreeView } from '../view/TreeView'
 import { ListNode } from './ListNode'
 
 type ChoiceType = 'object' | 'list' | 'string' | 'number' | 'boolean' | 'never'

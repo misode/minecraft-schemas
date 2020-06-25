@@ -1,5 +1,4 @@
 import { INode, Base } from './Node'
-import { locale } from '../Registries'
 
 export type IMap = {
   [name: string]: any

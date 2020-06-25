@@ -1,5 +1,6 @@
 import { DataModel, ModelListener } from '../model/DataModel'
 import { Path } from '../model/Path'
+import { AbstractView } from './AbstractView'
 
 type SourceViewOptions = {
   indentation?: number | string,
@@ -10,10 +11,9 @@ type SourceViewOptions = {
  * JSON representation view of the model.
  * Renders the result in a <textarea>.
  */
-export class SourceView implements ModelListener {
-  options?: SourceViewOptions
+export class SourceView extends AbstractView {
   target: HTMLTextAreaElement
-  model: DataModel
+  options?: SourceViewOptions
 
   /**
    * @param model data model this view represents and listens to
@@ -21,10 +21,9 @@ export class SourceView implements ModelListener {
    * @param options optional options for the view
    */
   constructor(model: DataModel, target: HTMLTextAreaElement, options?: SourceViewOptions) {
-    this.model = model
+    super(model)
     this.target = target
     this.options = options
-    model.addListener(this)
     this.target.addEventListener('change', evt => this.updateModel())
   }
 

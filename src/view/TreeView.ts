@@ -1,5 +1,6 @@
 import { DataModel, ModelListener } from '../model/DataModel'
 import { Path } from '../model/Path'
+import { AbstractView } from './AbstractView'
 
 type Registry = {
   [id: string]: (el: Element) => void
@@ -25,8 +26,7 @@ type TreeViewOptions = {
 /**
  * DOM representation view of the model.
  */
-export class TreeView implements ModelListener {
-  model: DataModel
+export class TreeView extends AbstractView {
   target: HTMLElement
   registry: Registry = {}
   showErrors: boolean
@@ -37,9 +37,8 @@ export class TreeView implements ModelListener {
    * @param target DOM element to render the view
    */
   constructor(model: DataModel, target: HTMLElement, options?: TreeViewOptions) {
-    this.model = model
+    super(model)
     this.target = target
-    this.model.addListener(this)
     this.showErrors = options?.showErrors ?? false
     this.observer = options?.observer ?? (() => {})
   }

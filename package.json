@@ -27,6 +27,6 @@
   },
   "files": [
     "lib/**/*",
-    "src/locales/*"
+    "locales/*"
   ]
 }

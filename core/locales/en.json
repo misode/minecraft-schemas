@@ -400,6 +400,8 @@
   "generator.biome_source.type": "Biome Source",
   "generator.seed": "Dimension Seed",
   "generator.settings": "Generator Settings",
+  "generator.settings.string": "Preset",
+  "generator.settings.object": "Custom",
   "generator.settings.bedrock_floor_position": "Bedrock Floor Position",
   "generator.settings.bedrock_roof_position": "Bedrock Roof Position",
   "generator.settings.biome": "Biome",

@@ -63,9 +63,13 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
       })
     },
     validate(path, value, errors, options) {
-      const choice = activeChoice(value)
+      let choice = activeChoice(value)
       if (choice === undefined) {
-        return value
+        if (options.loose) {
+          choice = choices[0]
+        } else {
+          return value
+        }
       }
       return choice[1].validate(path, value, errors, options)
     }

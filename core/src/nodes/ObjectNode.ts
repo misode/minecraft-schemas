@@ -81,7 +81,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         ${options?.hideHeader ? '' : `<div class="node-header" ${path.error()}>
           ${options?.prepend ? options.prepend : `
             ${(options?.collapse || config?.collapse) ? value === undefined ? `
-              <button class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, this.default()))}"></button>
+              <button class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, {__init: true}))}"></button>
             `: `
               <button class="collapse open" data-id="${view.registerClick(() => view.model.set(path, undefined))}"></button>
             ` : ``}
@@ -104,13 +104,14 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         errors.add(path, 'error.expected_object')
         return value
       }
+      const newOptions = (value.__init) ? {...options, init: true} : options
       let activeFields = defaultFields
       if (filter) {
         const filterPath = filter(path)
         let switchValue = filterPath.get()
         if (path.equals(filterPath.pop())) {
           const filterField = filterPath.last()
-          switchValue = defaultFields[filterField].validate(path.push(filterField), value[filterField], new Errors(), options)
+          switchValue = defaultFields[filterField].validate(path.push(filterField), value[filterField], new Errors(), newOptions)
         }
         activeFields = {...activeFields, ...cases![switchValue]}
       }
@@ -120,11 +121,11 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       let res: any = {};
       keys.forEach(k => {
         if (activeKeys.includes(k)) {
-          const newValue = activeFields[k].validate(path.push(k), value[k], errors, options)
+          const newValue = activeFields[k].validate(path.push(k), value[k], errors, newOptions)
           if (newValue !== undefined) {
             res[k] = newValue
           }
-        } else {
+        } else if (!k.startsWith('__')) {
           res[k] = value[k]
         }
       })

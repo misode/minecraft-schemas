@@ -1,8 +1,10 @@
 import {
   BooleanNode,
   Case,
+  ChoiceNode,
   EnumNode,
   Force,
+  INode,
   ListNode,
   MapNode,
   Mod,
@@ -14,6 +16,285 @@ import {
   StringNode,
   Switch,
 } from '@mcschema/core'
+
+const SettingsPresets = (node: INode<any>) => ChoiceNode([
+  [
+    'string',
+    EnumNode([
+      'minecraft:overworld',
+      'minecraft:nether',
+      'minecraft:end',
+      'minecraft:amplified',
+      'minecraft:caves',
+      'minecraft:floating_islands'
+    ], 'minecraft:overworld'),
+    v => 'minecraft:overworld'
+  ],
+  [
+    'object',
+    node,
+    v => {
+      switch (v) {
+        case 'minecraft:nether':
+          return {
+            bedrock_roof_position: 0,
+            bedrock_floor_position: 0,
+            sea_level: 32,
+            disable_mob_generation: true,
+            noise: {
+              density_factor: 0,
+              density_offset: 0.019921875,
+              simplex_surface_noise: false,
+              random_density_offset: false,
+              island_noise_override: false,
+              amplified: false,
+              size_horizontal: 1,
+              size_vertical: 2,
+              height: 128,
+              sampling: {
+                xz_scale: 1,
+                y_scale: 3,
+                xz_factor: 80,
+                y_factor: 60
+              },
+              top_slide: {
+                target: 120,
+                size: 3,
+                offset: 0
+              },
+              bottom_slide: {
+                target: 320,
+                size: 4,
+                offset: -1
+              }
+            },
+            default_block: {
+              Name: "minecraft:netherrack"
+            },
+            default_fluid: {
+              Name: "minecraft:lava",
+              Properties: {
+                level: "0"
+              }
+            }
+          }
+        case 'minecraft:end':
+          return {
+            bedrock_roof_position: -10,
+            bedrock_floor_position: -10,
+            sea_level: 0,
+            disable_mob_generation: true,
+            noise: {
+              density_factor: 0,
+              density_offset: 0,
+              simplex_surface_noise: true,
+              random_density_offset: false,
+              island_noise_override: true,
+              amplified: false,
+              size_horizontal: 2,
+              size_vertical: 1,
+              height: 128,
+              sampling: {
+                xz_scale: 2,
+                y_scale: 1,
+                xz_factor: 80,
+                y_factor: 160
+              },
+              top_slide: {
+                target: -3000,
+                size: 64,
+                offset: -46
+              },
+              bottom_slide: {
+                target: -30,
+                size: 7,
+                offset: 1
+              }
+            },
+            default_block: {
+              Name: "minecraft:end_stone"
+            },
+            default_fluid: {
+              Name: "minecraft:air"
+            }
+          }
+        case 'minecraft:amplified':
+          return {
+            bedrock_roof_position: -10,
+            bedrock_floor_position: 0,
+            sea_level: 63,
+            disable_mob_generation: false,
+            noise: {
+              density_factor: 1,
+              density_offset: -0.46875,
+              simplex_surface_noise: true,
+              random_density_offset: true,
+              island_noise_override: false,
+              amplified: true,
+              size_horizontal: 1,
+              size_vertical: 2,
+              height: 256,
+              sampling: {
+                xz_scale: 1,
+                y_scale: 1,
+                xz_factor: 80,
+                y_factor: 160
+              },
+              top_slide: {
+                target: -10,
+                size: 3,
+                offset: 0
+              },
+              bottom_slide: {
+                target: -30,
+                size: 0,
+                offset: 0
+              }
+            },
+            default_block: {
+              Name: "minecraft:stone"
+            },
+            default_fluid: {
+              Name: "minecraft:water",
+              Properties: {
+                level: "0"
+              }
+            }
+          }
+        case 'minecraft:caves':
+          return {
+            bedrock_roof_position: 0,
+            bedrock_floor_position: 0,
+            sea_level: 32,
+            disable_mob_generation: true,
+            noise: {
+              density_factor: 0,
+              density_offset: 0.019921875,
+              simplex_surface_noise: false,
+              random_density_offset: false,
+              island_noise_override: false,
+              amplified: false,
+              size_horizontal: 1,
+              size_vertical: 2,
+              height: 128,
+              sampling: {
+                xz_scale: 1,
+                y_scale: 3,
+                xz_factor: 80,
+                y_factor: 60
+              },
+              top_slide: {
+                target: 120,
+                size: 3,
+                offset: 0
+              },
+              bottom_slide: {
+                target: 320,
+                size: 4,
+                offset: -1
+              }
+            },
+            default_block: {
+              Name: "minecraft:stone"
+            },
+            default_fluid: {
+              Name: "minecraft:water",
+              Properties: {
+                level: "0"
+              }
+            }
+          }
+        case 'minecraft:floating_islands':
+          return {
+            bedrock_roof_position: -10,
+            bedrock_floor_position: -10,
+            sea_level: 0,
+            disable_mob_generation: true,
+            noise: {
+              density_factor: 0,
+              density_offset: 0,
+              simplex_surface_noise: true,
+              random_density_offset: false,
+              island_noise_override: true,
+              amplified: false,
+              size_horizontal: 2,
+              size_vertical: 1,
+              height: 128,
+              sampling: {
+                xz_scale: 2,
+                y_scale: 1,
+                xz_factor: 80,
+                y_factor: 160
+              },
+              top_slide: {
+                target: -3000,
+                size: 64,
+                offset: -46
+              },
+              bottom_slide: {
+                target: -30,
+                size: 7,
+                offset: 1
+              }
+            },
+            default_block: {
+              Name: "minecraft:stone"
+            },
+            default_fluid: {
+              Name: "minecraft:water",
+              Properties: {
+                level: "0"
+              }
+            }
+          }
+        case 'minecraft:overworld':
+        default:
+          return {
+            bedrock_roof_position: -10,
+            bedrock_floor_position: 0,
+            sea_level: 63,
+            disable_mob_generation: false,
+            noise: {
+              density_factor: 1,
+              density_offset: -0.46875,
+              simplex_surface_noise: true,
+              random_density_offset: true,
+              island_noise_override: false,
+              amplified: false,
+              size_horizontal: 1,
+              size_vertical: 2,
+              height: 256,
+              sampling: {
+                xz_scale: 1,
+                y_scale: 1,
+                xz_factor: 80,
+                y_factor: 160
+              },
+              top_slide: {
+                target: -10,
+                size: 3,
+                offset: 0
+              },
+              bottom_slide: {
+                target: -30,
+                size: 0,
+                offset: 0
+              }
+            },
+            default_block: {
+              Name: "minecraft:stone"
+            },
+            default_fluid: {
+              Name: "minecraft:water",
+              Properties: {
+                level: "0"
+              }
+            }
+          }
+      }
+    }
+  ]
+])
 
 SCHEMAS.register('dimension', Mod(ObjectNode({
   type: Force(EnumNode('dimension_type', { search: true, additional: true })),
@@ -47,54 +328,54 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
             }
           }
         }, { category: 'predicate', disableSwitchContext: true })),
-        settings: ObjectNode({
-          bedrock_roof_position: NumberNode({ integer: true }),
-          bedrock_floor_position: NumberNode({ integer: true }),
-          sea_level: NumberNode({ integer: true }),
-          disable_mob_generation: BooleanNode(),
-          default_block: ObjectNode({
-            Name: StringNode(),
+        settings: Force(SettingsPresets(ObjectNode({
+          bedrock_roof_position: Force(NumberNode({ integer: true })),
+          bedrock_floor_position: Force(NumberNode({ integer: true })),
+          sea_level: Force(NumberNode({ integer: true })),
+          disable_mob_generation: Force(BooleanNode()),
+          default_block: Force(ObjectNode({
+            Name: Force(EnumNode('block', { search: true })),
             Properties: MapNode(
               StringNode(),
               StringNode()
             )
-          }),
-          default_fluid: ObjectNode({
-            Name: StringNode(),
-            Properties: MapNode(
+          })),
+          default_fluid: Force(ObjectNode({
+            Name: Force(EnumNode('fluid', { search: true })),
+            Properties: Force(MapNode(
               StringNode(),
               StringNode()
-            )
-          }),
-          noise: ObjectNode({
-            density_factor: NumberNode(),
-            density_offset: NumberNode(),
-            simplex_surface_noise: BooleanNode(),
-            random_density_offset: BooleanNode(),
-            island_noise_override: BooleanNode(),
-            amplified: BooleanNode(),
-            size_horizontal: NumberNode({ integer: true }),
-            size_vertical: NumberNode({ integer: true }),
-            height: NumberNode({ integer: true }),
-            sampling: ObjectNode({
-              xz_scale: NumberNode(),
-              y_scale: NumberNode(),
-              xz_factor: NumberNode(),
-              y_factor: NumberNode()
-            }),
-            bottom_slide: ObjectNode({
-              target: NumberNode({ integer: true }),
-              size: NumberNode({ integer: true }),
-              offset: NumberNode({ integer: true })
-            }),
-            top_slide: ObjectNode({
-              target: NumberNode({ integer: true }),
-              size: NumberNode({ integer: true }),
-              offset: NumberNode({ integer: true })
-            })
-          }, { collapse: true }),
+            ))
+          })),
+          noise: Force(ObjectNode({
+            density_factor: Force(NumberNode()),
+            density_offset: Force(NumberNode()),
+            simplex_surface_noise: Force(BooleanNode()),
+            random_density_offset: Force(BooleanNode()),
+            island_noise_override: Force(BooleanNode()),
+            amplified: Force(BooleanNode()),
+            size_horizontal: Force(NumberNode({ integer: true })),
+            size_vertical: Force(NumberNode({ integer: true })),
+            height: Force(NumberNode({ integer: true })),
+            sampling: Force(ObjectNode({
+              xz_scale: Force(NumberNode()),
+              y_scale: Force(NumberNode()),
+              xz_factor: Force(NumberNode()),
+              y_factor: Force(NumberNode())
+            })),
+            bottom_slide: Force(ObjectNode({
+              target: Force(NumberNode({ integer: true })),
+              size: Force(NumberNode({ integer: true })),
+              offset: Force(NumberNode({ integer: true }))
+            })),
+            top_slide: Force(ObjectNode({
+              target: Force(NumberNode({ integer: true })),
+              size: Force(NumberNode({ integer: true })),
+              offset: Force(NumberNode({ integer: true }))
+            }))
+          })),
           structures: Reference('generator-structures')
-        }, { collapse: true })
+        })))
       },
       'minecraft:flat': {
         settings: ObjectNode({

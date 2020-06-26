@@ -11,6 +11,7 @@ export type NodeOptions = {
   label?: string
   inject?: string
   loose?: boolean
+  init?: boolean
 }
 
 export interface INode<T = any> {
@@ -77,6 +78,13 @@ export function Force<T>(node: INode<T>, defaultValue?: T): INode {
   return {
     ...node,
     force: () => true,
-    default: () => defaultValue ? defaultValue : node.default()
+    default: () => defaultValue ? defaultValue : node.default(),
+    validate: (p, v, e, o) => {
+      if (o.loose && o.init) {
+        return node.validate(p, v ?? defaultValue, e, o)
+      } else {
+        return node.validate(p, v, e, o)
+      }
+    }
   }
 }

@@ -14,7 +14,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mcschema/core.git"
+    "url": "https://github.com/misode/minecraft-schemas.git"
   },
   "devDependencies": {
     "@types/mocha": "^7.0.2",

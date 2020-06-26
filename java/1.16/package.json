@@ -1,0 +1,27 @@
+{
+  "name": "@mcschema/java-1.16",
+  "version": "0.1.0",
+  "description": "Schemas for Java Edition 1.16",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "keywords": [],
+  "author": "Misode",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/misode/minecraft-schemas.git"
+  },
+  "dependencies": {
+    "@mcschema/core": "^0.2.7"
+  },
+  "devDependencies": {
+    "typescript": "^3.9.3"
+  },
+  "files": [
+    "lib/**/*"
+  ]
+}

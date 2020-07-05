@@ -427,8 +427,8 @@ SCHEMAS.register('generator-structures', ObjectNode({
   structures: MapNode(
     EnumNode('structure_feature'),
     Mod(ObjectNode({
-      spacing: NumberNode({ integer: true }),
-      separation: NumberNode({ integer: true }),
+      spacing: NumberNode({ integer: true, min: 2, max: 4096 }),
+      separation: NumberNode({ integer: true, min: 1, max: 4096 }),
       salt: NumberNode({ integer: true })
     }, { context: 'generator_structure' }), {
       default: () => ({
@@ -442,7 +442,7 @@ SCHEMAS.register('generator-structures', ObjectNode({
 
 SCHEMAS.register('generator-layer', Mod(ObjectNode({
   block: Force(Resource(EnumNode('block', { search: true }))),
-  height: Force(NumberNode({ min: 1, integer: true }))
+  height: Force(NumberNode({ integer: true, min: 1 }))
 }), {
   default: () => ({
     block: 'stone',

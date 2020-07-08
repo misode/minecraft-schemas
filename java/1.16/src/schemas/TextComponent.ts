@@ -69,26 +69,61 @@ SCHEMAS.register('text-component-object', Mod(ObjectNode({
     action: Force(EnumNode(['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard'])),
     [Switch]: path => path.push('action'),
     [Case]: {
-      'open_url': { 
-        value: StringNode() 
+      'change_page': {
+        value: StringNode()
       },
-      'open_file': { 
-        value: StringNode() 
+      'copy_to_clipboard': {
+        value: StringNode()
+      },
+      'open_file': {
+        value: StringNode()
+      },
+      'open_url': {
+        value: StringNode()
       },
       'run_command': {
         value: StringNode({ validation: { validator: 'command', params: { leadingSlash: true } } })
       },
       'suggest_command': {
         value: StringNode({ validation: { validator: 'command', params: { leadingSlash: true, allowPartial: true } } })
-      },
-      'change_page': { 
-        value: StringNode() 
-      },
-      'copy_to_clipboard': { 
-        value: StringNode() 
       }
     }
-  })
+  }, { collapse: true }),
+  hoverEvent: ObjectNode({
+    action: Force(EnumNode(['show_text', 'show_item', 'show_entity'])),
+    [Switch]: path => path.push('action'),
+    [Case]: {
+      'show_text': {
+        value: Reference('text-component'),
+        contents: Reference('text-component')
+      },
+      'show_item': {
+        value: StringNode({ validation: { validator: 'nbt', params: { module: 'util::InventoryItem' } } }),
+        contents: ObjectNode({
+          id: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
+          count: NumberNode({ integer: true }),
+          tag: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: path => path.pop().push('id') } } } })
+        }, { collapse: true })
+      },
+      'show_entity': {
+        value: ObjectNode({
+          name: StringNode(),
+          type: StringNode(),
+          id: StringNode()
+        }, { collapse: true }),
+        contents: Mod(ObjectNode({
+          name: Reference('text-component'),
+          type: Force(Resource(EnumNode('entity', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:entity' } } }))),
+          id: Force(StringNode({ validation: { validator: 'uuid' } }))
+        }, { collapse: true }), {
+          default: () => ({
+            type: 'minecraft:pig',
+            id: '00000001-0001-0001-0001-000000000001'
+          })
+        })
+      }
+    }
+  }, { collapse: true })
 }, { context: 'text-component-object', collapse: true }), {
   default: () => ({
     text: ""

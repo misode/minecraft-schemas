@@ -1,3 +1,5 @@
+import { Path } from './model/Path'
+
 export type ValidationOption =
   | CommandValidationOption
   | EntityValidationOption
@@ -5,6 +7,7 @@ export type ValidationOption =
   | NbtPathValidationOption
   | ObjectiveValidationOption
   | ResourceValidationOption
+  | UuidValidationOption
   | VectorValidationOption
 
 export type CommandValidationOption = {
@@ -27,10 +30,12 @@ export type EntityValidationOption = {
 export type NbtValidationOption = {
   validator: 'nbt',
   params: {
-    category: 'minecraft:block' | 'minecraft:entity' | 'minecraft:item',
-    id?: string,
-    inPredicate?: boolean,
-    enclosingTag?: () => string
+    module?: string,
+    registry?: {
+      category: 'minecraft:block' | 'minecraft:entity' | 'minecraft:item',
+      id: (path: Path) => Path,
+    }
+    inPredicate?: boolean
   }
 }
 
@@ -47,8 +52,6 @@ export type ObjectiveValidationOption = {
   params?: {}
 }
 
-type ResourceType = '$storages'
-
 export type ResourceValidationOption = {
   validator: 'resource',
   params: {
@@ -56,6 +59,11 @@ export type ResourceValidationOption = {
     allowTag?: boolean,
     allowUnknown?: Boolean
   }
+}
+
+export type UuidValidationOption = {
+  validator: 'uuid',
+  params?: {}
 }
 
 export type VectorValidationOption = {
@@ -69,3 +77,8 @@ export type VectorValidationOption = {
     max?: number
   }
 }
+
+type ResourceType =
+  | '$storages'
+  | 'minecraft:entity'
+  | 'minecraft:item'

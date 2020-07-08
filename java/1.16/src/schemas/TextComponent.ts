@@ -45,31 +45,17 @@ SCHEMAS.register('text-component-object', Mod(ObjectNode({
   translate: StringNode({ allowEmpty: true }),
   with: Reference('text-component-list'),
   score: ObjectNode({
-    name: Force(StringNode({
-      validation: { validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } }
-    })),
-    objective: Force(StringNode({
-      validation: { validator: 'objective' }
-    })),
+    name: Force(StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } } })),
+    objective: Force(StringNode({ validation: { validator: 'objective' } })),
     value: StringNode()
   }, { collapse: true }),
-  selector: StringNode({
-    validation: { validator: 'entity', params: { amount: 'multiple', type: 'entities' } }
-  }),
+  selector: StringNode({ validation: { validator: 'entity', params: { amount: 'multiple', type: 'entities' } } }),
   keybind: EnumNode('keybind', { additional: true }),
-  nbt: StringNode({
-    validation: { validator: 'nbt_path' }
-  }),
+  nbt: StringNode({ validation: { validator: 'nbt_path' } }),
   interpret: BooleanNode(),
-  block: StringNode({
-    validation: { validator: 'vector', params: { dimension: 3, isInteger: true } }
-  }),
-  entity: StringNode({
-    validation: { validator: 'entity', params: { amount: 'single', type: 'entities' } }
-  }),
-  storage: Resource(StringNode({
-    validation: { validator: 'resource', params: { pool: '$storages' } }
-  })),
+  block: StringNode({ validation: { validator: 'vector', params: { dimension: 3, isInteger: true } } }),
+  entity: StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities' } } }),
+  storage: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$storages' } } })),
   extra: Reference('text-component-list'),
   color: StringNode() /* TODO */,
   font: Resource(StringNode()),
@@ -83,20 +69,24 @@ SCHEMAS.register('text-component-object', Mod(ObjectNode({
     action: Force(EnumNode(['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard'])),
     [Switch]: path => path.push('action'),
     [Case]: {
-      'open_url': { value: StringNode() },
-      'open_file': { value: StringNode() },
+      'open_url': { 
+        value: StringNode() 
+      },
+      'open_file': { 
+        value: StringNode() 
+      },
       'run_command': {
-        value: StringNode({
-          validation: { validator: 'command', params: { leadingSlash: true } }
-        })
+        value: StringNode({ validation: { validator: 'command', params: { leadingSlash: true } } })
       },
       'suggest_command': {
-        value: StringNode({
-          validation: { validator: 'command', params: { leadingSlash: true, allowPartial: true } }
-        })
+        value: StringNode({ validation: { validator: 'command', params: { leadingSlash: true, allowPartial: true } } })
       },
-      'change_page': { value: StringNode() },
-      'copy_to_clipboard': { value: StringNode() }
+      'change_page': { 
+        value: StringNode() 
+      },
+      'copy_to_clipboard': { 
+        value: StringNode() 
+      }
     }
   })
 }, { context: 'text-component-object', collapse: true }), {

@@ -1,10 +1,12 @@
 import { INode, Base } from './Node'
 import { locale } from '../Registries'
+import { ValidationOption } from '../ValidationOption'
 
 type StringNodeConfig = {
   allowEmpty?: boolean
   pattern?: RegExp,
-  patternError?: string
+  patternError?: string,
+  validation?: ValidationOption
 }
 
 /**

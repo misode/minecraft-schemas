@@ -71,8 +71,12 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     },
     navigate(path, index) {
       const nextIndex = index + 1
+      const pathElements = path.getArray()
+      if (pathElements.length <= nextIndex) {
+        return undefined
+      }
       const activeFields = getActiveFields(path.slice(0, nextIndex))
-      const node = activeFields[path.getArray()[nextIndex]]
+      const node = activeFields[pathElements[nextIndex]]
       return node.navigate(path, nextIndex)
     },
     transform(path, value, view) {

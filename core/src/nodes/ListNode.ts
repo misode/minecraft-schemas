@@ -9,11 +9,14 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
     ...Base,
     navigate(path, index) {
       const nextIndex = index + 1
+      if (path.getArray().length <= nextIndex) {
+        return undefined
+      }
       return children.navigate(path, nextIndex)
     },
     transform(path, value, view) {
       if (!(value instanceof Array)) return value
-      return value.map((obj, index) => 
+      return value.map((obj, index) =>
         children.transform(path.push(index), obj, view)
       )
     },

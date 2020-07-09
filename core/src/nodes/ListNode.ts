@@ -7,6 +7,10 @@ type ListNodeConfig = {
 export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]> => {
   return ({
     ...Base,
+    navigate(path, index) {
+      const nextIndex = index + 1
+      return children.navigate(path, nextIndex)
+    },
     transform(path, value, view) {
       if (!(value instanceof Array)) return value
       return value.map((obj, index) => 

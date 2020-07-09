@@ -2,12 +2,15 @@ import { INode, Base } from './Node'
 import { Path } from '../model/Path'
 import { COLLECTIONS, locale } from '../Registries'
 import { getId, TreeView } from '../view/TreeView'
+import { ValidationOption } from '../ValidationOption'
 
 type EnumNodeConfig = {
-  /** If true, a <datalist> will be used and options won't be translated */
+  /** If true, a \<datalist> will be used and options won't be translated */
   search?: boolean
   /** If true, values not in the list are also permitted */
-  additional?: boolean
+  additional?: boolean,
+  /** Options for value validation. */
+  validation?: ValidationOption
 }
 
 export const EnumNode = (values: string[] | string, config?: string | EnumNodeConfig): INode<string> => {
@@ -17,6 +20,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
   const defaultValue = (typeof config === 'string') ? config : undefined
   const search = (typeof config === 'string') ? undefined : config?.search
   const additional = (typeof config === 'string') ? undefined : config?.additional
+  const validation = (typeof config === 'string') ? undefined : config?.validation
 
   return {
     ...Base,
@@ -78,6 +82,9 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
     },
     getState(el: Element) {
       return el.getElementsByTagName(search ? 'input' : 'select')[0].value
+    },
+    validationOption() {
+      return validation
     }
   }
 }

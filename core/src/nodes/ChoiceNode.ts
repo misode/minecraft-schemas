@@ -19,7 +19,7 @@ type ChoiceNodeConfig = {
  */
 export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<any> => {
   const isValid = (choice: ChoiceType, value: any) => {
-    switch(choice) {
+    switch (choice) {
       case 'list': return value instanceof Array
       case 'object': return typeof value === 'object' && !(value instanceof Array)
       default: return typeof value === choice
@@ -34,6 +34,18 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
   return {
     ...Base,
     default: () => choices[0][1].default(),
+    keys(path, value) {
+      const objectNode = choices.find(([type]) => type === 'object')?.[1]
+      const keys = objectNode?.keys(path, value)
+      return keys ?? []
+    },
+    navigate(path, index) {
+      const nextIndex = index + 1
+      const nextPathElement = path.getArray()[nextIndex]
+      const expectedChoiceType = typeof nextPathElement === 'number' ? 'list' : 'object'
+      const node = choices.find(([type]) => type === expectedChoiceType)?.[1]
+      return node?.navigate(path, nextIndex)
+    },
     transform(path, value, view) {
       const choice = activeChoice(value)
       if (choice === undefined) {
@@ -78,7 +90,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
 
 export const ObjectOrList = (node: INode<any>, config?: ChoiceNodeConfig): INode<any> => {
   return ChoiceNode([
-    [ 'object', node, v => v[0] ],
-    [ 'list', ListNode(node), v => [v] ]
+    ['object', node, v => v[0]],
+    ['list', ListNode(node), v => [v]]
   ], config)
 }

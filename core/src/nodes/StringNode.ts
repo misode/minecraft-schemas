@@ -1,10 +1,12 @@
 import { INode, Base } from './Node'
 import { locale } from '../Registries'
+import { ValidationOption } from '../ValidationOption'
 
 type StringNodeConfig = {
   allowEmpty?: boolean
   pattern?: RegExp,
-  patternError?: string
+  patternError?: string,
+  validation?: ValidationOption
 }
 
 /**
@@ -45,6 +47,9 @@ export const StringNode = (config?: StringNodeConfig): INode<string> => {
     },
     getState(el: HTMLElement) {
       return el.getElementsByTagName('input')[0].value
+    },
+    validationOption() {
+      return config?.validation
     },
     renderRaw() {
       return `<input>`

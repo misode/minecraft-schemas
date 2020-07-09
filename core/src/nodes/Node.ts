@@ -3,6 +3,7 @@ import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { SourceView } from '../view/SourceView'
 import { Errors } from '../model/Errors'
+import { ValidationOption } from '../ValidationOption'
 
 export type NodeOptions = {
   hideHeader?: boolean
@@ -40,6 +41,23 @@ export interface INode<T = any> {
   force: () => boolean
 
   /**
+   * Get all possible keys that can be used under this object
+   * @param path The path of this object node
+   * @param value The value corresponding to this object node
+   */
+  keys: (path: Path, value: any) => string[]
+
+  /**
+   * Navigate to the specific child of this node according to the path
+   * @param path The path of the target node
+   * @param index The index of the model path element that the current node 
+   * is at. For example, in object `{ foo: { bar: true } }` with path `foo.bar`,
+   * the index for the root object is `-1`, the one for the inner object is `0`,
+   * and the one for the boolean value is `1`.
+   */
+  navigate: (path: Path, index: number) => INode | undefined
+
+  /**
    * Renders the node and handles events to update the model
    * @param path 
    * @param value 
@@ -48,7 +66,7 @@ export interface INode<T = any> {
    * @returns string HTML representation of this node using the given data
    */
   render: (path: Path, value: T, view: TreeView, options?: NodeOptions) => string
-  
+
   /**
    * Validates the model using this schema
    * 
@@ -58,6 +76,12 @@ export interface INode<T = any> {
    */
   validate: (path: Path, value: any, errors: Errors, options: NodeOptions) => any
 
+  /**
+   * Get the validation option of this node. The client of this schema may
+   * do more detailed validation according to this option
+   */
+  validationOption: () => ValidationOption | undefined
+
   [custom: string]: any
 }
 
@@ -66,8 +90,11 @@ export const Base: INode = ({
   transform: (_, v) => v,
   enabled: () => true,
   force: () => false,
+  keys: () => [],
+  navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
   render: () => '',
-  validate: (_, v) => v
+  validate: (_, v) => v,
+  validationOption: () => undefined
 })
 
 export const Mod = (node: INode, mods: Partial<INode>): INode => ({

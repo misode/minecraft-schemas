@@ -30,6 +30,20 @@ export class Path {
   }
 
   /**
+   * A new path with the specific sliced module elements
+   */
+  slice(start?: number, end?: number): Path {
+    return new Path(this.modelArr.slice(start, end), this.localeArr, this.model)
+  }
+
+  /**
+   * A new path with the first model element removed
+   */
+  shift(): Path {
+    return new Path(this.modelArr.slice(1), this.localeArr, this.model)
+  }
+
+  /**
    * A new path with the last model element removed
    */
   pop(): Path {

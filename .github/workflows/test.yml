@@ -24,7 +24,7 @@ jobs:
         run: | 
           cd core
           npm i
-          npm link
+          sudo npm link
 
       - name: Build & Test
         run: |

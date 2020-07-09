@@ -1,9 +1,9 @@
 import assert from 'power-assert'
 import { describe, it } from 'mocha'
-import { Path } from '../src/model/Path'
-import { DataModel } from '../src/model/DataModel'
-import { StringNode } from '../src/nodes/StringNode'
-import { ObjectNode } from '../src/nodes/ObjectNode'
+import { Path } from '../model/Path'
+import { DataModel } from '../model/DataModel'
+import { StringNode } from '../nodes/StringNode'
+import { ObjectNode } from '../nodes/ObjectNode'
 
 describe('Path Tests', () => {
   describe('last() Tests', () => {

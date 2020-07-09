@@ -41,10 +41,21 @@ export interface INode<T = any> {
   force: () => boolean
 
   /**
-   * Get the validation option of this node. The client of this schema may
-   * do more detailed validation according to this option
+   * Get all possible keys that can be used under this object
+   * @param path The path of this object node
+   * @param value The value corresponding to this object node
    */
-  getValidationOption: () => ValidationOption | undefined
+  keys: (path: Path, value: any) => string[]
+
+  /**
+   * Navigate to the specific child of this node according to the path
+   * @param path The path of the target node
+   * @param index The index of the model path element that the current node 
+   * is at. For example, in object `{ foo: { bar: true } }` with path `foo.bar`,
+   * the index for the root object is `-1`, the one for the inner object is `0`,
+   * and the one for the boolean value is `1`.
+   */
+  navigate: (path: Path, index: number) => INode | undefined
 
   /**
    * Renders the node and handles events to update the model
@@ -65,6 +76,12 @@ export interface INode<T = any> {
    */
   validate: (path: Path, value: any, errors: Errors, options: NodeOptions) => any
 
+  /**
+   * Get the validation option of this node. The client of this schema may
+   * do more detailed validation according to this option
+   */
+  validationOption: () => ValidationOption | undefined
+
   [custom: string]: any
 }
 
@@ -73,9 +90,11 @@ export const Base: INode = ({
   transform: (_, v) => v,
   enabled: () => true,
   force: () => false,
-  getValidationOption: () => undefined,
+  keys: () => [],
+  navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
   render: () => '',
-  validate: (_, v) => v
+  validate: (_, v) => v,
+  validationOption: () => undefined
 })
 
 export const Mod = (node: INode, mods: Partial<INode>): INode => ({

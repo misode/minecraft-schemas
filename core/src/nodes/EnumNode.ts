@@ -83,7 +83,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
     getState(el: Element) {
       return el.getElementsByTagName(search ? 'input' : 'select')[0].value
     },
-    getValidationOption() {
+    validationOption() {
       return validation
     }
   }

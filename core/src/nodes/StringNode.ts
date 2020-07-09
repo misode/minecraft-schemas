@@ -48,7 +48,7 @@ export const StringNode = (config?: StringNodeConfig): INode<string> => {
     getState(el: HTMLElement) {
       return el.getElementsByTagName('input')[0].value
     },
-    getValidationOption() {
+    validationOption() {
       return config?.validation
     },
     renderRaw() {

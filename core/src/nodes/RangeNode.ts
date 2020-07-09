@@ -46,6 +46,19 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
   return {
     ...Base,
     default: () => (config?.forceRange) ? {} : 0,
+    keys(_path, value) {
+      if (value === undefined || typeof value === 'number') {
+        return []
+      } else {
+        const existingKeys = Object.keys(value)
+        return ['type', 'min', 'max', ...(config?.allowBinomial ? ['n', 'p'] : [])].filter(k => !existingKeys.includes(k))
+      }
+    },
+    navigate(path, index) {
+      const nextIndex = index + 1
+      const node = NumberNode({ integer: config?.integer, min: config?.min, max: config?.max })
+      return node.navigate(path, nextIndex)
+    },
     render(path, value, view, options) {
       let curType = ''
       let input = ''
@@ -73,7 +86,7 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
         el.addEventListener('change', evt => {
           const target = (el as HTMLInputElement).value
           const newValue = target === 'exact' ? this.default() :
-            target === 'binomial' ? {type: 'binomial'} : {}
+            target === 'binomial' ? { type: 'binomial' } : {}
           view.model.set(path, newValue)
           evt.stopPropagation()
         })

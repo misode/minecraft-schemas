@@ -32,7 +32,6 @@ export class DataModel {
     this.data = schema.default()
     this.listeners = []
     this.errors = new Errors()
-    this.validate(true)
     this.history = [JSON.stringify(this.data)]
     this.historyIndex = 0
     this.historyMax = options?.historyMax ?? 50

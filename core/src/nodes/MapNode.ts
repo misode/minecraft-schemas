@@ -44,6 +44,10 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
       </div>`
     },
     validate(path, value, errors, options) {
+      console.log(path.last(), value)
+      if (options.loose && value === undefined) {
+        value = {}
+      }
       if (value === null || typeof value !== 'object') {
         errors.add(path, 'error.expected_object')
         return value

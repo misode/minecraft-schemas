@@ -20,17 +20,13 @@ jobs:
             ${{ runner.os }}-node-
             ${{ runner.os }}-
 
-      - name: Install Dependencies
+      - name: Test Core
         run: | 
           cd core
           npm i
           sudo npm link
-
-      - name: Build & Test
-        run: |
           npm run build
           npm test
-          cd ..
         
       - name: Cache Java 1.16 Node Modules
         uses: actions/cache@v1
@@ -41,13 +37,9 @@ jobs:
             ${{ runner.os }}-node-
             ${{ runner.os }}-
 
-      - name: Install Dependencies
+      - name: Test Java 1.16
         run: | 
           cd java/1.16
           npm i
           npm link @mcschema/core
-
-      - name: Build & Test
-        run: |
           npm run build
-          cd ../..

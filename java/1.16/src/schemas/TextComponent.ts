@@ -2,15 +2,15 @@ import { BooleanNode, Case, ChoiceNode, EnumNode, Force, ListNode, Mod, NumberNo
 
 const getSimpleString = (jsonText: any): string => jsonText instanceof Array ? getSimpleString(jsonText[0]) : jsonText?.text ?? jsonText?.toString() ?? ''
 
-SCHEMAS.register('text-component', Mod(ChoiceNode([
+SCHEMAS.register('text_component', Mod(ChoiceNode([
   [
     'object',
-    Reference('text-component-object'),
+    Reference('text_component_object'),
     v => v instanceof Array ? (typeof v[0] === 'object' ? v[0] : { text: getSimpleString(v[0]) }) : typeof v === 'object' ? v : { text: getSimpleString(v) }
   ],
   [
     'list',
-    Reference('text-component-list'),
+    Reference('text-component_list'),
     v => [v]
   ],
   [
@@ -34,16 +34,16 @@ SCHEMAS.register('text-component', Mod(ChoiceNode([
       return s === 'true' || s === 'false' ? s === 'true' : !!s
     }
   ]
-], { context: 'text-component' }), {
+], { context: 'text_component' }), {
   default: () => ({
     text: ""
   })
 }))
 
-SCHEMAS.register('text-component-object', Mod(ObjectNode({
+SCHEMAS.register('text_component_object', Mod(ObjectNode({
   text: StringNode({ allowEmpty: true }),
   translate: StringNode({ allowEmpty: true }),
-  with: Reference('text-component-list'),
+  with: Reference('text_component_list'),
   score: ObjectNode({
     name: Force(StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } } })),
     objective: Force(StringNode({ validation: { validator: 'objective' } })),
@@ -56,7 +56,7 @@ SCHEMAS.register('text-component-object', Mod(ObjectNode({
   block: StringNode({ validation: { validator: 'vector', params: { dimension: 3, isInteger: true } } }),
   entity: StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities' } } }),
   storage: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$storages' } } })),
-  extra: Reference('text-component-list'),
+  extra: Reference('text_component_list'),
   color: StringNode() /* TODO */,
   font: Resource(StringNode()),
   bold: BooleanNode(),
@@ -94,8 +94,8 @@ SCHEMAS.register('text-component-object', Mod(ObjectNode({
     [Switch]: path => path.push('action'),
     [Case]: {
       'show_text': {
-        value: Reference('text-component'),
-        contents: Reference('text-component')
+        value: Reference('text_component'),
+        contents: Reference('text_component')
       },
       'show_item': {
         value: StringNode({ validation: { validator: 'nbt', params: { module: 'util::InventoryItem' } } }),
@@ -112,7 +112,7 @@ SCHEMAS.register('text-component-object', Mod(ObjectNode({
           id: StringNode()
         }, { collapse: true }),
         contents: Mod(ObjectNode({
-          name: Reference('text-component'),
+          name: Reference('text_component'),
           type: Force(Resource(EnumNode('entity', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:entity' } } }))),
           id: Force(StringNode({ validation: { validator: 'uuid' } }))
         }, { collapse: true }), {
@@ -124,18 +124,16 @@ SCHEMAS.register('text-component-object', Mod(ObjectNode({
       }
     }
   }, { collapse: true })
-}, { context: 'text-component-object', collapse: true }), {
+}, { context: 'text_component_object', collapse: true }), {
   default: () => ({
     text: ""
   })
 }))
 
-SCHEMAS.register('text-component-list', Mod(ListNode(
-  Reference('text-component'), { allowEmpty: true }
+SCHEMAS.register('text_component_list', Mod(ListNode(
+  Reference('text_component'), { allowEmpty: true }
 ), {
   default: () => [{
     text: ""
   }]
 }))
-
-export const TextComponentSchema = SCHEMAS.get('text-component')

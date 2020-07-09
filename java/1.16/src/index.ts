@@ -17,5 +17,5 @@ export const schemas = {
   'dimension-type': SCHEMAS.get('dimension_type'),
   'feature': SCHEMAS.get('configured_feature'),
   'loot-table': SCHEMAS.get('loot_table'),
-  'text-component': SCHEMAS.get('text_component')
+  'text-component': SCHEMAS.get('text_component_object')
 }

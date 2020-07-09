@@ -1,14 +1,19 @@
+import { SCHEMAS } from '@mcschema/core'
 import './Collections'
 import './schemas/Predicates'
-import { AdvancementSchema } from './schemas/Advancement'
-import { ConditionSchema } from './schemas/Condition'
-import { LootTableSchema } from './schemas/LootTable'
-import { DimensionSchema, DimensionTypeSchema } from './schemas/Dimension'
+import './schemas/Advancement'
+import './schemas/Condition'
+import './schemas/LootTable'
+import './schemas/Dimension'
+import './schemas/worldgen/Biome'
+import './schemas/worldgen/Feature'
 
 export const schemas = {
-  'advancement': AdvancementSchema,
-  'predicate': ConditionSchema,
-  'dimension': DimensionSchema,
-  'dimension-type': DimensionTypeSchema,
-  'loot-table': LootTableSchema
+  'advancement': SCHEMAS.get('advancement'),
+  'biome': SCHEMAS.get('biome'),
+  'predicate': SCHEMAS.get('predicate'),
+  'dimension': SCHEMAS.get('dimension'),
+  'dimension-type': SCHEMAS.get('dimension_type'),
+  'feature': SCHEMAS.get('configured_feature'),
+  'loot-table': SCHEMAS.get('loot_table')
 }

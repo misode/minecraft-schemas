@@ -37,11 +37,11 @@ SCHEMAS.register('condition', ObjectNode({
       )
     },
     'minecraft:damage_source_properties': {
-      predicate: Reference('damage-source-predicate')
+      predicate: Reference('damage_source_predicate')
     },
     'minecraft:entity_properties': {
       entity: EnumNode('entity_source', 'this'),
-      predicate: Reference('entity-predicate')
+      predicate: Reference('entity_predicate')
     },
     'minecraft:entity_scores': {
       entity: EnumNode('entity_source', 'this'),
@@ -60,10 +60,10 @@ SCHEMAS.register('condition', ObjectNode({
       offsetX: NumberNode({ integer: true }),
       offsetY: NumberNode({ integer: true }),
       offsetZ: NumberNode({ integer: true }),
-      predicate: Reference('location-predicate')
+      predicate: Reference('location_predicate')
     },
     'minecraft:match_tool': {
-      predicate: Reference('item-predicate')
+      predicate: Reference('item_predicate')
     },
     'minecraft:random_chance': {
       chance: Force(NumberNode({ min: 0, max: 1 }))
@@ -96,5 +96,3 @@ SCHEMAS.register('condition', ObjectNode({
     }
   }
 }, { category: 'predicate', context: 'condition' }))
-
-export const ConditionSchema = SCHEMAS.get('predicate')

@@ -305,26 +305,28 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
     [Case]: {
       'minecraft:noise': {
         biome_source: Force(ObjectNode({
-          type: Resource(EnumNode('biome_source', 'minecraft:multi_noise')),
+          type: Resource(EnumNode('worldgen/biome_source', 'minecraft:multi_noise')),
           seed: NumberNode({ integer: true }),
           [Switch]: path => path.push('type'),
           [Case]: {
             'minecraft:fixed': {
-              biome: EnumNode('biome', 'minecraft:plains')
+              biome: EnumNode('worldgen/biome', 'minecraft:plains')
             },
             'minecraft:multi_noise': {
               preset: EnumNode(['nether']),
               biomes: ListNode(
-                Reference('generator-biome')
+                Reference('generator_biome')
               )
             },
             'minecraft:checkerboard': {
+              scale: NumberNode({ integer: true, min: 0, max: 62 }),
               biomes: ListNode(
-                EnumNode('biome', 'minecraft:plains')
+                EnumNode('worldgen/biome', 'minecraft:plains')
               )
             },
             'minecraft:vanilla_layered': {
-              large_biomes: BooleanNode()
+              large_biomes: BooleanNode(),
+              legacy_biome_init_layer: BooleanNode()
             }
           }
         }, { category: 'predicate', disableSwitchContext: true })),
@@ -374,16 +376,18 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
               offset: Force(NumberNode({ integer: true }))
             }))
           })),
-          structures: Reference('generator-structures')
+          structures: Reference('generator_structures')
         })))
       },
       'minecraft:flat': {
         settings: ObjectNode({
-          biome: Resource(EnumNode('biome')),
+          biome: Resource(EnumNode('worldgen/biome')),
+          lakes: BooleanNode(),
+          features: BooleanNode(),
           layers: Force(ListNode(
-            Reference('generator-layer')
+            Reference('generator_layer')
           )),
-          structures: Reference('generator-structures')
+          structures: Reference('generator_structures')
         })
       }
     }
@@ -394,8 +398,8 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
   })
 }))
 
-SCHEMAS.register('generator-biome', Mod(ObjectNode({
-  biome: Force(Resource(EnumNode('biome', { search: true }))),
+SCHEMAS.register('generator_biome', Mod(ObjectNode({
+  biome: Force(Resource(EnumNode('worldgen/biome', { search: true }))),
   parameters: ObjectNode({
     altitude: Force(NumberNode({ min: -1, max: 1 })),
     temperature: Force(NumberNode({ min: -1, max: 1 })),
@@ -416,7 +420,7 @@ SCHEMAS.register('generator-biome', Mod(ObjectNode({
   })
 }))
 
-SCHEMAS.register('generator-structures', ObjectNode({
+SCHEMAS.register('generator_structures', ObjectNode({
   stronghold: ObjectNode({
     distance: NumberNode({ integer: true }),
     spread: NumberNode({ integer: true }),
@@ -425,7 +429,7 @@ SCHEMAS.register('generator-structures', ObjectNode({
     collapse: true
   }),
   structures: MapNode(
-    EnumNode('structure_feature'),
+    EnumNode('worldgen/feature'),
     Mod(ObjectNode({
       spacing: NumberNode({ integer: true, min: 2, max: 4096 }),
       separation: NumberNode({ integer: true, min: 1, max: 4096 }),
@@ -440,7 +444,7 @@ SCHEMAS.register('generator-structures', ObjectNode({
   )
 }))
 
-SCHEMAS.register('generator-layer', Mod(ObjectNode({
+SCHEMAS.register('generator_layer', Mod(ObjectNode({
   block: Force(Resource(EnumNode('block', { search: true }))),
   height: Force(NumberNode({ integer: true, min: 1 }))
 }), {
@@ -450,7 +454,7 @@ SCHEMAS.register('generator-layer', Mod(ObjectNode({
   })
 }))
 
-SCHEMAS.register('dimension-type', Mod(ObjectNode({
+SCHEMAS.register('dimension_type', Mod(ObjectNode({
   ultrawarm: Force(BooleanNode({ radio: true })),
   natural: Force(BooleanNode({ radio: true })),
   shrunk: Force(BooleanNode({ radio: true })),
@@ -484,6 +488,3 @@ SCHEMAS.register('dimension-type', Mod(ObjectNode({
     infiniburn: 'minecraft:infiniburn_overworld',
   })
 }))
-
-export const DimensionSchema = SCHEMAS.get('dimension')
-export const DimensionTypeSchema = SCHEMAS.get('dimension-type')

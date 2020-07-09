@@ -55,7 +55,7 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
   parent: StringNode(),
   criteria: MapNode(
     StringNode(),
-    Reference('advancement-criteria')
+    Reference('advancement_criteria')
   ),
   requirements: ListNode(
     ListNode(
@@ -80,11 +80,11 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
   })
 }))
 
-SCHEMAS.register('advancement-criteria', ObjectNode({
+SCHEMAS.register('advancement_criteria', ObjectNode({
   trigger: Force(Resource(EnumNode('advancement_trigger'))),
   conditions: ObjectNode({
     player: Mod(PredicateChoice(
-      Reference('entity-predicate', { collapse: true })
+      Reference('entity_predicate', { collapse: true })
     ), {
       enabled: (path: Path) => path.pop().push('trigger').get() !== 'minecraft:impossible'
     }),
@@ -93,12 +93,12 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
       'minecraft:bee_nest_destroyed': {
         block: Resource(EnumNode('block', { search: true })),
         num_bees_inside: NumberNode({ integer: true }),
-        item: Reference('item-predicate', { collapse: true })
+        item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:bred_animals': {
-        parent: PredicateChoice(Reference('entity-predicate', { collapse: true })),
-        partner: PredicateChoice(Reference('entity-predicate', { collapse: true })),
-        child: PredicateChoice(Reference('entity-predicate', { collapse: true }))
+        parent: PredicateChoice(Reference('entity_predicate', { collapse: true })),
+        partner: PredicateChoice(Reference('entity_predicate', { collapse: true })),
+        child: PredicateChoice(Reference('entity_predicate', { collapse: true }))
       },
       'minecraft:brewed_potion': {
         potion: StringNode()
@@ -109,18 +109,18 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
       },
       'minecraft:channeled_lightning': {
         victims: ListNode(
-          PredicateChoice(Reference('entity-predicate'))
+          PredicateChoice(Reference('entity_predicate'))
         )
       },
       'minecraft:construct_beacon': {
         level: RangeNode()
       },
       'minecraft:consume_item': {
-        item: Reference('item-predicate', { collapse: true })
+        item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:cured_zombie_villager': {
-        villager: PredicateChoice(Reference('entity-predicate', { collapse: true })),
-        zombie: PredicateChoice(Reference('entity-predicate', { collapse: true }))
+        villager: PredicateChoice(Reference('entity_predicate', { collapse: true })),
+        zombie: PredicateChoice(Reference('entity_predicate', { collapse: true }))
       },
       'minecraft:effects_changed': {
         effects: MapNode(
@@ -140,24 +140,24 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
       },
       'minecraft:enchanted_item': {
         levels: RangeNode(),
-        item: Reference('item-predicate', { collapse: true })
+        item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:entity_hurt_player': {
-        damage: Reference('damage-predicate', { collapse: true })
+        damage: Reference('damage_predicate', { collapse: true })
       },
       'minecraft:entity_killed_player': {
-        entity: PredicateChoice(Reference('entity-predicate', { collapse: true })),
-        killing_blow: Reference('damage-source-predicate', { collapse: true })
+        entity: PredicateChoice(Reference('entity_predicate', { collapse: true })),
+        killing_blow: Reference('damage_source_predicate', { collapse: true })
       },
       'minecraft:filled_bucket': {
-        item: Reference('item-predicate', { collapse: true })
+        item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:fishing_rod_hooked': {
-        entity: PredicateChoice(Reference('entity-predicate', { collapse: true })),
-        item: Reference('item-predicate', { collapse: true })
+        entity: PredicateChoice(Reference('entity_predicate', { collapse: true })),
+        item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:hero_of_the_village': {
-        location: Reference('location-predicate', { collapse: true })
+        location: Reference('location_predicate', { collapse: true })
       },
       'minecraft:inventory_changed': {
         slots: ObjectNode({
@@ -166,22 +166,22 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
           full: RangeNode()
         }),
         items: ListNode(
-          Reference('item-predicate')
+          Reference('item_predicate')
         )
       },
       'minecraft:item_durability_changed': {
         delta: RangeNode(),
         durability: RangeNode(),
-        item: Reference('item-predicate', { collapse: true })
+        item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:item_used_on_block': {
-        item: Reference('item-predicate', { collapse: true }),
-        location: Reference('location-predicate', { collapse: true })
+        item: Reference('item_predicate', { collapse: true }),
+        location: Reference('location_predicate', { collapse: true })
       },
       'minecraft:killed_by_crossbow': {
         unique_entity_types: RangeNode(),
         victims: ListNode(
-          PredicateChoice(Reference('entity-predicate'))
+          PredicateChoice(Reference('entity_predicate'))
         )
       },
       'minecraft:levitation': {
@@ -189,7 +189,7 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         duration: RangeNode()
       },
       'minecraft:location': {
-        location: Reference('location-predicate', { collapse: true })
+        location: Reference('location_predicate', { collapse: true })
       },
       'minecraft:nether_travel': {
         distance: RangeNode()
@@ -200,62 +200,60 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
           StringNode(),
           StringNode()
         ),
-        item: Reference('item-predicate', { collapse: true }),
-        location: Reference('location-predicate', { collapse: true })
+        item: Reference('item_predicate', { collapse: true }),
+        location: Reference('location_predicate', { collapse: true })
       },
       'minecraft:player_generates_container_loot': {
         loot_table: StringNode()
       },
       'minecraft:player_hurt_entity': {
-        damage: Reference('damage-predicate', { collapse: true }),
-        entity: PredicateChoice(Reference('entity-predicate', { collapse: true }))
+        damage: Reference('damage_predicate', { collapse: true }),
+        entity: PredicateChoice(Reference('entity_predicate', { collapse: true }))
       },
       'minecraft:player_killed_entity': {
-        entity: PredicateChoice(Reference('entity-predicate', { collapse: true })),
-        killing_blow: Reference('damage-source-predicate', { collapse: true })
+        entity: PredicateChoice(Reference('entity_predicate', { collapse: true })),
+        killing_blow: Reference('damage_source_predicate', { collapse: true })
       },
       'minecraft:recipe_unlocked': {
         recipe: StringNode()
       },
       'minecraft:slept_in_bed': {
-        location: Reference('location-predicate', { collapse: true })
+        location: Reference('location_predicate', { collapse: true })
       },
       'minecraft:slide_down_block': {
         block: Resource(EnumNode('block', { search: true }))
       },
       'minecraft:shot_crossbow': {
-        item: Reference('item-predicate', { collapse: true })
+        item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:summoned_entity': {
-        entity: PredicateChoice(Reference('entity-predicate', { collapse: true }))
+        entity: PredicateChoice(Reference('entity_predicate', { collapse: true }))
       },
       'minecraft:tame_animal': {
-        entity: PredicateChoice(Reference('entity-predicate', { collapse: true }))
+        entity: PredicateChoice(Reference('entity_predicate', { collapse: true }))
       },
       'minecraft:target_hit': {
-        projectile: PredicateChoice(Reference('entity-predicate', { collapse: true })),
-        shooter: PredicateChoice(Reference('entity-predicate', { collapse: true })),
+        projectile: PredicateChoice(Reference('entity_predicate', { collapse: true })),
+        shooter: PredicateChoice(Reference('entity_predicate', { collapse: true })),
         signal_strength: RangeNode({ integer: true })
       },
       'minecraft:thrown_item_picked_up_by_entity': {
-        entity: Reference('entity-predicate', { collapse: true }),
-        item: Reference('item-predicate', { collapse: true })
+        entity: Reference('entity_predicate', { collapse: true }),
+        item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:used_ender_eye': {
         distance: RangeNode()
       },
       'minecraft:used_totem': {
-        item: Reference('item-predicate', { collapse: true })
+        item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:villager_trade': {
-        villager: Reference('entity-predicate', { collapse: true }),
-        item: Reference('item-predicate', { collapse: true })
+        villager: Reference('entity_predicate', { collapse: true }),
+        item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:voluntary_exile': {
-        location: Reference('location-predicate', { collapse: true })
+        location: Reference('location_predicate', { collapse: true })
       }
     }
   }, { context: 'criterion' })
 }, { category: 'predicate', context: 'criterion' }))
-
-export const AdvancementSchema = SCHEMAS.get('advancement')

@@ -25,18 +25,18 @@ const conditions = {
 
 const functionsAndConditions = {
   functions: ListNode(
-    Reference('loot-function')
+    Reference('loot_function')
   ),
   ...conditions
 }
 
-SCHEMAS.register('loot-table', Mod(ObjectNode({
+SCHEMAS.register('loot_table', Mod(ObjectNode({
   pools: Force(ListNode(
     ObjectNode({
       rolls: Force(RangeNode({ allowBinomial: true, integer: true, min: 1 })),
-      bonus_rolls: RangeNode({ allowBinomial: true }),
+      bonus_rolls: RangeNode({ integer: true, min: 1 }),
       entries: ListNode(
-        Reference('loot-entry')
+        Reference('loot_entry')
       ),
       ...functionsAndConditions
     }, { context: 'loot_pool' })
@@ -51,7 +51,7 @@ SCHEMAS.register('loot-table', Mod(ObjectNode({
   })
 }))
 
-SCHEMAS.register('loot-entry', ObjectNode({
+SCHEMAS.register('loot_entry', ObjectNode({
   type: Resource(EnumNode('loot_pool_entry_type', 'minecraft:item')),
   weight: Mod(NumberNode({ integer: true, min: 1 }), {
     enabled: (path: Path) => path.pop().get()?.length > 1
@@ -61,7 +61,7 @@ SCHEMAS.register('loot-entry', ObjectNode({
   [Case]: {
     'minecraft:alternatives': {
       children: ListNode(
-        Reference('loot-entry')
+        Reference('loot_entry')
       ),
       ...functionsAndConditions
     },
@@ -71,7 +71,7 @@ SCHEMAS.register('loot-entry', ObjectNode({
     },
     'minecraft:group': {
       children: ListNode(
-        Reference('loot-entry')
+        Reference('loot_entry')
       ),
       ...functionsAndConditions
     },
@@ -85,7 +85,7 @@ SCHEMAS.register('loot-entry', ObjectNode({
     },
     'minecraft:sequence': {
       children: ListNode(
-        Reference('loot-entry')
+        Reference('loot_entry')
       ),
       ...functionsAndConditions
     },
@@ -97,7 +97,7 @@ SCHEMAS.register('loot-entry', ObjectNode({
   }
 }, { context: 'loot_entry' }))
 
-SCHEMAS.register('loot-function', ObjectNode({
+SCHEMAS.register('loot_function', ObjectNode({
   function: Resource(EnumNode('loot_function_type', 'minecraft:set_count')),
   [Switch]: path => path.push('function'),
   [Case]: {
@@ -179,13 +179,13 @@ SCHEMAS.register('loot-function', ObjectNode({
     },
     'minecraft:set_attributes': {
       modifiers: ListNode(
-        Reference('attribute-modifier')
+        Reference('attribute_modifier')
       ),
       ...conditions
     },
     'minecraft:set_contents': {
       entries: ListNode(
-        Reference('loot-entry')
+        Reference('loot_entry')
       ),
       ...conditions
     },
@@ -230,7 +230,7 @@ SCHEMAS.register('loot-function', ObjectNode({
   }
 }, { category: 'function', context: 'function' }))
 
-SCHEMAS.register('attribute-modifier', ObjectNode({
+SCHEMAS.register('attribute_modifier', ObjectNode({
   attribute: EnumNode('attribute'),
   name: StringNode(),
   amount: RangeNode({ allowBinomial: true }),
@@ -239,5 +239,3 @@ SCHEMAS.register('attribute-modifier', ObjectNode({
     EnumNode('slot')
   )
 }, { context: 'attribute_modifier' }))
-
-export const LootTableSchema = SCHEMAS.get('loot-table')

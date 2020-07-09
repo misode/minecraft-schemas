@@ -1,0 +1,53 @@
+name: Test
+on: 
+  - push
+  - pull_request
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Cache Core Node Modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/core/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: | 
+          cd core
+          npm i
+          npm link
+
+      - name: Build & Test
+        run: |
+          npm run build
+          npm test
+          cd ..
+        
+      - name: Cache Java 1.16 Node Modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/java/1.16/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: | 
+          cd java/1.16
+          npm i
+          npm link @mcschema/core
+
+      - name: Build & Test
+        run: |
+          npm run build
+          cd ../..

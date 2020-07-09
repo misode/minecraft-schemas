@@ -1,6 +1,7 @@
 import { Path } from './model/Path'
 
 export type ValidationOption =
+  | BlockStateMapValidationOption
   | CommandValidationOption
   | EntityValidationOption
   | NbtValidationOption
@@ -9,6 +10,13 @@ export type ValidationOption =
   | ResourceValidationOption
   | UuidValidationOption
   | VectorValidationOption
+
+export type BlockStateMapValidationOption = {
+  validator: 'block_state_map',
+  params: {
+    id: (path: Path) => Path
+  }
+}
 
 export type CommandValidationOption = {
   validator: 'command',
@@ -35,7 +43,7 @@ export type NbtValidationOption = {
       category: 'minecraft:block' | 'minecraft:entity' | 'minecraft:item',
       id: (path: Path) => Path,
     }
-    inPredicate?: boolean
+    isPredicate?: boolean
   }
 }
 
@@ -79,6 +87,15 @@ export type VectorValidationOption = {
 }
 
 type ResourceType =
+  | '$advancements'
+  | '$dimensions'
+  | '$functions'
+  | '$loot_tables'
+  | '$predicates'
+  | '$recipes'
   | '$storages'
+  | 'minecraft:block'
   | 'minecraft:entity'
   | 'minecraft:item'
+  | 'minecraft:mob_effect'
+  | 'minecraft:potion'

@@ -1,13 +1,18 @@
 import { INode, Base } from './Node'
+import { ValidationOption } from '../ValidationOption'
 
 export type IMap = {
   [name: string]: any
 }
 
+type MapNodeConfig = {
+  validation?: ValidationOption
+}
+
 /**
  * Map nodes similar to list nodes, but a string key is required to add children
  */
-export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
+export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeConfig): INode<IMap> => {
   return {
     ...Base,
     transform(path, value, view) {
@@ -28,7 +33,7 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
           ${options?.prepend ?? ''}
           <label>${options?.label ?? path.locale()}</label>
           ${options?.inject ?? ''}
-          ${keys.renderRaw(path, view)}
+          ${keys.renderRaw(path, view)}getValidationOption
           <button class="add" data-id="${onAdd}"></button>
         </div>
         <div class="node-body">
@@ -54,6 +59,9 @@ export const MapNode = (keys: INode<string>, children: INode): INode<IMap> => {
         res[k] = children.validate(path.push(k), value[k], errors, options)
       })
       return res
+    },
+    getValidationOption() {
+      return config?.validation
     }
   }
 }

@@ -3,6 +3,7 @@ import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { SourceView } from '../view/SourceView'
 import { Errors } from '../model/Errors'
+import { ValidationOption } from '../ValidationOption'
 
 export type NodeOptions = {
   hideHeader?: boolean
@@ -40,6 +41,12 @@ export interface INode<T = any> {
   force: () => boolean
 
   /**
+   * Get the validation option of this node. The client of this schema may
+   * do more detailed validation according to this option
+   */
+  getValidationOption: () => ValidationOption | undefined
+
+  /**
    * Renders the node and handles events to update the model
    * @param path 
    * @param value 
@@ -48,7 +55,7 @@ export interface INode<T = any> {
    * @returns string HTML representation of this node using the given data
    */
   render: (path: Path, value: T, view: TreeView, options?: NodeOptions) => string
-  
+
   /**
    * Validates the model using this schema
    * 
@@ -66,6 +73,7 @@ export const Base: INode = ({
   transform: (_, v) => v,
   enabled: () => true,
   force: () => false,
+  getValidationOption: () => undefined,
   render: () => '',
   validate: (_, v) => v
 })

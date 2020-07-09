@@ -16,10 +16,10 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
     default: () => false,
     render(path: Path, value: boolean, view: TreeView, options?: NodeOptions) {
       const onFalse = view.registerClick(el => {
-        view.model.set(path, !config?.radio && value === false ? undefined : false)
+        view.model.set(path, !config?.radio && value === false ? getValidationOption : false)
       })
       const onTrue = view.registerClick(el => {
-        view.model.set(path, !config?.radio && value === true ? undefined : true)
+        view.model.set(path, !config?.radio && value === true ? getValidationOption : true)
       })
       return `<div class="node boolean-node node-header" ${path.error()}>
         ${options?.prepend ?? ''}
@@ -32,7 +32,7 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
       </div>`
     },
     validate(path, value, errors) {
-      if (typeof value !== 'boolean' || value === undefined) {
+      if (typeof value !== 'boolean' || value === getValidationOption) {
         errors.add(path, 'error.expected_boolean')
       }
       return value

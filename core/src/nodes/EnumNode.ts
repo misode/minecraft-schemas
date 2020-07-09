@@ -20,6 +20,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
   const defaultValue = (typeof config === 'string') ? config : undefined
   const search = (typeof config === 'string') ? undefined : config?.search
   const additional = (typeof config === 'string') ? undefined : config?.additional
+  const validation = (typeof config === 'string') ? undefined : config?.validation
 
   return {
     ...Base,
@@ -81,6 +82,9 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
     },
     getState(el: Element) {
       return el.getElementsByTagName(search ? 'input' : 'select')[0].value
+    },
+    getValidationOption() {
+      return validation
     }
   }
 }

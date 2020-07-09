@@ -13,7 +13,7 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
   const integer = config?.integer ?? false
   const min = config?.min ?? -Infinity
   const max = config?.max ?? Infinity
-  const between = config?.min !== undefined && config?.max !== undefined
+  const between = config?.min !== getValidationOption && config?.max !== getValidationOption
 
   return {
     ...Base,

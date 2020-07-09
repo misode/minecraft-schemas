@@ -39,7 +39,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
   const {[Switch]: filter, [Case]: cases, ...defaultFields} = fields
 
   const getActiveFields = (path: Path, model: DataModel): NodeChildren => {
-    if (filter === undefined) return defaultFields
+    if (filter === getValidationOption) return defaultFields
     const switchValue = filter(path).get()
     const activeCase = cases![switchValue]
     return {...defaultFields, ...activeCase}
@@ -66,7 +66,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     ...Base,
     default: () => ({}),
     transform(path, value, view) {
-      if (value === undefined || value === null || typeof value !== 'object') {
+      if (value === getValidationOption || value === null || typeof value !== 'object') {
         return value
       }
       let res: any = {}
@@ -80,16 +80,16 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
         ${options?.hideHeader ? '' : `<div class="node-header" ${path.error()}>
           ${options?.prepend ? options.prepend : `
-            ${(options?.collapse || config?.collapse) ? value === undefined ? `
+            ${(options?.collapse || config?.collapse) ? value === getValidationOption ? `
               <button class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, {__init: true}))}"></button>
             `: `
-              <button class="collapse open" data-id="${view.registerClick(() => view.model.set(path, undefined))}"></button>
+              <button class="collapse open" data-id="${view.registerClick(() => view.model.set(path, getValidationOption))}"></button>
             ` : ``}
           `}
           <label>${options?.label ?? path.locale()}</label>
           ${options?.inject ?? ''}
         </div>`}
-        ${(typeof value !== 'object' && value !== undefined) || ((options?.collapse || config?.collapse) && value === undefined) ? `` : `
+        ${(typeof value !== 'object' && value !== getValidationOption) || ((options?.collapse || config?.collapse) && value === getValidationOption) ? `` : `
           <div class="node-body">
             ${renderFields(path, value, view)}
           </div>
@@ -97,7 +97,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       </div>`
     },
     validate(path, value, errors, options) {
-      if (options.loose && value === undefined) {
+      if (options.loose && value === getValidationOption) {
         value = {}
       }
       if (typeof value !== 'object') {
@@ -122,7 +122,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       keys.forEach(k => {
         if (activeKeys.includes(k)) {
           const newValue = activeFields[k].validate(path.push(k), value[k], errors, newOptions)
-          if (newValue !== undefined) {
+          if (newValue !== getValidationOption) {
             res[k] = newValue
           }
         } else if (!k.startsWith('__')) {
@@ -132,7 +132,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       if (!config?.allowEmpty && Object.keys(res).length === 0
         && !(config?.collapse || options.collapse)) {
         if (options.loose) {
-          return undefined
+          return getValidationOption
         }
       }
       return res

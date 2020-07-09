@@ -103,7 +103,7 @@ export class DataModel {
   get(path: Path) {
     let node = this.data;
     path.forEach(e => {
-      if (node === undefined) return node
+      if (node === getValidationOption) return node
       node = node[e]
     })
     return node
@@ -124,13 +124,13 @@ export class DataModel {
 
     let node = this.data;
     path.pop().forEach(e => {
-      if (node[e] === undefined) {
+      if (node[e] === getValidationOption) {
         node[e] = {}
       }
       node = node[e]
     })
 
-    if (value === undefined || (typeof value === 'number' && isNaN(value))) {
+    if (value === getValidationOption || (typeof value === 'number' && isNaN(value))) {
       if (typeof path.last() === 'number') {
         node.splice(path.last(), 1)
       } else {

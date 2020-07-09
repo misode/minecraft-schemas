@@ -29,7 +29,7 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
         ${!(value instanceof Array) ? `` :
           `<div class="node-body">
           ${(value ?? []).map((obj, index) => {
-            const removeId = view.registerClick(el => view.model.set(path.push(index), undefined))
+            const removeId = view.registerClick(el => view.model.set(path.push(index), getValidationOption))
             return `<div class="node-entry">
             ${children.render(path.push(index).localePush('entry'), obj, view, {
               prepend: `<button class="remove" data-id="${removeId}"></button>`,
@@ -41,7 +41,7 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
       </div>`
     },
     validate(path, value, errors, options) {
-      if (options.loose && value === undefined) {
+      if (options.loose && value === getValidationOption) {
         return []
       }
       if (!(value instanceof Array)) {
@@ -50,7 +50,7 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
       }
       if (!config?.allowEmpty && value.length === 0) {
         if (options.loose) {
-          return undefined
+          return getValidationOption
         } else {
           errors.add(path, 'error.invalid_empty_list')
         }

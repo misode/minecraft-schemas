@@ -18,6 +18,7 @@ import {
   SCHEMAS,
   StringNode,
   Switch,
+  COLLECTIONS,
 } from '@mcschema/core'
 
 export const PredicateChoice = (node: INode<any>): INode<any> => {
@@ -41,8 +42,8 @@ export const PredicateChoice = (node: INode<any>): INode<any> => {
 SCHEMAS.register('advancement', Mod(ObjectNode({
   display: ObjectNode({
     icon: Force(ObjectNode({
-      item: Force(Resource(EnumNode('item'))),
-      nbt: StringNode()
+      item: Force(Resource(EnumNode('item', { validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
+      nbt: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: path => path.pop().push('item') } } } })
     })),
     title: Force(JsonNode()),
     description: Force(JsonNode()),
@@ -52,7 +53,7 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
     announce_to_chat: BooleanNode(),
     hidden: BooleanNode()
   }, { collapse: true }),
-  parent: StringNode(),
+  parent: StringNode({ validation: { validator: 'resource', params: { pool: '$advancements' } } }),
   criteria: MapNode(
     StringNode(),
     Reference('advancement-criteria')
@@ -63,10 +64,12 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
     )
   ),
   rewards: ObjectNode({
-    function: StringNode(),
-    loot: StringNode(),
+    function: StringNode({ validation: { validator: 'resource', params: { pool: '$functions' } } }),
+    loot: ListNode(
+      StringNode({ validation: { validator: 'resource', params: { pool: '$loot_tables' } } })
+    ),
     recipes: ListNode(
-      StringNode()
+      StringNode({ validation: { validator: 'resource', params: { pool: '$recipes' } } })
     ),
     experience: NumberNode({ integer: true })
   }, { collapse: true }),
@@ -81,7 +84,7 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('advancement-criteria', ObjectNode({
-  trigger: Force(Resource(EnumNode('advancement_trigger'))),
+  trigger: Force(Resource(EnumNode('advancement_trigger', { validation: { validator: 'resource', params: { pool: COLLECTIONS.get('advancement_trigger') } } }))),
   conditions: ObjectNode({
     player: Mod(PredicateChoice(
       Reference('entity-predicate', { collapse: true })
@@ -91,7 +94,7 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
     [Switch]: path => path.pop().push('trigger'),
     [Case]: {
       'minecraft:bee_nest_destroyed': {
-        block: Resource(EnumNode('block', { search: true })),
+        block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
         num_bees_inside: NumberNode({ integer: true }),
         item: Reference('item-predicate', { collapse: true })
       },
@@ -101,11 +104,11 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         child: PredicateChoice(Reference('entity-predicate', { collapse: true }))
       },
       'minecraft:brewed_potion': {
-        potion: StringNode()
+        potion: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:potion' } } })
       },
       'minecraft:changed_dimension': {
-        from: Resource(StringNode()),
-        to: Resource(StringNode())
+        from: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimensions' } } })),
+        to: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimensions' } } }))
       },
       'minecraft:channeled_lightning': {
         victims: ListNode(
@@ -124,7 +127,7 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
       },
       'minecraft:effects_changed': {
         effects: MapNode(
-          EnumNode('mob_effect', { search: true }),
+          EnumNode('mob_effect', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:mob_effect' } } }),
           ObjectNode({
             amplifier: RangeNode(),
             duration: RangeNode()
@@ -132,10 +135,11 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         )
       },
       'minecraft:enter_block': {
-        block: Resource(EnumNode('block', { search: true })),
+        block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
         state: MapNode(
           StringNode(),
-          StringNode()
+          StringNode(),
+          { validation: { validator: 'block_state_map', params: { id: path => path.pop().push('block') } } }
         )
       },
       'minecraft:enchanted_item': {
@@ -195,16 +199,17 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         distance: RangeNode()
       },
       'minecraft:placed_block': {
-        block: Resource(EnumNode('block', { search: true })),
+        block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
         state: MapNode(
           StringNode(),
-          StringNode()
+          StringNode(),
+          { validation: { validator: 'block_state_map', params: { id: path => path.pop().push('block') } } }
         ),
         item: Reference('item-predicate', { collapse: true }),
         location: Reference('location-predicate', { collapse: true })
       },
       'minecraft:player_generates_container_loot': {
-        loot_table: StringNode()
+        loot_table: StringNode({ validation: { validator: 'resource', params: { pool: '$loot_tables' } } })
       },
       'minecraft:player_hurt_entity': {
         damage: Reference('damage-predicate', { collapse: true }),
@@ -215,13 +220,13 @@ SCHEMAS.register('advancement-criteria', ObjectNode({
         killing_blow: Reference('damage-source-predicate', { collapse: true })
       },
       'minecraft:recipe_unlocked': {
-        recipe: StringNode()
+        recipe: StringNode({ validation: { validator: 'resource', params: { pool: '$recipes' } } })
       },
       'minecraft:slept_in_bed': {
         location: Reference('location-predicate', { collapse: true })
       },
       'minecraft:slide_down_block': {
-        block: Resource(EnumNode('block', { search: true }))
+        block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))
       },
       'minecraft:shot_crossbow': {
         item: Reference('item-predicate', { collapse: true })

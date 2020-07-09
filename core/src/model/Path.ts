@@ -109,13 +109,13 @@ export class Path {
     let path = this.localeArr.slice(-5)
     while (path.length > 0) {
       const locale = LOCALES.getLocale(path.join('.'))
-      if (locale !== getValidationOption) return locale
+      if (locale !== undefined) return locale
       path.shift()
     }
     path = this.localeArr.slice(-5)
     while (path.length > 0) {
       const locale = LOCALES.get('en')[path.join('.')]
-      if (locale !== getValidationOption) return locale
+      if (locale !== undefined) return locale
       path.shift()
     }
     return (this.localeArr[this.localeArr.length - 1] ?? '')

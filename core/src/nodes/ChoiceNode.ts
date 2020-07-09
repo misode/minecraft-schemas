@@ -27,7 +27,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
   }
   const activeChoice = (value: any): Choice | undefined => {
     const index = choices.map(choice => isValid(choice[0], value)).indexOf(true)
-    if (index === -1) return getValidationOption
+    if (index === -1) return undefined
     return choices[index]
   }
 
@@ -36,7 +36,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     default: () => choices[0][1].default(),
     transform(path, value, view) {
       const choice = activeChoice(value)
-      if (choice === getValidationOption) {
+      if (choice === undefined) {
         return value
       }
       return choice[1].transform(path, value, view)
@@ -57,14 +57,14 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
 
       return choice[1]?.render(pathWithContext, value, view, {
         ...options,
-        label: options?.hideHeader ? '' : getValidationOption,
+        label: options?.hideHeader ? '' : undefined,
         hideHeader: false,
         inject
       })
     },
     validate(path, value, errors, options) {
       let choice = activeChoice(value)
-      if (choice === getValidationOption) {
+      if (choice === undefined) {
         if (options.loose) {
           choice = choices[0]
         } else {

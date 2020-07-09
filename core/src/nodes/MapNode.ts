@@ -33,7 +33,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
           ${options?.prepend ?? ''}
           <label>${options?.label ?? path.locale()}</label>
           ${options?.inject ?? ''}
-          ${keys.renderRaw(path, view)}getValidationOption
+          ${keys.renderRaw(path, view)}
           <button class="add" data-id="${onAdd}"></button>
         </div>
         <div class="node-body">

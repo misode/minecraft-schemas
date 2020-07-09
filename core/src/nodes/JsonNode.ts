@@ -11,7 +11,7 @@ export const JsonNode = (): INode<any> => {
         try {
           view.model.set(path, JSON.parse(value))
         } catch (e) {
-          view.model.set(path, value || getValidationOption)
+          view.model.set(path, value || undefined)
         }
       })
       return `<div class="node json-node node-header" ${path.error()}>
@@ -22,7 +22,7 @@ export const JsonNode = (): INode<any> => {
       </div>`
     },
     validate(path, value, errors) {
-      if (value == getValidationOption) {
+      if (value == undefined) {
         errors.add(path, 'error.expected_json')
       }
       return value

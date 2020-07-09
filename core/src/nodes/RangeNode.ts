@@ -24,22 +24,22 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
   const getState = (el: Element): IRange => {
     const type = (config?.forceRange) ? 'range' : el.querySelector('select')!.value
     if (type === 'exact') {
-      return Number(el.querySelector('input')?.value || getValidationOption)
+      return Number(el.querySelector('input')?.value || undefined)
     }
     if (type === 'range') {
-      const min = Number(el.querySelectorAll('input')[0]?.value || getValidationOption)
-      const max = Number(el.querySelectorAll('input')[1]?.value || getValidationOption)
+      const min = Number(el.querySelectorAll('input')[0]?.value || undefined)
+      const max = Number(el.querySelectorAll('input')[1]?.value || undefined)
       return {
-        min: isNaN(min) ? getValidationOption : min,
-        max: isNaN(max) ? getValidationOption : max
+        min: isNaN(min) ? undefined : min,
+        max: isNaN(max) ? undefined : max
       }
     }
-    const n = Number(el.querySelectorAll('input')[0]?.value || getValidationOption)
-    const p = Number(el.querySelectorAll('input')[1]?.value || getValidationOption)
+    const n = Number(el.querySelectorAll('input')[0]?.value || undefined)
+    const p = Number(el.querySelectorAll('input')[1]?.value || undefined)
     return {
       type: 'binomial',
-      n: isNaN(n) ? getValidationOption : n,
-      p: isNaN(p) ? getValidationOption : p
+      n: isNaN(n) ? undefined : n,
+      p: isNaN(p) ? undefined : p
     }
   }
 
@@ -49,21 +49,21 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
     render(path, value, view, options) {
       let curType = ''
       let input = ''
-      if (value === getValidationOption || typeof value === 'number') {
+      if (value === undefined || typeof value === 'number') {
         curType = 'exact'
-        input = `<input value=${value === getValidationOption ? '' : value}>`
+        input = `<input value=${value === undefined ? '' : value}>`
       } else if (value.type === 'binomial') {
         curType = 'binomial'
         input = `<label>${locale('range.n')}</label>
-          <input value=${value.n === getValidationOption ? '' : value.n}>
+          <input value=${value.n === undefined ? '' : value.n}>
           <label>${locale('range.p')}</label>
-          <input value=${value.p === getValidationOption ? '' : value.p}>`
+          <input value=${value.p === undefined ? '' : value.p}>`
       } else {
         curType = 'range'
         input = `<label>${locale('range.min')}</label>
-          <input value=${value.min === getValidationOption ? '' : value.min}>
+          <input value=${value.min === undefined ? '' : value.min}>
           <label>${locale('range.max')}</label>
-          <input value=${value.max === getValidationOption ? '' : value.max}>`
+          <input value=${value.max === undefined ? '' : value.max}>`
       }
       const id = view.registerChange(el => {
         view.model.set(path, getState(el))
@@ -97,7 +97,7 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
         errors.add(path, 'error.expected_range')
         return value
       }
-      if (value === getValidationOption || typeof value === 'number') {
+      if (value === undefined || typeof value === 'number') {
         if (config?.forceRange) {
           errors.add(path, 'error.invalid_exact')
         }
@@ -110,10 +110,10 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
           errors.add(path, 'error.invalid_binomial')
         }
       } else {
-        if (value.min !== getValidationOption) {
+        if (value.min !== undefined) {
           numberNode.validate(path.push('min'), value.min, errors, options)
         }
-        if (value.max !== getValidationOption) {
+        if (value.max !== undefined) {
           numberNode.validate(path.push('max'), value.max, errors, options)
         }
       }

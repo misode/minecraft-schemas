@@ -17,7 +17,7 @@ export class SchemaRegistry implements Registry<INode> {
 
   get(id: string) {
     const node = this.registry[id]
-    if (node === getValidationOption) {
+    if (node === undefined) {
       console.error(`Tried to access schema "${id}, but that doesn't exit.`)
     }
     return node
@@ -36,7 +36,7 @@ export class CollectionRegistry implements Registry<string[]> {
 
   get(id: string) {
     const list = this.registry[id]
-    if (list === getValidationOption) {
+    if (list === undefined) {
       console.warn(`Tried to access collection "${id}", but that doesn't exist`)
     }
     return list ?? []
@@ -69,7 +69,7 @@ export class LocaleRegistry implements Registry<Locale> {
   }
 
   has(id: string) {
-    return this.registry[id] !== getValidationOption
+    return this.registry[id] !== undefined
   }
 
   getLocale(key: string) {
@@ -90,8 +90,8 @@ export const LOCALES = new LocaleRegistry()
  */
 export const locale = (key: string, params: string[] = []) => {
   let value = LOCALES.getLocale(key)
-  if (value === getValidationOption) value = LOCALES.get('en')[key]
-  if (value === getValidationOption) value = key
+  if (value === undefined) value = LOCALES.get('en')[key]
+  if (value === undefined) value = key
 
   value = value.replace(/%\d+%/g, match => {
     const index = parseInt(match.slice(1, -1))

@@ -1,5 +1,3 @@
-import { Path } from './model/Path'
-
 export type ValidationOption =
   | BlockStateMapValidationOption
   | CommandValidationOption
@@ -11,7 +9,7 @@ export type ValidationOption =
   | UuidValidationOption
   | VectorValidationOption
 
-type RelativePath = ('pop' | { push: string })[]
+export type RelativePath = ('pop' | { push: string })[]
 
 type BlockStateMapValidationOption = {
   validator: 'block_state_map',

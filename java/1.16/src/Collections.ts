@@ -142,6 +142,12 @@ COLLECTIONS.register('copy_source', [
   'killer_player'
 ])
 
+COLLECTIONS.register('loot_table_apply_bonus_formula', [
+  'minecraft:uniform_bonus_count',
+  'minecraft:binomial_with_bonus_count',
+  'minecraft:ore_drops'
+])
+
 COLLECTIONS.register('map_decoration', [
   'mansion',
   'monument',

@@ -15,6 +15,7 @@ import {
   SCHEMAS,
   StringNode,
   Switch,
+  COLLECTIONS,
 } from '@mcschema/core'
 
 const conditions = {
@@ -52,7 +53,7 @@ SCHEMAS.register('loot_table', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('loot_entry', ObjectNode({
-  type: Resource(EnumNode('loot_pool_entry_type', 'minecraft:item')),
+  type: Resource(EnumNode('loot_pool_entry_type', { defaultValue: 'minecraft:item', validation: { validator: 'resource', params: { pool: 'minecraft:loot_pool_entry_type' } } })),
   weight: Mod(NumberNode({ integer: true, min: 1 }), {
     enabled: (path: Path) => path.pop().get()?.length > 1
       && !['minecraft:alternatives', 'minecraft:group', 'minecraft:sequence'].includes(path.push('type').get())
@@ -76,11 +77,11 @@ SCHEMAS.register('loot_entry', ObjectNode({
       ...functionsAndConditions
     },
     'minecraft:item': {
-      name: Force(Resource(EnumNode('item', { search: true }))),
+      name: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
       ...functionsAndConditions
     },
     'minecraft:loot_table': {
-      name: Force(StringNode()),
+      name: Force(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })),
       ...functionsAndConditions
     },
     'minecraft:sequence': {
@@ -90,7 +91,7 @@ SCHEMAS.register('loot_entry', ObjectNode({
       ...functionsAndConditions
     },
     'minecraft:tag': {
-      name: Force(StringNode()),
+      name: Force(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } })),
       expand: BooleanNode(),
       ...functionsAndConditions
     }
@@ -98,16 +99,12 @@ SCHEMAS.register('loot_entry', ObjectNode({
 }, { context: 'loot_entry' }))
 
 SCHEMAS.register('loot_function', ObjectNode({
-  function: Resource(EnumNode('loot_function_type', 'minecraft:set_count')),
+  function: Resource(EnumNode('loot_function_type', { defaultValue: 'minecraft:set_count', validation: { validator: 'resource', params: { pool: 'minecraft:loot_function_type' } } })),
   [Switch]: path => path.push('function'),
   [Case]: {
     'minecraft:apply_bonus': {
-      enchantment: Force(EnumNode('enchantment')),
-      formula: Resource(EnumNode([
-        'minecraft:uniform_bonus_count',
-        'minecraft:binomial_with_bonus_count',
-        'minecraft:ore_drops'
-      ], 'minecraft:uniform_bonus_count')),
+      enchantment: Force(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })),
+      formula: Resource(EnumNode('loot_table_apply_bonus_formula', { defaultValue: 'minecraft:uniform_bonus_count', validation: { validator: 'resource', params: { pool: COLLECTIONS.get('loot_table_apply_bonus_formula') } } })),
       parameters: Mod(ObjectNode({
         bonusMultiplier: Mod(NumberNode(), {
           enabled: (path: Path) => path.pop().push('formula').get() === 'minecraft:uniform_bonus_count'
@@ -131,23 +128,23 @@ SCHEMAS.register('loot_function', ObjectNode({
       source: EnumNode('copy_source', 'this'),
       ops: ListNode(
         ObjectNode({
-          source: Force(StringNode()),
-          target: Force(StringNode()),
+          source: Force(StringNode({ validation: { validator: 'nbt_path', params: { category: 'minecraft:entity' } } })),
+          target: Force(StringNode({ validation: { validator: 'nbt_path', params: { category: 'minecraft:entity' } } })),
           op: EnumNode(['replace', 'append', 'merge'])
         }, { context: 'nbt_operation' })
       ),
       ...conditions
     },
     'minecraft:copy_state': {
-      block: Resource(EnumNode('block')),
+      block: Resource(EnumNode('block', { validation: { validator: 'nbt_path', params: { category: 'minecraft:block' } } })),
       properties: ListNode(
-        StringNode()
+        StringNode({ validation: { validator: 'block_state_key', params: { id: ['pop', 'pop', { push: 'block' }] } } })
       ),
       ...conditions
     },
     'minecraft:enchant_randomly': {
       enchantments: ListNode(
-        EnumNode('enchantment')
+        EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })
       ),
       ...conditions
     },
@@ -158,7 +155,7 @@ SCHEMAS.register('loot_function', ObjectNode({
     },
     'minecraft:exploration_map': {
       destination: Force(EnumNode('structure_feature')),
-      decoration: Force(EnumNode('map_decoration')),
+      decoration: Force(EnumNode('map_decoration', { validation: { validator: 'resource', params: { pool: COLLECTIONS.get('map_decoration') } } })),
       zoom: NumberNode({ integer: true }),
       search_radius: NumberNode({ integer: true }),
       skip_existing_chunks: BooleanNode(),
@@ -198,7 +195,7 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:set_loot_table': {
-      name: Force(StringNode()),
+      name: Force(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })),
       seed: NumberNode({ integer: true })
     },
     'minecraft:set_lore': {
@@ -215,13 +212,13 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:set_nbt': {
-      tag: Force(StringNode()),
+      tag: Force(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item' } } } })),
       ...conditions
     },
     'minecraft:set_stew_effect': {
       effects: ListNode(
         ObjectNode({
-          type: StringNode(),
+          type: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:mob_effect' } } }),
           duration: RangeNode()
         })
       ),
@@ -231,7 +228,7 @@ SCHEMAS.register('loot_function', ObjectNode({
 }, { category: 'function', context: 'function' }))
 
 SCHEMAS.register('attribute_modifier', ObjectNode({
-  attribute: EnumNode('attribute'),
+  attribute: EnumNode('attribute', { validation: { validator: 'resource', params: { pool: 'minecraft:attribute' } } }),
   name: StringNode(),
   amount: RangeNode({ allowBinomial: true }),
   operation: EnumNode(['addition', 'multiply_base', 'multiply_total']),

@@ -5,6 +5,8 @@ import { getId, TreeView } from '../view/TreeView'
 import { ValidationOption } from '../ValidationOption'
 
 type EnumNodeConfig = {
+  /** The default value */
+  defaultValue?: string,
   /** If true, a \<datalist> will be used and options won't be translated */
   search?: boolean
   /** If true, values not in the list are also permitted */
@@ -13,11 +15,14 @@ type EnumNodeConfig = {
   validation?: ValidationOption
 }
 
+/**
+ * @param config `string` to represent the default value.
+ */
 export const EnumNode = (values: string[] | string, config?: string | EnumNodeConfig): INode<string> => {
   const getValues = (typeof values === 'string') ?
     () => COLLECTIONS.get(values) :
     () => values
-  const defaultValue = (typeof config === 'string') ? config : undefined
+  const defaultValue = (typeof config === 'string') ? config : config?.defaultValue
   const search = (typeof config === 'string') ? undefined : config?.search
   const additional = (typeof config === 'string') ? undefined : config?.additional
   const validation = (typeof config === 'string') ? undefined : config?.validation

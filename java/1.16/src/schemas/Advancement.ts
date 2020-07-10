@@ -53,7 +53,7 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
     announce_to_chat: BooleanNode(),
     hidden: BooleanNode()
   }, { collapse: true }),
-  parent: StringNode({ validation: { validator: 'resource', params: { pool: '$advancements' } } }),
+  parent: StringNode({ validation: { validator: 'resource', params: { pool: '$advancement' } } }),
   criteria: MapNode(
     StringNode(),
     Reference('advancement_criteria')
@@ -64,12 +64,12 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
     )
   ),
   rewards: ObjectNode({
-    function: StringNode({ validation: { validator: 'resource', params: { pool: '$functions' } } }),
+    function: StringNode({ validation: { validator: 'resource', params: { pool: '$function' } } }),
     loot: ListNode(
-      StringNode({ validation: { validator: 'resource', params: { pool: '$loot_tables' } } })
+      StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })
     ),
     recipes: ListNode(
-      StringNode({ validation: { validator: 'resource', params: { pool: '$recipes' } } })
+      StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } })
     ),
     experience: NumberNode({ integer: true })
   }, { collapse: true }),
@@ -107,8 +107,8 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
         potion: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:potion' } } })
       },
       'minecraft:changed_dimension': {
-        from: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimensions' } } })),
-        to: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimensions' } } }))
+        from: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimension' } } })),
+        to: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimension' } } }))
       },
       'minecraft:channeled_lightning': {
         victims: ListNode(
@@ -209,7 +209,7 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
         location: Reference('location_predicate', { collapse: true })
       },
       'minecraft:player_generates_container_loot': {
-        loot_table: StringNode({ validation: { validator: 'resource', params: { pool: '$loot_tables' } } })
+        loot_table: StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })
       },
       'minecraft:player_hurt_entity': {
         damage: Reference('damage_predicate', { collapse: true }),
@@ -220,7 +220,7 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
         killing_blow: Reference('damage_source_predicate', { collapse: true })
       },
       'minecraft:recipe_unlocked': {
-        recipe: StringNode({ validation: { validator: 'resource', params: { pool: '$recipes' } } })
+        recipe: StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } })
       },
       'minecraft:slept_in_bed': {
         location: Reference('location_predicate', { collapse: true })

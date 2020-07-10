@@ -21,7 +21,7 @@ SCHEMAS.register('predicate', ObjectOrList(
 ))
 
 SCHEMAS.register('condition', ObjectNode({
-  condition: Resource(EnumNode('loot_condition_type', 'minecraft:random_chance')),
+  condition: Resource(EnumNode('loot_condition_type', { defaultValue: 'minecraft:random_chance', validation: { validator: 'resource', params: { pool: 'minecraft:loot_condition_type' } } })),
   [Switch]: path => path.push('condition'),
   [Case]: {
     'minecraft:alternative': {
@@ -30,10 +30,11 @@ SCHEMAS.register('condition', ObjectNode({
       ))
     },
     'minecraft:block_state_property': {
-      block: Resource(EnumNode('block')),
+      block: Resource(EnumNode('block', { validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
       properties: MapNode(
         StringNode(),
-        StringNode()
+        StringNode(),
+        { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'block' }] } } }
       )
     },
     'minecraft:damage_source_properties': {
@@ -46,7 +47,7 @@ SCHEMAS.register('condition', ObjectNode({
     'minecraft:entity_scores': {
       entity: EnumNode('entity_source', 'this'),
       scores: MapNode(
-        StringNode(),
+        StringNode({ validation: { validator: 'objective' } }),
         RangeNode({ forceRange: true })
       )
     },
@@ -78,10 +79,10 @@ SCHEMAS.register('condition', ObjectNode({
       ),
     },
     'minecraft:reference': {
-      name: Force(StringNode())
+      name: Force(StringNode({ validation: { validator: 'resource', params: { pool: '$predicate' } } }))
     },
     'minecraft:table_bonus': {
-      enchantment: Force(Resource(EnumNode('enchantment'))),
+      enchantment: Force(Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } }))),
       chances: Force(ListNode(
         NumberNode({ min: 0, max: 1 })
       ))

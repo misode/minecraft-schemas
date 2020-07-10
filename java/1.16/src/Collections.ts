@@ -1,4 +1,4 @@
-import { COLLECTIONS, CollectionRegistry } from '@mcschema/core'
+import { COLLECTIONS } from '@mcschema/core'
 
 COLLECTIONS.register('advancement_trigger', [
   'minecraft:bee_nest_destroyed',
@@ -106,6 +106,27 @@ COLLECTIONS.register('gamemode', [
   'creative',
   'adventure',
   'spectator'
+])
+
+COLLECTIONS.register('dimension_generator_setting_preset', [
+  'minecraft:overworld',
+  'minecraft:nether',
+  'minecraft:end',
+  'minecraft:amplified',
+  'minecraft:caves',
+  'minecraft:floating_islands'
+])
+
+COLLECTIONS.register('dimension_generator_type', [
+  'minecraft:noise',
+  'minecraft:flat',
+  'minecraft:debug'
+])
+
+COLLECTIONS.register('dimension_type_infiniburn', [
+  'minecraft:infiniburn_overworld',
+  'minecraft:infiniburn_nether',
+  'minecraft:infiniburn_end'
 ])
 
 COLLECTIONS.register('entity_source', [

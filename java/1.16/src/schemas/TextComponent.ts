@@ -55,7 +55,7 @@ SCHEMAS.register('text_component_object', Mod(ObjectNode({
   interpret: BooleanNode(),
   block: StringNode({ validation: { validator: 'vector', params: { dimension: 3, isInteger: true } } }),
   entity: StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities' } } }),
-  storage: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$storages' } } })),
+  storage: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$storage' } } })),
   extra: Reference('text_component_list'),
   color: StringNode() /* TODO */,
   font: Resource(StringNode()),

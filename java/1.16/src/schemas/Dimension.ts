@@ -15,20 +15,14 @@ import {
   SCHEMAS,
   StringNode,
   Switch,
+  COLLECTIONS,
 } from '@mcschema/core'
 
 const SettingsPresets = (node: INode<any>) => ChoiceNode([
   [
     'string',
-    EnumNode([
-      'minecraft:overworld',
-      'minecraft:nether',
-      'minecraft:end',
-      'minecraft:amplified',
-      'minecraft:caves',
-      'minecraft:floating_islands'
-    ], 'minecraft:overworld'),
-    v => 'minecraft:overworld'
+    EnumNode('dimension_generator_setting_preset', { defaultValue: 'minecraft:overworld', validation: { validator: 'resource', params: { pool: COLLECTIONS.get('dimension_generator_setting_preset') } } }),
+    _ => 'minecraft:overworld'
   ],
   [
     'object',
@@ -297,20 +291,20 @@ const SettingsPresets = (node: INode<any>) => ChoiceNode([
 ])
 
 SCHEMAS.register('dimension', Mod(ObjectNode({
-  type: Force(EnumNode('dimension_type', { search: true, additional: true })),
+  type: Force(EnumNode('dimension_type', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension' } } })),
   generator: Force(ObjectNode({
-    type: Resource(EnumNode(['minecraft:noise', 'minecraft:flat', 'minecraft:debug'], 'minecraft:noise')),
+    type: Resource(EnumNode('dimension_generator_type', { defaultValue: 'minecraft:noise', validation: { validator: 'resource', params: { pool: COLLECTIONS.get('dimension_generator_type') } } })),
     seed: NumberNode({ integer: true }),
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:noise': {
         biome_source: Force(ObjectNode({
-          type: Resource(EnumNode('worldgen/biome_source', 'minecraft:multi_noise')),
+          type: Resource(EnumNode('worldgen/biome_source', { defaultValue: 'minecraft:multi_noise', validation: { validator: 'resource', params: { pool: 'minecraft:worldgen/biome_source' } } })),
           seed: NumberNode({ integer: true }),
           [Switch]: path => path.push('type'),
           [Case]: {
             'minecraft:fixed': {
-              biome: EnumNode('worldgen/biome', 'minecraft:plains')
+              biome: EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })
             },
             'minecraft:multi_noise': {
               preset: EnumNode(['nether']),
@@ -321,7 +315,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
             'minecraft:checkerboard': {
               scale: NumberNode({ integer: true, min: 0, max: 62 }),
               biomes: ListNode(
-                EnumNode('worldgen/biome', 'minecraft:plains')
+                EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })
               )
             },
             'minecraft:vanilla_layered': {
@@ -336,14 +330,15 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
           sea_level: Force(NumberNode({ integer: true })),
           disable_mob_generation: Force(BooleanNode()),
           default_block: Force(ObjectNode({
-            Name: Force(EnumNode('block', { search: true })),
+            Name: Force(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
             Properties: MapNode(
               StringNode(),
-              StringNode()
+              StringNode(),
+              { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'Name' }] } } }
             )
           })),
           default_fluid: Force(ObjectNode({
-            Name: Force(EnumNode('fluid', { search: true })),
+            Name: Force(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } })),
             Properties: Force(MapNode(
               StringNode(),
               StringNode()
@@ -381,7 +376,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
       },
       'minecraft:flat': {
         settings: ObjectNode({
-          biome: Resource(EnumNode('worldgen/biome')),
+          biome: Resource(EnumNode('worldgen/biome', { validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
           lakes: BooleanNode(),
           features: BooleanNode(),
           layers: Force(ListNode(
@@ -399,7 +394,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('generator_biome', Mod(ObjectNode({
-  biome: Force(Resource(EnumNode('worldgen/biome', { search: true }))),
+  biome: Force(Resource(EnumNode('worldgen/biome', { search: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))),
   parameters: ObjectNode({
     altitude: Force(NumberNode({ min: -1, max: 1 })),
     temperature: Force(NumberNode({ min: -1, max: 1 })),
@@ -429,7 +424,7 @@ SCHEMAS.register('generator_structures', ObjectNode({
     collapse: true
   }),
   structures: MapNode(
-    EnumNode('worldgen/feature'),
+    EnumNode('worldgen/feature', { validation: { validator: 'resource', params: { pool: '$worldgen/feature' } } }),
     Mod(ObjectNode({
       spacing: NumberNode({ integer: true, min: 2, max: 4096 }),
       separation: NumberNode({ integer: true, min: 1, max: 4096 }),
@@ -445,7 +440,7 @@ SCHEMAS.register('generator_structures', ObjectNode({
 }))
 
 SCHEMAS.register('generator_layer', Mod(ObjectNode({
-  block: Force(Resource(EnumNode('block', { search: true }))),
+  block: Force(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
   height: Force(NumberNode({ integer: true, min: 1 }))
 }), {
   default: () => ({
@@ -467,11 +462,7 @@ SCHEMAS.register('dimension_type', Mod(ObjectNode({
   ambient_light: Force(NumberNode()),
   fixed_time: NumberNode({ integer: true }),
   logical_height: Force(NumberNode({ integer: true })),
-  infiniburn: Force(EnumNode([
-    'minecraft:infiniburn_overworld',
-    'minecraft:infiniburn_nether',
-    'minecraft:infiniburn_end'
-  ], { search: true, additional: true }))
+  infiniburn: Force(EnumNode('dimension_type_infiniburn', { search: true, additional: true, validation: { validator: 'resource', params: { pool: COLLECTIONS.get('dimension_type_infiniburn') } } }))
 }, { context: 'dimension_type' }), {
   default: () => ({
     ultrawarm: false,

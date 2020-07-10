@@ -65,7 +65,7 @@ export type ResourceValidationOption = {
   params: {
     pool: ResourceType | string[],
     allowTag?: boolean,
-    allowUnknown?: Boolean
+    allowUnknown?: boolean
   }
 }
 

@@ -58,8 +58,8 @@ type NbtValidationOption = {
 
 type NbtPathValidationOption = {
   validator: 'nbt_path',
-  params?: {
-    category?: 'minecraft:block' | 'minecraft:entity' | 'minecraft:item',
+  params: {
+    category: 'minecraft:block' | 'minecraft:entity' | 'minecraft:item',
     id?: string
   }
 }

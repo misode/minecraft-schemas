@@ -2,6 +2,7 @@ import {
   BooleanNode,
   Case,
   ChoiceNode,
+  COLLECTIONS,
   EnumNode,
   Force,
   INode,
@@ -17,8 +18,7 @@ import {
   Resource,
   SCHEMAS,
   StringNode,
-  Switch,
-  COLLECTIONS,
+  Switch
 } from '@mcschema/core'
 
 export const PredicateChoice = (node: INode<any>): INode<any> => {
@@ -43,7 +43,7 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
   display: ObjectNode({
     icon: Force(ObjectNode({
       item: Force(Resource(EnumNode('item', { validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
-      nbt: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: path => path.pop().push('item') } } } })
+      nbt: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } } })
     })),
     title: Force(JsonNode()),
     description: Force(JsonNode()),
@@ -139,7 +139,7 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
         state: MapNode(
           StringNode(),
           StringNode(),
-          { validation: { validator: 'block_state_map', params: { id: path => path.pop().push('block') } } }
+          { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'block' }] } } }
         )
       },
       'minecraft:enchanted_item': {
@@ -203,7 +203,7 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
         state: MapNode(
           StringNode(),
           StringNode(),
-          { validation: { validator: 'block_state_map', params: { id: path => path.pop().push('block') } } }
+          { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'block' }] } } }
         ),
         item: Reference('item_predicate', { collapse: true }),
         location: Reference('location_predicate', { collapse: true })

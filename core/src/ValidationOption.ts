@@ -11,14 +11,16 @@ export type ValidationOption =
   | UuidValidationOption
   | VectorValidationOption
 
-export type BlockStateMapValidationOption = {
+type RelativePath = ('pop' | { push: string })[]
+
+type BlockStateMapValidationOption = {
   validator: 'block_state_map',
   params: {
-    id: (path: Path) => Path
+    id: RelativePath
   }
 }
 
-export type CommandValidationOption = {
+type CommandValidationOption = {
   validator: 'command',
   params: {
     leadingSlash?: boolean,
@@ -26,7 +28,7 @@ export type CommandValidationOption = {
   }
 }
 
-export type EntityValidationOption = {
+type EntityValidationOption = {
   validator: 'entity',
   params: {
     amount: 'single' | 'multiple',
@@ -35,19 +37,19 @@ export type EntityValidationOption = {
   }
 }
 
-export type NbtValidationOption = {
+type NbtValidationOption = {
   validator: 'nbt',
   params: {
     module?: string,
     registry?: {
       category: 'minecraft:block' | 'minecraft:entity' | 'minecraft:item',
-      id: (path: Path) => Path,
+      id: RelativePath,
     }
     isPredicate?: boolean
   }
 }
 
-export type NbtPathValidationOption = {
+type NbtPathValidationOption = {
   validator: 'nbt_path',
   params?: {
     category?: 'minecraft:block' | 'minecraft:entity' | 'minecraft:item',
@@ -55,12 +57,12 @@ export type NbtPathValidationOption = {
   }
 }
 
-export type ObjectiveValidationOption = {
+type ObjectiveValidationOption = {
   validator: 'objective',
   params?: {}
 }
 
-export type ResourceValidationOption = {
+type ResourceValidationOption = {
   validator: 'resource',
   params: {
     pool: ResourceType | string[],
@@ -69,12 +71,12 @@ export type ResourceValidationOption = {
   }
 }
 
-export type UuidValidationOption = {
+type UuidValidationOption = {
   validator: 'uuid',
   params?: {}
 }
 
-export type VectorValidationOption = {
+type VectorValidationOption = {
   validator: 'vector',
   params: {
     dimension: 2 | 3 | 4,

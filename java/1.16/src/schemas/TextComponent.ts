@@ -10,7 +10,7 @@ SCHEMAS.register('text_component', Mod(ChoiceNode([
   ],
   [
     'list',
-    Reference('text-component_list'),
+    Reference('text_component_list'),
     v => [v]
   ],
   [
@@ -102,7 +102,7 @@ SCHEMAS.register('text_component_object', Mod(ObjectNode({
         contents: ObjectNode({
           id: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
           count: NumberNode({ integer: true }),
-          tag: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: path => path.pop().push('id') } } } })
+          tag: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'id' }] } } } })
         }, { collapse: true })
       },
       'show_entity': {

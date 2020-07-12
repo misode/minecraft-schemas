@@ -462,7 +462,7 @@ SCHEMAS.register('dimension_type', Mod(ObjectNode({
   ambient_light: Force(NumberNode()),
   fixed_time: NumberNode({ integer: true }),
   logical_height: Force(NumberNode({ integer: true })),
-  infiniburn: Force(EnumNode('dimension_type_infiniburn', { search: true, additional: true, validation: { validator: 'resource', params: { pool: COLLECTIONS.get('dimension_type_infiniburn') } } }))
+  infiniburn: Force(EnumNode('dimension_type_infiniburn', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$tag/block' } } }))
 }, { context: 'dimension_type' }), {
   default: () => ({
     ultrawarm: false,

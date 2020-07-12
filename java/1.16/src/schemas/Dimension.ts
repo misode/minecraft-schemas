@@ -13,10 +13,10 @@ import {
   Reference,
   Resource,
   SCHEMAS,
-  StringNode,
   Switch,
   COLLECTIONS,
 } from '@mcschema/core'
+import { BlockState, FluidState } from './Common'
 
 const SettingsPresets = (node: INode<any>) => ChoiceNode([
   [
@@ -329,21 +329,8 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
           bedrock_floor_position: Force(NumberNode({ integer: true })),
           sea_level: Force(NumberNode({ integer: true })),
           disable_mob_generation: Force(BooleanNode()),
-          default_block: Force(ObjectNode({
-            Name: Force(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
-            Properties: MapNode(
-              StringNode(),
-              StringNode(),
-              { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'Name' }] } } }
-            )
-          })),
-          default_fluid: Force(ObjectNode({
-            Name: Force(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } })),
-            Properties: Force(MapNode(
-              StringNode(),
-              StringNode()
-            ))
-          })),
+          default_block: Force(BlockState),
+          default_fluid: Force(FluidState),
           noise: Force(ObjectNode({
             density_factor: Force(NumberNode()),
             density_offset: Force(NumberNode()),

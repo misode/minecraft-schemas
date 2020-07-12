@@ -7,15 +7,9 @@ import './schemas/LootTable'
 import './schemas/Dimension'
 import './schemas/TextComponent'
 import './schemas/worldgen/Biome'
+import './schemas/worldgen/Carver'
 import './schemas/worldgen/Feature'
-
-export const schemas = {
-  'advancement': SCHEMAS.get('advancement'),
-  'biome': SCHEMAS.get('biome'),
-  'predicate': SCHEMAS.get('predicate'),
-  'dimension': SCHEMAS.get('dimension'),
-  'dimension-type': SCHEMAS.get('dimension_type'),
-  'feature': SCHEMAS.get('configured_feature'),
-  'loot-table': SCHEMAS.get('loot_table'),
-  'text-component': SCHEMAS.get('text_component_object')
-}
+import './schemas/worldgen/ProcessorList'
+import './schemas/worldgen/StructureFeature'
+import './schemas/worldgen/SurfaceBuilder'
+import './schemas/worldgen/TemplatePool'

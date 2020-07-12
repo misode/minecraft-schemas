@@ -49,7 +49,6 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
       </div>`
     },
     validate(path, value, errors, options) {
-      console.log(path.last(), value)
       if (options.loose && value === undefined) {
         value = {}
       }

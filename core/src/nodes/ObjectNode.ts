@@ -73,7 +73,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       const nextIndex = index + 1
       const pathElements = path.getArray()
       if (pathElements.length <= nextIndex) {
-        return undefined
+        return this
       }
       const activeFields = getActiveFields(path.slice(0, nextIndex))
       const node = activeFields[pathElements[nextIndex]]

@@ -7,6 +7,7 @@ type ListNodeConfig = {
 export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]> => {
   return ({
     ...Base,
+    default: () => [],
     navigate(path, index) {
       const nextIndex = index + 1
       if (path.getArray().length <= nextIndex) {
@@ -55,13 +56,13 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
         errors.add(path, 'error.expected_list')
         return value
       }
-      if (!config?.allowEmpty && value.length === 0) {
+      /* if (!config?.allowEmpty && value.length === 0) {
         if (options.loose) {
           return undefined
         } else {
           errors.add(path, 'error.invalid_empty_list')
         }
-      }
+      } */
       return value.map((obj, index) =>
         children.validate(path.push(index), obj, errors, options)
       )

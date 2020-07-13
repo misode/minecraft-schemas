@@ -30,7 +30,7 @@ export const UniformIntNode = (config?: UniformIntNodeConfig): INode<IUniformInt
     ...Base,
     default: () => 0,
     keep: () => true,
-    keys(_path, value) {
+    suggest(_path, value) {
       if (value === undefined || typeof value === 'number') {
         return []
       } else {

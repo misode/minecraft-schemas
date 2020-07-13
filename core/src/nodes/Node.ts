@@ -46,19 +46,13 @@ export interface INode<T = any> {
   keep: () => boolean
 
   /**
-   * Get all possible keys that can be used under this object
-   * @param path The path of this object node
-   * @param value The value corresponding to this object node
-   */
-  keys: (path: Path, value: any) => string[]
-
-  /**
    * Navigate to the specific child of this node according to the path
    * @param path The path of the target node
-   * @param index The index of the model path element that the current node 
-   * is at. For example, in object `{ foo: { bar: true } }` with path `foo.bar`,
-   * the index for the root object is `-1`, the one for the inner object is `0`,
-   * and the one for the boolean value is `1`.
+   * @param index The index of the path element that the current node is at. 
+   * For example, in object `{ foo: { bar: true } }` with path `foo.bar`,
+   * the index for the root object is `-1`, 
+   * the one for the inner object is `0` (which is the index of `foo` in `foo.bar`),
+   * and the one for the boolean value is `1` (which is the index of `bar` in `foo.bar`)
    */
   navigate: (path: Path, index: number) => INode | undefined
 
@@ -71,6 +65,23 @@ export interface INode<T = any> {
    * @returns string HTML representation of this node using the given data
    */
   render: (path: Path, value: T, view: TreeView, options?: NodeOptions) => string
+
+  /**
+   * Provide code suggestions for this node. The result are valid JSON strings that can be used
+   * in JSON directly without triggering any syntax errors; e.g. string suggestions, including
+   * object key suggestions, have double quotation marks surrounding them, while boolean suggestions
+   * and number suggestions don't
+   * - For `BooleanNode`: Returns a list containing `false` and `true`.
+   * - For `ChoiceNode`: Combines and returns all suggestions of the choices.
+   * - For `EnumNode`: Returns all the options.
+   * - For `MapNode`: Returns all the suggestions provided by the key node.
+   * - For `ObjectNode` and `RangeNode`: Returns all possible keys that can be used under this object. 
+   * Keys existing in the `value` will be excluded from the suggestion.
+   * - For other nodes: Returns an empty list.
+   * @param path The path of this node
+   * @param value The value corresponding to this node
+   */
+  suggest: (path: Path, value: any) => string[]
 
   /**
    * Validates the model using this schema
@@ -96,9 +107,9 @@ export const Base: INode = ({
   enabled: () => true,
   force: () => false,
   keep: () => false,
-  keys: () => [],
   navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
   render: () => '',
+  suggest: () => [],
   validate: (_, v) => v,
   validationOption: () => undefined
 })

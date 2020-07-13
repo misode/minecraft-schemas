@@ -47,12 +47,14 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
     ...Base,
     default: () => (config?.forceRange) ? {} : 0,
     keep: () => true,
-    keys(_path, value) {
+    suggest(_path, value) {
       if (value === undefined || typeof value === 'number') {
         return []
       } else {
         const existingKeys = Object.keys(value)
-        return ['type', 'min', 'max', ...(config?.allowBinomial ? ['n', 'p'] : [])].filter(k => !existingKeys.includes(k))
+        return ['type', 'min', 'max', ...(config?.allowBinomial ? ['n', 'p'] : [])]
+          .filter(k => !existingKeys.includes(k))
+          .map(k => `"${k}"`)
       }
     },
     navigate(path, index) {

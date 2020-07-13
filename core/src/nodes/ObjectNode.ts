@@ -64,11 +64,6 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     ...Base,
     default: () => ({}),
     keep: () => config?.collapse ?? false,
-    keys(path, value) {
-      const activeFields = getActiveFields(path)
-      const existingKeys = Object.keys(typeof value === 'object' ? value : {})
-      return Object.keys(activeFields).filter(k => !existingKeys.includes(k))
-    },
     navigate(path, index) {
       const nextIndex = index + 1
       const pathElements = path.getArray()
@@ -109,6 +104,13 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
           </div>
         `}
       </div>`
+    },
+    suggest(path, value) {
+      const activeFields = getActiveFields(path)
+      const existingKeys = Object.keys(typeof value === 'object' ? value : {})
+      return Object.keys(activeFields)
+        .filter(k => !existingKeys.includes(k))
+        .map(k => `"${k}"`)
     },
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'object') {

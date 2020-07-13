@@ -49,6 +49,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
         </div>
       </div>`
     },
+    suggest: (path, value) => keys.suggest(path, value),
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'object') {
         value = {}

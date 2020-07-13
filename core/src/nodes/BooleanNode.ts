@@ -31,6 +31,7 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
           data-id="${onTrue}">${locale('true')}</button>
       </div>`
     },
+    suggest: () => ['false', 'true'],
     validate(path, value, errors) {
       if (typeof value !== 'boolean' || value === undefined) {
         errors.add(path, 'error.expected_boolean')

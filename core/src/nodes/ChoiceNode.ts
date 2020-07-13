@@ -36,11 +36,6 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     ...Base,
     default: () => choices[0][1].default(),
     keep: () => true,
-    keys(path, value) {
-      const objectNode = choices.find(([type]) => type === 'object')?.[1]
-      const keys = objectNode?.keys(path, value)
-      return keys ?? []
-    },
     navigate(path, index) {
       const nextIndex = index + 1
       const nextPathElement = path.getArray()[nextIndex]
@@ -76,6 +71,11 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
         hideHeader: false,
         inject
       })
+    },
+    suggest(path, value) {
+      return choices
+        .map(([_, n]) => n.suggest(path, value))
+        .reduce((p, c) => p.concat(c))
     },
     validate(path, value, errors, options) {
       let choice = activeChoice(value)

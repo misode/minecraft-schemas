@@ -37,11 +37,10 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     default: () => choices[0][1].default(),
     keep: () => true,
     navigate(path, index) {
-      const nextIndex = index + 1
-      const nextPathElement = path.getArray()[nextIndex]
-      const expectedChoiceType = typeof nextPathElement === 'number' ? 'list' : 'object'
+      const pathElement = path.getArray()[index + 1]
+      const expectedChoiceType = typeof pathElement === 'number' ? 'list' : 'object'
       const node = choices.find(([type]) => type === expectedChoiceType)?.[1]
-      return node?.navigate(path, nextIndex)
+      return node?.navigate(path, index)
     },
     transform(path, value, view) {
       const choice = activeChoice(value)
@@ -74,8 +73,8 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     },
     suggest(path, value) {
       return choices
-        .map(([_, n]) => n.suggest(path, value))
-        .reduce((p, c) => p.concat(c))
+        .find(([c]) => isValid(c, value))?.[1]
+        ?.suggest(path, value) ?? []
     },
     validate(path, value, errors, options) {
       let choice = activeChoice(value)

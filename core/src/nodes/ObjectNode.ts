@@ -111,7 +111,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       </div>`
     },
     validate(path, value, errors, options) {
-      if (options.loose && value === undefined) {
+      if (options.loose && typeof value !== 'object') {
         value = {}
       }
       if (typeof value !== 'object') {

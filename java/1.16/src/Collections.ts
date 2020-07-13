@@ -117,12 +117,6 @@ COLLECTIONS.register('dimension_generator_setting_preset', [
   'minecraft:floating_islands'
 ])
 
-COLLECTIONS.register('dimension_generator_type', [
-  'minecraft:noise',
-  'minecraft:flat',
-  'minecraft:debug'
-])
-
 COLLECTIONS.register('dimension_type_infiniburn', [
   'minecraft:infiniburn_overworld',
   'minecraft:infiniburn_nether',

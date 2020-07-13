@@ -36,7 +36,7 @@ export const PredicateChoice = (node: INode<any>): INode<any> => {
         predicate: v
       }]
     ]
-  ])
+  ], { choiceContext: 'conditions' })
 }
 
 SCHEMAS.register('advancement', Mod(ObjectNode({

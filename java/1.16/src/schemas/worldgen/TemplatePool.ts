@@ -1,17 +1,16 @@
 import {
+  Case,
+  ChoiceNode,
   EnumNode,
   Force,
-  Mod,
-  ObjectNode,
-  Resource,
-  SCHEMAS,
   ListNode,
-  Reference,
-  Switch,
-  Case,
+  Mod,
   NumberNode,
+  ObjectNode,
+  Reference,
+  SCHEMAS,
   StringNode,
-  ChoiceNode,
+  Switch,
 } from '@mcschema/core'
 import './ProcessorList'
 
@@ -40,7 +39,14 @@ SCHEMAS.register('template_pool', Mod(ObjectNode({
 }, { context: 'template_pool' }), {
   default: () => ({
     fallback: 'minecraft:empty',
-    
+    elements: [
+      {
+        weight: 1,
+        element: {
+          element_type: 'minecraft:list_pool_element'
+        }
+      }
+    ]
   })
 }))
 

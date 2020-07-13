@@ -49,7 +49,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
       </div>`
     },
     validate(path, value, errors, options) {
-      if (options.loose && value === undefined) {
+      if (options.loose && typeof value !== 'object') {
         value = {}
       }
       if (value === null || typeof value !== 'object') {

@@ -11,7 +11,8 @@ type Choice = [
 ]
 
 type ChoiceNodeConfig = {
-  context?: string
+  context?: string,
+  choiceContext?: string
 }
 
 /**
@@ -57,14 +58,15 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
       const choice = activeChoice(value) ?? choices[0]
       const pathWithContext = (config?.context) ?
         new Path(path.getArray(), [config.context], path.getModel()) : path
+      const pathWithChoiceContext = config?.choiceContext ? new Path([], [config.choiceContext]) : path
       let inject = choices.map(c => {
         if (c[0] === choice[0]) {
-          return `<button class="selected" disabled>${pathWithContext.push(c[0]).locale()}</button>`
+          return `<button class="selected" disabled>${pathWithChoiceContext.push(c[0]).locale()}</button>`
         }
         const buttonId = view.registerClick(el => {
           view.model.set(path, c[2](value))
         })
-        return `<button data-id="${buttonId}">${pathWithContext.push(c[0]).locale()}</button>`
+        return `<button data-id="${buttonId}">${pathWithChoiceContext.push(c[0]).locale()}</button>`
       }).join('')
 
       return choice[1]?.render(pathWithContext, value, view, {

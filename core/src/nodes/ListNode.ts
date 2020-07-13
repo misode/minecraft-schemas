@@ -56,13 +56,9 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
         errors.add(path, 'error.expected_list')
         return value
       }
-      /* if (!config?.allowEmpty && value.length === 0) {
-        if (options.loose) {
-          return undefined
-        } else {
-          errors.add(path, 'error.invalid_empty_list')
-        }
-      } */
+      if (options.loose && !config?.allowEmpty && value.length === 0) {
+        return undefined
+      }
       return value.map((obj, index) =>
         children.validate(path.push(index), obj, errors, options)
       )

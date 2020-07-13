@@ -1,16 +1,16 @@
 import {
+  BooleanNode,
+  Case,
   EnumNode,
   Force,
   Mod,
+  NodeChildren,
   NumberNode,
   ObjectNode,
   Resource,
   SCHEMAS,
-  Switch,
-  Case,
-  NodeChildren,
   StringNode,
-  BooleanNode,
+  Switch,
 } from '@mcschema/core'
 
 const templatePoolConfig: NodeChildren = {
@@ -28,18 +28,18 @@ SCHEMAS.register('configured_structure_feature', Mod(ObjectNode({
         probability: NumberNode({ min: 0, max: 1 })
       },
       'minecraft:mineshaft': {
-        type: EnumNode([ 'normal', 'mesa' ], 'normal'),
+        type: EnumNode(['normal', 'mesa'], 'normal'),
         probability: NumberNode({ min: 0, max: 1 })
       },
       'minecraft:ocean_ruin': {
-        biome_temp: EnumNode([ 'cold', 'warm' ], 'cold'),
+        biome_temp: EnumNode(['cold', 'warm'], 'cold'),
         large_probability: NumberNode({ min: 0, max: 1 }),
         cluster_probability: NumberNode({ min: 0, max: 1 })
       },
       'minecraft:pillager_outpost': templatePoolConfig,
       'minecraft:ruined_portal': {
-        portal_type: EnumNode([ 'standard', 'desert', 'jungle',
-          'mountain', 'nether', 'ocean', 'swamp' ], 'standard')
+        portal_type: EnumNode(['standard', 'desert', 'jungle',
+          'mountain', 'nether', 'ocean', 'swamp'], 'standard')
       },
       'minecraft:shipwreck': {
         is_beached: BooleanNode()

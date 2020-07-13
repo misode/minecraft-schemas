@@ -1,4 +1,5 @@
 import {
+  BooleanNode,
   EnumNode,
   Force,
   ListNode,
@@ -8,6 +9,7 @@ import {
   ObjectNode,
   Resource,
   SCHEMAS,
+  StringNode,
 } from '@mcschema/core'
 
 SCHEMAS.register('biome', Mod(ObjectNode({
@@ -19,6 +21,34 @@ SCHEMAS.register('biome', Mod(ObjectNode({
   downfall: NumberNode(),
   precipitation: EnumNode(['none', 'rain', 'snow'], 'none'),
   category: EnumNode('biome_category'),
+  effects: Force(ObjectNode({
+    fog_color: NumberNode({ integer: true }),
+    water_color: NumberNode({ integer: true }),
+    water_fog_color: NumberNode({ integer: true }),
+    ambient_sound: StringNode(),
+    mood_sound: ObjectNode({
+      sound: StringNode(),
+      tick_delay: NumberNode({ integer: true }),
+      block_search_extent: NumberNode({ integer: true }),
+      offset: NumberNode()
+    }, { collapse: true }),
+    additions_sound: ObjectNode({
+      sound: StringNode(),
+      tick_chance: NumberNode({ min: 0, max: 1 })
+    }, { collapse: true }),
+    music: ObjectNode({
+      sound: StringNode(),
+      min_delay: NumberNode({ integer: true, min: 0 }),
+      max_delay: NumberNode({ integer: true, min: 0 }),
+      replace_current_music: BooleanNode()
+    }, { collapse: true }),
+    particle: ObjectNode({
+      options: ObjectNode({
+        type: StringNode()
+      }),
+      probability: NumberNode({ min: 0, max: 1 })
+    }, { collapse: true })
+  })),
   starts: Force(ListNode(
     EnumNode('configured_structure_feature', { search: true, additional: true })
   )),
@@ -60,7 +90,7 @@ SCHEMAS.register('biome', Mod(ObjectNode({
   carvers: Force(MapNode(
     EnumNode(['air', 'liquid'], 'air'),
     Mod(ListNode(
-      EnumNode('worldgen/carver', { search: true, additional: true})
+      EnumNode('worldgen/carver', { search: true, additional: true })
     ), {
       default: () => ['minecraft:cave']
     })
@@ -80,7 +110,3 @@ SCHEMAS.register('biome', Mod(ObjectNode({
     downfall: 0.0,
   })
 }))
-
-SCHEMAS.register('configured_surface_builder', ObjectNode({
-  
-}, { category: 'predicate' }))

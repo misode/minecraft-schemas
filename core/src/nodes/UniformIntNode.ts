@@ -4,7 +4,15 @@ import { NumberNode } from './NumberNode'
 
 export type IUniformInt = number | { base?: number, spread?: number }
 
-export const UniformIntNode = (): INode<IUniformInt> => {
+type UniformIntNodeConfig = {
+  min?: number
+  max?: number
+  maxSpread?: number
+}
+
+export const UniformIntNode = (config?: UniformIntNodeConfig): INode<IUniformInt> => {
+  const baseNode = NumberNode({ integer: true, min: config?.min, max: config?.max })
+  const spreadNode = NumberNode({ integer: true, min: 0, max: config?.maxSpread })
   const getState = (el: Element): IUniformInt => {
     const type = el.querySelector('select')!.value
     if (type === 'exact') {
@@ -72,13 +80,13 @@ export const UniformIntNode = (): INode<IUniformInt> => {
         return value
       }
       if (value === undefined || typeof value === 'number') {
-        NumberNode({ integer: true }).validate(path, value, errors, options)
+        baseNode.validate(path, value, errors, options)
       } else {
         if (value.base !== undefined) {
-          NumberNode({ integer: true }).validate(path.push('base'), value.base, errors, options)
+          baseNode.validate(path.push('base'), value.base, errors, options)
         }
         if (value.spread !== undefined) {
-          NumberNode({ min: 0, integer: true }).validate(path.push('spread'), value.spread, errors, options)
+          spreadNode.validate(path.push('spread'), value.spread, errors, options)
         }
       }
       return value

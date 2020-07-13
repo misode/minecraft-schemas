@@ -4,6 +4,8 @@ import {
   ObjectNode,
   MapNode,
   StringNode,
+  ListNode,
+  NumberNode,
 } from '@mcschema/core'
 
 export const BlockState = ObjectNode({
@@ -22,3 +24,7 @@ export const FluidState = ObjectNode({
     StringNode()
   ))
 })
+
+export const BlockPos = ListNode(
+  NumberNode({ integer: true })
+)

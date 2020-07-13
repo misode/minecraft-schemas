@@ -500,3 +500,12 @@ COLLECTIONS.register('biome_category', [
   'taiga',
   'the_end'
 ])
+
+COLLECTIONS.register('heightmap_type', [
+  'MOTION_BLOCKING',
+  'MOTION_BLOCKING_NO_LEAVES',
+  'OCEAN_FLOOR',
+  'OCEAN_FLOOR_WG',
+  'WORLD_SURFACE',
+  'WORLD_SURFACE_WG'
+])

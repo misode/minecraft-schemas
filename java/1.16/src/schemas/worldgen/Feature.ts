@@ -17,11 +17,11 @@ import {
   ChoiceNode,
   UniformIntNode,
 } from '@mcschema/core'
-import { BlockState, FluidState } from '../Common'
+import { BlockState, FluidState, BlockPos } from '../Common'
 import './Decorator'
 import './ProcessorList'
 
-const RandomPatchOrFlower: NodeChildren = {
+const RandomPatchConfig: NodeChildren = {
   can_replace: BooleanNode(),
   project: BooleanNode(),
   need_water: BooleanNode(),
@@ -31,21 +31,37 @@ const RandomPatchOrFlower: NodeChildren = {
   tries: NumberNode({ integer: true }),
   state_provider: Force(Reference('block_state_provider')),
   block_placer: Force(Reference('block_placer')),
-  whitelist: ListNode(
+  whitelist: Force(ListNode(
     BlockState
-  ),
-  blacklist: ListNode(
+  )),
+  blacklist: Force(ListNode(
     BlockState
-  )
+  ))
 }
 
-const DiskOrIcePatch: NodeChildren = {
-  state: BlockState,
-  radius: UniformIntNode(),
-  half_height: NumberNode({ integer: true }),
-  targets: ListNode(
+const DiskConfig: NodeChildren = {
+  state: Force(BlockState),
+  radius: Force(UniformIntNode({ min: 0, max: 4, maxSpread: 4})),
+  half_height: Force(NumberNode({ integer: true, min: 0, max: 4 })),
+  targets: Force(ListNode(
     BlockState
-  )
+  ))
+}
+
+const HugeMushroomConfig: NodeChildren = {
+  cap_provider: Force(Reference('block_state_provider')),
+  stem_provider: Force(Reference('block_state_provider')),
+  foliage_radius: NumberNode({ integer: true })
+}
+
+const OreConfig: NodeChildren = {
+  state: Force(BlockState),
+  size: Force(NumberNode({ integer: true, min: 0, max: 64 })),
+  target: Force(Reference('block_predicate'))
+}
+
+const CountConfig: NodeChildren = {
+  count: Force(UniformIntNode({ min: -10, max: 128, maxSpread: 128 }))
 }
 
 const Feature = ChoiceNode([
@@ -67,11 +83,11 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
     [Switch]: path => path.pop().push('name'),
     [Case]: {
       'minecraft:bamboo': {
-        probability: NumberNode({ min: 0, max: 1 })
+        probability: Force(NumberNode({ min: 0, max: 1 }))
       },
       'minecraft:basalt_columns': {
-        reach: UniformIntNode(),
-        height: UniformIntNode()
+        reach: Force(UniformIntNode({ min: 0, max: 2, maxSpread: 1})),
+        height: Force(UniformIntNode({ min: 1, max: 5, maxSpread: 5}))
       },
       'minecraft:block_pile': {
         state_provider: Force(Reference('block_state_provider'))
@@ -85,133 +101,125 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
         feature: Force(Feature)
       },
       'minecraft:delta_feature': {
-        contents: BlockState,
-        rim: BlockState,
-        size: UniformIntNode(),
-        rim_size: UniformIntNode()
+        contents: Force(BlockState),
+        rim: Force(BlockState),
+        size: Force(UniformIntNode({ min: 0, max: 8, maxSpread: 8})),
+        rim_size: Force(UniformIntNode({ min: 0, max: 8, maxSpread: 8}))
       },
-      'minecraft:disk': DiskOrIcePatch,
+      'minecraft:disk': DiskConfig,
       'minecraft:emerald_ore': {
-        state: BlockState,
-        target: BlockState
+        state: Force(BlockState),
+        target: Force(BlockState)
       },
       'minecraft:end_gateway': {
-        exact: BooleanNode()
+        exact: Force(BooleanNode()),
+        exit: BlockPos
       },
       'minecraft:end_spike': {
-        crystal_invulnerable: BooleanNode(),
-        spikes: ListNode(Base) // TODO: find out what can be valid entries
+        crystal_invulnerable: Force(BooleanNode()),
+        crystal_beam_target: BlockPos,
+        spikes: Force(ListNode(
+          ObjectNode({
+            centerX: NumberNode({ integer: true }),
+            centerZ: NumberNode({ integer: true }),
+            radius: NumberNode({ integer: true }),
+            height: NumberNode({ integer: true }),
+            guarded: BooleanNode()
+          })
+        ))
       },
       'minecraft:fill_layer': {
-        // TODO: find out how this can be used
+        state: BlockState,
+        height: NumberNode({ integer: true, min: 0, max: 255 })
       },
-      'minecraft:flower': RandomPatchOrFlower,
+      'minecraft:flower': RandomPatchConfig,
       'minecraft:forest_rock': {
-        state: BlockState
+        state: Force(BlockState)
       },
-      'minecraft:huge_brown_mushroom': {
-        stem_provider: Force(Reference('block_state_provider')),
-        cap_provider: Force(Reference('block_state_provider'))
-      },
+      'minecraft:huge_brown_mushroom': HugeMushroomConfig,
       'minecraft:huge_fungus': {
-        hat_state: BlockState,
-        decor_state: BlockState,
-        stem_state: BlockState,
-        valid_base_block: BlockState,
+        hat_state: Force(BlockState),
+        decor_state: Force(BlockState),
+        stem_state: Force(BlockState),
+        valid_base_block: Force(BlockState),
         planted: BooleanNode()
       },
-      'minecraft:huge_red_mushroom': {
-        stem_provider: Force(Reference('block_state_provider')),
-        cap_provider: Force(Reference('block_state_provider'))
-      },
-      'minecraft:ice_patch': DiskOrIcePatch,
+      'minecraft:huge_red_mushroom': HugeMushroomConfig,
+      'minecraft:ice_patch': DiskConfig,
       'minecraft:iceberg': {
-        state: BlockState
+        state: Force(BlockState)
       },
       'minecraft:lake': {
-        state: FluidState
+        state: Force(BlockState)
       },
       'minecraft:nether_forest_vegetation': {
         state_provider: Reference('block_state_provider')
       },
       'minecraft:netherrack_replace_blobs': {
-        state: BlockState,
-        target: BlockState,
-        radius: UniformIntNode()
+        state: Force(BlockState),
+        target: Force(BlockState),
+        radius: Force(UniformIntNode())
       },
-      'minecraft:no_surface_ore': {
-        state: BlockState,
-        size: NumberNode({ integer: true }),
-        target: Force(Reference('block_predicate'))
-      },
-      'minecraft:ore': {
-        state: BlockState,
-        size: NumberNode({ integer: true }),
-        target: Force(Reference('block_predicate'))
-      },
-      'minecraft:random_patch': RandomPatchOrFlower,
+      'minecraft:no_surface_ore': OreConfig,
+      'minecraft:ore': OreConfig,
+      'minecraft:random_patch': RandomPatchConfig,
       'minecraft:random_boolean_selector': {
-        feature_false: Feature,
-        feature_true: Feature
+        feature_false: Force(Feature),
+        feature_true: Force(Feature)
       },
       'minecraft:random_selector': {
-        features: ListNode(
+        features: Force(ListNode(
           ObjectNode({
-            feature: Feature,
-            chance: NumberNode({ min: 0, max: 1 })
+            chance: Force(NumberNode({ min: 0, max: 1 })),
+            feature: Force(Feature)
           })
-        ),
+        )),
         default: Force(Feature)
       },
-      'minecraft:sea_pickle': {
-        count: NumberNode({ integer: true, min: 0 })
-      },
+      'minecraft:sea_pickle': CountConfig,
       'minecraft:seagrass': {
-        probability: NumberNode({ min: 0, max: 1 })
+        probability: Force(NumberNode({ min: 0, max: 1 }))
       },
       'minecraft:simple_block': {
-        to_place: BlockState,
-        place_on: BlockState,
-        place_in: BlockState,
-        place_under: BlockState
+        to_place: Force(BlockState),
+        place_on: Force(ListNode(BlockState)),
+        place_in: Force(ListNode(BlockState)),
+        place_under: Force(ListNode(BlockState))
       },
       'minecraft:simple_random_selector': {
-        features: ListNode(
+        features: Force(ListNode(
           Feature
-        )
+        ))
       },
       'minecraft:spring_feature': {
-        state: FluidState,
+        state: Force(FluidState),
         rock_count: NumberNode({ integer: true }),
         hole_count: NumberNode({ integer: true }),
         required_block_below: BooleanNode(),
-        valid_blocks: ListNode(
+        valid_blocks: Force(ListNode(
           EnumNode('block')
-        )
+        ))
       },
       'minecraft:tree': {
         max_water_depth: NumberNode({ integer: true }),
         ignore_vines: BooleanNode(),
-        heightmap: EnumNode([
-          'OCEAN_FLOOR',
-          'MOTION_BLOCKING',
-          'MOTION_BLOCKING_NO_LEAVES'
-        ], 'OCEAN_FLOOR'),
+        heightmap: Force(EnumNode('heightmap_type', 'OCEAN_FLOOR')),
         minimum_size: Force(ObjectNode({
-          type: EnumNode('worldgen/feature_size_type', 'minecraft:two_layers_feature_size'),
+          type: Force(EnumNode('worldgen/feature_size_type', 'minecraft:two_layers_feature_size')),
+          min_clipped_height: NumberNode({ min: 0, max: 80}),
           [Switch]: path => path.push('type'),
           [Case]: {
             'minecraft:two_layers_feature_size': {
-              limit: NumberNode({ integer: true }),
-              lower_size: NumberNode({ integer: true }),
-              upper_size: NumberNode({ integer: true })
+              limit: NumberNode({ integer: true, min: 0, max: 81 }),
+              lower_size: NumberNode({ integer: true, min: 0, max: 16 }),
+              upper_size: NumberNode({ integer: true, min: 0, max: 16 })
             },
             'minecraft:three_layers_feature_size': {
-              limit: NumberNode({ integer: true }),
-              upper_limit: NumberNode({ integer: true }),
-              lower_size: NumberNode({ integer: true }),
-              middle_size: NumberNode({ integer: true }),
-              upper_size: NumberNode({ integer: true })
+              limit: NumberNode({ integer: true, min: 0, max: 80 }),
+              upper_limit: NumberNode({ integer: true, min: 0, max: 80 }),
+              lower_size: NumberNode({ integer: true, min: 0, max: 16 }),
+              middle_size: NumberNode({ integer: true, min: 0, max: 16 }),
+              upper_size: NumberNode({ integer: true, min: 0, max: 16 })
             }
           }
         })),
@@ -219,30 +227,36 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
         leaves_provider: Force(Reference('block_state_provider')),
         trunk_placer: Force(ObjectNode({
           type: Force(EnumNode('worldgen/trunk_placer_type', 'minecraft:straight_trunk_placer')),
-          base_height: NumberNode({ integer: true }),
-          height_rand_a: NumberNode({ integer: true }),
-          height_rand_b: NumberNode({ integer: true })
+          base_height: Force(NumberNode({ integer: true, min: 0, max: 32 })),
+          height_rand_a: Force(NumberNode({ integer: true, min: 0, max: 24 })),
+          height_rand_b: Force(NumberNode({ integer: true, min: 0, max: 24 }))
         })),
         foliage_placer: ObjectNode({
           type: Force(EnumNode('worldgen/foliage_placer_type', 'minecraft:blob_foliage_placer')),
-          radius: NumberNode({ integer: true }),
-          offset: NumberNode({ integer: true }),
+          radius: Force(UniformIntNode({ min: 0, max: 8, maxSpread: 8 })),
+          offset: Force(UniformIntNode({ min: 0, max: 8, maxSpread: 8 })),
           [Switch]: path => path.push('type'),
           [Case]: {
             'minecraft:blob_foliage_placer': {
-              height: NumberNode({ integer: true })
+              height: Force(NumberNode({ integer: true, min: 0, max: 16 }))
             },
             'minecraft:bush_foliage_placer': {
-              height: NumberNode({ integer: true })
+              height: Force(NumberNode({ integer: true, min: 0, max: 16 }))
+            },
+            'minecraft:fancy_foliage_placer': {
+              height: Force(NumberNode({ integer: true, min: 0, max: 16 }))
             },
             'minecraft:jungle_foliage_placer': {
-              height: NumberNode({ integer: true })
+              height: Force(NumberNode({ integer: true, min: 0, max: 16 }))
             },
             'minecraft:mega_pine_foliage_placer': {
-              crown_height: UniformIntNode()
+              crown_height: Force(UniformIntNode({ min: 0, max: 16, maxSpread: 8 }))
             },
             'minecraft:pine_foliage_placer': {
-              height: UniformIntNode()
+              height: Force(UniformIntNode({ min: 0, max: 16, maxSpread: 8 }))
+            },
+            'minecraft:spruce_foliage_placer': {
+              trunk_height: Force(UniformIntNode({ min: 0, max: 16, maxSpread: 8 }))
             }
           }
         }),
@@ -252,13 +266,13 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
             [Switch]: path => path.push('type'),
             [Case]: {
               'minecraft:alter_ground': {
-                provider: Reference('block_state_provider')
+                provider: Force(Reference('block_state_provider'))
               },
               'minecraft:beehive': {
-                probability: NumberNode({ min: 0, max: 1 })
+                probability: Force(NumberNode({ min: 0, max: 1 }))
               },
               'minecraft:cocoa': {
-                probability: NumberNode({ min: 0, max: 1 })
+                probability: Force(NumberNode({ min: 0, max: 1 }))
               }
             }
           })
@@ -307,22 +321,22 @@ SCHEMAS.register('block_state_provider', ObjectNode({
   [Switch]: path => path.push('type'),
   [Case]: {
     'minecraft:rotated_block_provider': {
-      state: BlockState
+      state: Force(BlockState)
     },
     'minecraft:simple_state_provider': {
-      state: BlockState
+      state: Force(BlockState)
     },
     'minecraft:weighted_state_provider': {
-      entries: ListNode(
+      entries: Force(ListNode(
         Mod(ObjectNode({
           weight: NumberNode({ integer: true, min: 1 }),
-          data: BlockState
+          data: Force(BlockState)
         }), {
           default: () => ({
-            weight: 1
+            data: {}
           })
         })
-      )
+      ))
     }
   }
 }))
@@ -332,8 +346,8 @@ SCHEMAS.register('block_placer', ObjectNode({
   [Switch]: path => path.push('type'),
   [Case]: {
     'minecraft:column_placer': {
-      min_size: NumberNode({ integer: true }),
-      extra_size: NumberNode({ integer: true })
+      min_size: Force(NumberNode({ integer: true })),
+      extra_size: Force(NumberNode({ integer: true }))
     }
   }
 }))

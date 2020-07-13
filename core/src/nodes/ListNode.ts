@@ -7,7 +7,7 @@ export const ListNode = (children: INode): INode<any[]> => {
     navigate(path, index) {
       const nextIndex = index + 1
       if (path.getArray().length <= nextIndex) {
-        return undefined
+        return this
       }
       return children.navigate(path, nextIndex)
     },

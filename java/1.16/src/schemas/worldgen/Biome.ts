@@ -13,7 +13,6 @@ import {
 } from '@mcschema/core'
 
 SCHEMAS.register('biome', Mod(ObjectNode({
-  sky_color: NumberNode({ integer: true }),
   surface_builder: Force(Resource(EnumNode('worldgen/surface_builder', { search: true, additional: true }))),
   depth: NumberNode(),
   scale: NumberNode(),
@@ -21,10 +20,11 @@ SCHEMAS.register('biome', Mod(ObjectNode({
   downfall: NumberNode(),
   precipitation: EnumNode(['none', 'rain', 'snow'], 'none'),
   category: EnumNode('biome_category'),
+  sky_color: NumberNode({ color: true }),
   effects: Force(ObjectNode({
-    fog_color: NumberNode({ integer: true }),
-    water_color: NumberNode({ integer: true }),
-    water_fog_color: NumberNode({ integer: true }),
+    fog_color: NumberNode({ color: true }),
+    water_color: NumberNode({ color: true }),
+    water_fog_color: NumberNode({ color: true }),
     ambient_sound: StringNode(),
     mood_sound: ObjectNode({
       sound: StringNode(),
@@ -102,11 +102,16 @@ SCHEMAS.register('biome', Mod(ObjectNode({
   ))
 }, { context: 'biome' }), {
   default: () => ({
-    sky_color: 7907327,
     surface_builder: 'minecraft:default',
-    depth: 0.1,
-    scale: 0.2,
-    temperature: 2.0,
-    downfall: 0.0,
+    depth: 0.125,
+    scale: 0.05,
+    temperature: 0.8,
+    downfall: 0.4,
+    sky_color: 7907327,
+    effects: {
+      fog_color: 12638463,
+      water_color: 4159204,
+      water_fog_color: 329011
+    }
   })
 }))

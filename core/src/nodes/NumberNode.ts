@@ -6,13 +6,15 @@ type NumberNodeConfig = {
   /** If specified, number will be capped at this minimum */
   min?: number
   /** If specified, number will be capped at this maximum */
-  max?: number
+  max?: number,
+  /** Whether the number represents a color */
+  color?: boolean
 }
 
 export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
-  const integer = config?.integer ?? false
-  const min = config?.min ?? -Infinity
-  const max = config?.max ?? Infinity
+  const integer = config?.color ? true : config?.integer ?? false
+  const min = config?.color ? 0 : config?.min ?? -Infinity
+  const max = config?.color ? 16777215 : config?.max ?? Infinity
   const between = config?.min !== undefined && config?.max !== undefined
 
   return {
@@ -29,6 +31,9 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
         <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}
         <input data-id="${onChange}" value="${value ?? ''}">
+        ${value && config?.color
+          ? `<button class="color" style="background: #${value.toString(16)}"></button>`
+          : ''}
       </div>`
     },
     validate(path, value, errors, options) {

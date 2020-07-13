@@ -127,3 +127,4 @@ type ResourceType =
   | 'minecraft:potion'
   | 'minecraft:stat_type'
   | 'minecraft:worldgen/biome_source'
+  | 'minecraft:worldgen/chunk_generator'

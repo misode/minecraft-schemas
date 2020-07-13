@@ -121,7 +121,7 @@ export class DataModel {
 
     let node = this.data;
     path.pop().forEach(e => {
-      if (node[e] === undefined) {
+      if (node[e] === undefined || typeof node[e] === 'string' || typeof node[e] === 'number') {
         node[e] = {}
       }
       node = node[e]

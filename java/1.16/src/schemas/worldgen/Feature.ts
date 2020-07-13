@@ -15,16 +15,11 @@ import {
   Base,
   StringNode,
   ChoiceNode,
+  UniformIntNode,
 } from '@mcschema/core'
 import { BlockState, FluidState } from '../Common'
 import './Decorator'
 import './ProcessorList'
-
-// TODO: investigate whether this object can also be defined as an integer
-const BaseSpread = ObjectNode({
-  base: NumberNode({ integer: true }),
-  spread: NumberNode({ integer: true })
-})
 
 const RandomPatchOrFlower: NodeChildren = {
   can_replace: BooleanNode(),
@@ -46,7 +41,7 @@ const RandomPatchOrFlower: NodeChildren = {
 
 const DiskOrIcePatch: NodeChildren = {
   state: BlockState,
-  radius: BaseSpread,
+  radius: UniformIntNode(),
   half_height: NumberNode({ integer: true }),
   targets: ListNode(
     BlockState
@@ -75,8 +70,8 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
         probability: NumberNode({ min: 0, max: 1 })
       },
       'minecraft:basalt_columns': {
-        reach: BaseSpread,
-        height: BaseSpread
+        reach: UniformIntNode(),
+        height: UniformIntNode()
       },
       'minecraft:block_pile': {
         state_provider: Force(Reference('block_state_provider'))
@@ -92,8 +87,8 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
       'minecraft:delta_feature': {
         contents: BlockState,
         rim: BlockState,
-        size: BaseSpread,
-        rim_size: BaseSpread
+        size: UniformIntNode(),
+        rim_size: UniformIntNode()
       },
       'minecraft:disk': DiskOrIcePatch,
       'minecraft:emerald_ore': {
@@ -142,7 +137,7 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
       'minecraft:netherrack_replace_blobs': {
         state: BlockState,
         target: BlockState,
-        radius: BaseSpread
+        radius: UniformIntNode()
       },
       'minecraft:no_surface_ore': {
         state: BlockState,
@@ -244,10 +239,10 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
               height: NumberNode({ integer: true })
             },
             'minecraft:mega_pine_foliage_placer': {
-              crown_height: BaseSpread
+              crown_height: UniformIntNode()
             },
             'minecraft:pine_foliage_placer': {
-              height: BaseSpread
+              height: UniformIntNode()
             }
           }
         }),

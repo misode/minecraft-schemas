@@ -411,7 +411,7 @@ SCHEMAS.register('generator_structures', ObjectNode({
     collapse: true
   }),
   structures: MapNode(
-    EnumNode('worldgen/feature', { validation: { validator: 'resource', params: { pool: '$worldgen/feature' } } }),
+    EnumNode('worldgen/structure_feature', { search: true, additional: true }),
     Mod(ObjectNode({
       spacing: NumberNode({ integer: true, min: 2, max: 4096 }),
       separation: NumberNode({ integer: true, min: 1, max: 4096 }),
@@ -431,7 +431,7 @@ SCHEMAS.register('generator_layer', Mod(ObjectNode({
   height: Force(NumberNode({ integer: true, min: 1 }))
 }), {
   default: () => ({
-    block: 'stone',
+    block: 'minecraft:stone',
     height: 1
   })
 }))

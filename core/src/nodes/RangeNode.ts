@@ -46,6 +46,7 @@ export const RangeNode = (config?: RangeNodeConfig): INode<IRange> => {
   return {
     ...Base,
     default: () => (config?.forceRange) ? {} : 0,
+    keep: () => true,
     keys(_path, value) {
       if (value === undefined || typeof value === 'number') {
         return []

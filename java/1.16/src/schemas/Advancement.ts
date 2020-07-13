@@ -6,7 +6,6 @@ import {
   EnumNode,
   Force,
   INode,
-  JsonNode,
   ListNode,
   MapNode,
   Mod,
@@ -45,8 +44,8 @@ SCHEMAS.register('advancement', Mod(ObjectNode({
       item: Force(Resource(EnumNode('item', { validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
       nbt: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } } })
     })),
-    title: Force(JsonNode()),
-    description: Force(JsonNode()),
+    title: Force(Reference('text_component')),
+    description: Force(Reference('text_component')),
     background: StringNode(),
     frame: EnumNode(['task', 'challenge', 'goal']),
     show_toast: BooleanNode(),

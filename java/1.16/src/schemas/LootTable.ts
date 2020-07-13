@@ -3,7 +3,6 @@ import {
   Case,
   EnumNode,
   Force,
-  JsonNode,
   ListNode,
   Mod,
   NumberNode,
@@ -201,14 +200,14 @@ SCHEMAS.register('loot_function', ObjectNode({
     'minecraft:set_lore': {
       entity: Force(EnumNode('entity_source', 'this')),
       lore: Force(ListNode(
-        JsonNode()
+        Reference('text_component')
       )),
       replace: BooleanNode(),
       ...conditions
     },
     'minecraft:set_name': {
       entity: Force(EnumNode('entity_source', 'this')),
-      name: Force(JsonNode()),
+      name: Force(Reference('text_component')),
       ...conditions
     },
     'minecraft:set_nbt': {

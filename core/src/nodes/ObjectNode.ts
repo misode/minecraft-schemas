@@ -143,6 +143,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
             res[k] = undefined
           } else {
             res[k] = newValue
+            path.getModel()!.set(path.push(k), newValue, true)
           }
         } else if (!k.startsWith('__')) {
           res[k] = value[k]

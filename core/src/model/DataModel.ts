@@ -109,13 +109,11 @@ export class DataModel {
   }
 
   /**
-   * Updates the date on a path. Node will be removed when value is undefined
+   * Updates the data on a path. Node will be removed when value is undefined
    * @param path path to update
    * @param value new data at the specified path
    */
-  set(path: Path, value: any) {
-    console.log('Set', path.toString(), JSON.stringify(value))
-
+  set(path: Path, value: any, silent?: boolean) {
     if (path.getArray().length === 0) {
       this.reset(value, true)
       return
@@ -139,6 +137,9 @@ export class DataModel {
       node[path.last()] = value
     }
 
+    if (silent) return
+
+    console.log('Set', path.toString(), JSON.stringify(value))
     this.validate(true)
     this.invalidate()
   }

@@ -3,10 +3,9 @@ import { INode } from './Node'
 export const Resource = (node: INode<string>): INode<string> => ({
   ...node,
   validate: (path, value, errors, options) => {
-    const val = node.validate(path, value, errors, options)
-    if (typeof value === 'string' && value.length !== 0 && !value.startsWith('minecraft:')) {
-      return 'minecraft:' + val
+    if (typeof value === 'string' && value.length !== 0 && !value.includes(':')) {
+      value = 'minecraft:' + value
     }
-    return val
+    return node.validate(path, value, errors, options)
   }
 })

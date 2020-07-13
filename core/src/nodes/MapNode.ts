@@ -15,6 +15,7 @@ type MapNodeConfig = {
 export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeConfig): INode<IMap> => {
   return {
     ...Base,
+    default: () => ({}),
     transform(path, value, view) {
       if (value === undefined) return undefined
       let res: any = {}

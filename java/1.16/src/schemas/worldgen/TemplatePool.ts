@@ -31,11 +31,11 @@ const Processors = ChoiceNode([
 ])
 
 SCHEMAS.register('template_pool', Mod(ObjectNode({
-  name: StringNode(),
-  fallback: StringNode(),
-  elements: ListNode(
+  name: Force(StringNode()),
+  fallback: Force(StringNode()),
+  elements: Force(ListNode(
     Reference('template_weighted_element')
-  )
+  ))
 }, { context: 'template_pool' }), {
   default: () => ({
     fallback: 'minecraft:empty',
@@ -51,7 +51,7 @@ SCHEMAS.register('template_pool', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('template_weighted_element', Mod(ObjectNode({
-  weight: NumberNode({ integer: true, min: 1 }),
+  weight: Force(NumberNode({ integer: true, min: 1 })),
   element: Force(Reference('template_element'))
 }), {
   default: () => ({
@@ -64,27 +64,24 @@ SCHEMAS.register('template_weighted_element', Mod(ObjectNode({
 
 SCHEMAS.register('template_element', ObjectNode({
   element_type: Force(EnumNode('worldgen/structure_pool_element', 'minecraft:single_pool_element')),
+  projection: Force(Projection),
   [Switch]: path => path.push('element_type'),
   [Case]: {
     'minecraft:feature_pool_element': {
-      feature: EnumNode('configured_feature', { search: true, additional: true }),
-      projection: Force(Projection),
+      feature: Force(EnumNode('configured_feature', { search: true, additional: true })),
       processors: Force(Processors)
     },
     'minecraft:legacy_single_pool_element': {
-      location: StringNode(),
-      projection: Force(Projection),
+      location: Force(StringNode()),
       processors: Force(Processors)
     },
     'minecraft:list_pool_element': {
-      projection: Force(Projection),
-      elements: ListNode(
+      elements: Force(ListNode(
         Reference('template_element')
-      )
+      ))
     },
     'minecraft:single_pool_element': {
       location: StringNode(),
-      projection: Force(Projection),
       processors: Force(Processors)
     }
   }

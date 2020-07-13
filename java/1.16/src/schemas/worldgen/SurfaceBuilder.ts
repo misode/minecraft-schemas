@@ -10,11 +10,11 @@ import { BlockState } from '../Common'
 
 SCHEMAS.register('configured_surface_builder', Mod(ObjectNode({
   name: Force(Resource(EnumNode('worldgen/surface_builder'))),
-  config: ObjectNode({
-    top_material: BlockState,
-    under_material: BlockState,
-    underwater_material: BlockState,
-  })
+  config: Force(ObjectNode({
+    top_material: Force(BlockState),
+    under_material: Force(BlockState),
+    underwater_material: Force(BlockState),
+  }))
 }, { context: 'surface_builder' }), {
   default: () => ({
     name: 'minecraft:default',

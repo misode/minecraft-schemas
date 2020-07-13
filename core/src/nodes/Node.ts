@@ -72,7 +72,7 @@ export interface INode<T = any> {
    * object key suggestions, have double quotation marks surrounding them, while boolean suggestions
    * and number suggestions don't
    * - For `BooleanNode`: Returns a list containing `false` and `true`.
-   * - For `ChoiceNode`: Combines and returns all suggestions of the choices.
+   * - For `ChoiceNode`: Returns suggestions of the choice corresponding to the type of `value`.
    * - For `EnumNode`: Returns all the options.
    * - For `MapNode`: Returns all the suggestions provided by the key node.
    * - For `ObjectNode` and `RangeNode`: Returns all possible keys that can be used under this object. 

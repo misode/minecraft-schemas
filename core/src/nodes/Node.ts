@@ -122,3 +122,10 @@ export function Force<T>(node: INode<T>, defaultValue?: T): INode {
     }
   }
 }
+
+export function Keep<T>(node: INode<T>): INode<T> {
+  return {
+    ...node,
+    keep: () => true
+  }
+}

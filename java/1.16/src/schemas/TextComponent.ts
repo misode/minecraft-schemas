@@ -1,4 +1,4 @@
-import { BooleanNode, Case, ChoiceNode, EnumNode, Force, ListNode, Mod, NumberNode, ObjectNode, Reference, Resource, SCHEMAS, StringNode, Switch } from '@mcschema/core'
+import { BooleanNode, Case, ChoiceNode, EnumNode, Force, ListNode, Mod, NumberNode, ObjectNode, Reference, Resource, SCHEMAS, StringNode, Switch, Keep } from '@mcschema/core'
 
 const getSimpleString = (jsonText: any): string => jsonText instanceof Array ? getSimpleString(jsonText[0]) : jsonText?.text ?? jsonText?.toString() ?? ''
 
@@ -41,8 +41,8 @@ SCHEMAS.register('text_component', Mod(ChoiceNode([
 }))
 
 SCHEMAS.register('text_component_object', Mod(ObjectNode({
-  text: Force(StringNode()),
-  translate: Force(StringNode()),
+  text: Keep(StringNode()),
+  translate: Keep(StringNode()),
   with: Reference('text_component_list'),
   score: ObjectNode({
     name: Force(StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } } })),

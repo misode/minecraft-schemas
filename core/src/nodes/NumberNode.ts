@@ -37,9 +37,6 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
       </div>`
     },
     validate(path, value, errors, options) {
-      if (options.loose && typeof value !== 'number') {
-        return undefined
-      }
       if (typeof value !== 'number') {
         errors.add(path, 'error.expected_number')
       } else if (integer && !Number.isInteger(value)) {

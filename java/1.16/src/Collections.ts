@@ -509,3 +509,8 @@ COLLECTIONS.register('heightmap_type', [
   'WORLD_SURFACE',
   'WORLD_SURFACE_WG'
 ])
+
+COLLECTIONS.register('generation_step', [
+  'air',
+  'liquid'
+])

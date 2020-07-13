@@ -9,47 +9,48 @@ import {
   SCHEMAS,
   Switch,
   NodeChildren,
+  UniformIntNode,
 } from '@mcschema/core'
 
 const RangeConfig: NodeChildren = {
-  maximum: NumberNode({ integer: true, min: 0 }),
+  maximum: NumberNode({ integer: true }),
   bottom_offset: NumberNode({ integer: true }),
   top_offset: NumberNode({ integer: true })
 }
 
 const ChanceConfig: NodeChildren = {
-  count: NumberNode({ integer: true, min: 0 })
+  count: Force(NumberNode({ integer: true, min: 0 }))
 }
 
 const CountConfig: NodeChildren = {
-  count: NumberNode({ integer: true, min: 0 })
+  count: Force(UniformIntNode({ min: -10, max: 128, maxSpread: 128 }))
 }
 
 SCHEMAS.register('configured_decorator', ObjectNode({
   name: Force(Resource(EnumNode('worldgen/decorator', 'minecraft:count'))),
-  config: ObjectNode({
+  config: Force(ObjectNode({
     [Switch]: path => path.pop().push('name'),
     [Case]: {
       'minecraft:carving_mask': {
-        step: EnumNode(['air', 'liquid'], 'air'),
-        probability: NumberNode({ min: 0, max: 1 })
+        step: Force(EnumNode('generation_step', 'air')),
+        probability: Force(NumberNode({ min: 0, max: 1 }))
       },
       'minecraft:chance': ChanceConfig,
       'minecraft:count': CountConfig,
       'minecraft:count_extra': {
-        count: NumberNode({ integer: true, min: 0 }),
-        extra_count: NumberNode({ integer: true, min: 0 }),
-        extra_chance: NumberNode({ min: 0, max: 1 })
+        count: Force(NumberNode({ integer: true, min: 0 })),
+        extra_count: Force(NumberNode({ integer: true, min: 0 })),
+        extra_chance: Force(NumberNode({ min: 0, max: 1 }))
       },
       'minecraft:count_multilayer': CountConfig,
       'minecraft:count_noise': {
-        noise_level: NumberNode(),
-        below_noise: NumberNode({ integer: true }),
-        above_noise: NumberNode({ integer: true })
+        noise_level: Force(NumberNode()),
+        below_noise: Force(NumberNode({ integer: true })),
+        above_noise: Force(NumberNode({ integer: true }))
       },
       'minecraft:count_noise_biased': {
-        noise_to_count_ratio: NumberNode({ integer: true }),
-        noise_factor: NumberNode(),
+        noise_to_count_ratio: Force(NumberNode({ integer: true })),
+        noise_factor: Force(NumberNode()),
         noise_offset: NumberNode()
       },
       'minecraft:decorated': {
@@ -57,8 +58,8 @@ SCHEMAS.register('configured_decorator', ObjectNode({
         inner: Force(Reference('configured_decorator'))
       },
       'minecraft:depth_average': {
-        baseline: NumberNode({ integer: true }),
-        spread: NumberNode({ integer: true })
+        baseline: Force(NumberNode({ integer: true })),
+        spread: Force(NumberNode({ integer: true }))
       },
       'minecraft:fire': CountConfig,
       'minecraft:glowstone': CountConfig,
@@ -68,5 +69,5 @@ SCHEMAS.register('configured_decorator', ObjectNode({
       'minecraft:range_very_biased': RangeConfig,
       'minecraft:water_lake': ChanceConfig
     }
-  }, { category: 'predicate' })
+  }, { category: 'predicate' }))
 }, { category: 'predicate' }))

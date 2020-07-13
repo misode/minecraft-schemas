@@ -3,7 +3,6 @@ import { locale } from '../Registries'
 import { ValidationOption } from '../ValidationOption'
 
 type StringNodeConfig = {
-  allowEmpty?: boolean
   pattern?: RegExp,
   patternError?: string,
   validation?: ValidationOption
@@ -28,17 +27,10 @@ export const StringNode = (config?: StringNodeConfig): INode<string> => {
         <input data-id="${onChange}" value="${value ?? ''}">
       </div>`
     },
-    validate(path, value, errors, options) {
+    validate(path, value, errors) {
       if (typeof value !== 'string') {
         errors.add(path, 'error.expected_string')
         return value
-      }
-      if (!config?.allowEmpty && value.length === 0) {
-        if (options.loose) {
-          return undefined
-        } else {
-          errors.add(path, 'error.invalid_empty_string')
-        }
       }
       if (config?.pattern && !value.match(config.pattern)) {
         errors.add(path, 'error.invalid_pattern', locale(config.patternError ?? 'pattern'))

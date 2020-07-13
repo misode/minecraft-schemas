@@ -15,7 +15,7 @@ SCHEMAS.register('text_component', Mod(ChoiceNode([
   ],
   [
     'string',
-    StringNode({ allowEmpty: true }),
+    StringNode(),
     getSimpleString
   ],
   [
@@ -41,8 +41,8 @@ SCHEMAS.register('text_component', Mod(ChoiceNode([
 }))
 
 SCHEMAS.register('text_component_object', Mod(ObjectNode({
-  text: StringNode({ allowEmpty: true }),
-  translate: StringNode({ allowEmpty: true }),
+  text: Force(StringNode()),
+  translate: Force(StringNode()),
   with: Reference('text_component_list'),
   score: ObjectNode({
     name: Force(StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } } })),
@@ -131,7 +131,7 @@ SCHEMAS.register('text_component_object', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('text_component_list', Mod(ListNode(
-  Reference('text_component'), { allowEmpty: true }
+  Reference('text_component')
 ), {
   default: () => [{
     text: ""

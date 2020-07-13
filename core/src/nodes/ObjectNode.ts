@@ -27,7 +27,6 @@ export type FilteredChildren = {
 }
 
 type ObjectNodeConfig = {
-  allowEmpty?: boolean,
   collapse?: boolean,
   context?: string,
   disableSwitchContext?: boolean,
@@ -64,6 +63,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
   return ({
     ...Base,
     default: () => ({}),
+    keep: () => config?.collapse ?? false,
     keys(path, value) {
       const activeFields = getActiveFields(path)
       const existingKeys = Object.keys(typeof value === 'object' ? value : {})
@@ -136,19 +136,18 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       keys.forEach(k => {
         if (activeKeys.includes(k)) {
           const newValue = activeFields[k].validate(path.push(k), value[k], errors, newOptions)
-          if (newValue !== undefined) {
+          if (!activeFields[k].keep()
+             && (newValue === undefined
+              || (Array.isArray(newValue) && newValue.length === 0)
+              || (newValue.constructor === Object && Object.keys(newValue).length === 0))) {
+            res[k] = undefined
+          } else {
             res[k] = newValue
           }
         } else if (!k.startsWith('__')) {
           res[k] = value[k]
         }
       })
-      if (!config?.allowEmpty && Object.keys(res).length === 0
-        && !(config?.collapse || options.collapse)) {
-        if (options.loose) {
-          return undefined
-        }
-      }
       return res
     }
   })

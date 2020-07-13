@@ -56,7 +56,7 @@ const DiskOrIcePatch: NodeChildren = {
 const Feature = ChoiceNode([
   [
     'string',
-    StringNode({ allowEmpty: true }),
+    StringNode(),
     v => ''
   ],
   [

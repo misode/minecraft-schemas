@@ -12,17 +12,17 @@ import {
 
 SCHEMAS.register('biome', Mod(ObjectNode({
   sky_color: NumberNode({ integer: true }),
-  surface_builder: Force(Resource(EnumNode('worldgen/surface_builder', 'minecraft:default'))),
+  surface_builder: Force(Resource(EnumNode('worldgen/surface_builder', { search: true, additional: true }))),
   depth: NumberNode(),
   scale: NumberNode(),
   temperature: NumberNode(),
   downfall: NumberNode(),
   precipitation: EnumNode(['none', 'rain', 'snow'], 'none'),
   category: EnumNode('biome_category'),
-  starts: ListNode(
+  starts: Force(ListNode(
     EnumNode('configured_structure_feature', { search: true, additional: true })
-  ),
-  spawners: MapNode(
+  )),
+  spawners: Force(MapNode(
     EnumNode([
       'water_ambient',
       'ambient',
@@ -44,7 +44,7 @@ SCHEMAS.register('biome', Mod(ObjectNode({
         weight: 1
       }]
     })
-  ),
+  )),
   spawn_costs: Force(MapNode(
     EnumNode('entity_type', { search: true }),
     Mod(ObjectNode({
@@ -57,26 +57,27 @@ SCHEMAS.register('biome', Mod(ObjectNode({
       })
     })
   )),
-  carvers: MapNode(
+  carvers: Force(MapNode(
     EnumNode(['air', 'liquid'], 'air'),
     Mod(ListNode(
       EnumNode('worldgen/carver', { search: true, additional: true})
     ), {
       default: () => ['minecraft:cave']
     })
-  ),
-  features: ListNode(
+  )),
+  features: Force(ListNode(
     ListNode(
-      EnumNode('configured_feature')
+      EnumNode('configured_feature', { search: true, additional: true })
     )
-  )
+  ))
 }, { context: 'biome' }), {
   default: () => ({
     sky_color: 7907327,
+    surface_builder: 'minecraft:default',
     depth: 0.1,
     scale: 0.2,
     temperature: 2.0,
-    downfall: 0.0
+    downfall: 0.0,
   })
 }))
 

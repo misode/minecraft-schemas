@@ -41,6 +41,11 @@ export interface INode<T = any> {
   force: () => boolean
 
   /**
+   * Determines whether the node should be kept when empty
+   */
+  keep: () => boolean
+
+  /**
    * Get all possible keys that can be used under this object
    * @param path The path of this object node
    * @param value The value corresponding to this object node
@@ -90,6 +95,7 @@ export const Base: INode = ({
   transform: (_, v) => v,
   enabled: () => true,
   force: () => false,
+  keep: () => false,
   keys: () => [],
   navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
   render: () => '',
@@ -105,6 +111,7 @@ export function Force<T>(node: INode<T>, defaultValue?: T): INode {
   return {
     ...node,
     force: () => true,
+    keep: () => !node.keep(),
     default: () => defaultValue ? defaultValue : node.default(),
     validate: (p, v, e, o) => {
       if (o.loose && o.init) {

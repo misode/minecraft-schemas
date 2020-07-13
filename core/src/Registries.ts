@@ -18,7 +18,7 @@ export class SchemaRegistry implements Registry<INode> {
   get(id: string) {
     const node = this.registry[id]
     if (node === undefined) {
-      console.error(`Tried to access schema "${id}", but that doesn't exsit.`)
+      console.error(`Tried to access schema "${id}", but that doesn't exist.`)
     }
     return node
   }

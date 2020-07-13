@@ -35,6 +35,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
   return {
     ...Base,
     default: () => choices[0][1].default(),
+    keep: () => true,
     keys(path, value) {
       const objectNode = choices.find(([type]) => type === 'object')?.[1]
       const keys = objectNode?.keys(path, value)

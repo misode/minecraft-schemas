@@ -136,12 +136,13 @@ type ResourceValidationOption = {
      * implementation is encouraged to use the values for the corresponding tag type to validate
      * these tag resource locations.
      * 
-     * | Pool type          | Tag type           |
-     * | ------------------ | ------------------ |
-     * | `minecraft:block`  | `$tag/block`       |
-     * | `minecraft:entity` | `$tag/entity_type` |
-     * | `minecraft:fluid`  | `$tag/fluid`       |
-     * | `minecraft:item`   | `$tag/item`        |
+     * | Pool type               | Tag type           |
+     * | ----------------------- | ------------------ |
+     * | `$function`             | `$tag/function`    |
+     * | `minecraft:block`       | `$tag/block`       |
+     * | `minecraft:entity_type` | `$tag/entity_type` |
+     * | `minecraft:fluid`       | `$tag/fluid`       |
+     * | `minecraft:item`        | `$tag/item`        |
      */
     allowTag?: boolean,
     /**
@@ -191,8 +192,9 @@ type VectorValidationOption = {
   }
 }
 
-type ResourceType =
+export type ResourceType =
   | '$advancement'
+  | '$bossbar'
   | '$dimension'
   | '$dimension_type'
   | '$function'
@@ -201,10 +203,18 @@ type ResourceType =
   | '$recipe'
   | '$storage'
   | '$tag/block'
+  | '$tag/entity_type'
   | '$tag/fluid'
+  | '$tag/function'
   | '$tag/item'
   | '$worldgen/biome'
-  | '$worldgen/feature'
+  | '$worldgen/configured_carver'
+  | '$worldgen/configured_decorator'
+  | '$worldgen/configured_feature'
+  | '$worldgen/configured_structure_feature'
+  | '$worldgen/configured_surface_builder'
+  | '$worldgen/processor_list'
+  | '$worldgen/template_pool'
   | 'minecraft:attribute'
   | 'minecraft:block'
   | 'minecraft:custom_stat'

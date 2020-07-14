@@ -93,10 +93,10 @@ SCHEMAS.register('statistic_predicate', ObjectNode({
       stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))
     },
     'minecraft:killed': {
-      stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity' } } }))
+      stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } }))
     },
     'minecraft:killed_by': {
-      stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity' } } }))
+      stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } }))
     },
     'minecraft:custom': {
       stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:custom_stat' } } }))
@@ -136,7 +136,7 @@ SCHEMAS.register('distance_predicate', ObjectNode({
 }, { context: 'distance' }))
 
 SCHEMAS.register('entity_predicate', ObjectNode({
-  type: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity', allowTag: true } } }),
+  type: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type', allowTag: true } } }),
   nbt: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:entity', id: ['pop', { push: 'type' }] } } } }),
   team: StringNode({ validation: { validator: 'team' } }),
   location: Reference('location_predicate', { collapse: true }),

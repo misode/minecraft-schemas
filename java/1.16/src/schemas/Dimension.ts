@@ -291,7 +291,7 @@ const SettingsPresets = (node: INode<any>) => ChoiceNode([
 ])
 
 SCHEMAS.register('dimension', Mod(ObjectNode({
-  type: Force(EnumNode('dimension_type', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension' } } })),
+  type: Force(EnumNode('dimension_type', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension_type' } } })),
   generator: Force(ObjectNode({
     type: Resource(EnumNode('worldgen/chunk_generator', { defaultValue: 'minecraft:noise', validation: { validator: 'resource', params: { pool: 'minecraft:worldgen/chunk_generator' } } })),
     seed: NumberNode({ integer: true }),

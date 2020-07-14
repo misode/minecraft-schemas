@@ -82,7 +82,7 @@ SCHEMAS.register('text_component_object', Mod(ObjectNode({
         value: StringNode()
       },
       'run_command': {
-        value: StringNode({ validation: { validator: 'command', params: { leadingSlash: true } } })
+        value: StringNode({ validation: { validator: 'command', params: { leadingSlash: true, allowPartial: true } } })
       },
       'suggest_command': {
         value: StringNode({ validation: { validator: 'command', params: { leadingSlash: true, allowPartial: true } } })
@@ -113,7 +113,7 @@ SCHEMAS.register('text_component_object', Mod(ObjectNode({
         }, { collapse: true }),
         contents: Mod(ObjectNode({
           name: Reference('text_component'),
-          type: Force(Resource(EnumNode('entity', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:entity' } } }))),
+          type: Force(Resource(EnumNode('entity_type', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } }))),
           id: Force(StringNode({ validation: { validator: 'uuid' } }))
         }, { collapse: true }), {
           default: () => ({

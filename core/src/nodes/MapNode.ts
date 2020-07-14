@@ -66,7 +66,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
       return res
     },
     validationOption() {
-      return config?.validation
+      return config?.validation ?? keys.validationOption()
     }
   }
 }

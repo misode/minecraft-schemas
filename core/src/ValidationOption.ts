@@ -194,6 +194,7 @@ type VectorValidationOption = {
 type ResourceType =
   | '$advancement'
   | '$dimension'
+  | '$dimension_type'
   | '$function'
   | '$loot_table'
   | '$predicate'
@@ -208,7 +209,7 @@ type ResourceType =
   | 'minecraft:block'
   | 'minecraft:custom_stat'
   | 'minecraft:enchantment'
-  | 'minecraft:entity'
+  | 'minecraft:entity_type'
   | 'minecraft:fluid'
   | 'minecraft:item'
   | 'minecraft:loot_condition_type'

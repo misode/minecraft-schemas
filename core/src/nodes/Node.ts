@@ -95,6 +95,10 @@ export interface INode<T = any> {
   /**
    * Get the validation option of this node. The client of this schema may
    * do more detailed validation according to this option
+   * - For `EnumNode` and `StringNode`: Returns the corresponding `validation` in their `options`.
+   * - For `MapNode`: Returns the corresponding `validation` in their `options`, or the `validationOption`
+   * of their key node if the former is `undefined`.
+   * - For other nodes: Returns `undefined`.
    */
   validationOption: () => ValidationOption | undefined
 

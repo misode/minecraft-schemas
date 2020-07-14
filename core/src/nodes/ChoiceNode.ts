@@ -73,8 +73,9 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     },
     suggest(path, value) {
       return choices
-        .find(([c]) => isValid(c, value))?.[1]
-        ?.suggest(path, value) ?? []
+        .filter(([c]) => value === undefined || isValid(c, value))
+        .map(([_, n]) => n.suggest(path, value))
+        .reduce((p, c) => p.concat(c))
     },
     validate(path, value, errors, options) {
       let choice = activeChoice(value)

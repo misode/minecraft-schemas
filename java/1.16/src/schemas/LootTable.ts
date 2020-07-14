@@ -57,6 +57,10 @@ SCHEMAS.register('loot_entry', ObjectNode({
     enabled: (path: Path) => path.pop().get()?.length > 1
       && !['minecraft:alternatives', 'minecraft:group', 'minecraft:sequence'].includes(path.push('type').get())
   }),
+  quality: Mod(NumberNode({ integer: true, min: 1 }), {
+    enabled: (path: Path) => path.pop().get()?.length > 1
+      && !['minecraft:alternatives', 'minecraft:group', 'minecraft:sequence'].includes(path.push('type').get())
+  }),
   [Switch]: path => path.push('type'),
   [Case]: {
     'minecraft:alternatives': {

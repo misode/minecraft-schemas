@@ -12,7 +12,7 @@ import {
   Resource,
   SCHEMAS,
   StringNode,
-  Switch
+  Switch,
 } from '@mcschema/core'
 
 SCHEMAS.register('recipe', Mod(ObjectNode({

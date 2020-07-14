@@ -68,7 +68,6 @@ export const Range = (config?: RangeConfig) => ChoiceNode([
   {
     type: 'object',
     node: ObjectNode({
-      type: Resource(StringNode()),
       min: NumberNode(config),
       max: NumberNode(config)
     }),

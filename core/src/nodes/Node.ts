@@ -122,6 +122,10 @@ export const Mod = (node: INode, mods: Partial<INode>): INode => ({
   ...node, ...mods
 })
 
+export const Has = (key: string, node: INode<any>) => Mod(node, {
+  enabled: (p: Path) => p.push(key).get() !== undefined
+})
+
 export function Force<T>(node: INode<T>, defaultValue?: T): INode {
   return {
     ...node,

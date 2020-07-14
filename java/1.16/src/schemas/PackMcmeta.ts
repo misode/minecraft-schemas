@@ -1,4 +1,11 @@
-import { Force, Mod, NumberNode, ObjectNode, Reference, SCHEMAS } from '@mcschema/core'
+import {
+  Force,
+  Mod,
+  NumberNode,
+  ObjectNode,
+  Reference,
+  SCHEMAS,
+} from '@mcschema/core'
 
 const getSimpleString = (jsonText: any): string => jsonText instanceof Array ? getSimpleString(jsonText[0]) : jsonText?.text ?? jsonText?.toString() ?? ''
 

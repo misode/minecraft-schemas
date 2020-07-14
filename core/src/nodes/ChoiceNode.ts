@@ -8,7 +8,6 @@ type Choice = {
   node: INode<any>
   match?: (value: any) => boolean
   change?: (old: any) => any
-  render?: (path: Path, value: any, view: TreeView, options?: NodeOptions) => string
 }
 
 type ChoiceNodeConfig = {
@@ -58,7 +57,6 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
       const pathWithContext = (config?.context) ?
         new Path(path.getArray(), [config.context], path.getModel()) : path
       const pathWithChoiceContext = config?.choiceContext ? new Path([], [config.choiceContext]) : config?.context ? new Path([], [config.context]) : path
-      console.log(config?.choiceContext)
       let inject = choices.map(c => {
         if (c.type === choice.type) {
           return `<button class="selected" disabled>${pathWithChoiceContext.push(c.type).locale()}</button>`
@@ -69,7 +67,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
         return `<button data-id="${buttonId}">${pathWithChoiceContext.push(c.type).locale()}</button>`
       }).join('')
 
-      return (choice.render ?? choice.node.render)(pathWithContext, value, view, {
+      return choice.node.render(pathWithContext, value, view, {
         ...options,
         label: path.locale(),
         hideHeader: false,

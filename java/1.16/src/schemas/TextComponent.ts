@@ -1,4 +1,21 @@
-import { BooleanNode, Case, ChoiceNode, EnumNode, Force, ListNode, Mod, NumberNode, ObjectNode, Reference, Resource, SCHEMAS, StringNode, Switch, Keep } from '@mcschema/core'
+import {
+  BooleanNode,
+  Case,
+  ChoiceNode,
+  EnumNode,
+  Force,
+  Has,
+  Keep,
+  ListNode,
+  Mod,
+  NumberNode,
+  ObjectNode,
+  Reference,
+  Resource,
+  SCHEMAS,
+  StringNode,
+  Switch,
+} from '@mcschema/core'
 
 const getSimpleString = (jsonText: any): string => jsonText instanceof Array ? getSimpleString(jsonText[0]) : jsonText?.text ?? jsonText?.toString() ?? ''
 
@@ -52,10 +69,10 @@ SCHEMAS.register('text_component_object', Mod(ObjectNode({
   selector: StringNode({ validation: { validator: 'entity', params: { amount: 'multiple', type: 'entities' } } }),
   keybind: EnumNode('keybind', { additional: true }),
   nbt: StringNode({ validation: { validator: 'nbt_path' } }),
-  interpret: BooleanNode(),
-  block: StringNode({ validation: { validator: 'vector', params: { dimension: 3, isInteger: true } } }),
-  entity: StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities' } } }),
-  storage: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$storage' } } })),
+  interpret: Has('nbt', BooleanNode()),
+  block: Has('nbt', StringNode({ validation: { validator: 'vector', params: { dimension: 3, isInteger: true } } })),
+  entity: Has('nbt', StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities' } } })),
+  storage: Has('nbt', Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$storage' } } }))),
   extra: Reference('text_component_list'),
   color: StringNode() /* TODO */,
   font: Resource(StringNode()),

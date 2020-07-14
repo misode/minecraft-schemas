@@ -50,39 +50,10 @@ SCHEMAS.register('processor', ObjectNode({
   }
 }))
 
-const posTestFields = {
-  min_dist: NumberNode({ min: 0, max: 255, integer: true }),
-  max_dist: NumberNode({ min: 0, max: 255, integer: true }),
-  min_chance: NumberNode({ min: 0, max: 1 }),
-  max_chance: NumberNode({ min: 0, max: 1 })
-}
-
 SCHEMAS.register('processor_rule', Mod(ObjectNode({
-  position_predicate: ObjectNode({
-    predicate_type: Force(EnumNode([
-      'minecraft:always_true',
-      'minecraft:linear_pos',
-      'minecraft:axis_aligned_linear_pos'
-    ], 'minecraft:always_true')),
-    [Switch]: path => path.push('predicate_type'),
-    [Case]: {
-      'minecraft:axis_aligned_linear_pos': {
-        axis: Force(EnumNode(['x', 'y', 'z'], 'y')),
-        ...posTestFields
-      },
-      'minecraft:linear_pos': posTestFields
-    }
-  }),
-  location_predicate: ObjectNode({
-    predicate_type: Force(EnumNode('pos_rule_test', 'minecraft:always_true')),
-    [Switch]: path => path.push('predicate_type'),
-    [Case]: {
-      'minecraft:block_match': {
-        block: Force(EnumNode('block', { search: true }))
-      }
-    }
-  }),
-  input_predicate: Force(Reference('block_predicate')),
+  position_predicate: Force(Reference('pos_rule_test')),
+  location_predicate: Force(Reference('pos_rule_test')),
+  input_predicate: Force(Reference('rule_test')),
   output_state: Force(BlockState),
   output_nbt: StringNode()
 }), {
@@ -96,7 +67,30 @@ SCHEMAS.register('processor_rule', Mod(ObjectNode({
   })
 }))
 
-SCHEMAS.register('block_predicate', ObjectNode({
+const posTestFields = {
+  min_dist: NumberNode({ min: 0, max: 255, integer: true }),
+  max_dist: NumberNode({ min: 0, max: 255, integer: true }),
+  min_chance: NumberNode({ min: 0, max: 1 }),
+  max_chance: NumberNode({ min: 0, max: 1 })
+}
+
+SCHEMAS.register('pos_rule_test', ObjectNode({
+  predicate_type: Force(EnumNode([
+    'minecraft:always_true',
+    'minecraft:linear_pos',
+    'minecraft:axis_aligned_linear_pos'
+  ], 'minecraft:always_true')),
+  [Switch]: path => path.push('predicate_type'),
+  [Case]: {
+    'minecraft:axis_aligned_linear_pos': {
+      axis: Force(EnumNode(['x', 'y', 'z'], 'y')),
+      ...posTestFields
+    },
+    'minecraft:linear_pos': posTestFields
+  }
+}))
+
+SCHEMAS.register('rule_test', ObjectNode({
   predicate_type: Force(EnumNode('rule_test', 'minecraft:always_true')),
   [Switch]: path => path.push('predicate_type'),
   [Case]: {

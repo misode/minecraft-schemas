@@ -8,16 +8,16 @@ import {
   NumberNode,
   ObjectNode,
   ObjectOrList,
-  RangeNode,
   Reference,
   Resource,
   SCHEMAS,
   StringNode,
   Switch,
 } from '@mcschema/core'
+import { Range } from './Common'
 
 SCHEMAS.register('predicate', ObjectOrList(
-  Reference('condition'), { context: 'condition' }
+  Reference('condition'), { choiceContext: 'condition' }
 ))
 
 SCHEMAS.register('condition', ObjectNode({
@@ -48,7 +48,7 @@ SCHEMAS.register('condition', ObjectNode({
       entity: EnumNode('entity_source', 'this'),
       scores: MapNode(
         StringNode({ validation: { validator: 'objective' } }),
-        RangeNode({ forceRange: true })
+        Range({ forceRange: true })
       )
     },
     'minecraft:inverted': {
@@ -88,7 +88,7 @@ SCHEMAS.register('condition', ObjectNode({
       ))
     },
     'minecraft:time_check': {
-      value: Force(RangeNode()),
+      value: Force(Range()),
       period: NumberNode()
     },
     'minecraft:weather_check': {

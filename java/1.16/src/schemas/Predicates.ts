@@ -5,7 +5,6 @@ import {
   ListNode,
   MapNode,
   ObjectNode,
-  RangeNode,
   Reference,
   Resource,
   SCHEMAS,
@@ -13,12 +12,13 @@ import {
   Switch,
   Case,
 } from '@mcschema/core'
+import { Range } from './Common'
 
 SCHEMAS.register('item_predicate', ObjectNode({
   item: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
   tag: StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } }),
-  count: RangeNode(),
-  durability: RangeNode(),
+  count: Range(),
+  durability: Range(),
   potion: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:potion' } } }),
   nbt: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } } }),
   enchantments: ListNode(
@@ -28,7 +28,7 @@ SCHEMAS.register('item_predicate', ObjectNode({
 
 SCHEMAS.register('enchantment_predicate', ObjectNode({
   enchantment: Resource(EnumNode('enchantment', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })),
-  levels: RangeNode()
+  levels: Range()
 }, { context: 'enchantment' }))
 
 SCHEMAS.register('block_predicate', ObjectNode({
@@ -53,15 +53,15 @@ SCHEMAS.register('fluid_predicate', ObjectNode({
 
 SCHEMAS.register('location_predicate', ObjectNode({
   position: ObjectNode({
-    x: RangeNode(),
-    y: RangeNode(),
-    z: RangeNode()
+    x: Range(),
+    y: Range(),
+    z: Range()
   }, { collapse: true }),
   biome: Resource(EnumNode('biome', { search: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
   feature: Resource(EnumNode('structure_feature', { search: true })),
   dimension: Resource(EnumNode('dimension', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension' } } })),
   light: ObjectNode({
-    light: RangeNode()
+    light: Range()
   }),
   smokey: BooleanNode(),
   block: Reference('block_predicate', { collapse: true }),
@@ -71,7 +71,7 @@ SCHEMAS.register('location_predicate', ObjectNode({
 SCHEMAS.register('statistic_predicate', ObjectNode({
   type: EnumNode('stat_type', { defaultValue: 'minecraft:custom', validation: { validator: 'resource', params: { pool: 'minecraft:stat_type' } } }),
   stat: Force(StringNode()),
-  value: Force(RangeNode()),
+  value: Force(Range()),
   [Switch]: path => path.push('type'),
   [Case]: {
     'minecraft:mined': {
@@ -106,7 +106,7 @@ SCHEMAS.register('statistic_predicate', ObjectNode({
 
 SCHEMAS.register('player_predicate', ObjectNode({
   gamemode: EnumNode('gamemode'),
-  level: RangeNode(),
+  level: Range(),
   advancements: MapNode(
     StringNode({ validation: { validator: 'resource', params: { pool: '$advancement' } } }),
     BooleanNode()
@@ -121,18 +121,18 @@ SCHEMAS.register('player_predicate', ObjectNode({
 }, { context: 'player' }))
 
 SCHEMAS.register('status_effect_predicate', ObjectNode({
-  amplifier: RangeNode(),
-  duration: RangeNode(),
+  amplifier: Range(),
+  duration: Range(),
   ambient: BooleanNode(),
   visible: BooleanNode()
 }, { context: 'status_effect' }))
 
 SCHEMAS.register('distance_predicate', ObjectNode({
-  x: RangeNode(),
-  y: RangeNode(),
-  z: RangeNode(),
-  absolute: RangeNode(),
-  horizontal: RangeNode()
+  x: Range(),
+  y: Range(),
+  z: Range(),
+  absolute: Range(),
+  horizontal: Range()
 }, { context: 'distance' }))
 
 SCHEMAS.register('entity_predicate', ObjectNode({
@@ -178,8 +178,8 @@ SCHEMAS.register('damage_source_predicate', ObjectNode({
 }, { context: 'damage_source' }))
 
 SCHEMAS.register('damage_predicate', ObjectNode({
-  dealt: RangeNode(),
-  taken: RangeNode(),
+  dealt: Range(),
+  taken: Range(),
   blocked: BooleanNode(),
   source_entity: Reference('entity_predicate', { collapse: true }),
   type: Reference('damage_source_predicate', { collapse: true })

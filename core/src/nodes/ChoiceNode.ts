@@ -1,13 +1,14 @@
-import { INode, Base } from './Node'
+import { INode, Base, NodeOptions } from './Node'
 import { Path } from '../model/Path'
 import { ListNode } from './ListNode'
-
-type ChoiceType = 'object' | 'list' | 'string' | 'number' | 'boolean' | 'never'
+import { TreeView } from '../view/TreeView'
 
 type Choice = {
-  type: ChoiceType,
-  node: INode<any>,
+  type: string
+  node: INode<any>
+  match?: (value: any) => boolean
   change?: (old: any) => any
+  render?: (path: Path, value: any, view: TreeView, options?: NodeOptions) => string
 }
 
 type ChoiceNodeConfig = {
@@ -19,15 +20,18 @@ type ChoiceNodeConfig = {
  * Node that allows multiple types
  */
 export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<any> => {
-  const isValid = (choice: ChoiceType, value: any) => {
-    switch (choice) {
-      case 'list': return value instanceof Array
+  const isValid = (choice: Choice, value: any) => {
+    if (choice.match) {
+      return choice.match(value)
+    } 
+    switch (choice.type) {
+      case 'list': return Array.isArray(value)
       case 'object': return typeof value === 'object' && !(value instanceof Array)
-      default: return typeof value === choice
+      default: return typeof value === choice.type
     }
   }
   const activeChoice = (value: any): Choice | undefined => {
-    const index = choices.map(choice => isValid(choice.type, value)).indexOf(true)
+    const index = choices.map(choice => isValid(choice, value)).indexOf(true)
     if (index === -1) return undefined
     return choices[index]
   }
@@ -53,7 +57,8 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
       const choice = activeChoice(value) ?? choices[0]
       const pathWithContext = (config?.context) ?
         new Path(path.getArray(), [config.context], path.getModel()) : path
-      const pathWithChoiceContext = config?.choiceContext ? new Path([], [config.choiceContext]) : path
+      const pathWithChoiceContext = config?.choiceContext ? new Path([], [config.choiceContext]) : config?.context ? new Path([], [config.context]) : path
+      console.log(config?.choiceContext)
       let inject = choices.map(c => {
         if (c.type === choice.type) {
           return `<button class="selected" disabled>${pathWithChoiceContext.push(c.type).locale()}</button>`
@@ -64,16 +69,16 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
         return `<button data-id="${buttonId}">${pathWithChoiceContext.push(c.type).locale()}</button>`
       }).join('')
 
-      return choice.node.render(pathWithContext, value, view, {
+      return (choice.render ?? choice.node.render)(pathWithContext, value, view, {
         ...options,
-        label: options?.hideHeader ? '' : undefined,
+        label: path.locale(),
         hideHeader: false,
         inject
       })
     },
     suggest(path, value) {
       return choices
-        .filter(c => value === undefined || isValid(c.type, value))
+        .filter(c => value === undefined || isValid(c, value))
         .map(c => c.node.suggest(path, value))
         .reduce((p, c) => p.concat(c))
     },
@@ -95,7 +100,7 @@ export const ObjectOrList = (node: INode<any>, config?: ChoiceNodeConfig): INode
   return ChoiceNode([
     {
       type: 'object',
-      node, 
+      node,
       change: v => v[0]
     },
     {

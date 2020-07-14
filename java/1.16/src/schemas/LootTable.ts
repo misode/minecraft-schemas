@@ -8,7 +8,6 @@ import {
   NumberNode,
   ObjectNode,
   Path,
-  RangeNode,
   Reference,
   Resource,
   SCHEMAS,
@@ -16,6 +15,7 @@ import {
   Switch,
   COLLECTIONS,
 } from '@mcschema/core'
+import { Range } from './Common'
 
 const conditions = {
   conditions: ListNode(
@@ -33,8 +33,8 @@ const functionsAndConditions = {
 SCHEMAS.register('loot_table', Mod(ObjectNode({
   pools: Force(ListNode(
     ObjectNode({
-      rolls: Force(RangeNode({ allowBinomial: true, integer: true, min: 1 })),
-      bonus_rolls: RangeNode({ integer: true, min: 1 }),
+      rolls: Force(Range({ allowBinomial: true, integer: true, min: 1 })),
+      bonus_rolls: Range({ integer: true, min: 1 }),
       entries: ListNode(
         Reference('loot_entry')
       ),
@@ -148,7 +148,7 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:enchant_with_levels': {
-      levels: Force(RangeNode({ allowBinomial: true })),
+      levels: Force(Range({ allowBinomial: true })),
       treasure: BooleanNode(),
       ...conditions
     },
@@ -165,11 +165,11 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:limit_count': {
-      limit: RangeNode(),
+      limit: Range(),
       ...conditions
     },
     'minecraft:looting_enchant': {
-      count: RangeNode({ allowBinomial: true }),
+      count: Range({ allowBinomial: true }),
       limit: NumberNode({ integer: true }),
       ...conditions
     },
@@ -186,11 +186,11 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:set_count': {
-      count: Force(RangeNode({ allowBinomial: true })),
+      count: Force(Range({ allowBinomial: true })),
       ...conditions
     },
     'minecraft:set_damage': {
-      damage: Force(RangeNode({ allowBinomial: true })),
+      damage: Force(Range({ allowBinomial: true })),
       ...conditions
     },
     'minecraft:set_loot_table': {
@@ -218,7 +218,7 @@ SCHEMAS.register('loot_function', ObjectNode({
       effects: ListNode(
         ObjectNode({
           type: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:mob_effect' } } }),
-          duration: RangeNode()
+          duration: Range()
         })
       ),
       ...conditions
@@ -229,7 +229,7 @@ SCHEMAS.register('loot_function', ObjectNode({
 SCHEMAS.register('attribute_modifier', ObjectNode({
   attribute: EnumNode('attribute', { validation: { validator: 'resource', params: { pool: 'minecraft:attribute' } } }),
   name: StringNode(),
-  amount: RangeNode({ allowBinomial: true }),
+  amount: Range({ allowBinomial: true }),
   operation: EnumNode(['addition', 'multiply_base', 'multiply_total']),
   slot: ListNode(
     EnumNode('slot')

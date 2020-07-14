@@ -15,9 +15,8 @@ import {
   Base,
   StringNode,
   ChoiceNode,
-  UniformIntNode,
 } from '@mcschema/core'
-import { BlockState, FluidState, BlockPos } from '../Common'
+import { BlockState, FluidState, BlockPos, UniformInt } from '../Common'
 import './Decorator'
 import './ProcessorList'
 
@@ -41,7 +40,7 @@ const RandomPatchConfig: NodeChildren = {
 
 const DiskConfig: NodeChildren = {
   state: Force(BlockState),
-  radius: Force(UniformIntNode({ min: 0, max: 4, maxSpread: 4})),
+  radius: Force(UniformInt({ min: 0, max: 4, maxSpread: 4})),
   half_height: Force(NumberNode({ integer: true, min: 0, max: 4 })),
   targets: Force(ListNode(
     BlockState
@@ -61,7 +60,7 @@ const OreConfig: NodeChildren = {
 }
 
 const CountConfig: NodeChildren = {
-  count: Force(UniformIntNode({ min: -10, max: 128, maxSpread: 128 }))
+  count: Force(UniformInt({ min: -10, max: 128, maxSpread: 128 }))
 }
 
 const Feature = ChoiceNode([
@@ -84,8 +83,8 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
         probability: Force(NumberNode({ min: 0, max: 1 }))
       },
       'minecraft:basalt_columns': {
-        reach: Force(UniformIntNode({ min: 0, max: 2, maxSpread: 1})),
-        height: Force(UniformIntNode({ min: 1, max: 5, maxSpread: 5}))
+        reach: Force(UniformInt({ min: 0, max: 2, maxSpread: 1})),
+        height: Force(UniformInt({ min: 1, max: 5, maxSpread: 5}))
       },
       'minecraft:block_pile': {
         state_provider: Force(Reference('block_state_provider'))
@@ -101,8 +100,8 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
       'minecraft:delta_feature': {
         contents: Force(BlockState),
         rim: Force(BlockState),
-        size: Force(UniformIntNode({ min: 0, max: 8, maxSpread: 8})),
-        rim_size: Force(UniformIntNode({ min: 0, max: 8, maxSpread: 8}))
+        size: Force(UniformInt({ min: 0, max: 8, maxSpread: 8})),
+        rim_size: Force(UniformInt({ min: 0, max: 8, maxSpread: 8}))
       },
       'minecraft:disk': DiskConfig,
       'minecraft:emerald_ore': {
@@ -156,7 +155,7 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
       'minecraft:netherrack_replace_blobs': {
         state: Force(BlockState),
         target: Force(BlockState),
-        radius: Force(UniformIntNode())
+        radius: Force(UniformInt())
       },
       'minecraft:no_surface_ore': OreConfig,
       'minecraft:ore': OreConfig,
@@ -231,8 +230,8 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
         })),
         foliage_placer: ObjectNode({
           type: Force(EnumNode('worldgen/foliage_placer_type', 'minecraft:blob_foliage_placer')),
-          radius: Force(UniformIntNode({ min: 0, max: 8, maxSpread: 8 })),
-          offset: Force(UniformIntNode({ min: 0, max: 8, maxSpread: 8 })),
+          radius: Force(UniformInt({ min: 0, max: 8, maxSpread: 8 })),
+          offset: Force(UniformInt({ min: 0, max: 8, maxSpread: 8 })),
           [Switch]: path => path.push('type'),
           [Case]: {
             'minecraft:blob_foliage_placer': {
@@ -248,13 +247,13 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
               height: Force(NumberNode({ integer: true, min: 0, max: 16 }))
             },
             'minecraft:mega_pine_foliage_placer': {
-              crown_height: Force(UniformIntNode({ min: 0, max: 16, maxSpread: 8 }))
+              crown_height: Force(UniformInt({ min: 0, max: 16, maxSpread: 8 }))
             },
             'minecraft:pine_foliage_placer': {
-              height: Force(UniformIntNode({ min: 0, max: 16, maxSpread: 8 }))
+              height: Force(UniformInt({ min: 0, max: 16, maxSpread: 8 }))
             },
             'minecraft:spruce_foliage_placer': {
-              trunk_height: Force(UniformIntNode({ min: 0, max: 16, maxSpread: 8 }))
+              trunk_height: Force(UniformInt({ min: 0, max: 16, maxSpread: 8 }))
             }
           }
         }),

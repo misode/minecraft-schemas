@@ -12,13 +12,13 @@ import {
   NumberNode,
   ObjectNode,
   Path,
-  RangeNode,
   Reference,
   Resource,
   SCHEMAS,
   StringNode,
   Switch
 } from '@mcschema/core'
+import { Range } from './Common'
 
 export const PredicateChoice = (node: INode<any>): INode<any> => {
   return ChoiceNode([
@@ -115,7 +115,7 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
         )
       },
       'minecraft:construct_beacon': {
-        level: RangeNode()
+        level: Range()
       },
       'minecraft:consume_item': {
         item: Reference('item_predicate', { collapse: true })
@@ -128,8 +128,8 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
         effects: MapNode(
           EnumNode('mob_effect', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:mob_effect' } } }),
           ObjectNode({
-            amplifier: RangeNode(),
-            duration: RangeNode()
+            amplifier: Range(),
+            duration: Range()
           })
         )
       },
@@ -142,7 +142,7 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
         )
       },
       'minecraft:enchanted_item': {
-        levels: RangeNode(),
+        levels: Range(),
         item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:entity_hurt_player': {
@@ -164,17 +164,17 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
       },
       'minecraft:inventory_changed': {
         slots: ObjectNode({
-          empty: RangeNode(),
-          occupied: RangeNode(),
-          full: RangeNode()
+          empty: Range(),
+          occupied: Range(),
+          full: Range()
         }),
         items: ListNode(
           Reference('item_predicate')
         )
       },
       'minecraft:item_durability_changed': {
-        delta: RangeNode(),
-        durability: RangeNode(),
+        delta: Range(),
+        durability: Range(),
         item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:item_used_on_block': {
@@ -182,20 +182,20 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
         location: Reference('location_predicate', { collapse: true })
       },
       'minecraft:killed_by_crossbow': {
-        unique_entity_types: RangeNode(),
+        unique_entity_types: Range(),
         victims: ListNode(
           PredicateChoice(Reference('entity_predicate'))
         )
       },
       'minecraft:levitation': {
-        distance: RangeNode(),
-        duration: RangeNode()
+        distance: Range(),
+        duration: Range()
       },
       'minecraft:location': {
         location: Reference('location_predicate', { collapse: true })
       },
       'minecraft:nether_travel': {
-        distance: RangeNode()
+        distance: Range()
       },
       'minecraft:placed_block': {
         block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
@@ -239,14 +239,14 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
       'minecraft:target_hit': {
         projectile: PredicateChoice(Reference('entity_predicate', { collapse: true })),
         shooter: PredicateChoice(Reference('entity_predicate', { collapse: true })),
-        signal_strength: RangeNode({ integer: true })
+        signal_strength: Range({ integer: true })
       },
       'minecraft:thrown_item_picked_up_by_entity': {
         entity: Reference('entity_predicate', { collapse: true }),
         item: Reference('item_predicate', { collapse: true })
       },
       'minecraft:used_ender_eye': {
-        distance: RangeNode()
+        distance: Range()
       },
       'minecraft:used_totem': {
         item: Reference('item_predicate', { collapse: true })

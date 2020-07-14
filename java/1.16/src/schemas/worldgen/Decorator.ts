@@ -9,8 +9,8 @@ import {
   SCHEMAS,
   Switch,
   NodeChildren,
-  UniformIntNode,
 } from '@mcschema/core'
+import { UniformInt } from '../Common' 
 
 const RangeConfig: NodeChildren = {
   maximum: NumberNode({ integer: true }),
@@ -19,11 +19,11 @@ const RangeConfig: NodeChildren = {
 }
 
 const ChanceConfig: NodeChildren = {
-  count: Force(NumberNode({ integer: true, min: 0 }))
+  chance: Force(NumberNode({ integer: true, min: 0 }))
 }
 
 const CountConfig: NodeChildren = {
-  count: Force(UniformIntNode({ min: -10, max: 128, maxSpread: 128 }))
+  count: Force(UniformInt({ min: -10, max: 128, maxSpread: 128 }))
 }
 
 SCHEMAS.register('configured_decorator', ObjectNode({

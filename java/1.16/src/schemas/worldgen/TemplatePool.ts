@@ -16,18 +16,18 @@ import './ProcessorList'
 
 const Projection = EnumNode(['rigid', 'terrain_matching'], 'rigid')
 const Processors = ChoiceNode([
-  [
-    'string',
-    StringNode(),
-    v => undefined
-  ],
-  [
-    'object',
-    Reference('processor_list'),
-    v => ({
+  {
+    type: 'string',
+    node: StringNode(),
+    change: v => undefined
+  },
+  {
+    type: 'object',
+    node: Reference('processor_list'),
+    change: v => ({
       processors: [{}]
     })
-  ]
+  }
 ])
 
 SCHEMAS.register('template_pool', Mod(ObjectNode({

@@ -65,16 +65,14 @@ const CountConfig: NodeChildren = {
 }
 
 const Feature = ChoiceNode([
-  [
-    'string',
-    StringNode(),
-    v => ''
-  ],
-  [
-    'object',
-    Reference('configured_feature'),
-    v => ({})
-  ]
+  {
+    type: 'string',
+    node: StringNode()
+  },
+  {
+    type: 'object',
+    node: Reference('configured_feature')
+  }
 ], { choiceContext: 'feature' })
 
 SCHEMAS.register('configured_feature', Mod(ObjectNode({

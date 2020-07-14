@@ -3,37 +3,37 @@ import { BooleanNode, Case, ChoiceNode, EnumNode, Force, ListNode, Mod, NumberNo
 const getSimpleString = (jsonText: any): string => jsonText instanceof Array ? getSimpleString(jsonText[0]) : jsonText?.text ?? jsonText?.toString() ?? ''
 
 SCHEMAS.register('text_component', Mod(ChoiceNode([
-  [
-    'object',
-    Reference('text_component_object'),
-    v => v instanceof Array ? (typeof v[0] === 'object' ? v[0] : { text: getSimpleString(v[0]) }) : typeof v === 'object' ? v : { text: getSimpleString(v) }
-  ],
-  [
-    'list',
-    Reference('text_component_list'),
-    v => [v]
-  ],
-  [
-    'string',
-    StringNode(),
-    getSimpleString
-  ],
-  [
-    'number',
-    NumberNode(),
-    v => {
+  {
+    type: 'object',
+    node: Reference('text_component_object'),
+    change: v => v instanceof Array ? (typeof v[0] === 'object' ? v[0] : { text: getSimpleString(v[0]) }) : typeof v === 'object' ? v : { text: getSimpleString(v) }
+  },
+  {
+    type: 'list',
+    node: Reference('text_component_list'),
+    change: v => [v]
+  },
+  {
+    type: 'string',
+    node: StringNode(),
+    change: getSimpleString
+  },
+  {
+    type: 'number',
+    node: NumberNode(),
+    change: v => {
       const n = parseFloat(getSimpleString(v))
       return isFinite(n) ? n : (!!v ? 1 : 0)
     }
-  ],
-  [
-    'boolean',
-    BooleanNode({ radio: true }),
-    v => {
+  },
+  {
+    type: 'boolean',
+    node: BooleanNode({ radio: true }),
+    change: v => {
       const s = getSimpleString(v)
       return s === 'true' || s === 'false' ? s === 'true' : !!s
     }
-  ]
+  }
 ], { context: 'text_component' }), {
   default: () => ({
     text: ""

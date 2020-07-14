@@ -22,19 +22,19 @@ import {
 
 export const PredicateChoice = (node: INode<any>): INode<any> => {
   return ChoiceNode([
-    [
-      'object',
+    {
+      type: 'object',
       node,
-      v => v[0]?.predicate ?? ({})
-    ],
-    [
-      'list',
-      ListNode(Reference('condition')),
-      v => [{
+      change: v => v[0]?.predicate ?? ({})
+    },
+    {
+      type: 'list',
+      node: ListNode(Reference('condition')),
+      change: v => [{
         condition: 'minecraft:entity_properties',
         predicate: v
       }]
-    ]
+    }
   ], { choiceContext: 'conditions' })
 }
 

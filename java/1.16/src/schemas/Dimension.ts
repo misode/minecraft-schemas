@@ -19,15 +19,14 @@ import {
 import { BlockState, FluidState } from './Common'
 
 const SettingsPresets = (node: INode<any>) => ChoiceNode([
-  [
-    'string',
-    EnumNode('dimension_generator_setting_preset', { defaultValue: 'minecraft:overworld', validation: { validator: 'resource', params: { pool: COLLECTIONS.get('dimension_generator_setting_preset') } } }),
-    _ => 'minecraft:overworld'
-  ],
-  [
-    'object',
+  {
+    type: 'string',
+    node: EnumNode('dimension_generator_setting_preset', { defaultValue: 'minecraft:overworld', validation: { validator: 'resource', params: { pool: COLLECTIONS.get('dimension_generator_setting_preset') } } })
+  },
+  {
+    type: 'object',
     node,
-    v => {
+    change: v => {
       switch (v) {
         case 'minecraft:nether':
           return {
@@ -287,7 +286,7 @@ const SettingsPresets = (node: INode<any>) => ChoiceNode([
           }
       }
     }
-  ]
+  }
 ])
 
 SCHEMAS.register('dimension', Mod(ObjectNode({

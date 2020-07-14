@@ -1,17 +1,13 @@
 import {
   Case,
   ChoiceNode,
-
   EnumNode,
   Force,
-
   ListNode,
   MapNode,
   Mod,
   NumberNode,
   ObjectNode,
-
-
   Reference,
   Resource,
   SCHEMAS,
@@ -85,16 +81,16 @@ SCHEMAS.register('recipe', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('recipe_ingredient', Mod(ChoiceNode([
-  [
-    'object',
-    Reference('recipe_ingredient_object'),
-    v => v[0]
-  ],
-  [
-    'list',
-    ListNode(Reference('recipe_ingredient_object')),
-    v => [v]
-  ]
+  {
+    type: 'object',
+    node: Reference('recipe_ingredient_object'),
+    change: v => v[0]
+  },
+  {
+    type: 'list',
+    node: ListNode(Reference('recipe_ingredient_object')),
+    change: v => [v]
+  }
 ]), {
   default: () => ({
     item: 'minecraft:stone'

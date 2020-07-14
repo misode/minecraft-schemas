@@ -4,11 +4,11 @@ import { ListNode } from './ListNode'
 
 type ChoiceType = 'object' | 'list' | 'string' | 'number' | 'boolean' | 'never'
 
-type Choice = [
-  ChoiceType,
-  INode<any>,
-  (old: any) => any
-]
+type Choice = {
+  type: ChoiceType,
+  node: INode<any>,
+  change?: (old: any) => any
+}
 
 type ChoiceNodeConfig = {
   context?: string,
@@ -27,19 +27,19 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     }
   }
   const activeChoice = (value: any): Choice | undefined => {
-    const index = choices.map(choice => isValid(choice[0], value)).indexOf(true)
+    const index = choices.map(choice => isValid(choice.type, value)).indexOf(true)
     if (index === -1) return undefined
     return choices[index]
   }
 
   return {
     ...Base,
-    default: () => choices[0][1].default(),
+    default: () => choices[0].node.default(),
     keep: () => true,
     navigate(path, index) {
       const pathElement = path.getArray()[index + 1]
       const expectedChoiceType = typeof pathElement === 'number' ? 'list' : 'object'
-      const node = choices.find(([type]) => type === expectedChoiceType)?.[1]
+      const node = choices.find(c => c.type === expectedChoiceType)?.node
       return node?.navigate(path, index)
     },
     transform(path, value, view) {
@@ -47,7 +47,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
       if (choice === undefined) {
         return value
       }
-      return choice[1].transform(path, value, view)
+      return choice.node.transform(path, value, view)
     },
     render(path, value, view, options) {
       const choice = activeChoice(value) ?? choices[0]
@@ -55,16 +55,16 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
         new Path(path.getArray(), [config.context], path.getModel()) : path
       const pathWithChoiceContext = config?.choiceContext ? new Path([], [config.choiceContext]) : path
       let inject = choices.map(c => {
-        if (c[0] === choice[0]) {
-          return `<button class="selected" disabled>${pathWithChoiceContext.push(c[0]).locale()}</button>`
+        if (c.type === choice.type) {
+          return `<button class="selected" disabled>${pathWithChoiceContext.push(c.type).locale()}</button>`
         }
         const buttonId = view.registerClick(el => {
-          view.model.set(path, c[2](value))
+          view.model.set(path, c.change ? c.change(value) : c.node.default())
         })
-        return `<button data-id="${buttonId}">${pathWithChoiceContext.push(c[0]).locale()}</button>`
+        return `<button data-id="${buttonId}">${pathWithChoiceContext.push(c.type).locale()}</button>`
       }).join('')
 
-      return choice[1]?.render(pathWithContext, value, view, {
+      return choice.node.render(pathWithContext, value, view, {
         ...options,
         label: options?.hideHeader ? '' : undefined,
         hideHeader: false,
@@ -73,8 +73,8 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     },
     suggest(path, value) {
       return choices
-        .filter(([c]) => value === undefined || isValid(c, value))
-        .map(([_, n]) => n.suggest(path, value))
+        .filter(c => value === undefined || isValid(c.type, value))
+        .map(c => c.node.suggest(path, value))
         .reduce((p, c) => p.concat(c))
     },
     validate(path, value, errors, options) {
@@ -86,14 +86,22 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
           return value
         }
       }
-      return choice[1].validate(path, value, errors, options)
+      return choice.node.validate(path, value, errors, options)
     }
   }
 }
 
 export const ObjectOrList = (node: INode<any>, config?: ChoiceNodeConfig): INode<any> => {
   return ChoiceNode([
-    ['object', node, v => v[0]],
-    ['list', ListNode(node), v => [v]]
+    {
+      type: 'object',
+      node, 
+      change: v => v[0]
+    },
+    {
+      type: 'list',
+      node: ListNode(node),
+      change: v => [v]
+    }
   ], config)
 }

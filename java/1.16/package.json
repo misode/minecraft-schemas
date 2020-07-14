@@ -1,6 +1,6 @@
 {
   "name": "@mcschema/java-1.16",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "description": "Schemas for Java Edition 1.16",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -16,7 +16,7 @@
     "url": "https://github.com/misode/minecraft-schemas.git"
   },
   "dependencies": {
-    "@mcschema/core": "^0.4.0"
+    "@mcschema/core": "^0.4.1"
   },
   "devDependencies": {
     "typescript": "^3.9.3"

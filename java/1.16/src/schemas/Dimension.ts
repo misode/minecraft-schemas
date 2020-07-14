@@ -304,7 +304,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
           [Switch]: path => path.push('type'),
           [Case]: {
             'minecraft:fixed': {
-              biome: EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })
+              biome: EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })
             },
             'minecraft:multi_noise': {
               preset: EnumNode(['nether']),
@@ -315,7 +315,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
             'minecraft:checkerboard': {
               scale: NumberNode({ integer: true, min: 0, max: 62 }),
               biomes: ListNode(
-                EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })
+                EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })
               )
             },
             'minecraft:vanilla_layered': {
@@ -363,7 +363,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
       },
       'minecraft:flat': {
         settings: ObjectNode({
-          biome: Resource(EnumNode('worldgen/biome', { validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
+          biome: Resource(EnumNode('worldgen/biome', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
           lakes: BooleanNode(),
           features: BooleanNode(),
           layers: Force(ListNode(
@@ -381,7 +381,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
 }))
 
 SCHEMAS.register('generator_biome', Mod(ObjectNode({
-  biome: Force(Resource(EnumNode('worldgen/biome', { search: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))),
+  biome: Force(Resource(EnumNode('worldgen/biome', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))),
   parameters: ObjectNode({
     altitude: Force(NumberNode({ min: -1, max: 1 })),
     temperature: Force(NumberNode({ min: -1, max: 1 })),

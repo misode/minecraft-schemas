@@ -709,6 +709,8 @@
   "table.type.entity": "Entity",
   "table.type.fishing": "Fishing",
   "table.type.generic": "Generic",
+  "tag.replace": "Replace",
+  "tag.values": "Values",
   "text-component": "Text Component",
   "text-component.boolean": "Boolean",
   "text-component.list": "List",

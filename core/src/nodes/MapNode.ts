@@ -16,6 +16,14 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
   return {
     ...Base,
     default: () => ({}),
+    navigate(path, index) {
+      const nextIndex = index + 1
+      const pathElements = path.getArray()
+      if (pathElements.length <= nextIndex) {
+        return this
+      }
+      return children.navigate(path, nextIndex)
+    },
     transform(path, value, view) {
       if (value === undefined) return undefined
       let res: any = {}

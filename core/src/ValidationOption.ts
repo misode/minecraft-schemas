@@ -227,6 +227,7 @@ export type ResourceType =
   | 'minecraft:loot_pool_entry_type'
   | 'minecraft:mob_effect'
   | 'minecraft:potion'
+  | 'minecraft:recipe_serializer'
   | 'minecraft:stat_type'
   | 'minecraft:worldgen/biome_source'
   | 'minecraft:worldgen/chunk_generator'

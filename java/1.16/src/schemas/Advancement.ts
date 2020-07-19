@@ -195,7 +195,9 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
         location: Reference('location_predicate', { collapse: true })
       },
       'minecraft:nether_travel': {
-        distance: Range()
+        distance: Range(),
+        entered: Reference('location_predicate', { collapse: true }),
+        exited: Reference('location_predicate', { collapse: true })
       },
       'minecraft:placed_block': {
         block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),

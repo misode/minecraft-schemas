@@ -183,6 +183,8 @@
   "criterion.levitation.duration": "Duration",
   "criterion.location.location": "Location",
   "criterion.nether_travel.distance": "Distance",
+  "criterion.nether_travel.entered": "Entered Location",
+  "criterion.nether_travel.exited": "Exited Location",
   "criterion.placed_block.block": "Block",
   "criterion.placed_block.item": "Item",
   "criterion.placed_block.location": "Location",

@@ -26,7 +26,6 @@
     "typescript": "^3.9.3"
   },
   "files": [
-    "lib/**/*",
-    "locales/*"
+    "lib/**/*"
   ]
 }

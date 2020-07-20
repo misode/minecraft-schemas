@@ -634,5 +634,8 @@
   "worldgen/biome_source.fixed": "固定",
   "worldgen/biome_source.multi_noise": "多重噪声",
   "worldgen/biome_source.the_end": "末地",
-  "worldgen/biome_source.vanilla_layered": "原版分层"
+  "worldgen/biome_source.vanilla_layered": "原版分层",
+  "worldgen/chunk_generator.debug": "调试世界",
+  "worldgen/chunk_generator.flat": "超平坦",
+  "worldgen/chunk_generator.noise": "默认"
 }

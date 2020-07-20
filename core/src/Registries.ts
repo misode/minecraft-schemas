@@ -72,8 +72,13 @@ export class LocaleRegistry implements Registry<Locale> {
     return this.registry[id] !== undefined
   }
 
-  getLocale(key: string) {
-    return this.get(this.language)[key]
+  getLocale(key: string, params?: string[], language?: string) {
+    const value = this.get(language ?? this.language)[key]
+    if (value === undefined || !params) return value
+    return value.replace(/%\d+%/g, match => {
+      const index = parseInt(match.slice(1, -1))
+      return params[index] ?? match
+    })
   }
 }
 
@@ -88,14 +93,9 @@ export const LOCALES = new LocaleRegistry()
  * @param params optional parameters
  * @returns the key itself if it isn't found for the selected language
  */
-export const locale = (key: string, params: string[] = []) => {
-  let value = LOCALES.getLocale(key)
-  if (value === undefined) value = LOCALES.get('en')[key]
+export const locale = (key: string, params?: string[]) => {
+  let value = LOCALES.getLocale(key, params)
+  if (value === undefined) value = LOCALES.getLocale(key, params, 'en')
   if (value === undefined) value = key
-
-  value = value.replace(/%\d+%/g, match => {
-    const index = parseInt(match.slice(1, -1))
-    return params[index] ?? match
-  })
   return value
 }

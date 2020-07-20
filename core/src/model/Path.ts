@@ -114,26 +114,24 @@ export class Path {
   /**
    * Gets the locale of a key from the locale registry.
    * 
-   * @param key string or path that refers to a locale ID.
-   *    If a string is given, an exact match is required.
-   *    If a path is given, it finds the longest match at the end.
-   * @returns undefined if the key isn't found for the selected language
+   * @param params optional parameters
+   * @returns the key itself if it isn't found
    */
-  locale = (): string => {
+  locale = (params?: string[]): string => {
     let path = this.localeArr.slice(-5)
     while (path.length > 0) {
-      const locale = LOCALES.getLocale(path.join('.'))
+      const locale = LOCALES.getLocale(path.join('.'), params)
       if (locale !== undefined) return locale
       path.shift()
     }
     path = this.localeArr.slice(-5)
     while (path.length > 0) {
-      const locale = LOCALES.get('en')[path.join('.')]
+      const locale = LOCALES.getLocale(path.join('.'), params, 'en')
       if (locale !== undefined) return locale
       path.shift()
     }
-    // return this.localeArr.slice(0, 5).join('.')
-    return (this.localeArr[this.localeArr.length - 1] ?? '')
+    // return this.localeArr.slice(-5).join('.')
+    return this.localeArr[this.localeArr.length - 1] ?? ''
   }
 
   /**

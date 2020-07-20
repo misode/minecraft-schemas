@@ -37,7 +37,7 @@ export const ListNode = (children: INode): INode<any[]> => {
             return `<div class="node-entry">
             ${children.render(path.push(index).localePush('entry'), obj, view, {
               prepend: `<button class="remove" data-id="${removeId}"></button>`,
-              label: path.localePush('entry').locale()
+              label: path.localePush('entry').locale([`${index}`])
             })}
           </div>`
           }).join('')}

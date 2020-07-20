@@ -87,7 +87,7 @@
   "attribute_modifier_remove": "Remove Modifier",
   "badge.experimental": "Experimental",
   "badge.unstable": "Unstable",
-  "biome.features.entry": "Step",
+  "biome.features.entry": "Step %0%",
   "biome.features.entry.entry": "Feature",
   "biome_source.checkerboard": "Checkerboard",
   "biome_source.fixed": "Fixed",

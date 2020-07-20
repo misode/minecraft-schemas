@@ -1,7 +1,6 @@
 import { INode, Base, NodeOptions } from './Node'
 import { Path } from '../model/Path'
 import { ListNode } from './ListNode'
-import { TreeView } from '../view/TreeView'
 
 type Choice = {
   type: string
@@ -107,4 +106,19 @@ export const ObjectOrList = (node: INode<any>, config?: ChoiceNodeConfig): INode
       change: v => [v]
     }
   ], config)
+}
+
+export const ObjectOrPreset = (presetNode: INode<string>, objectNode: INode<any>, presets: {[preset: string]: any}): INode<any> => {
+  return ChoiceNode([
+    {
+      type: 'string',
+      node: presetNode,
+      change: v => Object.keys(presets)[0]
+    },
+    {
+      type: 'object',
+      node: objectNode,
+      change: v => presets[v] ?? presets[Object.keys(presets)[0]]
+    }
+  ])
 }

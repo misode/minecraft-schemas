@@ -12,8 +12,8 @@ const TagBase = (type: ResourceType) => Mod(ObjectNode({
       {
         type: 'object',
         node: ObjectNode({
-          id: Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true, allowUnknown: true } } })),
-          required: BooleanNode({ radio: true })
+          id: Force(Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true, allowUnknown: true } } }))),
+          required: Force(BooleanNode({ radio: true }))
         }),
         change: v => ({ id: v, required: true })
       }

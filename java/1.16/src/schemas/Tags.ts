@@ -1,9 +1,23 @@
-import { BooleanNode, EnumNode, Force, ListNode, Mod, ObjectNode, Resource, ResourceType, SCHEMAS } from '@mcschema/core'
+import { BooleanNode, EnumNode, Force, ListNode, Mod, ObjectNode, Resource, ResourceType, SCHEMAS, ChoiceNode } from '@mcschema/core'
 
 const TagBase = (type: ResourceType) => Mod(ObjectNode({
   replace: BooleanNode(),
   values: Force(ListNode(
-    Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true } } }))
+    ChoiceNode([
+      {
+        type: 'string',
+        node: Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true } } })),
+        change: v => v.id
+      },
+      {
+        type: 'object',
+        node: ObjectNode({
+          id: Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true, allowUnknown: true } } })),
+          required: BooleanNode({ radio: true })
+        }),
+        change: v => ({ id: v, required: true })
+      }
+    ])
   )),
 }, { context: 'tag' }), {
   default: () => ({

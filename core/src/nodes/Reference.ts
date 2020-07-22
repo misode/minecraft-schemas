@@ -13,5 +13,5 @@ export const Reference = (schema: string, config?: Options): INode => ({
   navigate: (p, i) => SCHEMAS.get(schema).navigate(p, i),
   render: (p, v, t, options) => SCHEMAS.get(schema).render(p, v, t, {...options, ...config}),
   validate: (p, v, e, options) => SCHEMAS.get(schema).validate(p, v, e, {...options, ...config}),
-  validationOption: () => SCHEMAS.get(schema).validationOption(),
+  validationOption: (v) => SCHEMAS.get(schema).validationOption(v),
 })

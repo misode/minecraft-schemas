@@ -39,7 +39,12 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     default: () => choices[0].node.default(),
     keep: () => true,
     navigate(path, index) {
-      const pathElement = path.getArray()[index + 1]
+      const nextIndex = index + 1
+      const pathElements = path.getArray()
+      if (pathElements.length <= nextIndex) {
+        return this
+      }
+      const pathElement = pathElements[nextIndex]
       const expectedChoiceType = typeof pathElement === 'number' ? 'list' : 'object'
       const node = choices.find(c => c.type === expectedChoiceType)?.node
       return node?.navigate(path, index)
@@ -89,6 +94,12 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
         }
       }
       return choice.node.validate(path, value, errors, options)
+    },
+    validationOption(value) {
+      return choices
+        .find(c => isValid(c, value))
+        ?.node
+        ?.validationOption(value)
     }
   }
 }

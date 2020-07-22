@@ -98,9 +98,10 @@ export interface INode<T = any> {
    * - For `EnumNode` and `StringNode`: Returns the corresponding `validation` in their `options`.
    * - For `MapNode`: Returns the corresponding `validation` in their `options`, or the `validationOption`
    * of their key node if the former is `undefined`.
+   * - For `ChoiceNode`: Returns the corresponding `validationOption` of the matched choice's node.
    * - For other nodes: Returns `undefined`.
    */
-  validationOption: () => ValidationOption | undefined
+  validationOption: (value: any) => ValidationOption | undefined
 
   [custom: string]: any
 }

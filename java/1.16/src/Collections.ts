@@ -330,7 +330,6 @@ COLLECTIONS.register('configured_feature', [
   'minecraft:monster_room',
   'minecraft:mushroom_field_vegetation',
   'minecraft:nether_sprouts',
-  'minecraft:nope',
   'minecraft:oak_badlands',
   'minecraft:oak_bees_0002',
   'minecraft:oak_bees_002',
@@ -424,11 +423,12 @@ COLLECTIONS.register('configured_feature', [
   'minecraft:spring_lava',
   'minecraft:spring_open',
   'minecraft:spring_water',
-  'minecraft:spruce_snovy',
+  'minecraft:spruce_snowy',
   'minecraft:spruce',
   'minecraft:super_birch_bees_0002',
   'minecraft:swamp_tree',
   'minecraft:taiga_vegetation',
+  'minecraft:trees_birch',
   'minecraft:trees_giant_spruce',
   'minecraft:trees_giant',
   'minecraft:trees_jungle_edge',
@@ -478,7 +478,7 @@ COLLECTIONS.register('configured_structure_feature', [
   'minecraft:village_desert',
   'minecraft:village_plains',
   'minecraft:village_savanna',
-  'minecraft:village_snovy',
+  'minecraft:village_snowy',
   'minecraft:village_taiga'
 ])
 

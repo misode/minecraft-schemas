@@ -489,7 +489,7 @@
   "help.dimension": "在 \"/execute in\" 中使用的标识符。必须全部为小写字母。",
   "help.dimension.type.ambient_light": "位于 0 与 1 之间的值",
   "help.dimension.type.fixed_time": "设定该值会导致太阳处于某一固定位置",
-  "help.dimension.type.natural": "如果设置为 true，猪灵会抖动，且传送门中会生成僵尸猪灵。如果设置为 false，指南针会不断旋转，且床会爆炸。",
+  "help.dimension.type.natural": "如果设置为 true，传送门中会生成僵尸猪灵。如果设置为 false，指南针会不断旋转。",
   "help.dimension.type.shrunk": "坐标是否应缩放至正常情况下的 1/8",
   "help.dimension.type.ultrawarm": "如果设置为 true，水会蒸发且海绵会变干",
   "help.display": "如果存在，该进度将会在进度界面中显示",

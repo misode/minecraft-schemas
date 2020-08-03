@@ -479,7 +479,7 @@
   "generator_structure.separation": "Separation",
   "generator_structure.spacing": "Spacing",
   "help.biome.parameters.altitude": "These parameters determine the placement of the biome. Every biome must have a unique combination of them. Biomes with similar values will generate next to each other.",
-  "help.biome_source.type.checkerboard": "Biomes generating in a checkerboard chunk pattern",
+  "help.biome_source.type.checkerboard": "Biomes generate in a checkerboard chunk pattern.",
   "help.biome_source.type.fixed": "One biome for the whole world",
   "help.biome_source.type.multi_noise": "Custom biome distribution with configurable parameters",
   "help.biome_source.type.the_end": "Biome distrubution for the end",

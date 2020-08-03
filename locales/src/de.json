@@ -476,5 +476,20 @@
   "generator_biome.parameters.weirdness": "Merkwürdigkeit",
   "generator_structure.salt": "Salt",
   "generator_structure.separation": "Aufteilung",
-  "generator_structure.spacing": "Abstand"
+  "generator_structure.spacing": "Abstand",
+  "help.biome.parameters.altitude": "Diese Parameter entscheiden die Platzierung des Bioms. Jedes Biom braucht eine einzigartige Kombination. Biome mit ähnlichen Werten generieren näher beieinander.",
+  "help.biome_source.type.checkerboard": "Biome in einem Schachbrettmuster generieren",
+  "help.biome_source.type.fixed": "EIn Biom für die gesamte Welt",
+  "help.biome_source.type.multi_noise": "Biomverteilung basierend auf einer Rauschfunktion",
+  "help.biome_source.type.the_end": "Biomverteilung für das Ende",
+  "help.biome_source.type.vanilla_layered": "Biomverteilung basierend auf einem Schichtenmodell",
+  "help.condition.chances": "Komma-separierte Liste von Fließkommazahlen zwichen 0 und 1",
+  "help.condition.time_period": "Wenn vorhanden, wird der Restwert von der Zeit geteilt durch diesen Wert gebildet. Wenn beispielsweise dieser Wert auf 24000 gesetzt wird, wird der Zeitwert auf Tagen operieren.",
+  "help.dimension": "Der Bezeichner, der für „/execute in“ verwendet wird. Muss komplett klein geschrieben werden.",
+  "help.dimension.type.ambient_light": "Wert zwischen 0 und 1",
+  "help.dimension.type.fixed_time": "Wenn dieser Wert gesetzt ist, ist die Zeit an diesem Wert für diese Dimension angehalten und die Sonne bzw. der Mond bleiben an derselben Stelle.",
+  "help.dimension.type.natural": "Wenn „true“, erzeugen Nether-Portale zombifizierte piglins. Wenn „false“, rotieren Kompasse und Uhren zufällig.",
+  "help.dimension.type.shrunk": "Ob Koordinaten mit einem Faktor von 8 runter-skaliert werden, wenn man durch ein Netherportal diese Dimension verlässt.",
+  "help.dimension.type.ultrawarm": "Wenn „true“, verdampft Wasser und Schwämme trocknen",
+  "help.display": "Wenn vorhanden, wird der Fortschritt in einem Fortschrittstab angezeigt."
 }

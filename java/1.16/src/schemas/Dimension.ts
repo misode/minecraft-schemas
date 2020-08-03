@@ -35,6 +35,10 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
             },
             'minecraft:multi_noise': {
               preset: EnumNode(['nether']),
+              altitude_noise: Reference('generator_biome_noise'),
+              temperature_noise: Reference('generator_biome_noise'),
+              humidity_noise: Reference('generator_biome_noise'),
+              weirdness_noise: Reference('generator_biome_noise'),
               biomes: ListNode(
                 Reference('generator_biome')
               )
@@ -68,7 +72,27 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
   }, { disableSwitchContext: true }))
 }, { context: 'dimension' }), {
   default: () => ({
-    type: 'minecraft:overworld'
+    type: 'minecraft:overworld',
+    generator: {
+      biome_source: {
+        altitude_noise: {
+          firstOctave: -7,
+          amplitudes: [1, 1]
+        },
+        temperature_noise: {
+          firstOctave: -7,
+          amplitudes: [1, 1]
+        },
+        humidity_noise: {
+          firstOctave: -7,
+          amplitudes: [1, 1]
+        },
+        weirdness_noise: {
+          firstOctave: -7,
+          amplitudes: [1, 1]
+        }
+      }
+    }
   })
 }))
 
@@ -93,3 +117,10 @@ SCHEMAS.register('generator_biome', Mod(ObjectNode({
     }
   })
 }))
+
+SCHEMAS.register('generator_biome_noise', Force(ObjectNode({
+  firstOctave: Force(NumberNode({ integer: true })),
+  amplitudes: Force(ListNode(
+    NumberNode()
+  ))
+})))

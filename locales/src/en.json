@@ -489,7 +489,7 @@
   "help.dimension": "The identifier used for \"/execute in\". Must be all lowercase.",
   "help.dimension.type.ambient_light": "Value between 0 and 1.",
   "help.dimension.type.fixed_time": "Setting this value will keep the sun in a fixed position.",
-  "help.dimension.type.natural": "If true, portals will spawn zombified pigmen. If false, compasses will spin.",
+  "help.dimension.type.natural": "If true, portals will spawn zombified pigmen. If false, compasses and clocks spin randomly.",
   "help.dimension.type.shrunk": "Whether coordinates should be scaled down by a factor of 8.",
   "help.dimension.type.ultrawarm": "If true, water will evaporate and sponges will dry.",
   "help.display": "If present, advancement will be visible in the advancement tabs.",

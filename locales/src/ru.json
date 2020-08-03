@@ -231,6 +231,7 @@
   "dimension.the_end": "Энд",
   "dimension.the_nether": "Незер",
   "dimension.type": "Параметры измерения",
+  "dimension.type.string": "Предустановка",
   "dimension_add": "Добавить измерение",
   "dimension_remove": "Удалить измерение",
   "dimension_type.ambient_light": "Свет окружения",

@@ -14,6 +14,7 @@ import {
   StringNode,
   Switch,
   COLLECTIONS,
+  StringOrList,
 } from '@mcschema/core'
 import { Range } from './Common'
 
@@ -235,7 +236,7 @@ SCHEMAS.register('attribute_modifier', ObjectNode({
   name: StringNode(),
   amount: Range({ allowBinomial: true }),
   operation: EnumNode(['addition', 'multiply_base', 'multiply_total']),
-  slot: ListNode(
+  slot: StringOrList(
     EnumNode('slot')
   )
 }, { context: 'attribute_modifier' }))

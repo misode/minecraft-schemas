@@ -1,5 +1,5 @@
 import { DataModel } from './DataModel'
-import { LOCALES } from '../Registries'
+import { LOCALES, locale } from '../Registries'
 
 export type PathElement = number | string
 
@@ -189,7 +189,7 @@ export class ModelPath extends Path {
   error(exact = true): string {
     const errors = this.model.errors.get(this, exact)
     if (errors.length === 0) return ''
-    return `data-error="${errors[0].error}"`
+    return `data-error="${locale(errors[0].error, errors[0].params)}"`
   }
 
   /**

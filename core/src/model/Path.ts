@@ -193,7 +193,7 @@ export class ModelPath extends Path {
   }
 
   /**
-   * Gets the error inside this path if the model is attached
+   * Gets the help message corresponding to this path if the model is attached
    * @returns a html attribute containing the error message
    */
   help(): string {

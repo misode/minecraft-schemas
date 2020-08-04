@@ -53,8 +53,9 @@ export interface INode<T = any> {
    * the index for the root object is `-1`, 
    * the one for the inner object is `0` (which is the index of `foo` in `foo.bar`),
    * and the one for the boolean value is `1` (which is the index of `bar` in `foo.bar`)
+   * @param value The value corresponding to the schema node
    */
-  navigate: (path: Path, index: number) => INode | undefined
+  navigate: (path: Path, index: number, value: any) => INode | undefined
 
   /**
    * Renders the node and handles events to update the model

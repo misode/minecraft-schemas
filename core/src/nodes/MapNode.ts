@@ -16,13 +16,13 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
   return {
     ...Base,
     default: () => ({}),
-    navigate(path, index) {
+    navigate(path, index, value) {
       const nextIndex = index + 1
       const pathElements = path.getArray()
       if (pathElements.length <= nextIndex) {
         return this
       }
-      return children.navigate(path, nextIndex)
+      return children.navigate(path, nextIndex, value ? value[pathElements[nextIndex]] : undefined)
     },
     transform(path, value, view) {
       if (value === undefined) return undefined

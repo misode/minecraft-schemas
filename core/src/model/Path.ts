@@ -97,8 +97,8 @@ export class Path {
    */
   locale (params?: string[]): string {
     const res = this.strictLocale(params)
-    // if (res !== undefined) return res
-    return this.localeArr.slice(-5).join('.')
+    if (res !== undefined) return res
+    // return this.localeArr.slice(-5).join('.')
     return this.localeArr[this.localeArr.length - 1] ?? ''
   }
 
@@ -198,7 +198,6 @@ export class ModelPath extends Path {
    */
   help(): string {
     const res = this.localePush('help').strictLocale([], 6)
-    console.warn('HELP', this.localePush('help'), res)
     if (res === undefined) return ''
     return `data-help="${res}"`
   }

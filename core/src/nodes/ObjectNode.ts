@@ -88,7 +88,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     },
     render(path, value, view, options) {
       return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
-        ${options?.hideHeader ? '' : `<div class="node-header" ${path.error()}>
+        ${options?.hideHeader ? '' : `<div class="node-header" ${path.error()} ${path.help()}>
           ${options?.prepend ? options.prepend : `
             ${(options?.collapse || config?.collapse) ? value === undefined ? `
               <button class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, { __init: true }))}"></button>

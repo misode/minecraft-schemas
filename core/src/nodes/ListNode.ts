@@ -25,7 +25,7 @@ export const ListNode = (children: INode): INode<any[]> => {
         view.model.set(path, [...value, children.default()])
       })
       return `<div class="node list-node">
-        <div class="node-header" ${path.error()}>
+        <div class="node-header" ${path.error()} ${path.help()}>
           ${options?.prepend ?? ''}
           <label>${options?.label ?? path.locale()}</label>
           ${options?.inject ?? ''}

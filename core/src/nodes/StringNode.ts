@@ -20,7 +20,7 @@ export const StringNode = (config?: StringNodeConfig): INode<string> => {
         const value = (el as HTMLInputElement).value
         view.model.set(path, value)
       })
-      return `<div class="node string-node node-header" ${path.error()}>
+      return `<div class="node string-node node-header" ${path.error()} ${path.help()}>
         ${options?.prepend ?? ''}
         <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}

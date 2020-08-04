@@ -26,7 +26,7 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
         let parsed = integer ? parseInt(value) : parseFloat(value)
         view.model.set(path, parsed)
       })
-      return `<div class="node number-node node-header" ${path.error()}>
+      return `<div class="node number-node node-header" ${path.error()} ${path.help()}>
         ${options?.prepend ?? ''}
         <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}

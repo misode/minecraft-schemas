@@ -92,32 +92,38 @@ export class Path {
   /**
    * Gets the locale of a key from the locale registry.
    * 
-   * @param params optional parameters
+   * @param params optional locale parameters
    * @returns the key itself if it isn't found
    */
-  locale (params?: string[], depth = 5): string {
+  locale (params?: string[]): string {
+    const res = this.strictLocale(params)
+    // if (res !== undefined) return res
+    return this.localeArr.slice(-5).join('.')
+    return this.localeArr[this.localeArr.length - 1] ?? ''
+  }
+
+  /**
+   * Gets the locale of a key from the locale registry.
+   * 
+   * @param params optional locale parameters
+   * @param depth path depth to start, defaults to 5
+   * @param minDepth minimum length of the path, defaults to 1
+   * @returns undefined if the key isn't found
+   */
+  strictLocale(params?: string[], depth = 5, minDepth = 1): string | undefined {
     let path = this.localeArr.slice(-depth)
-    while (path.length > 0) {
+    while (path.length >= minDepth) {
       const locale = LOCALES.getLocale(path.join('.'), params)
       if (locale !== undefined) return locale
       path.shift()
     }
     path = this.localeArr.slice(-depth)
-    while (path.length > 0) {
+    while (path.length >= minDepth) {
       const locale = LOCALES.getLocale(path.join('.'), params, 'en')
       if (locale !== undefined) return locale
       path.shift()
     }
-    // return this.localeArr.slice(-depth).join('.')
-    return this.localeArr[this.localeArr.length - 1] ?? ''
-  }
-
-  /**
-   * Gets the error inside this path if the model is attached
-   * @returns a html attribute containing the error message
-   */
-  error(exact = true): string {
-    return ''
+    return undefined
   }
 
   /**
@@ -181,9 +187,20 @@ export class ModelPath extends Path {
    * @returns a html attribute containing the error message
    */
   error(exact = true): string {
-    const errors = this.model?.errors.get(this, exact) ?? []
+    const errors = this.model.errors.get(this, exact)
     if (errors.length === 0) return ''
     return `data-error="${errors[0].error}"`
+  }
+
+  /**
+   * Gets the error inside this path if the model is attached
+   * @returns a html attribute containing the error message
+   */
+  help(): string {
+    const res = this.localePush('help').strictLocale([], 6)
+    console.warn('HELP', this.localePush('help'), res)
+    if (res === undefined) return ''
+    return `data-help="${res}"`
   }
 
   /**

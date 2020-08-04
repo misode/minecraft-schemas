@@ -39,7 +39,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
         view.model.set(path.push(key), children.default())
       })
       return `<div class="node map-node">
-        <div class="node-header">
+        <div class="node-header" ${path.help()}>
           ${options?.prepend ?? ''}
           <label>${options?.label ?? path.locale()}</label>
           ${options?.inject ?? ''}

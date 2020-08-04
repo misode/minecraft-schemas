@@ -1,5 +1,5 @@
 import { DataModel } from '../model/DataModel'
-import { ModelPath } from '../model/Path'
+import { ModelPath, Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { SourceView } from '../view/SourceView'
 import { Errors } from '../model/Errors'

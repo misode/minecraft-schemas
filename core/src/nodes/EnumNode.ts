@@ -45,11 +45,14 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
           evt.stopPropagation()
         })
       })
-      return `<div class="node enum-node node-header" ${path.error()}>
+      const pathWithContext = (typeof values === 'string') ?
+        new ModelPath(path.getModel(), new Path(path.getArray(), [values])) : path
+      const helpPath = getValues().includes(value) ? pathWithContext.localePush(value) : pathWithContext
+      return `<div class="node enum-node node-header" ${path.error()} ${helpPath.help()}>
         ${options?.prepend ?? ''}
         <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}
-        ${this.renderRaw(path, view, inputId)}
+        ${this.renderRaw(path, view, pathWithContext, inputId)}
       </div>`
     },
     validate(path, value, errors, options) {
@@ -63,7 +66,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
       }
       return value
     },
-    renderRaw(path: ModelPath, view: TreeView, inputId?: string) {
+    renderRaw(path: ModelPath, view: TreeView, pathWithContext: Path, inputId?: string) {
       const valuesList = getValues()
       inputId = inputId ?? view.register(el => {
         (el as HTMLSelectElement).value = defaultValue ?? ''
@@ -77,8 +80,6 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
           ).join('')}
         </datalist>`
       }
-      const pathWithContext = (typeof values === 'string') ?
-        new ModelPath(path.getModel(), new Path(path.getArray(), [values])) : path
       return `<select data-id="${inputId}">
         ${defaultValue ? `` : `<option value="">${locale('unset')}</option>`}
         ${valuesList.map(v =>

@@ -18,6 +18,9 @@
   "dependencies": {
     "@mcschema/core": "^0.5.2"
   },
+  "publishConfig": {
+      "access": "public"
+  },
   "files": [
     "lib/**/*"
   ]

@@ -16,8 +16,7 @@
     "url": "https://github.com/misode/minecraft-schemas.git"
   },
   "dependencies": {
-    "@mcschema/core": "^0.5.3",
-    "@mcschema/locales": "^0.1.4"
+    "@mcschema/core": "^0.5.4"
   },
   "publishConfig": {
     "access": "public"

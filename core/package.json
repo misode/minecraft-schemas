@@ -30,8 +30,5 @@
   },
   "files": [
     "lib/**/*"
-  ],
-  "dependencies": {
-    "@mcschema/locales": "^0.1.4"
-  }
+  ]
 }

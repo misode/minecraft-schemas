@@ -72,6 +72,22 @@ type EntityValidationOption = {
   }
 }
 
+type NbtdocCategory = 'minecraft:block' | 'minecraft:entity' | 'minecraft:item'
+
+/**
+ * Get the nbtdoc category from a loot copy source. 
+ * 
+ * The category for `this`, `killer`, and `killer_player` should be `minecraft:entity`, while
+ * the category for `block_entity` should be `minecraft:block`
+ */
+type NbtdocCategoryGeter = {
+  getter: 'copy_source',
+  /**
+   * Relative path to the field that contains a loot copy source.
+   */
+  path: RelativePath
+}
+
 type NbtValidationOption = {
   validator: 'nbt',
   params: {
@@ -87,7 +103,7 @@ type NbtValidationOption = {
       /**
        * The category of this registry.
        */
-      category: 'minecraft:block' | 'minecraft:entity' | 'minecraft:item',
+      category: NbtdocCategory,
       /**
        * A relative path from the node with this validator to 
        * the string node containing a block/entity/item ID.
@@ -109,7 +125,7 @@ type NbtPathValidationOption = {
     /**
      * The category of an nbtdoc registry for selecting the relevant module.
      */
-    category: 'minecraft:block' | 'minecraft:entity' | 'minecraft:item',
+    category: NbtdocCategory | NbtdocCategoryGeter,
     /**
      * A block/entity/item ID.
      */

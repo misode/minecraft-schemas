@@ -131,8 +131,8 @@ SCHEMAS.register('loot_function', ObjectNode({
       source: EnumNode('copy_source', 'this'),
       ops: ListNode(
         ObjectNode({
-          source: Force(StringNode({ validation: { validator: 'nbt_path', params: { category: 'minecraft:entity' } } })),
-          target: Force(StringNode({ validation: { validator: 'nbt_path', params: { category: 'minecraft:entity' } } })),
+          source: Force(StringNode({ validation: { validator: 'nbt_path', params: { category: { getter: 'copy_source', path: ['pop', 'pop', 'pop', { push: 'source' }] } } } })),
+          target: Force(StringNode({ validation: { validator: 'nbt_path', params: { category: 'minecraft:item' } } })),
           op: EnumNode(['replace', 'append', 'merge'])
         }, { context: 'nbt_operation' })
       ),

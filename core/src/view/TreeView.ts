@@ -1,21 +1,10 @@
 import { DataModel } from '../model/DataModel'
 import { ModelPath } from '../model/Path'
 import { AbstractView } from './AbstractView'
+import { hexId } from '../utils'
 
 type Registry = {
   [id: string]: (el: Element) => void
-}
-
-const registryIdLength = 12
-const dec2hex = (dec: number) => ('0' + dec.toString(16)).substr(-2)
-
-/**
- * Helper function to generate a random ID
- */
-export function getId() {
-  var arr = new Uint8Array((registryIdLength || 40) / 2)
-  window.crypto.getRandomValues(arr)
-  return Array.from(arr, dec2hex).join('')
 }
 
 type TreeViewOptions = {
@@ -49,7 +38,7 @@ export class TreeView extends AbstractView {
    * @returns the ID that should be applied to the data-id attribute
    */
   register(callback: (el: Element) => void): string {
-    const id = getId()
+    const id = hexId()
     this.registry[id] = callback
     return id
   }

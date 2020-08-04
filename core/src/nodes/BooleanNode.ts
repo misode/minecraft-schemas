@@ -14,7 +14,7 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
   return {
     ...Base,
     default: () => false,
-    render(path: Path, value: boolean, view: TreeView, options?: NodeOptions) {
+    render(path, value, view, options) {
       const onFalse = view.registerClick(el => {
         view.model.set(path, !config?.radio && value === false ? undefined : false)
       })

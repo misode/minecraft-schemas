@@ -1,5 +1,5 @@
 import { DataModel } from '../model/DataModel'
-import { Path } from '../model/Path'
+import { ModelPath } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { SourceView } from '../view/SourceView'
 import { Errors } from '../model/Errors'
@@ -26,14 +26,14 @@ export interface INode<T = any> {
   /**
    * Transforms the data model to the final output format
    */
-  transform: (path: Path, value: T, view: SourceView) => any
+  transform: (path: ModelPath, value: T, view: SourceView) => any
 
   /**
    * Determines whether the node should be enabled for this path
    * @param path
    * @param model
    */
-  enabled: (path: Path, model: DataModel) => boolean
+  enabled: (path: ModelPath, model: DataModel) => boolean
 
   /**
    * Determines whether the node should always have a value present
@@ -55,7 +55,7 @@ export interface INode<T = any> {
    * and the one for the boolean value is `1` (which is the index of `bar` in `foo.bar`)
    * @param value The value corresponding to the schema node
    */
-  navigate: (path: Path, index: number, value: any) => INode | undefined
+  navigate: (path: ModelPath, index: number, value: any) => INode | undefined
 
   /**
    * Renders the node and handles events to update the model
@@ -65,7 +65,7 @@ export interface INode<T = any> {
    * @param options optional render options
    * @returns string HTML representation of this node using the given data
    */
-  render: (path: Path, value: T, view: TreeView, options?: NodeOptions) => string
+  render: (path: ModelPath, value: T, view: TreeView, options?: NodeOptions) => string
 
   /**
    * Provide code suggestions for this node. The result are valid JSON strings that can be used
@@ -84,7 +84,7 @@ export interface INode<T = any> {
    * @param path The path of this node
    * @param value The value corresponding to this node
    */
-  suggest: (path: Path, value: any) => string[]
+  suggest: (path: ModelPath, value: any) => string[]
 
   /**
    * Validates the model using this schema
@@ -93,7 +93,7 @@ export interface INode<T = any> {
    * or add an error and retain the original value
    * @param value value to be validated
    */
-  validate: (path: Path, value: any, errors: Errors, options: NodeOptions) => any
+  validate: (path: ModelPath, value: any, errors: Errors, options: NodeOptions) => any
 
   /**
    * Get the validation option of this node. The client of this schema may
@@ -127,7 +127,7 @@ export const Mod = (node: INode, mods: Partial<INode>): INode => ({
 })
 
 export const Has = (key: string, node: INode<any>) => Mod(node, {
-  enabled: (p: Path) => p.push(key).get() !== undefined
+  enabled: (p: ModelPath) => p.push(key).get() !== undefined
 })
 
 export function Force<T>(node: INode<T>, defaultValue?: T): INode {

@@ -1,5 +1,5 @@
 import { DataModel } from '../model/DataModel'
-import { Path } from '../model/Path'
+import { ModelPath } from '../model/Path'
 import { AbstractView } from './AbstractView'
 
 type Registry = {
@@ -92,7 +92,7 @@ export class TreeView extends AbstractView {
    */
   invalidated() {
     this.target.innerHTML = this.model.schema.render(
-      new Path().withModel(this.model), this.model.data, this, {hideHeader: true})
+      new ModelPath(this.model), this.model.data, this, {hideHeader: true})
     for (const id in this.registry) {
       const element = this.target.querySelector(`[data-id="${id}"]`)
       if (element !== null) this.registry[id](element)

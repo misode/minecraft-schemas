@@ -1,5 +1,5 @@
 import { INode, Base } from './Node'
-import { Path } from '../model/Path'
+import { Path, ModelPath } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { Errors } from '../model/Errors'
 import { quoteString } from '../utils'
@@ -22,7 +22,7 @@ export type IObject = {
 export type FilteredChildren = {
   [name: string]: INode
   /** The field to filter on */
-  [Switch]?: (path: Path) => Path
+  [Switch]?: (path: ModelPath) => ModelPath
   /** Map of filter values to node fields */
   [Case]?: NestedNodeChildren
 }
@@ -37,16 +37,16 @@ type ObjectNodeConfig = {
 export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig): INode<IObject> => {
   const { [Switch]: filter, [Case]: cases, ...defaultFields } = fields
 
-  const getActiveFields = (path: Path): NodeChildren => {
+  const getActiveFields = (path: ModelPath): NodeChildren => {
     if (filter === undefined) return defaultFields
     const switchValue = filter(path).get()
     const activeCase = cases![switchValue]
     return { ...defaultFields, ...activeCase }
   }
 
-  const renderFields = (path: Path, value: IObject, view: TreeView) => {
+  const renderFields = (path: ModelPath, value: IObject, view: TreeView) => {
     value = value ?? {}
-    const filterPath = filter ? filter(path) : new Path()
+    const filterPath = filter ? filter(path) : new ModelPath(view.model)
     const switchValue = filterPath.get()
     const caseFields = filter ? cases![switchValue] : {}
     const activeFields = filter ? { ...defaultFields, ...caseFields } : defaultFields
@@ -54,7 +54,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     return Object.keys(activeFields).map(k => {
       if (!activeFields[k].enabled(path, view.model)) return ''
       const pathWithContext = (config?.context) ?
-        new Path(path.getArray(), [config.context], path.getModel()) : path
+        new ModelPath(path.getModel(), new Path(path.getArray(), [config.context])) : path
       const pathWithFilter = !config?.disableSwitchContext && switchValue && filteredKeys.includes(k) ?
         pathWithContext.localePush(switchValue) : pathWithContext
       return activeFields[k].render(pathWithFilter.push(k), value[k], view)

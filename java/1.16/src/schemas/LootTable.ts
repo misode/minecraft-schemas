@@ -55,11 +55,11 @@ SCHEMAS.register('loot_table', Mod(ObjectNode({
 SCHEMAS.register('loot_entry', ObjectNode({
   type: Resource(EnumNode('loot_pool_entry_type', { defaultValue: 'minecraft:item', validation: { validator: 'resource', params: { pool: 'minecraft:loot_pool_entry_type' } } })),
   weight: Mod(NumberNode({ integer: true, min: 1 }), {
-    enabled: (path: Path) => path.pop().get()?.length > 1
+    enabled: path => path.pop().get()?.length > 1
       && !['minecraft:alternatives', 'minecraft:group', 'minecraft:sequence'].includes(path.push('type').get())
   }),
   quality: Mod(NumberNode({ integer: true, min: 1 }), {
-    enabled: (path: Path) => path.pop().get()?.length > 1
+    enabled: path => path.pop().get()?.length > 1
       && !['minecraft:alternatives', 'minecraft:group', 'minecraft:sequence'].includes(path.push('type').get())
   }),
   [Switch]: path => path.push('type'),
@@ -111,16 +111,16 @@ SCHEMAS.register('loot_function', ObjectNode({
       formula: Resource(Resource(EnumNode('loot_table_apply_bonus_formula', { defaultValue: 'minecraft:uniform_bonus_count', validation: { validator: 'resource', params: { pool: COLLECTIONS.get('loot_table_apply_bonus_formula') } } }))),
       parameters: Mod(ObjectNode({
         bonusMultiplier: Mod(NumberNode(), {
-          enabled: (path: Path) => path.pop().push('formula').get() === 'minecraft:uniform_bonus_count'
+          enabled: path => path.pop().push('formula').get() === 'minecraft:uniform_bonus_count'
         }),
         extra: Mod(NumberNode(), {
-          enabled: (path: Path) => path.pop().push('formula').get() === 'minecraft:binomial_with_bonus_count'
+          enabled: path => path.pop().push('formula').get() === 'minecraft:binomial_with_bonus_count'
         }),
         probability: Mod(NumberNode(), {
-          enabled: (path: Path) => path.pop().push('formula').get() === 'minecraft:binomial_with_bonus_count'
+          enabled: path => path.pop().push('formula').get() === 'minecraft:binomial_with_bonus_count'
         })
       }), {
-        enabled: (path: Path) => path.push('formula').get() !== 'minecraft:ore_drops'
+        enabled: path => path.push('formula').get() !== 'minecraft:ore_drops'
       }),
       ...conditions
     },

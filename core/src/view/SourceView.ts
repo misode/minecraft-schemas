@@ -1,5 +1,5 @@
 import { DataModel } from '../model/DataModel'
-import { Path } from '../model/Path'
+import { Path, ModelPath } from '../model/Path'
 import { AbstractView } from './AbstractView'
 
 type SourceViewOptions = {
@@ -28,7 +28,7 @@ export class SourceView extends AbstractView {
   }
 
   invalidated() {
-    const transformed = this.model.schema.transform(new Path().withModel(this.model), this.model.data, this)
+    const transformed = this.model.schema.transform(new ModelPath(this.model), this.model.data, this)
     this.target.value = JSON.stringify(transformed, null, this.options?.indentation)
   }
 

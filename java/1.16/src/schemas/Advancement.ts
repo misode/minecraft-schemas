@@ -88,7 +88,7 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
     player: Mod(PredicateChoice(
       Reference('entity_predicate', { collapse: true })
     ), {
-      enabled: (path: Path) => path.pop().push('trigger').get() !== 'minecraft:impossible'
+      enabled: path => path.pop().push('trigger').get() !== 'minecraft:impossible'
     }),
     [Switch]: path => path.pop().push('trigger'),
     [Case]: {

@@ -57,8 +57,8 @@ SCHEMAS.register('location_predicate', ObjectNode({
     y: Range(),
     z: Range()
   }, { collapse: true }),
-  biome: Resource(EnumNode('biome', { search: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
-  feature: Resource(EnumNode('structure_feature', { search: true })),
+  biome: Resource(EnumNode('worldgen/biome', { search: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
+  feature: Resource(EnumNode('worldgen/structure_feature', { search: true })),
   dimension: Resource(EnumNode('dimension', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension' } } })),
   light: ObjectNode({
     light: Range()

@@ -1,5 +1,5 @@
-import { INode, Base, NodeOptions } from './Node'
-import { Path } from '../model/Path'
+import { INode, Base } from './Node'
+import { Path, ModelPath } from '../model/Path'
 import { ListNode } from './ListNode'
 
 type Choice = {
@@ -56,7 +56,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     render(path, value, view, options) {
       const choice = activeChoice(value) ?? choices[0]
       const pathWithContext = (config?.context) ?
-        new Path(path.getArray(), [config.context], path.getModel()) : path
+        new ModelPath(path.getModel(), new Path(path.getArray(), [config.context])) : path
       const pathWithChoiceContext = config?.choiceContext ? new Path([], [config.choiceContext]) : config?.context ? new Path([], [config.context]) : path
       let inject = choices.map(c => {
         if (c.type === choice.type) {

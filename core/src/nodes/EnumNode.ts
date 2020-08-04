@@ -1,5 +1,5 @@
 import { INode, Base } from './Node'
-import { Path } from '../model/Path'
+import { Path, ModelPath } from '../model/Path'
 import { COLLECTIONS, locale } from '../Registries'
 import { getId, TreeView } from '../view/TreeView'
 import { ValidationOption } from '../ValidationOption'
@@ -63,7 +63,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
       }
       return value
     },
-    renderRaw(path: Path, view: TreeView, inputId?: string) {
+    renderRaw(path: ModelPath, view: TreeView, inputId?: string) {
       const valuesList = getValues()
       inputId = inputId ?? view.register(el => {
         (el as HTMLSelectElement).value = defaultValue ?? ''
@@ -78,7 +78,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
         </datalist>`
       }
       const pathWithContext = (typeof values === 'string') ?
-        new Path(path.getArray(), [values], path.getModel()) : path
+        new ModelPath(path.getModel(), new Path(path.getArray(), [values])) : path
       return `<select data-id="${inputId}">
         ${defaultValue ? `` : `<option value="">${locale('unset')}</option>`}
         ${valuesList.map(v =>

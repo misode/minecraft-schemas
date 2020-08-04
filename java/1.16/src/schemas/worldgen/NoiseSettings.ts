@@ -137,7 +137,7 @@ SCHEMAS.register('generator_layer', Mod(ObjectNode({
 }))
 
 export const NoiseSettingsPresets = (node: INode<any>) => ObjectOrPreset(
-  EnumNode('dimension_generator_setting_preset', { search: true, additional: true, validation: { validator: 'resource', params: { pool: COLLECTIONS.get('dimension_generator_setting_preset') } } }),
+  Resource(EnumNode('dimension_generator_setting_preset', { search: true, additional: true, validation: { validator: 'resource', params: { pool: COLLECTIONS.get('dimension_generator_setting_preset') } } })),
   node,
   {
     'minecraft:overworld': defaultSettings,

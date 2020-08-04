@@ -31,7 +31,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
           [Switch]: path => path.push('type'),
           [Case]: {
             'minecraft:fixed': {
-              biome: EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })
+              biome: Resource(EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))
             },
             'minecraft:multi_noise': {
               preset: EnumNode(['nether']),
@@ -46,7 +46,7 @@ SCHEMAS.register('dimension', Mod(ObjectNode({
             'minecraft:checkerboard': {
               scale: NumberNode({ integer: true, min: 0, max: 62 }),
               biomes: ListNode(
-                EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })
+                Resource(EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))
               )
             },
             'minecraft:vanilla_layered': {

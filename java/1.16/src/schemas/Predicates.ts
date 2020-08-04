@@ -69,7 +69,7 @@ SCHEMAS.register('location_predicate', ObjectNode({
 }, { context: 'location' }))
 
 SCHEMAS.register('statistic_predicate', ObjectNode({
-  type: EnumNode('stat_type', { defaultValue: 'minecraft:custom', validation: { validator: 'resource', params: { pool: 'minecraft:stat_type' } } }),
+  type: Resource(EnumNode('stat_type', { defaultValue: 'minecraft:custom', validation: { validator: 'resource', params: { pool: 'minecraft:stat_type' } } })),
   stat: Force(StringNode()),
   value: Force(Range()),
   [Switch]: path => path.push('type'),

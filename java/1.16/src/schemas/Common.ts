@@ -11,7 +11,7 @@ import {
 } from '@mcschema/core'
 
 export const BlockState = ObjectNode({
-  Name: Force(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
+  Name: Force(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
   Properties: MapNode(
     StringNode(),
     StringNode(),
@@ -20,7 +20,7 @@ export const BlockState = ObjectNode({
 })
 
 export const FluidState = ObjectNode({
-  Name: Force(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } })),
+  Name: Force(Resource(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } }))),
   Properties: Force(MapNode(
     StringNode(),
     StringNode()

@@ -106,8 +106,8 @@ SCHEMAS.register('loot_function', ObjectNode({
   [Switch]: path => path.push('function'),
   [Case]: {
     'minecraft:apply_bonus': {
-      enchantment: Force(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })),
-      formula: Resource(EnumNode('loot_table_apply_bonus_formula', { defaultValue: 'minecraft:uniform_bonus_count', validation: { validator: 'resource', params: { pool: COLLECTIONS.get('loot_table_apply_bonus_formula') } } })),
+      enchantment: Force(Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } }))),
+      formula: Resource(Resource(EnumNode('loot_table_apply_bonus_formula', { defaultValue: 'minecraft:uniform_bonus_count', validation: { validator: 'resource', params: { pool: COLLECTIONS.get('loot_table_apply_bonus_formula') } } }))),
       parameters: Mod(ObjectNode({
         bonusMultiplier: Mod(NumberNode(), {
           enabled: (path: Path) => path.pop().push('formula').get() === 'minecraft:uniform_bonus_count'
@@ -147,7 +147,7 @@ SCHEMAS.register('loot_function', ObjectNode({
     },
     'minecraft:enchant_randomly': {
       enchantments: ListNode(
-        EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })
+        Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } }))
       ),
       ...conditions
     },
@@ -158,7 +158,7 @@ SCHEMAS.register('loot_function', ObjectNode({
     },
     'minecraft:exploration_map': {
       destination: Force(EnumNode('structure_feature')),
-      decoration: Force(EnumNode('map_decoration', { validation: { validator: 'resource', params: { pool: COLLECTIONS.get('map_decoration') } } })),
+      decoration: Force(Resource(EnumNode('map_decoration', { validation: { validator: 'resource', params: { pool: COLLECTIONS.get('map_decoration') } } }))),
       zoom: NumberNode({ integer: true }),
       search_radius: NumberNode({ integer: true }),
       skip_existing_chunks: BooleanNode(),
@@ -231,7 +231,7 @@ SCHEMAS.register('loot_function', ObjectNode({
 }, { category: 'function', context: 'function' }))
 
 SCHEMAS.register('attribute_modifier', ObjectNode({
-  attribute: EnumNode('attribute', { validation: { validator: 'resource', params: { pool: 'minecraft:attribute' } } }),
+  attribute: Resource(EnumNode('attribute', { validation: { validator: 'resource', params: { pool: 'minecraft:attribute' } } })),
   name: StringNode(),
   amount: Range({ allowBinomial: true }),
   operation: EnumNode(['addition', 'multiply_base', 'multiply_total']),

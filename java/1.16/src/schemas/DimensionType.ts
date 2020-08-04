@@ -43,13 +43,13 @@ SCHEMAS.register('dimension_type', Mod(ObjectNode({
   ambient_light: Force(NumberNode()),
   fixed_time: NumberNode({ integer: true }),
   logical_height: Force(NumberNode({ integer: true })),
-  infiniburn: Force(EnumNode('dimension_type_infiniburn', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$tag/block' } } }))
+  infiniburn: Force(Resource(EnumNode('dimension_type_infiniburn', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$tag/block' } } })))
 }, { context: 'dimension_type' }), {
   default: () => defaultType
 }))
 
 export const DimensionTypePresets = (node: INode<any>) => ObjectOrPreset(
-  EnumNode('dimension_type', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension_type' } } }),
+  Resource(EnumNode('dimension_type', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension_type' } } })),
   node,
   {
     'minecraft:overworld': defaultType,

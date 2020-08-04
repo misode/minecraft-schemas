@@ -126,7 +126,7 @@ SCHEMAS.register('advancement_criteria', ObjectNode({
       },
       'minecraft:effects_changed': {
         effects: MapNode(
-          EnumNode('mob_effect', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:mob_effect' } } }),
+          Resource(EnumNode('mob_effect', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:mob_effect' } } })),
           ObjectNode({
             amplifier: Range(),
             duration: Range()

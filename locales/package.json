@@ -1,12 +1,12 @@
 {
   "name": "@mcschema/locales",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Locales for Minecraft schemas",
   "keywords": [],
   "author": "Misode",
   "license": "MIT",
   "publishConfig": {
-      "access": "public"
+    "access": "public"
   },
   "repository": {
     "type": "git",

@@ -2,6 +2,7 @@ import { INode, Base } from './Node'
 import { Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { Errors } from '../model/Errors'
+import { quoteString } from '../utils'
 
 export const Switch = Symbol('switch')
 export const Case = Symbol('case')
@@ -110,7 +111,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       const existingKeys = Object.keys(typeof value === 'object' ? value : {})
       return Object.keys(activeFields)
         .filter(k => !existingKeys.includes(k))
-        .map(k => `"${k}"`)
+        .map(quoteString)
     },
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'object') {

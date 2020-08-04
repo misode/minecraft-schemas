@@ -75,8 +75,10 @@ export interface INode<T = any> {
    * - For `BooleanNode`: Returns a list containing `false` and `true`.
    * - For `ChoiceNode`: Returns suggestions of the choice corresponding to the type of `value`.
    * - For `EnumNode`: Returns all the options.
-   * - For `MapNode`: Returns all the suggestions provided by the key node.
-   * - For `ObjectNode` and `RangeNode`: Returns all possible keys that can be used under this object. 
+   * - For `MapNode`: Returns all the suggestions provided by the key node, surrounded in double 
+   * quotation marks.
+   * - For `ObjectNode`: Returns all possible keys that can be used under this object, 
+   * surrounded in double quotation marks. 
    * Keys existing in the `value` will be excluded from the suggestion.
    * - For other nodes: Returns an empty list.
    * @param path The path of this node

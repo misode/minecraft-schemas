@@ -1,5 +1,6 @@
 import { INode, Base } from './Node'
 import { ValidationOption } from '../ValidationOption'
+import { quoteString } from '../utils'
 
 export type IMap = {
   [name: string]: any
@@ -57,7 +58,9 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
         </div>
       </div>`
     },
-    suggest: (path, value) => keys.suggest(path, value),
+    suggest: (path, value) => keys
+      .suggest(path, value)
+      .map(quoteString),
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'object') {
         value = {}

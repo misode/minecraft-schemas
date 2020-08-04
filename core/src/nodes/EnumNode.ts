@@ -3,6 +3,7 @@ import { Path } from '../model/Path'
 import { COLLECTIONS, locale } from '../Registries'
 import { getId, TreeView } from '../view/TreeView'
 import { ValidationOption } from '../ValidationOption'
+import { quoteString } from '../utils'
 
 type EnumNodeConfig = {
   /** The default value */
@@ -85,7 +86,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
         ).join('')}
       </select>`
     },
-    suggest: () => getValues().map(v => `"${v}"`),
+    suggest: () => getValues().map(quoteString),
     getState(el: Element) {
       return el.getElementsByTagName(search ? 'input' : 'select')[0].value
     },

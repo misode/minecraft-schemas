@@ -54,7 +54,7 @@ export const Range = (config?: RangeConfig) => ChoiceNode([
   ...(config?.allowBinomial ? [{
     type: 'binomial',
     node: ObjectNode({
-      type: Force(Resource(StringNode({ pattern: /^minecraft:binomial$/ }))),
+      type: Force(Resource(EnumNode(['minecraft:binomial']))),
       n: Force(NumberNode({ integer: true, min: 0 })),
       p: Force(NumberNode({ min: 0, max: 1 }))
     }),

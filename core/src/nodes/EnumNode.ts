@@ -1,9 +1,9 @@
 import { INode, Base } from './Node'
 import { Path, ModelPath } from '../model/Path'
 import { COLLECTIONS, locale } from '../Registries'
-import { getId, TreeView } from '../view/TreeView'
+import { TreeView } from '../view/TreeView'
 import { ValidationOption } from '../ValidationOption'
-import { quoteString } from '../utils'
+import { quoteString, hexId } from '../utils'
 
 type EnumNodeConfig = {
   /** The default value */
@@ -69,7 +69,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
         (el as HTMLSelectElement).value = defaultValue ?? ''
       })
       if (search) {
-        const datalistId = getId()
+        const datalistId = hexId()
         return `<input list="${datalistId}" data-id="${inputId}">
         <datalist id="${datalistId}">
           ${valuesList.map(v => 

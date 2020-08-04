@@ -332,5 +332,8 @@
   "nbt_operation.source": "ソース",
   "nbt_operation.target": "ターゲット",
   "pattern": "パターン",
-  "placeholder.advancement": "進捗のID"
+  "placeholder.advancement": "進捗のID",
+  "placeholder.block_state": "block stateのキー",
+  "placeholder.criteria": "条件のID",
+  "placeholder.dimension": "ディメンションのID"
 }

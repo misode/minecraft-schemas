@@ -1,6 +1,6 @@
 {
   "name": "@mcschema/core",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Schemas to parse and render JSON structures",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -26,9 +26,12 @@
     "typescript": "^3.9.3"
   },
   "publishConfig": {
-      "access": "public"
+    "access": "public"
   },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "dependencies": {
+    "@mcschema/locales": "^0.1.4"
+  }
 }

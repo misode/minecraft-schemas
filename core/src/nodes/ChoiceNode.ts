@@ -2,10 +2,8 @@ import { INode, Base, NodeOptions } from './Node'
 import { Path } from '../model/Path'
 import { ListNode } from './ListNode'
 
-type ChoiceType = 'list' | 'object' | 'boolean' | 'number' | 'string'
-
 type Choice = {
-  type: ChoiceType
+  type: string
   node: INode<any>
   match?: (value: any) => boolean
   change?: (old: any) => any
@@ -102,7 +100,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
   }
 }
 
-const XOrList = (x: ChoiceType): ((node: INode<any>, config?: ChoiceNodeConfig) => INode<any>) => ((node, config) => {
+const XOrList = (x: string): ((node: INode<any>, config?: ChoiceNodeConfig) => INode<any>) => ((node, config) => {
   return ChoiceNode([
     {
       type: x,

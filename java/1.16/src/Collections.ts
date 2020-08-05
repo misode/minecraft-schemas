@@ -514,3 +514,18 @@ COLLECTIONS.register('generation_step', [
   'air',
   'liquid'
 ])
+
+COLLECTIONS.register('loot_context_type', [
+  'minecraft:empty',
+  'minecraft:chest',
+  'minecraft:command',
+  'minecraft:selector',
+  'minecraft:fishing',
+  'minecraft:entity',
+  'minecraft:gift',
+  'minecraft:barter',
+  'minecraft:advancement_reward',
+  'minecraft:advancement_entity',
+  'minecraft:generic',
+  'minecraft:block'
+])

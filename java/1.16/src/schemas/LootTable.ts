@@ -32,6 +32,7 @@ const functionsAndConditions = {
 }
 
 SCHEMAS.register('loot_table', Mod(ObjectNode({
+  type: EnumNode('loot_context_type', { validation: { validator: "resource", params: { pool: COLLECTIONS.get('loot_context_type') } } }),
   pools: Force(ListNode(
     ObjectNode({
       rolls: Force(Range({ allowBinomial: true, integer: true, min: 1 })),

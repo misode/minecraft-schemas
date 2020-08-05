@@ -1,6 +1,7 @@
 import { INode, Base } from './Node'
 import { Path, ModelPath } from '../model/Path'
 import { ListNode } from './ListNode'
+import { SwitchNode } from './SwitchNode'
 
 type Choice = {
   type: string
@@ -21,45 +22,24 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
   const isValid = (choice: Choice, value: any) => {
     if (choice.match) {
       return choice.match(value)
-    } 
+    }
     switch (choice.type) {
       case 'list': return Array.isArray(value)
       case 'object': return typeof value === 'object' && !(value instanceof Array)
       default: return typeof value === choice.type
     }
   }
-  const activeChoice = (value: any): Choice | undefined => {
-    const index = choices.map(choice => isValid(choice, value)).indexOf(true)
-    if (index === -1) return undefined
-    return choices[index]
-  }
+  const switchNode = SwitchNode(choices.map(c => ({
+    type: c.type,
+    match: (path) => isValid(c, path.get()),
+    node: c.node
+  })))
 
   return {
-    ...Base,
-    default: () => choices[0].node.default(),
+    ...switchNode,
     keep: () => true,
-    navigate(path, index, value) {
-      const nextIndex = index + 1
-      if (path.getArray().length <= nextIndex) {
-        return this
-      }
-      const node = activeChoice(value)?.node
-      return node?.navigate(path, index, value)
-    },
-    pathPush(path, key) {
-      return activeChoice(path.get())
-        ?.node
-        ?.pathPush(path, key) ?? path
-    },
-    transform(path, value, view) {
-      const choice = activeChoice(value)
-      if (choice === undefined) {
-        return value
-      }
-      return choice.node.transform(path, value, view)
-    },
     render(path, value, view, options) {
-      const choice = activeChoice(value) ?? choices[0]
+      const choice = switchNode.activeCase(path) ?? choices[0]
       const pathWithContext = (config?.context) ?
         new ModelPath(path.getModel(), new Path(path.getArray(), [config.context])) : path
       const pathWithChoiceContext = config?.choiceContext ? new Path([], [config.choiceContext]) : config?.context ? new Path([], [config.context]) : path
@@ -80,14 +60,8 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
         inject
       })
     },
-    suggest(path, value) {
-      return choices
-        .filter(c => value === undefined || isValid(c, value))
-        .map(c => c.node.suggest(path, value))
-        .reduce((p, c) => p.concat(c))
-    },
     validate(path, value, errors, options) {
-      let choice = activeChoice(value)
+      let choice = switchNode.activeCase(path)
       if (choice === undefined) {
         if (options.loose) {
           choice = choices[0]
@@ -96,11 +70,6 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
         }
       }
       return choice.node.validate(path, value, errors, options)
-    },
-    validationOption(value) {
-      return activeChoice(value)
-        ?.node
-        ?.validationOption(value)
     }
   }
 }

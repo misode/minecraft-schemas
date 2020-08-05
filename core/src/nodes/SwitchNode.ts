@@ -10,12 +10,6 @@ type Case<T> = {
  * Node that allows multiple types
  */
 export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
-  const activeCase = (path: ModelPath): Case<T> | undefined => {
-    const index = cases.map(c => c.match(path)).indexOf(true)
-    if (index === -1) return undefined
-    return cases[index]
-  }
-
   return {
     ...Base,
     default: () => cases[0].node.default(),
@@ -24,17 +18,17 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
       if (path.getArray().length <= nextIndex) {
         return this
       }
-      const node = activeCase(path)?.node
+      const node = this.activeCase(path)?.node
       return node?.navigate(path, index, value)
     },
     pathPush(path, key) {
-      return activeCase(path.get())?.node.pathPush(path, key) ?? path
+      return this.activeCase(path)?.node.pathPush(path, key) ?? path
     },
     transform(path, value, view) {
-      return activeCase(path)?.node.transform(path, value, view) ?? value
+      return this.activeCase(path)?.node.transform(path, value, view) ?? value
     },
     render(path, value, view, options) {
-      return (activeCase(path) ?? cases[cases.length - 1])
+      return (this.activeCase(path) ?? cases[cases.length - 1])
         .node.render(path, value, view, options)
     },
     suggest(path, value) {
@@ -44,11 +38,21 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
         .reduce((p, c) => p.concat(c))
     },
     validate(path, value, errors, options) {
-      let c = activeCase(path)
+      let c = this.activeCase(path)
       if (c === undefined) {
         return value
       }
       return c.node.validate(path, value, errors, options)
+    },
+    validationOption(path) {
+      return this.activeCase(path)
+        ?.node
+        ?.validationOption(path)
+    },
+    activeCase(path: ModelPath): Case<T> | undefined {
+      const index = cases.map(c => c.match(path)).indexOf(true)
+      if (index === -1) return undefined
+      return cases[index]
     }
   }
 }

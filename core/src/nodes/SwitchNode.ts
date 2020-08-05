@@ -22,11 +22,7 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
       return node?.navigate(path, index, value)
     },
     pathPush(path, key) {
-<<<<<<< HEAD
       return this.activeCase(path)?.node.pathPush(path, key) ?? path
-=======
-      return activeCase(path)?.node.pathPush(path, key) ?? path
->>>>>>> 5fc6536... Make loot table schema context-aware
     },
     transform(path, value, view) {
       return this.activeCase(path)?.node.transform(path, value, view) ?? value

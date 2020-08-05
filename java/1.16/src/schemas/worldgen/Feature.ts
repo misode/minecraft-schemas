@@ -75,9 +75,9 @@ const Feature = ChoiceNode([
 ], { choiceContext: 'feature' })
 
 SCHEMAS.register('configured_feature', Mod(ObjectNode({
-  name: Force(Resource(EnumNode('worldgen/feature', 'minecraft:tree'))),
+  type: Force(Resource(EnumNode('worldgen/feature', 'minecraft:tree'))),
   config: Force(ObjectNode({
-    [Switch]: path => path.pop().push('name'),
+    [Switch]: path => path.pop().push('type'),
     [Case]: {
       'minecraft:bamboo': {
         probability: Force(NumberNode({ min: 0, max: 1 }))
@@ -279,16 +279,16 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
   }, { context: 'feature' }))
 }), {
   default: () => ({
-    name: 'minecraft:decorated',
+    type: 'minecraft:decorated',
     config: {
       decorator: {
-        name: 'minecraft:count',
+        type: 'minecraft:count',
         config: {
           count: 4
         }
       },
       feature: {
-        name: 'minecraft:tree',
+        type: 'minecraft:tree',
         config: {
           max_water_depth: 0,
           ignore_vines: true,

@@ -19,9 +19,9 @@ const templatePoolConfig: NodeChildren = {
 }
 
 SCHEMAS.register('configured_structure_feature', Mod(ObjectNode({
-  name: Force(Resource(EnumNode('worldgen/structure_feature'))),
+  type: Force(Resource(EnumNode('worldgen/structure_feature'))),
   config: Force(ObjectNode({
-    [Switch]: path => path.pop().push('name'),
+    [Switch]: path => path.pop().push('type'),
     [Case]: {
       'minecraft:bastion_remnant': templatePoolConfig,
       'minecraft:buried_treasure': {
@@ -49,7 +49,7 @@ SCHEMAS.register('configured_structure_feature', Mod(ObjectNode({
   }))
 }, { context: 'structure_feature' }), {
   default: () => ({
-    name: 'minecraft:bastion_remnant',
+    type: 'minecraft:bastion_remnant',
     config: {
       start_pool: 'minecraft:bastion/starts',
       size: 6

@@ -9,7 +9,7 @@ import {
 import { BlockState } from '../Common'
 
 SCHEMAS.register('configured_surface_builder', Mod(ObjectNode({
-  name: Force(Resource(EnumNode('worldgen/surface_builder'))),
+  type: Force(Resource(EnumNode('worldgen/surface_builder'))),
   config: Force(ObjectNode({
     top_material: Force(BlockState),
     under_material: Force(BlockState),
@@ -17,7 +17,7 @@ SCHEMAS.register('configured_surface_builder', Mod(ObjectNode({
   }))
 }, { context: 'surface_builder' }), {
   default: () => ({
-    name: 'minecraft:default',
+    type: 'minecraft:default',
     config: {
       top_material: {
         Name: 'minecraft:grass_block',

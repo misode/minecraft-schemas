@@ -9,13 +9,13 @@ import {
 } from '@mcschema/core'
 
 SCHEMAS.register('configured_carver', Mod(ObjectNode({
-  name: Force(Resource(EnumNode('worldgen/carver', 'minecraft:cave'))),
+  type: Force(Resource(EnumNode('worldgen/carver', 'minecraft:cave'))),
   config: Force(ObjectNode({
     probability: Force(NumberNode({ min: 0, max: 1 }))
   }))
 }, { context: 'carver' }), {
   default: () => ({
-    name: 'minecraft:cave',
+    type: 'minecraft:cave',
     config: {
       probability: 0.1
     }

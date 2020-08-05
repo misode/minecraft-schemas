@@ -27,9 +27,9 @@ const CountConfig: NodeChildren = {
 }
 
 SCHEMAS.register('configured_decorator', ObjectNode({
-  name: Force(Resource(EnumNode('worldgen/decorator', 'minecraft:count'))),
+  type: Force(Resource(EnumNode('worldgen/decorator', 'minecraft:count'))),
   config: Force(ObjectNode({
-    [Switch]: path => path.pop().push('name'),
+    [Switch]: path => path.pop().push('type'),
     [Case]: {
       'minecraft:carving_mask': {
         step: Force(EnumNode('generation_step', 'air')),

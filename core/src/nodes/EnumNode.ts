@@ -52,7 +52,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
         ${options?.prepend ?? ''}
         <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}
-        ${this.renderRaw(path, view, pathWithContext, inputId)}
+        ${this.renderRaw(path, view, inputId)}
       </div>`
     },
     validate(path, value, errors, options) {
@@ -66,7 +66,7 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
       }
       return value
     },
-    renderRaw(path: ModelPath, view: TreeView, pathWithContext: Path, inputId?: string) {
+    renderRaw(path: ModelPath, view: TreeView, inputId?: string) {
       const valuesList = getValues()
       inputId = inputId ?? view.register(el => {
         (el as HTMLSelectElement).value = defaultValue ?? ''
@@ -80,6 +80,8 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
           ).join('')}
         </datalist>`
       }
+      const pathWithContext = (typeof values === 'string') ?
+        new ModelPath(path.getModel(), new Path(path.getArray(), [values])) : path
       return `<select data-id="${inputId}">
         ${defaultValue ? `` : `<option value="">${locale('unset')}</option>`}
         ${valuesList.map(v =>

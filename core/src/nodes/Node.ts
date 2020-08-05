@@ -113,7 +113,7 @@ export interface INode<T = any> {
    * - For `ChoiceNode`: Returns the corresponding `validationOption` of the matched choice's node.
    * - For other nodes: Returns `undefined`.
    */
-  validationOption: (value: T) => ValidationOption | undefined
+  validationOption: (path: ModelPath) => ValidationOption | undefined
 
   [custom: string]: any
 }

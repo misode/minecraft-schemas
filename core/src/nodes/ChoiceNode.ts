@@ -70,6 +70,11 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
         }
       }
       return choice.node.validate(path, value, errors, options)
+    },
+    validationOption(path) {
+      return switchNode.activeCase(path)
+        ?.node
+        ?.validationOption(path)
     }
   }
 }

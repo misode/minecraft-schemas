@@ -125,6 +125,7 @@ COLLECTIONS.register('dimension_type_infiniburn', [
 
 COLLECTIONS.register('entity_source', [
   'this',
+  'direct_killer',
   'killer',
   'killer_player'
 ])
@@ -132,6 +133,7 @@ COLLECTIONS.register('entity_source', [
 COLLECTIONS.register('copy_source', [
   'block_entity',
   'this',
+  'direct_killer',
   'killer',
   'killer_player'
 ])

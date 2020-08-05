@@ -7,32 +7,70 @@ import {
   Mod,
   NumberNode,
   ObjectNode,
-  Path,
   Reference,
   Resource,
   SCHEMAS,
   StringNode,
-  Switch,
-  COLLECTIONS,
   StringOrList,
+  Switch,
+  SwitchNode,
+  COLLECTIONS,
+  INode,
+  Path,
+  ModelPath,
+  NestedNodeChildren,
+  MapNode,
 } from '@mcschema/core'
+import {
+  LootTableTypes,
+  LootContext,
+  LootFunctions,
+  LootConditions,
+  LootEntitySources,
+  LootCopySources
+} from '../LootContext'
 import { Range } from './Common'
+import { ConditionCases } from './Condition'
 
-const conditions = {
+const conditions: NestedNodeChildren = {
   conditions: ListNode(
-    Reference('condition')
+    Reference('loot_condition')
   )
 }
 
-const functionsAndConditions = {
+const functionsAndConditions: NestedNodeChildren = {
   functions: ListNode(
     Reference('loot_function')
   ),
   ...conditions
 }
 
+function compileSwitchNode(contextMap: Map<string, LootContext[]>, collectionID: string, getNode: (type: string | string[]) => INode): INode {
+  const cases: { match: (path: ModelPath) => boolean, node: INode }[] = []
+  const getAvailableOptions = (providedContext: LootContext[]) => COLLECTIONS
+    .get(collectionID)
+    .filter(t => {
+      const requiredContext = contextMap.get(t) ?? []
+      return requiredContext.every(c => providedContext.includes(c))
+    })
+  for (const [tableType, { allows, requires }] of LootTableTypes) {
+    const providedContext = [...allows, ...requires]
+    cases.push({
+      match: path => path.getModel().get(new Path(['type'])) === tableType,
+      node: getNode(getAvailableOptions(providedContext))
+    })
+  }
+  cases.push({ match: _ => true, node: getNode(collectionID) })
+  return SwitchNode(cases)
+}
+
+const conditionSwtichNode = compileSwitchNode(LootConditions, 'loot_condition_type', type => Resource(EnumNode(type, { defaultValue: 'minecraft:random_chance', validation: { validator: 'resource', params: { pool: type instanceof Array ? type : `minecraft:loot_condition_type` } } })))
+const functionSwtichNode = compileSwitchNode(LootFunctions, 'loot_function_type', type => Resource(EnumNode(type, { defaultValue: 'minecraft:set_count', validation: { validator: 'resource', params: { pool: type instanceof Array ? type : `minecraft:loot_function_type` } } })))
+const entitySourceSwtichNode = compileSwitchNode(LootEntitySources, 'entity_source', type => EnumNode(type, 'this'))
+const copySourceSwtichNode = compileSwitchNode(LootCopySources, 'copy_source', type => EnumNode(type, 'this'))
+
 SCHEMAS.register('loot_table', Mod(ObjectNode({
-  type: EnumNode('loot_context_type', { validation: { validator: "resource", params: { pool: COLLECTIONS.get('loot_context_type') } } }),
+  type: Resource(EnumNode('loot_context_type', { validation: { validator: "resource", params: { pool: COLLECTIONS.get('loot_context_type') } } })),
   pools: Force(ListNode(
     ObjectNode({
       rolls: Force(Range({ allowBinomial: true, integer: true, min: 1 })),
@@ -104,7 +142,7 @@ SCHEMAS.register('loot_entry', ObjectNode({
 }, { context: 'loot_entry' }))
 
 SCHEMAS.register('loot_function', ObjectNode({
-  function: Resource(EnumNode('loot_function_type', { defaultValue: 'minecraft:set_count', validation: { validator: 'resource', params: { pool: 'minecraft:loot_function_type' } } })),
+  function: functionSwtichNode,
   [Switch]: path => path.push('function'),
   [Case]: {
     'minecraft:apply_bonus': {
@@ -126,11 +164,11 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:copy_name': {
-      source: EnumNode('copy_source', 'this'),
+      source: copySourceSwtichNode,
       ...conditions
     },
     'minecraft:copy_nbt': {
-      source: EnumNode('copy_source', 'this'),
+      source: copySourceSwtichNode,
       ops: ListNode(
         ObjectNode({
           source: Force(StringNode({ validation: { validator: 'nbt_path', params: { category: { getter: 'copy_source', path: ['pop', 'pop', 'pop', { push: 'source' }] } } } })),
@@ -167,7 +205,7 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:fill_player_head': {
-      entity: EnumNode('entity_source'),
+      entity: entitySourceSwtichNode,
       ...conditions
     },
     'minecraft:limit_count': {
@@ -204,7 +242,7 @@ SCHEMAS.register('loot_function', ObjectNode({
       seed: NumberNode({ integer: true })
     },
     'minecraft:set_lore': {
-      entity: Force(EnumNode('entity_source', 'this')),
+      entity: Force(entitySourceSwtichNode),
       lore: Force(ListNode(
         Reference('text_component')
       )),
@@ -212,7 +250,7 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:set_name': {
-      entity: Force(EnumNode('entity_source', 'this')),
+      entity: Force(entitySourceSwtichNode),
       name: Force(Reference('text_component')),
       ...conditions
     },
@@ -231,6 +269,25 @@ SCHEMAS.register('loot_function', ObjectNode({
     }
   }
 }, { category: 'function', context: 'function' }))
+
+SCHEMAS.register('loot_condition', Mod(ObjectNode({
+  condition: conditionSwtichNode,
+  [Switch]: path => path.push('condition'),
+  [Case]: {
+    ...ConditionCases,
+    'minecraft:entity_properties': {
+      entity: entitySourceSwtichNode,
+      predicate: Reference('entity_predicate')
+    },
+    'minecraft:entity_scores': {
+      entity: entitySourceSwtichNode,
+      scores: MapNode(
+        StringNode({ validation: { validator: 'objective' } }),
+        Range({ forceRange: true })
+      )
+    }
+  }
+}), { category: 'predicate', context: 'condition' }))
 
 SCHEMAS.register('attribute_modifier', ObjectNode({
   attribute: Resource(EnumNode('attribute', { validation: { validator: 'resource', params: { pool: 'minecraft:attribute' } } })),

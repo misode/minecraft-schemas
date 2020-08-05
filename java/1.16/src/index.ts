@@ -16,3 +16,5 @@ import './schemas/worldgen/ProcessorList'
 import './schemas/worldgen/StructureFeature'
 import './schemas/worldgen/SurfaceBuilder'
 import './schemas/worldgen/TemplatePool'
+
+export * as lootContext from './LootContext'

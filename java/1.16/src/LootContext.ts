@@ -13,19 +13,19 @@ export const enum LootContext {
 
 export type LootContextRegistration = { requires: LootContext[], allows: LootContext[] }
 
-export const LootContextTypes = new Map<string, LootContextRegistration>([
+export const LootTableTypes = new Map<string, LootContextRegistration>([
     ['minecraft:advancement_entity', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
     ['minecraft:advancement_reward', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
     ['minecraft:barter', { requires: [LootContext.ThisEntity], allows: [] }],
+    ['minecraft:block', { requires: [LootContext.BlockState, LootContext.Origin, LootContext.Tool], allows: [LootContext.BlockEntity, LootContext.ExplosionRadius, LootContext.ThisEntity] }],
     ['minecraft:chest', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:command', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:empty', { requires: [], allows: [] }],
     ['minecraft:entity', { requires: [LootContext.DamageSource, LootContext.Origin, LootContext.ThisEntity], allows: [LootContext.DirectKillerEntity, LootContext.KillerEntity, LootContext.LastDamagePlayer] }],
     ['minecraft:fishing', { requires: [LootContext.Origin, LootContext.Tool], allows: [LootContext.ThisEntity] }],
-    ['minecraft:gift', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
-    ['minecraft:selector', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:generic', { requires: [LootContext.DamageSource, LootContext.BlockEntity, LootContext.BlockState, LootContext.DirectKillerEntity, LootContext.ExplosionRadius, LootContext.KillerEntity, LootContext.LastDamagePlayer, LootContext.Origin, LootContext.ThisEntity, LootContext.Tool], allows: [] }],
-    ['minecraft:block', { requires: [LootContext.BlockState, LootContext.Origin, LootContext.Tool], allows: [LootContext.BlockEntity, LootContext.ExplosionRadius, LootContext.ThisEntity] }]
+    ['minecraft:gift', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
+    ['minecraft:selector', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }]
 ])
 
 /**

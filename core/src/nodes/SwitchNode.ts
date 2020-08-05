@@ -22,7 +22,11 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
       return node?.navigate(path, index, value)
     },
     pathPush(path, key) {
+<<<<<<< HEAD
       return this.activeCase(path)?.node.pathPush(path, key) ?? path
+=======
+      return activeCase(path)?.node.pathPush(path, key) ?? path
+>>>>>>> 5fc6536... Make loot table schema context-aware
     },
     transform(path, value, view) {
       return this.activeCase(path)?.node.transform(path, value, view) ?? value
@@ -32,10 +36,16 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
         .node.render(path, value, view, options)
     },
     suggest(path, value) {
+      if (value === undefined) {
+        return cases
+          .filter(c => c.match(path))
+          .map(c => c.node.suggest(path, value))
+          .reduce((p, c) => p.concat(c))
+      }
       return cases
-        .filter(c => value === undefined || c.match(path))
-        .map(c => c.node.suggest(path, value))
-        .reduce((p, c) => p.concat(c))
+        .find(c => c.match(path))
+        ?.node
+        .suggest(path, value) ?? []
     },
     validate(path, value, errors, options) {
       let c = this.activeCase(path)
@@ -47,7 +57,7 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
     validationOption(path) {
       return this.activeCase(path)
         ?.node
-        ?.validationOption(path)
+        .validationOption(path)
     },
     activeCase(path: ModelPath): Case<T> | undefined {
       const index = cases.map(c => c.match(path)).indexOf(true)

@@ -12,6 +12,7 @@ import {
   Switch,
   Case,
   Mod,
+  COLLECTIONS,
 } from '@mcschema/core'
 import { Range } from './Common'
 
@@ -59,9 +60,7 @@ SCHEMAS.register('location_predicate', ObjectNode({
     z: Range()
   }, { collapse: true }),
   biome: Resource(EnumNode('worldgen/biome', { search: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
-  feature: Mod(Resource(EnumNode('worldgen/structure_feature', { search: true })), {
-    transform: (path, value, view) => value.replace(/^minecraft:/, '')
-  }),
+  feature: EnumNode(COLLECTIONS.get('worldgen/structure_feature').map(v => v.slice(10)), { search: true }),
   dimension: Resource(EnumNode('dimension', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension' } } })),
   light: ObjectNode({
     light: Range()

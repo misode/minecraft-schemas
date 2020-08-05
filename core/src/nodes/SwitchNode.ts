@@ -32,16 +32,12 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
         .node.render(path, value, view, options)
     },
     suggest(path, value) {
-      if (value === undefined) {
-        return cases
+      return this.activeCase(path)
+        ?.node
+        .suggest(path, value) ?? cases
           .filter(c => c.match(path))
           .map(c => c.node.suggest(path, value))
           .reduce((p, c) => p.concat(c))
-      }
-      return cases
-        .find(c => c.match(path))
-        ?.node
-        .suggest(path, value) ?? []
     },
     validate(path, value, errors, options) {
       let c = this.activeCase(path)

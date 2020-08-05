@@ -11,6 +11,7 @@ import {
   StringNode,
   Switch,
   Case,
+  Mod,
 } from '@mcschema/core'
 import { Range } from './Common'
 
@@ -58,7 +59,9 @@ SCHEMAS.register('location_predicate', ObjectNode({
     z: Range()
   }, { collapse: true }),
   biome: Resource(EnumNode('worldgen/biome', { search: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
-  feature: Resource(EnumNode('worldgen/structure_feature', { search: true })),
+  feature: Mod(Resource(EnumNode('worldgen/structure_feature', { search: true })), {
+    transform: (path, value, view) => value.replace(/^minecraft:/, '')
+  }),
   dimension: Resource(EnumNode('dimension', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension' } } })),
   light: ObjectNode({
     light: Range()

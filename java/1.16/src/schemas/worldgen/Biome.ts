@@ -20,8 +20,9 @@ SCHEMAS.register('biome', Mod(ObjectNode({
   downfall: NumberNode(),
   precipitation: EnumNode(['none', 'rain', 'snow'], 'none'),
   category: EnumNode('biome_category'),
-  sky_color: NumberNode({ color: true }),
+  player_spawn_friendly: Force(BooleanNode({ radio: true })),
   effects: Force(ObjectNode({
+    sky_color: NumberNode({ color: true }),
     fog_color: NumberNode({ color: true }),
     water_color: NumberNode({ color: true }),
     water_fog_color: NumberNode({ color: true }),
@@ -107,8 +108,9 @@ SCHEMAS.register('biome', Mod(ObjectNode({
     scale: 0.05,
     temperature: 0.8,
     downfall: 0.4,
-    sky_color: 7907327,
+    player_spawn_friendly: false,
     effects: {
+      sky_color: 7907327,
       fog_color: 12638463,
       water_color: 4159204,
       water_fog_color: 329011

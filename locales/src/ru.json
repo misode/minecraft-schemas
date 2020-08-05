@@ -252,8 +252,6 @@
   "dimension_type.natural.help": "Если «Да», из порталов будут появляться зомбифицированные пиглины. Если «Нет», компас и часы будут крутиться случайным образом.",
   "dimension_type.piglin_safe": "Пиглины не превращаются в зомби",
   "dimension_type.respawn_anchor_works": "Якорь Возрождения Работает",
-  "dimension_type.shrunk": "Сжатое",
-  "dimension_type.shrunk.help": "Определяет, должны ли координаты уменьшаться в 8 раз.",
   "dimension_type.ultrawarm": "Горячее",
   "dimension_type.ultrawarm.help": "Определяет, испаряется ли вода и высыхают ли губки.",
   "distance.absolute": "Абсолютное",

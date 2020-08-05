@@ -46,6 +46,11 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
       const node = activeChoice(value)?.node
       return node?.navigate(path, index, value)
     },
+    pathPush(path, key) {
+      return activeChoice(path.get())
+        ?.node
+        ?.pathPush(path, key) ?? path
+    },
     transform(path, value, view) {
       const choice = activeChoice(value)
       if (choice === undefined) {

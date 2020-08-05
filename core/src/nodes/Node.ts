@@ -55,7 +55,16 @@ export interface INode<T = any> {
    * and the one for the boolean value is `1` (which is the index of `bar` in `foo.bar`)
    * @param value The value corresponding to the schema node
    */
-  navigate: (path: ModelPath, index: number, value: any) => INode | undefined
+  navigate: (path: ModelPath, index: number, value: T) => INode | undefined
+
+  /**
+   * Get the path to the child node corresponding to the `key`
+   * - For `ChoiceNode`: Call the `pathPush` method from the matched node.
+   * - For `ListNode`: Returns the path of the specific child.
+   * - For `ObjectNode`: Returns the path of the specific child, with the locale arrays handled.
+   * - For other nodes: Returns the path without changes.
+   */
+  pathPush: (path: ModelPath, key: string | number) => ModelPath
 
   /**
    * Renders the node and handles events to update the model
@@ -73,7 +82,7 @@ export interface INode<T = any> {
    * object key suggestions, have double quotation marks surrounding them, while boolean suggestions
    * and number suggestions don't
    * - For `BooleanNode`: Returns a list containing `false` and `true`.
-   * - For `ChoiceNode`: Returns suggestions of the choice corresponding to the type of `value`.
+   * - For `ChoiceNode`: Returns suggestions of the matched choice node.
    * - For `EnumNode`: Returns all the options.
    * - For `MapNode`: Returns all the suggestions provided by the key node, surrounded in double 
    * quotation marks.
@@ -84,7 +93,7 @@ export interface INode<T = any> {
    * @param path The path of this node
    * @param value The value corresponding to this node
    */
-  suggest: (path: ModelPath, value: any) => string[]
+  suggest: (path: ModelPath, value: T) => string[]
 
   /**
    * Validates the model using this schema
@@ -93,7 +102,7 @@ export interface INode<T = any> {
    * or add an error and retain the original value
    * @param value value to be validated
    */
-  validate: (path: ModelPath, value: any, errors: Errors, options: NodeOptions) => any
+  validate: (path: ModelPath, value: T, errors: Errors, options: NodeOptions) => any
 
   /**
    * Get the validation option of this node. The client of this schema may
@@ -104,7 +113,7 @@ export interface INode<T = any> {
    * - For `ChoiceNode`: Returns the corresponding `validationOption` of the matched choice's node.
    * - For other nodes: Returns `undefined`.
    */
-  validationOption: (value: any) => ValidationOption | undefined
+  validationOption: (value: T) => ValidationOption | undefined
 
   [custom: string]: any
 }
@@ -116,6 +125,7 @@ export const Base: INode = ({
   force: () => false,
   keep: () => false,
   navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
+  pathPush: (p) => p,
   render: () => '',
   suggest: () => [],
   validate: (_, v) => v,

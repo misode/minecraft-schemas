@@ -10,7 +10,10 @@ export const ListNode = (children: INode): INode<any[]> => {
       if (pathElements.length <= nextIndex) {
         return this
       }
-      return children.navigate(path, nextIndex, value ? value[pathElements[nextIndex]] : undefined)
+      return children.navigate(path, nextIndex, value ? value[pathElements[nextIndex] as number] : undefined)
+    },
+    pathPush(path, index) {
+      return path.push(parseInt(index.toString())).localePush('entry')
     },
     transform(path, value, view) {
       if (!(value instanceof Array)) return value

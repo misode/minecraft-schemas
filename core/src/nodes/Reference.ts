@@ -11,6 +11,7 @@ export const Reference = (schema: string, config?: Options): INode => ({
   keep: (...args) => config?.collapse || SCHEMAS.get(schema).keep(...args),
   suggest: (p, v) => SCHEMAS.get(schema).suggest(p, v),
   navigate: (p, i, v) => SCHEMAS.get(schema).navigate(p, i, v),
+  pathPush: (p, k) => SCHEMAS.get(schema).pathPush(p, k),
   render: (p, v, t, options) => SCHEMAS.get(schema).render(p, v, t, {...options, ...config}),
   validate: (p, v, e, options) => SCHEMAS.get(schema).validate(p, v, e, {...options, ...config}),
   validationOption: (v) => SCHEMAS.get(schema).validationOption(v),

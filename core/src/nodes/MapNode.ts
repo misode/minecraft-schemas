@@ -25,6 +25,9 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
       }
       return children.navigate(path, nextIndex, value ? value[pathElements[nextIndex]] : undefined)
     },
+    pathPush(path, key) {
+      return path.modelPush(key)
+    },
     transform(path, value, view) {
       if (value === undefined) return undefined
       let res: any = {}
@@ -58,8 +61,8 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
         </div>
       </div>`
     },
-    suggest: (path, value) => keys
-      .suggest(path, value)
+    suggest: (path) => keys
+      .suggest(path, '')
       .map(quoteString),
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'object') {
@@ -76,8 +79,8 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
       })
       return res
     },
-    validationOption(value) {
-      return config?.validation ?? keys.validationOption(value)
+    validationOption() {
+      return config?.validation ?? keys.validationOption('')
     }
   }
 }

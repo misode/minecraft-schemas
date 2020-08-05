@@ -44,20 +44,23 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     return { ...defaultFields, ...activeCase }
   }
 
+  const getChildModelPath = (path: ModelPath, childKey: string): ModelPath => {
+    const switchValue = filter?.(path).get()
+    const caseFields = filter ? (cases![switchValue] ?? {}) : {}
+    const caseKeys = Object.keys(caseFields)
+    const pathWithContext = (config?.context) ?
+      new ModelPath(path.getModel(), new Path(path.getArray(), [config.context])) : path
+    const pathWithFilter = !config?.disableSwitchContext && switchValue && caseKeys.includes(childKey) ?
+      pathWithContext.localePush(switchValue) : pathWithContext
+    return pathWithFilter.push(childKey)
+  }
+
   const renderFields = (path: ModelPath, value: IObject, view: TreeView) => {
     value = value ?? {}
-    const filterPath = filter ? filter(path) : new ModelPath(view.model)
-    const switchValue = filterPath.get()
-    const caseFields = filter ? cases![switchValue] : {}
-    const activeFields = filter ? { ...defaultFields, ...caseFields } : defaultFields
-    const filteredKeys = caseFields ? Object.keys(caseFields) : []
+    const activeFields = getActiveFields(path)
     return Object.keys(activeFields).map(k => {
       if (!activeFields[k].enabled(path, view.model)) return ''
-      const pathWithContext = (config?.context) ?
-        new ModelPath(path.getModel(), new Path(path.getArray(), [config.context])) : path
-      const pathWithFilter = !config?.disableSwitchContext && switchValue && filteredKeys.includes(k) ?
-        pathWithContext.localePush(switchValue) : pathWithContext
-      return activeFields[k].render(pathWithFilter.push(k), value[k], view)
+      return activeFields[k].render(getChildModelPath(path, k), value[k], view)
     }).join('')
   }
 
@@ -74,6 +77,9 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       const activeFields = getActiveFields(path.slice(0, nextIndex))
       const node = activeFields[pathElements[nextIndex]]
       return node?.navigate(path, nextIndex, value ? value[pathElements[nextIndex]] : undefined)
+    },
+    pathPush(path, key) {
+      return getChildModelPath(path, key.toString())
     },
     transform(path, value, view) {
       if (value === undefined || value === null || typeof value !== 'object') {

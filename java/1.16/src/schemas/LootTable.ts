@@ -140,7 +140,7 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:copy_state': {
-      block: Resource(EnumNode('block', { validation: { validator: 'nbt_path', params: { category: 'minecraft:block' } } })),
+      block: Resource(EnumNode('block', { validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
       properties: ListNode(
         StringNode({ validation: { validator: 'block_state_key', params: { id: ['pop', 'pop', { push: 'block' }] } } })
       ),
@@ -158,7 +158,7 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:exploration_map': {
-      destination: Force(EnumNode('structure_feature')),
+      destination: Force(EnumNode('worldgen/structure_feature')),
       decoration: Force(Resource(EnumNode('map_decoration', { validation: { validator: 'resource', params: { pool: COLLECTIONS.get('map_decoration') } } }))),
       zoom: NumberNode({ integer: true }),
       search_radius: NumberNode({ integer: true }),

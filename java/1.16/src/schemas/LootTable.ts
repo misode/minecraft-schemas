@@ -242,7 +242,7 @@ SCHEMAS.register('loot_function', ObjectNode({
       seed: NumberNode({ integer: true })
     },
     'minecraft:set_lore': {
-      entity: Force(entitySourceSwtichNode),
+      entity: entitySourceSwtichNode,
       lore: Force(ListNode(
         Reference('text_component')
       )),
@@ -250,7 +250,7 @@ SCHEMAS.register('loot_function', ObjectNode({
       ...conditions
     },
     'minecraft:set_name': {
-      entity: Force(entitySourceSwtichNode),
+      entity: entitySourceSwtichNode,
       name: Force(Reference('text_component')),
       ...conditions
     },

@@ -358,7 +358,7 @@
   "function.apply_bonus.parameters": "Parameters",
   "function.apply_bonus.parameters.bonusMultiplier": "Multiplier",
   "function.apply_bonus.parameters.extra": "Extra",
-  "function.apply_bonus.parameters.probability": "Propability",
+  "function.apply_bonus.parameters.probability": "Probability",
   "function.copy_name.source": "Source",
   "function.copy_nbt.ops": "NBT Operations",
   "function.copy_nbt.ops.entry": "Operation",

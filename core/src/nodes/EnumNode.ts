@@ -1,6 +1,6 @@
 import { INode, Base } from './Node'
 import { Path, ModelPath } from '../model/Path'
-import { COLLECTIONS, locale } from '../Registries'
+import { locale, CollectionRegistry } from '../Registries'
 import { TreeView } from '../view/TreeView'
 import { ValidationOption } from '../ValidationOption'
 import { quoteString, hexId } from '../utils'
@@ -19,9 +19,9 @@ type EnumNodeConfig = {
 /**
  * @param config `string` to represent the default value.
  */
-export const EnumNode = (values: string[] | string, config?: string | EnumNodeConfig): INode<string> => {
+export const EnumNode = (collections: CollectionRegistry, values: string[] | string, config?: string | EnumNodeConfig): INode<string> => {
   const getValues = (typeof values === 'string') ?
-    () => COLLECTIONS.get(values) :
+    () => collections.get(values) :
     () => values
   const defaultValue = (typeof config === 'string') ? config : config?.defaultValue
   const search = (typeof config === 'string') ? undefined : config?.search
@@ -75,9 +75,9 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
         const datalistId = hexId()
         return `<input list="${datalistId}" data-id="${inputId}">
         <datalist id="${datalistId}">
-          ${valuesList.map(v => 
-            `<option value="${v}">`
-          ).join('')}
+          ${valuesList.map(v =>
+          `<option value="${v}">`
+        ).join('')}
         </datalist>`
       }
       const pathWithContext = (typeof values === 'string') ?
@@ -85,8 +85,8 @@ export const EnumNode = (values: string[] | string, config?: string | EnumNodeCo
       return `<select data-id="${inputId}">
         ${defaultValue ? `` : `<option value="">${locale('unset')}</option>`}
         ${valuesList.map(v =>
-          `<option value="${v}">${pathWithContext.push(v).locale()}</option>`
-        ).join('')}
+        `<option value="${v}">${pathWithContext.push(v).locale()}</option>`
+      ).join('')}
       </select>`
     },
     suggest: () => getValues().map(quoteString),

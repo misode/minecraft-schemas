@@ -37,7 +37,45 @@ export class CollectionRegistry implements Registry<string[]> {
   get(id: string) {
     const list = this.registry[id]
     if (list === undefined) {
-      console.warn(`Tried to access collection "${id}", but that doesn't exist`)
+      console.warn(`Tried to access collection "${id}", but that doesn't exist.`)
+    }
+    return list ?? []
+  }
+}
+
+type SchemaVersion = { 
+  /**
+   * Stores all the built-in collections for this version. The client of this module
+   * needs to futhermore register the vanilla registries: the collection IDs
+   * shouldn't contain the namespace (`minecraft:`) part, while the values within the
+   * collections should. 
+   * 
+   * @example
+   * for (const key in VANILLA_REGISTRIES>) {
+   *   collections.register(
+   *     key.replace(/^minecraft:/, ''), 
+   *     Object.keys(VANILLA_REGISTRIES[key].entries)
+   *   )
+   * }
+   */
+  collections: CollectionRegistry, 
+  schemas: SchemaRegistry 
+}
+
+/**
+ * Registry for versions
+ */
+export class VersionRegistry implements Registry<SchemaVersion> {
+  private registry: { [id: string]: SchemaVersion } = {}
+
+  register(id: string, version: SchemaVersion) {
+    this.registry[id] = version
+  }
+
+  get(id: string) {
+    const list = this.registry[id]
+    if (list === undefined) {
+      console.warn(`Tried to access schema for version "${id}", but that doesn't exist.`)
     }
     return list ?? []
   }
@@ -82,8 +120,7 @@ export class LocaleRegistry implements Registry<Locale> {
   }
 }
 
-export const SCHEMAS = new SchemaRegistry()
-export const COLLECTIONS = new CollectionRegistry()
+export const VERSIONS = new VersionRegistry()
 export const LOCALES = new LocaleRegistry()
 
 /**

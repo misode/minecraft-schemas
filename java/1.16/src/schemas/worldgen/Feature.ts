@@ -1,24 +1,28 @@
 import {
   Case,
-  EnumNode,
+  EnumNode as RawEnumNode,
   Force,
   Mod,
   NodeChildren,
   NumberNode,
   ObjectNode,
-  Reference,
+  Reference as RawReference,
   Resource,
-  SCHEMAS,
   Switch,
   BooleanNode,
   ListNode,
-  Base,
   StringNode,
   ChoiceNode,
+  SchemaRegistry,
+  CollectionRegistry,
 } from '@mcschema/core'
-import { BlockState, FluidState, BlockPos, UniformInt } from '../Common'
+import { UniformInt } from '../Common'
 import './Decorator'
 import './ProcessorList'
+
+export function initFeatureSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
+  const Reference = RawReference.bind(undefined, schemas)
+  const EnumNode = RawEnumNode.bind(undefined, collections)
 
 const RandomPatchConfig: NodeChildren = {
   can_replace: BooleanNode(),
@@ -31,19 +35,19 @@ const RandomPatchConfig: NodeChildren = {
   state_provider: Force(Reference('block_state_provider')),
   block_placer: Force(Reference('block_placer')),
   whitelist: Force(ListNode(
-    BlockState
+    Reference('block_state')
   )),
   blacklist: Force(ListNode(
-    BlockState
+    Reference('block_state')
   ))
 }
 
 const DiskConfig: NodeChildren = {
-  state: Force(BlockState),
+  state: Force(Reference('block_state')),
   radius: Force(UniformInt({ min: 0, max: 4, maxSpread: 4})),
   half_height: Force(NumberNode({ integer: true, min: 0, max: 4 })),
   targets: Force(ListNode(
-    BlockState
+    Reference('block_state')
   ))
 }
 
@@ -54,7 +58,7 @@ const HugeMushroomConfig: NodeChildren = {
 }
 
 const OreConfig: NodeChildren = {
-  state: Force(BlockState),
+  state: Force(Reference('block_state')),
   size: Force(NumberNode({ integer: true, min: 0, max: 64 })),
   target: Force(Reference('block_predicate'))
 }
@@ -74,7 +78,7 @@ const Feature = ChoiceNode([
   }
 ], { choiceContext: 'feature' })
 
-SCHEMAS.register('configured_feature', Mod(ObjectNode({
+schemas.register('configured_feature', Mod(ObjectNode({
   type: Force(Resource(EnumNode('worldgen/feature', 'minecraft:tree'))),
   config: Force(ObjectNode({
     [Switch]: path => path.pop().push('type'),
@@ -98,23 +102,23 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
         feature: Force(Feature)
       },
       'minecraft:delta_feature': {
-        contents: Force(BlockState),
-        rim: Force(BlockState),
+        contents: Force(Reference('block_state')),
+        rim: Force(Reference('block_state')),
         size: Force(UniformInt({ min: 0, max: 8, maxSpread: 8})),
         rim_size: Force(UniformInt({ min: 0, max: 8, maxSpread: 8}))
       },
       'minecraft:disk': DiskConfig,
       'minecraft:emerald_ore': {
-        state: Force(BlockState),
-        target: Force(BlockState)
+        state: Force(Reference('block_state')),
+        target: Force(Reference('block_state'))
       },
       'minecraft:end_gateway': {
         exact: Force(BooleanNode()),
-        exit: BlockPos
+        exit: Reference('block_pos')
       },
       'minecraft:end_spike': {
         crystal_invulnerable: Force(BooleanNode()),
-        crystal_beam_target: BlockPos,
+        crystal_beam_target: Reference('block_pos'),
         spikes: Force(ListNode(
           ObjectNode({
             centerX: NumberNode({ integer: true }),
@@ -126,35 +130,35 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
         ))
       },
       'minecraft:fill_layer': {
-        state: BlockState,
+        state: Reference('block_state'),
         height: NumberNode({ integer: true, min: 0, max: 255 })
       },
       'minecraft:flower': RandomPatchConfig,
       'minecraft:forest_rock': {
-        state: Force(BlockState)
+        state: Force(Reference('block_state'))
       },
       'minecraft:huge_brown_mushroom': HugeMushroomConfig,
       'minecraft:huge_fungus': {
-        hat_state: Force(BlockState),
-        decor_state: Force(BlockState),
-        stem_state: Force(BlockState),
-        valid_base_block: Force(BlockState),
+        hat_state: Force(Reference('block_state')),
+        decor_state: Force(Reference('block_state')),
+        stem_state: Force(Reference('block_state')),
+        valid_base_block: Force(Reference('block_state')),
         planted: BooleanNode()
       },
       'minecraft:huge_red_mushroom': HugeMushroomConfig,
       'minecraft:ice_patch': DiskConfig,
       'minecraft:iceberg': {
-        state: Force(BlockState)
+        state: Force(Reference('block_state'))
       },
       'minecraft:lake': {
-        state: Force(BlockState)
+        state: Force(Reference('block_state'))
       },
       'minecraft:nether_forest_vegetation': {
         state_provider: Reference('block_state_provider')
       },
       'minecraft:netherrack_replace_blobs': {
-        state: Force(BlockState),
-        target: Force(BlockState),
+        state: Force(Reference('block_state')),
+        target: Force(Reference('block_state')),
         radius: Force(UniformInt())
       },
       'minecraft:no_surface_ore': OreConfig,
@@ -178,10 +182,10 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
         probability: Force(NumberNode({ min: 0, max: 1 }))
       },
       'minecraft:simple_block': {
-        to_place: Force(BlockState),
-        place_on: Force(ListNode(BlockState)),
-        place_in: Force(ListNode(BlockState)),
-        place_under: Force(ListNode(BlockState))
+        to_place: Force(Reference('block_state')),
+        place_on: Force(ListNode(Reference('block_state'))),
+        place_in: Force(ListNode(Reference('block_state'))),
+        place_under: Force(ListNode(Reference('block_state')))
       },
       'minecraft:simple_random_selector': {
         features: Force(ListNode(
@@ -189,7 +193,7 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
         ))
       },
       'minecraft:spring_feature': {
-        state: Force(FluidState),
+        state: Force(Reference('fluid_state')),
         rock_count: NumberNode({ integer: true }),
         hole_count: NumberNode({ integer: true }),
         required_block_below: BooleanNode(),
@@ -313,21 +317,21 @@ SCHEMAS.register('configured_feature', Mod(ObjectNode({
   })
 }))
 
-SCHEMAS.register('block_state_provider', ObjectNode({
+schemas.register('block_state_provider', ObjectNode({
   type: Force(EnumNode('worldgen/block_state_provider_type', 'minecraft:simple_state_provider')),
   [Switch]: path => path.push('type'),
   [Case]: {
     'minecraft:rotated_block_provider': {
-      state: Force(BlockState)
+      state: Force(Reference('block_state'))
     },
     'minecraft:simple_state_provider': {
-      state: Force(BlockState)
+      state: Force(Reference('block_state'))
     },
     'minecraft:weighted_state_provider': {
       entries: Force(ListNode(
         Mod(ObjectNode({
           weight: NumberNode({ integer: true, min: 1 }),
-          data: Force(BlockState)
+          data: Force(Reference('block_state'))
         }), {
           default: () => ({
             data: {}
@@ -338,7 +342,7 @@ SCHEMAS.register('block_state_provider', ObjectNode({
   }
 }))
 
-SCHEMAS.register('block_placer', ObjectNode({
+  schemas.register('block_placer', ObjectNode({
   type: Force(EnumNode('worldgen/block_placer_type', 'minecraft:simple_block_placer')),
   [Switch]: path => path.push('type'),
   [Case]: {
@@ -348,3 +352,4 @@ SCHEMAS.register('block_placer', ObjectNode({
     }
   }
 }))
+}

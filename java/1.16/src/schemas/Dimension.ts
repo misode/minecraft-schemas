@@ -93,7 +93,8 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
             firstOctave: -7,
             amplitudes: [1, 1]
           }
-        }
+        },
+        settings: 'minecraft:overworld'
       }
     })
   }))

@@ -55,7 +55,7 @@ export interface INode<T = any> {
    * and the one for the boolean value is `1` (which is the index of `bar` in `foo.bar`)
    * @param value The value corresponding to the schema node
    */
-  navigate: (path: ModelPath, index: number, value: T) => INode | undefined
+  navigate: (path: ModelPath, index: number) => INode | undefined
 
   /**
    * Get the path to the child node corresponding to the `key`

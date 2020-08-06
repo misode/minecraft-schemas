@@ -4,13 +4,13 @@ export const ListNode = (children: INode): INode<any[]> => {
   return ({
     ...Base,
     default: () => [],
-    navigate(path, index, value) {
+    navigate(path, index) {
       const nextIndex = index + 1
       const pathElements = path.getArray()
       if (pathElements.length <= nextIndex) {
         return this
       }
-      return children.navigate(path, nextIndex, value ? value[pathElements[nextIndex] as number] : undefined)
+      return children.navigate(path, nextIndex)
     },
     pathPush(path, index) {
       return path.push(parseInt(index.toString())).localePush('entry')

@@ -13,13 +13,11 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
   return {
     ...Base,
     default: () => cases[0].node.default(),
-    navigate(path, index, value) {
+    navigate(path, index) {
       const nextIndex = index + 1
-      if (path.getArray().length <= nextIndex) {
-        return this
-      }
-      const node = this.activeCase(path)?.node
-      return node?.navigate(path, index, value)
+      return this.activeCase(path.slice(0, nextIndex))
+        ?.node
+        .navigate(path, index)
     },
     pathPush(path, key) {
       return this.activeCase(path)?.node.pathPush(path, key) ?? path

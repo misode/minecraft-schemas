@@ -68,7 +68,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     ...Base,
     default: () => ({}),
     keep: () => config?.collapse ?? false,
-    navigate(path, index, value) {
+    navigate(path, index) {
       const nextIndex = index + 1
       const pathElements = path.getArray()
       if (pathElements.length <= nextIndex) {
@@ -76,7 +76,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       }
       const activeFields = getActiveFields(path.slice(0, nextIndex))
       const node = activeFields[pathElements[nextIndex]]
-      return node?.navigate(path, nextIndex, value ? value[pathElements[nextIndex]] : undefined)
+      return node?.navigate(path, nextIndex)
     },
     pathPush(path, key) {
       return getChildModelPath(path, key.toString())

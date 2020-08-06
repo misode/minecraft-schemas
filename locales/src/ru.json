@@ -240,6 +240,7 @@
   "dimension_type.ambient_light": "Свет окружения",
   "dimension_type.ambient_light.help": "Значение от 0 до 1.",
   "dimension_type.bed_works": "Работает Кровать",
+  "dimension_type.coordinate_scale": "Масштаб координат",
   "dimension_type.fixed_time": "Фиксированное время",
   "dimension_type.fixed_time.help": "При указании значения солнце будет находится в фиксированном положении.",
   "dimension_type.has_ceiling": "Есть крыша из бедрока",

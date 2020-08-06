@@ -14,13 +14,13 @@ import {
   CollectionRegistry,
 } from '@mcschema/core'
 
-const templatePoolConfig: NodeChildren = {
-  start_pool: Force(StringNode()),
-  size: Force(NumberNode({ integer: true }))
-}
-
 export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const EnumNode = RawEnumNode.bind(undefined, collections)
+
+  const templatePoolConfig: NodeChildren = {
+    start_pool: Force(StringNode()),
+    size: Force(NumberNode({ integer: true }))
+  }
 
   schemas.register('configured_structure_feature', Mod(ObjectNode({
     type: Force(Resource(EnumNode('worldgen/structure_feature'))),

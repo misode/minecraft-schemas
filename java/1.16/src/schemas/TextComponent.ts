@@ -18,11 +18,12 @@ import {
   CollectionRegistry,
 } from '@mcschema/core'
 
-const getSimpleString = (jsonText: any): string => jsonText instanceof Array ? getSimpleString(jsonText[0]) : jsonText?.text ?? jsonText?.toString() ?? ''
 
 export function initTextComponentSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const EnumNode = RawEnumNode.bind(undefined, collections)
+
+  const getSimpleString = (jsonText: any): string => jsonText instanceof Array ? getSimpleString(jsonText[0]) : jsonText?.text ?? jsonText?.toString() ?? ''
 
   schemas.register('text_component', Mod(ChoiceNode([
     {

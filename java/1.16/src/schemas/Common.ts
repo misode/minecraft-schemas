@@ -35,7 +35,6 @@ export const DefaultDimensionType = {
 }
 export let DimensionTypePresets: (node: INode<any>) => INode<any>
 
-
 export const DefaultNoiseSettings = {
   bedrock_roof_position: -10,
   bedrock_floor_position: 0,
@@ -125,6 +124,58 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   schemas.register('block_pos', ListNode(
     NumberNode({ integer: true })
   ))
+
+  Range = (config?: RangeConfig) => ChoiceNode([
+    ...(config?.forceRange ? [] : [{
+      type: 'number',
+      node: NumberNode(config),
+      change: (v: any) => v === undefined ? 0 : v.min ?? v.max ?? v.n ?? 0
+    }]),
+    ...(config?.allowBinomial ? [{
+      type: 'binomial',
+      node: ObjectNode({
+        type: Force(Resource(EnumNode(['minecraft:binomial']))),
+        n: Force(NumberNode({ integer: true, min: 0 })),
+        p: Force(NumberNode({ min: 0, max: 1 }))
+      }),
+      match: (v: any) => v !== undefined && v.type === 'minecraft:binomial',
+      change: (v: any) => ({
+        type: 'minecraft:binomial',
+        n: typeof v === 'number' ? v : v === undefined ? 1 : (v.min ?? v.max ?? 1),
+        p: 0.5
+      })
+    }] : []),
+    {
+      type: 'object',
+      node: ObjectNode({
+        min: NumberNode(config),
+        max: NumberNode(config)
+      }),
+      change: (v: any) => ({
+        min: typeof v === 'number' ? v : v === undefined ? 1 : v.n,
+        max: typeof v === 'number' ? v : v === undefined ? 1 : v.n
+      })
+    }
+  ], { choiceContext: 'range' })
+
+  UniformInt = (config?: UniformIntConfig) => ChoiceNode([
+    {
+      type: 'number',
+      node: NumberNode({ integer: true, min: config?.min, max: config?.max }),
+      change: v => v.base
+    },
+    {
+      type: 'object',
+      node: ObjectNode({
+        base: Force(NumberNode({ integer: true, min: config?.min, max: config?.max })),
+        spread: Force(NumberNode({ integer: true, min: 0, max: config?.maxSpread }))
+      }),
+      change: v => ({
+        base: v,
+        spread: 0
+      })
+    }
+  ], { context: 'uniform_int' })
 
   ConditionCases = {
     'minecraft:alternative': {
@@ -452,56 +503,4 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       }
     }
   )
-
-  Range = (config?: RangeConfig) => ChoiceNode([
-    ...(config?.forceRange ? [] : [{
-      type: 'number',
-      node: NumberNode(config),
-      change: (v: any) => v === undefined ? 0 : v.min ?? v.max ?? v.n ?? 0
-    }]),
-    ...(config?.allowBinomial ? [{
-      type: 'binomial',
-      node: ObjectNode({
-        type: Force(Resource(EnumNode(['minecraft:binomial']))),
-        n: Force(NumberNode({ integer: true, min: 0 })),
-        p: Force(NumberNode({ min: 0, max: 1 }))
-      }),
-      match: (v: any) => v !== undefined && v.type === 'minecraft:binomial',
-      change: (v: any) => ({
-        type: 'minecraft:binomial',
-        n: typeof v === 'number' ? v : v === undefined ? 1 : (v.min ?? v.max ?? 1),
-        p: 0.5
-      })
-    }] : []),
-    {
-      type: 'object',
-      node: ObjectNode({
-        min: NumberNode(config),
-        max: NumberNode(config)
-      }),
-      change: (v: any) => ({
-        min: typeof v === 'number' ? v : v === undefined ? 1 : v.n,
-        max: typeof v === 'number' ? v : v === undefined ? 1 : v.n
-      })
-    }
-  ], { choiceContext: 'range' })
-
-  UniformInt = (config?: UniformIntConfig) => ChoiceNode([
-    {
-      type: 'number',
-      node: NumberNode({ integer: true, min: config?.min, max: config?.max }),
-      change: v => v.base
-    },
-    {
-      type: 'object',
-      node: ObjectNode({
-        base: Force(NumberNode({ integer: true, min: config?.min, max: config?.max })),
-        spread: Force(NumberNode({ integer: true, min: 0, max: config?.maxSpread }))
-      }),
-      change: v => ({
-        base: v,
-        spread: 0
-      })
-    }
-  ], { context: 'uniform_int' })
 }

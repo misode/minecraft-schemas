@@ -13,23 +13,23 @@ import {
 } from '@mcschema/core'
 import { UniformInt } from '../Common'
 
-const RangeConfig: NodeChildren = {
-  maximum: NumberNode({ integer: true }),
-  bottom_offset: NumberNode({ integer: true }),
-  top_offset: NumberNode({ integer: true })
-}
-
-const ChanceConfig: NodeChildren = {
-  chance: Force(NumberNode({ integer: true, min: 0 }))
-}
-
-const CountConfig: NodeChildren = {
-  count: Force(UniformInt({ min: -10, max: 128, maxSpread: 128 }))
-}
-
 export function initDecoratorSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const EnumNode = RawEnumNode.bind(undefined, collections)
+
+  const RangeConfig: NodeChildren = {
+    maximum: NumberNode({ integer: true }),
+    bottom_offset: NumberNode({ integer: true }),
+    top_offset: NumberNode({ integer: true })
+  }
+
+  const ChanceConfig: NodeChildren = {
+    chance: Force(NumberNode({ integer: true, min: 0 }))
+  }
+
+  const CountConfig: NodeChildren = {
+    count: Force(UniformInt({ min: -10, max: 128, maxSpread: 128 }))
+  }
 
   schemas.register('configured_decorator', ObjectNode({
     type: Force(Resource(EnumNode('worldgen/decorator', 'minecraft:count'))),

@@ -19,13 +19,11 @@ import {
 } from '@mcschema/core'
 import { Range } from './Common'
 
-let PredicateChoice: (node: INode<any>) => INode<any>
-
 export function initAdvancementSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const EnumNode = RawEnumNode.bind(undefined, collections)
 
-  PredicateChoice = (node: INode<any>): INode<any> => {
+  const PredicateChoice = (node: INode<any>): INode<any> => {
     return ChoiceNode([
       {
         type: 'object',

@@ -33,6 +33,7 @@ export const ListNode = (children: INode): INode<any[]> => {
           <label>${options?.label ?? path.locale()}</label>
           ${options?.inject ?? ''}
           <button class="add" data-id="${onAdd}"></button>
+          ${view.nodeInjector(path, view)}
         </div>
         ${!(value instanceof Array) ? `` :
           `<div class="node-body">

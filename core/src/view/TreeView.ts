@@ -10,6 +10,7 @@ type Registry = {
 type TreeViewOptions = {
   showErrors?: boolean
   observer?: (el: HTMLElement) => void
+  nodeInjector?: (path: ModelPath, view: TreeView) => string
 }
 
 /**
@@ -20,6 +21,7 @@ export class TreeView extends AbstractView {
   registry: Registry = {}
   showErrors: boolean
   observer: (el: HTMLElement) => void
+  nodeInjector: (path: ModelPath, view: TreeView) => string
 
   /**
    * @param model data model this view represents and listens to
@@ -30,6 +32,7 @@ export class TreeView extends AbstractView {
     this.target = target
     this.showErrors = options?.showErrors ?? false
     this.observer = options?.observer ?? (() => {})
+    this.nodeInjector = options?.nodeInjector ?? (() => '')
   }
 
   /**

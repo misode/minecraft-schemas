@@ -48,6 +48,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
           ${options?.inject ?? ''}
           ${keys.renderRaw(path, view)}
           <button class="add" data-id="${onAdd}"></button>
+          ${view.nodeInjector(path, view)}
         </div>
         <div class="node-body">
           ${Object.keys(value ?? []).map(key => {

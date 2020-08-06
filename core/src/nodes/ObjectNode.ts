@@ -104,6 +104,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
           `}
           <label>${options?.label ?? path.locale()}</label>
           ${options?.inject ?? ''}
+          ${view.nodeInjector(path, view)}
         </div>`}
         ${(typeof value !== 'object' && value !== undefined) || ((options?.collapse || config?.collapse) && value === undefined) ? `` : `
           <div class="node-body">

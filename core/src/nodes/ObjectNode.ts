@@ -58,10 +58,10 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
   const renderFields = (path: ModelPath, value: IObject, view: TreeView) => {
     value = value ?? {}
     const activeFields = getActiveFields(path)
-    return Object.keys(activeFields).map(k => {
-      if (!activeFields[k].enabled(path, view.model)) return ''
-      return activeFields[k].render(getChildModelPath(path, k), value[k], view)
-    }).join('')
+    return Object.keys(activeFields)
+      .filter(k => activeFields[k].enabled(path, view.model))
+      .map(k => activeFields[k].render(getChildModelPath(path, k), value[k], view))
+      .join('')
   }
 
   return ({
@@ -87,9 +87,11 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       }
       let res: any = {}
       const activeFields = getActiveFields(path)
-      Object.keys(activeFields).forEach(f => {
-        return res[f] = activeFields[f].transform(path.push(f), value[f], view)
-      })
+      Object.keys(activeFields)
+        .filter(k => activeFields[k].enabled(path, view.model))
+        .forEach(f => {
+          res[f] = activeFields[f].transform(path.push(f), value[f], view)
+        })
       return res
     },
     render(path, value, view, options) {
@@ -144,6 +146,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       const keys = new Set([...forcedKeys, ...Object.keys(value)])
       let res: any = {}
       keys.forEach(k => {
+        if (!activeFields[k].enabled(path, path.getModel())) return
         if (activeKeys.includes(k)) {
           const newValue = activeFields[k].validate(path.push(k), value[k], errors, newOptions)
           if (!activeFields[k].keep()

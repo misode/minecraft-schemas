@@ -146,8 +146,8 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       const keys = new Set([...forcedKeys, ...Object.keys(value)])
       let res: any = {}
       keys.forEach(k => {
-        if (!activeFields[k].enabled(path, path.getModel())) return
         if (activeKeys.includes(k)) {
+          if (!activeFields[k].enabled(path, path.getModel())) return
           const newValue = activeFields[k].validate(path.push(k), value[k], errors, newOptions)
           if (!activeFields[k].keep()
              && (newValue === undefined

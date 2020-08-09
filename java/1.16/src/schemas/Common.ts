@@ -36,6 +36,7 @@ export const DefaultDimensionType = {
 export let DimensionTypePresets: (node: INode<any>) => INode<any>
 
 export const DefaultNoiseSettings = {
+  name: 'minecraft:overworld',
   bedrock_roof_position: -10,
   bedrock_floor_position: 0,
   sea_level: 63,
@@ -257,6 +258,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     {
       'minecraft:overworld': DefaultDimensionType,
       'minecraft:the_nether': {
+        name: 'minecraft:the_nether',
         ultrawarm: true,
         natural: false,
         shrunk: true,
@@ -269,9 +271,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         ambient_light: 0.1,
         fixed_time: 18000,
         logical_height: 128,
+        effects: 'minecraft:the_nether',
         infiniburn: 'minecraft:infiniburn_nether',
       },
       'minecraft:the_end': {
+        name: 'minecraft:the_end',
         ultrawarm: false,
         natural: false,
         shrunk: false,
@@ -284,6 +288,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         ambient_light: 0,
         fixed_time: 6000,
         logical_height: 256,
+        effects: 'minecraft:the_end',
         infiniburn: 'minecraft:infiniburn_end',
       }
     }
@@ -295,6 +300,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     {
       'minecraft:overworld': DefaultNoiseSettings,
       'minecraft:nether': {
+        name: 'minecraft:nether',
         bedrock_roof_position: 0,
         bedrock_floor_position: 0,
         sea_level: 32,
@@ -337,6 +343,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         }
       },
       'minecraft:end': {
+        name: 'minecraft:end',
         bedrock_roof_position: -10,
         bedrock_floor_position: -10,
         sea_level: 0,
@@ -376,6 +383,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         }
       },
       'minecraft:amplified': {
+        name: 'minecraft:amplified',
         bedrock_roof_position: -10,
         bedrock_floor_position: 0,
         sea_level: 63,
@@ -418,6 +426,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         }
       },
       'minecraft:caves': {
+        name: 'minecraft:caves',
         bedrock_roof_position: 0,
         bedrock_floor_position: 0,
         sea_level: 32,
@@ -460,6 +469,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         }
       },
       'minecraft:floating_islands': {
+        name: 'minecraft:floating_islands',
         bedrock_roof_position: -10,
         bedrock_floor_position: -10,
         sea_level: 0,

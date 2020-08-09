@@ -55,14 +55,13 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
   }))
 
   schemas.register('processor_rule', Mod(ObjectNode({
-    position_predicate: Force(Reference('pos_rule_test')),
+    position_predicate: Reference('pos_rule_test', { collapse: true }),
     location_predicate: Force(Reference('pos_rule_test')),
     input_predicate: Force(Reference('rule_test')),
     output_state: Force(Reference('block_state')),
     output_nbt: StringNode()
   }), {
     default: () => ({
-      position_predicate: {},
       location_predicate: {},
       input_predicate: {},
       output_state: {

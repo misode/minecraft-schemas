@@ -582,7 +582,6 @@
   "noise_settings.default_fluid": "Стандартная жидкость",
   "noise_settings.disable_mob_generation": "Отключить генерацию мобов",
   "noise_settings.disable_mob_generation.help": "Определяет, появляются ли мобы во время генерации.",
-  "noise_settings.features": "Структуры",
   "noise_settings.noise": "Параметры шума",
   "noise_settings.noise.amplified": "Расширенный",
   "noise_settings.noise.bottom_slide": "Низ кривой",

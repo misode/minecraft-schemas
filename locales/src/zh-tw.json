@@ -582,7 +582,6 @@
   "noise_settings.default_fluid": "預設流體",
   "noise_settings.disable_mob_generation": "禁用生物生成",
   "noise_settings.disable_mob_generation.help": "若設為 true，生成世界時不會生成生物。",
-  "noise_settings.features": "地物",
   "noise_settings.noise": "噪聲選項",
   "noise_settings.noise.amplified": "巨大化",
   "noise_settings.noise.bottom_slide": "底部曲線",
@@ -610,7 +609,6 @@
   "noise_settings.noise.top_slide.size": "頂部曲線大小",
   "noise_settings.noise.top_slide.target": "頂部曲線目標",
   "noise_settings.sea_level": "海平面",
-  
   "pattern": "圖案",
   "player.advancements": "進度",
   "player.advancements.entry": "進度",

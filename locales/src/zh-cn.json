@@ -582,7 +582,6 @@
   "noise_settings.default_fluid": "默认流体",
   "noise_settings.disable_mob_generation": "禁用生物生成",
   "noise_settings.disable_mob_generation.help": "如果设置为 true，生成世界时不会生成生物。",
-  "noise_settings.features": "地物",
   "noise_settings.noise": "噪声选项",
   "noise_settings.noise.amplified": "放大化",
   "noise_settings.noise.bottom_slide": "底部曲线",

@@ -578,7 +578,6 @@
   "noise_settings.default_fluid": "Fluide par défaut",
   "noise_settings.disable_mob_generation": "Désactiver la génération des créatures",
   "noise_settings.disable_mob_generation.help": "Si vrai, les créatures n'apparaîtront pas pendant la génération",
-  "noise_settings.features": "Fonctionnalités",
   "noise_settings.noise": "Paramètres du bruit",
   "noise_settings.noise.amplified": "Amplifié",
   "noise_settings.noise.bottom_slide": "Glissement en bas",

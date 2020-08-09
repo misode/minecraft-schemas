@@ -221,7 +221,6 @@
   "damage_source.is_magic": "魔法",
   "damage_source.is_projectile": "飛び道具",
   "damage_source.source_entity": "要因のエンティティ",
-  "decorators.entry": "デコレータ",
   "dimension": "ディメンション",
   "dimension.generator": "ジェネレーター",
   "dimension.generator.biome_source": "バイオームの生成法則",

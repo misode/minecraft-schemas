@@ -52,7 +52,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         ))
       }
     }
-  }))
+  }, { context: 'processor' }))
 
   schemas.register('processor_rule', Mod(ObjectNode({
     position_predicate: Reference('pos_rule_test', { collapse: true }),
@@ -60,7 +60,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
     input_predicate: Force(Reference('rule_test')),
     output_state: Force(Reference('block_state')),
     output_nbt: StringNode()
-  }), {
+  }, { context: 'processor_rule' }), {
     default: () => ({
       location_predicate: {},
       input_predicate: {},
@@ -78,11 +78,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
   }
 
   schemas.register('pos_rule_test', ObjectNode({
-    predicate_type: Force(EnumNode([
-      'minecraft:always_true',
-      'minecraft:linear_pos',
-      'minecraft:axis_aligned_linear_pos'
-    ], 'minecraft:always_true')),
+    predicate_type: Force(EnumNode('pos_rule_test', 'minecraft:always_true')),
     [Switch]: path => path.push('predicate_type'),
     [Case]: {
       'minecraft:axis_aligned_linear_pos': {
@@ -91,7 +87,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
       },
       'minecraft:linear_pos': posTestFields
     }
-  }))
+  }, { context: 'pos_rule_test', disableSwitchContext: true }))
 
   schemas.register('rule_test', ObjectNode({
     predicate_type: Force(EnumNode('rule_test', 'minecraft:always_true')),
@@ -115,5 +111,5 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         tag: Force(StringNode())
       }
     }
-  }))
+  }, { context: 'rule_test', disableSwitchContext: true }))
 }

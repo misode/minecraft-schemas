@@ -27,7 +27,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
     sea_level: Force(NumberNode({ integer: true })),
     disable_mob_generation: Force(BooleanNode()),
     default_block: Force(Reference('block_state')),
-    default_fluid: Force(Reference('fluid_state')),
+    default_fluid: Force(Reference('block_state')),
     noise: Force(ObjectNode({
       density_factor: Force(NumberNode()),
       density_offset: Force(NumberNode()),
@@ -56,7 +56,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       }))
     })),
     structures: Reference('generator_structures')
-  }), {
+  }, { context: 'noise_settings' }), {
     default: () => DefaultNoiseSettings
   }))
 

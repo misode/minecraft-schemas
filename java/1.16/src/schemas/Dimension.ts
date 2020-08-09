@@ -126,5 +126,5 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
     amplitudes: Force(ListNode(
       NumberNode()
     ))
-  })))
+  }, { context: 'generator_biome_noise' })))
 }

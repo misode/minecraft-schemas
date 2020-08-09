@@ -90,5 +90,5 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
         processors: Force(Processors)
       }
     }
-  }))
+  }, { context: 'template_element', disableSwitchContext: true }))
 }

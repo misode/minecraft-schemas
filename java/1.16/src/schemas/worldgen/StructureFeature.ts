@@ -50,7 +50,7 @@ export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections
         },
         'minecraft:village': templatePoolConfig
       }
-    }))
+    }, { context: 'structure_feature', disableSwitchContext: true }))
   }, { context: 'structure_feature' }), {
     default: () => ({
       type: 'minecraft:bastion_remnant',

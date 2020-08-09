@@ -19,7 +19,7 @@ export function initSurfaceBuilderSchemas(schemas: SchemaRegistry, collections: 
       top_material: Force(Reference('block_state')),
       under_material: Force(Reference('block_state')),
       underwater_material: Force(Reference('block_state')),
-    }))
+    }, { context: 'surface_builder' }))
   }, { context: 'surface_builder' }), {
     default: () => ({
       type: 'minecraft:default',

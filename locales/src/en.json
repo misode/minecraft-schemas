@@ -155,6 +155,7 @@
   "biome.features": "Features",
   "biome.features.entry": "Step %0%",
   "biome.features.entry.entry": "Feature",
+  "block.block": "Block ID",
   "block.nbt": "NBT",
   "block.state": "Block State",
   "block.tag": "Block Tag",

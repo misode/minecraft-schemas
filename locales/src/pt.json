@@ -80,6 +80,7 @@
   "attribute_modifier.operation.multiply_base": "Multiplicação Base",
   "attribute_modifier.operation.multiply_total": "Multiplicação Total",
   "attribute_modifier.slot": "Slot",
+  "block.block": "ID do Bloco",
   "block.nbt": "NBT",
   "block.state": "Estados do Bloco",
   "block.tag": "Tag do Bloco",

@@ -88,6 +88,7 @@
   "badge.unstable": "不安定",
   "biome.features.entry": "ステップ",
   "biome.features.entry.entry": "特徴",
+  "block.block": "ブロックID",
   "block.nbt": "NBT",
   "block.state": "Block State",
   "block.tag": "ブロックタグ",

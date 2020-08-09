@@ -74,6 +74,6 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
         'minecraft:range_very_biased': RangeConfig,
         'minecraft:water_lake': ChanceConfig
       }
-    }, { category: 'predicate' }))
-  }, { category: 'predicate' }))
+    }, { context: 'decorator', category: 'predicate' }))
+  }, { context: 'decorator', category: 'predicate' }))
 }

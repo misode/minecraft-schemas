@@ -223,7 +223,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
                 upper_size: NumberNode({ integer: true, min: 0, max: 16 })
               }
             }
-          })),
+          }, { disableSwitchContext: true })),
           trunk_provider: Force(Reference('block_state_provider')),
           leaves_provider: Force(Reference('block_state_provider')),
           trunk_placer: Force(ObjectNode({
@@ -231,7 +231,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
             base_height: Force(NumberNode({ integer: true, min: 0, max: 32 })),
             height_rand_a: Force(NumberNode({ integer: true, min: 0, max: 24 })),
             height_rand_b: Force(NumberNode({ integer: true, min: 0, max: 24 }))
-          })),
+          }, { context: 'trunk_placer' })),
           foliage_placer: ObjectNode({
             type: Force(EnumNode('worldgen/foliage_placer_type', 'minecraft:blob_foliage_placer')),
             radius: Force(UniformInt({ min: 0, max: 8, maxSpread: 8 })),
@@ -260,7 +260,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
                 trunk_height: Force(UniformInt({ min: 0, max: 16, maxSpread: 8 }))
               }
             }
-          }),
+          }, { context: 'foliage_placer', disableSwitchContext: true }),
           decorators: ListNode(
             ObjectNode({
               type: EnumNode('worldgen/tree_decorator_type', 'minecraft:alter_ground'),
@@ -276,12 +276,12 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
                   probability: Force(NumberNode({ min: 0, max: 1 }))
                 }
               }
-            })
+            }, { context: 'tree_decorator' })
           )
         }
       }
     }, { context: 'feature' }))
-  }), {
+  }, { context: 'feature' }), {
     default: () => ({
       type: 'minecraft:decorated',
       config: {
@@ -340,7 +340,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         ))
       }
     }
-  }))
+  }, { context: 'block_state_provider' }))
 
   schemas.register('block_placer', ObjectNode({
     type: Force(EnumNode('worldgen/block_placer_type', 'minecraft:simple_block_placer')),
@@ -351,5 +351,5 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         extra_size: Force(NumberNode({ integer: true }))
       }
     }
-  }))
+  }, { context: 'block_placer' }))
 }

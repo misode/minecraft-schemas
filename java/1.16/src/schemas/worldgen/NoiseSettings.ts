@@ -55,7 +55,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
         offset: Force(NumberNode({ integer: true }))
       }))
     })),
-    structures: Reference('generator_structures')
+    structures: Force(Reference('generator_structures'))
   }, { context: 'noise_settings' }), {
     default: () => DefaultNoiseSettings
   }))
@@ -68,7 +68,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
     }, {
       collapse: true
     }),
-    structures: MapNode(
+    structures: Force(MapNode(
       EnumNode('worldgen/structure_feature', { search: true, additional: true }),
       Mod(ObjectNode({
         spacing: NumberNode({ integer: true, min: 2, max: 4096 }),
@@ -81,7 +81,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
           salt: 0
         })
       })
-    )
+    ))
   }))
 
   schemas.register('generator_layer', Mod(ObjectNode({

@@ -499,7 +499,7 @@
   "feature.huge_fungus.hat_state": "顶部",
   "feature.huge_fungus.planted": "已种植",
   "feature.huge_fungus.stem_state": "菌柄",
-  "feature.huge_fungus.valid_base_block": "合法的底部方块",
+  "feature.huge_fungus.valid_base_block": "有效底部方块",
   "feature.huge_red_mushroom.cap_provider": "菌盖声明",
   "feature.huge_red_mushroom.foliage_radius": "菌盖大小",
   "feature.huge_red_mushroom.stem_provider": "菌柄声明",

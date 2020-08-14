@@ -1136,5 +1136,9 @@
   "worldgen/trunk_placer_type.forking_trunk_placer": "Forking",
   "worldgen/trunk_placer_type.giant_trunk_placer": "Giant",
   "worldgen/trunk_placer_type.mega_jungle_trunk_placer": "Mega Jungle",
-  "worldgen/trunk_placer_type.straight_trunk_placer": "Straight"
+  "worldgen/trunk_placer_type.straight_trunk_placer": "Straight",
+  "world_settings.generate_features": "Generate Features",
+  "world_settings.bonus_chest": "Spawn Bonus Chest",
+  "world_settings.seed": "World Seed",
+  "world_settings.dimensions": "Dimensions"
 }

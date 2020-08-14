@@ -11,6 +11,7 @@ import { initRecipeSchemas } from './Recipe'
 import { initTagsSchemas } from './Tags'
 import { initTextComponentSchemas } from './TextComponent'
 import { initWorldgenSchemas } from './worldgen'
+import { initWorldSettingsSchemas } from './WorldSettings'
 
 export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
     // `Common.ts` is the only file that has exports. It should be initialized first. 
@@ -26,4 +27,5 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initTagsSchemas(schemas, collections)
     initTextComponentSchemas(schemas, collections)
     initWorldgenSchemas(schemas, collections)
+    initWorldSettingsSchemas(schemas, collections)
 }

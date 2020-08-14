@@ -136,11 +136,22 @@ export class Path {
   }
 
   /**
-   * Checks if this path is inside another path
-   * @param other parent path where this path should be inside
+   * Checks if this path starts with another path
+   * @param other path that this path should start with
    */
-  inside(other: Path) {
+  startsWith(other: Path) {
+    if (this.modelArr.length < other.modelArr.length) return false
     return other.modelArr.every((v, i) => v === this.modelArr[i])
+  }
+
+  /**
+   * Checks if this path ends with another path
+   * @param other parent path where this path should end with
+   */
+  endsWith(other: Path) {
+    const offset = this.modelArr.length - other.modelArr.length
+    if (offset < 0) return false
+    return other.modelArr.every((v, i) => v === this.modelArr[offset + i])
   }
 
   toString(): string {

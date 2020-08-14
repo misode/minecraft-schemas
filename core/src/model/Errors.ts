@@ -19,7 +19,7 @@ export class Errors implements Iterable<PathError> {
 
   get(path: Path, exact = false): PathError[] {
     return exact ? this.errors.filter(e => e.path.equals(path))
-      : this.errors.filter(e => e.path.inside(path))
+      : this.errors.filter(e => e.path.startsWith(path))
   }
 
   getAll() :PathError[] {

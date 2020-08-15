@@ -14,6 +14,7 @@ import {
   Switch,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
 } from '@mcschema/core'
 
 export function initRecipeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -25,7 +26,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:crafting_shaped': {
-        group: StringNode(),
+        group: Opt(StringNode()),
         pattern: Force(ListNode(StringNode({ pattern: /^.{0,3}$/, patternError: 'error.recipe.invalid_pattern' }))),
         key: Force(MapNode(
           StringNode({ pattern: /^.$/, patternError: 'error.recipe.invalid_key' }),
@@ -34,46 +35,46 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
         result: Force(Reference('recipe_result'))
       },
       'minecraft:crafting_shapeless': {
-        group: StringNode(),
+        group: Opt(StringNode()),
         ingredients: Force(ListNode(Reference('recipe_ingredient'))),
         result: Force(Reference('recipe_result'))
       },
       'minecraft:smelting': {
-        group: StringNode(),
+        group: Opt(StringNode()),
         ingredient: Force(Reference('recipe_ingredient')),
         result: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
-        experience: NumberNode(),
-        cookingtime: Mod(NumberNode({ integer: true }), { default: () => 200 })
+        experience: Opt(NumberNode()),
+        cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 200 }))
       },
       'minecraft:blasting': {
-        group: StringNode(),
+        group: Opt(StringNode()),
         ingredient: Force(Reference('recipe_ingredient')),
         result: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
-        experience: NumberNode(),
-        cookingtime: Mod(NumberNode({ integer: true }), { default: () => 100 })
+        experience: Opt(NumberNode()),
+        cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:smoking': {
-        group: StringNode(),
+        group: Opt(StringNode()),
         ingredient: Force(Reference('recipe_ingredient')),
         result: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
-        experience: NumberNode(),
-        cookingtime: Mod(NumberNode({ integer: true }), { default: () => 100 })
+        experience: Opt(NumberNode()),
+        cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:campfire_cooking': {
-        group: StringNode(),
+        group: Opt(StringNode()),
         ingredient: Force(Reference('recipe_ingredient')),
         result: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
-        experience: NumberNode(),
-        cookingtime: Mod(NumberNode({ integer: true }), { default: () => 100 })
+        experience: Opt(NumberNode()),
+        cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:stonecutting': {
-        group: StringNode(),
+        group: Opt(StringNode()),
         ingredient: Force(Reference('recipe_ingredient')),
         result: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
         count: Force(NumberNode({ integer: true }))
       },
       'minecraft:smithing': {
-        group: StringNode(),
+        group: Opt(StringNode()),
         base: Force(Reference('recipe_ingredient_object')),
         addition: Force(Reference('recipe_ingredient_object')),
         result: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),

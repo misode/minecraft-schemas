@@ -12,6 +12,7 @@ import {
   Switch,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
 } from '@mcschema/core'
 import { DimensionTypePresets, NoiseSettingsPresets } from './Common'
 
@@ -36,24 +37,24 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
                 biome: Resource(EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))
               },
               'minecraft:multi_noise': {
-                preset: EnumNode(['nether']),
-                altitude_noise: Reference('generator_biome_noise'),
-                temperature_noise: Reference('generator_biome_noise'),
-                humidity_noise: Reference('generator_biome_noise'),
-                weirdness_noise: Reference('generator_biome_noise'),
-                biomes: ListNode(
+                preset: Opt(EnumNode(['nether'])),
+                altitude_noise: Opt(Reference('generator_biome_noise')),
+                temperature_noise: Opt(Reference('generator_biome_noise')),
+                humidity_noise: Opt(Reference('generator_biome_noise')),
+                weirdness_noise: Opt(Reference('generator_biome_noise')),
+                biomes: Opt(ListNode(
                   Reference('generator_biome')
-                )
+                ))
               },
               'minecraft:checkerboard': {
-                scale: NumberNode({ integer: true, min: 0, max: 62 }),
+                scale: Opt(NumberNode({ integer: true, min: 0, max: 62 })),
                 biomes: ListNode(
                   Resource(EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))
                 )
               },
               'minecraft:vanilla_layered': {
-                large_biomes: BooleanNode(),
-                legacy_biome_init_layer: BooleanNode()
+                large_biomes: Opt(BooleanNode()),
+                legacy_biome_init_layer: Opt(BooleanNode())
               }
             }
           }, { category: 'predicate', disableSwitchContext: true })),
@@ -61,9 +62,9 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
         },
         'minecraft:flat': {
           settings: ObjectNode({
-            biome: Resource(EnumNode('worldgen/biome', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
-            lakes: BooleanNode(),
-            features: BooleanNode(),
+            biome: Opt(Resource(EnumNode('worldgen/biome', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))),
+            lakes: Opt(BooleanNode()),
+            features: Opt(BooleanNode()),
             layers: Force(ListNode(
               Reference('generator_layer')
             )),

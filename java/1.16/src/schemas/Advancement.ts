@@ -43,20 +43,20 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
   }
 
   schemas.register('advancement', Mod(ObjectNode({
-    display: ObjectNode({
+    display: Opt(ObjectNode({
       icon: Force(ObjectNode({
-        item: Force(Resource(EnumNode('item', { validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
-        nbt: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } } })
+        item: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
+        nbt: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } } }))
       })),
       title: Force(Reference('text_component')),
       description: Force(Reference('text_component')),
-      background: StringNode(),
-      frame: EnumNode(['task', 'challenge', 'goal']),
-      show_toast: BooleanNode(),
-      announce_to_chat: BooleanNode(),
-      hidden: BooleanNode()
-    }),
-    parent: StringNode({ validation: { validator: 'resource', params: { pool: '$advancement' } } }),
+      background: Opt(StringNode()),
+      frame: Opt(EnumNode(['task', 'challenge', 'goal'])),
+      show_toast: Opt(BooleanNode()),
+      announce_to_chat: Opt(BooleanNode()),
+      hidden: Opt(BooleanNode())
+    })),
+    parent: Opt(StringNode({ validation: { validator: 'resource', params: { pool: '$advancement' } } })),
     criteria: MapNode(
       StringNode(),
       Reference('advancement_criteria')

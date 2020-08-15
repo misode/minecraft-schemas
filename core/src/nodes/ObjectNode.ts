@@ -67,6 +67,9 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
   return ({
     ...Base,
     default: () => ({}),
+    keep() {
+      return this.optional()
+    },
     navigate(path, index) {
       const nextIndex = index + 1
       const pathElements = path.getArray()

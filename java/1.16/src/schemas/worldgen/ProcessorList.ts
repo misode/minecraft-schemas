@@ -11,6 +11,7 @@ import {
   Switch,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
 } from '@mcschema/core'
 
 export function initProcessorListSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -55,7 +56,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
   }, { context: 'processor' }))
 
   schemas.register('processor_rule', Mod(ObjectNode({
-    position_predicate: Reference('pos_rule_test'),
+    position_predicate: Opt(Reference('pos_rule_test')),
     location_predicate: Force(Reference('rule_test')),
     input_predicate: Force(Reference('rule_test')),
     output_state: Force(Reference('block_state')),

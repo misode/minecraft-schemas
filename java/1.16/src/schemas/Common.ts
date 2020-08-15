@@ -15,6 +15,7 @@ import {
   NestedNodeChildren,
   BooleanNode,
   ObjectOrPreset,
+  Opt,
 } from '@mcschema/core'
 
 export let ConditionCases: NestedNodeChildren
@@ -213,9 +214,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       inverse: BooleanNode()
     },
     'minecraft:location_check': {
-      offsetX: NumberNode({ integer: true }),
-      offsetY: NumberNode({ integer: true }),
-      offsetZ: NumberNode({ integer: true }),
+      offsetX: Opt(NumberNode({ integer: true })),
+      offsetY: Opt(NumberNode({ integer: true })),
+      offsetZ: Opt(NumberNode({ integer: true })),
       predicate: Reference('location_predicate')
     },
     'minecraft:match_tool': {

@@ -9,6 +9,7 @@ import {
   Resource,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
 } from '@mcschema/core'
 import { DefaultDimensionType } from './Common'
 
@@ -29,9 +30,9 @@ export function initDimensionTypeSchemas(schemas: SchemaRegistry, collections: C
     has_ceiling: Force(BooleanNode({ radio: true })),
     coordinate_scale: Force(NumberNode({ min: 0.00001, max: 30000000 })),
     ambient_light: Force(NumberNode()),
-    fixed_time: NumberNode({ integer: true }),
-    logical_height: Force(NumberNode({ integer: true })),
-    effects: Resource(EnumNode(['minecraft:overworld', 'minecraft:the_nether', 'minecraft:the_end'])),
+    fixed_time: Opt(NumberNode({ integer: true })),
+    logical_height: Force(NumberNode({ integer: true, min: 0, max: 256 })),
+    effects: Opt(Resource(EnumNode(['minecraft:overworld', 'minecraft:the_nether', 'minecraft:the_end']))),
     infiniburn: Force(Resource(EnumNode('dimension_type_infiniburn', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$tag/block' } } })))
   }, { context: 'dimension_type' }), {
     default: () => DefaultDimensionType

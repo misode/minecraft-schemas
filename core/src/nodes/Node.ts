@@ -130,8 +130,8 @@ export const Base: INode = ({
   validationOption: () => undefined
 })
 
-export const Mod = (node: INode, mods: Partial<INode>): INode => ({
-  ...node, ...mods
+export const Mod = (node: INode, mods: Partial<INode> | ((node: INode) => Partial<INode>)): INode => ({
+  ...node, ...(typeof mods === 'function' ? mods(node): mods)
 })
 
 export const Has = (key: string, node: INode<any>) => Mod(node, {
@@ -145,8 +145,7 @@ export function Force<T>(node: INode<T>): INode {
 export function Opt<T>(node: INode<T>): INode {
   return {
     ...node,
-    optional: () => true,
-    keep: () => true
+    optional: () => true
   }
 }
 

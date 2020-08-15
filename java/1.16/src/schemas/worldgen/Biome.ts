@@ -11,6 +11,7 @@ import {
   StringNode,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
 } from '@mcschema/core'
 
 export function initBiomeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -23,41 +24,41 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
     temperature: NumberNode(),
     downfall: NumberNode(),
     precipitation: Force(EnumNode(['none', 'rain', 'snow'], 'none')),
-    temperature_modifier: EnumNode(['none', 'frozen']),
+    temperature_modifier: Opt(EnumNode(['none', 'frozen'])),
     category: Force(EnumNode('biome_category', 'plains')),
-    player_spawn_friendly: BooleanNode(),
-    creature_spawn_probability: NumberNode({ min: 0, max: 1 }),
+    player_spawn_friendly: Opt(BooleanNode()),
+    creature_spawn_probability: Opt(NumberNode({ min: 0, max: 1 })),
     effects: Force(ObjectNode({
       sky_color: Force(NumberNode({ color: true })),
       fog_color: Force(NumberNode({ color: true })),
       water_color: Force(NumberNode({ color: true })),
       water_fog_color: Force(NumberNode({ color: true })),
-      grass_color: NumberNode({ color: true }),
-      foliage_color: NumberNode({ color: true }),
-      grass_color_modifier: EnumNode(['none', 'dark_forest', 'swamp']),
-      ambient_sound: StringNode(),
-      mood_sound: ObjectNode({
+      grass_color: Opt(NumberNode({ color: true })),
+      foliage_color: Opt(NumberNode({ color: true })),
+      grass_color_modifier: Opt(EnumNode(['none', 'dark_forest', 'swamp'])),
+      ambient_sound: Opt(StringNode()),
+      mood_sound: Opt(ObjectNode({
         sound: StringNode(),
         tick_delay: NumberNode({ integer: true }),
         block_search_extent: NumberNode({ integer: true }),
         offset: NumberNode()
-      }, { collapse: true }),
-      additions_sound: ObjectNode({
+      })),
+      additions_sound: Opt(ObjectNode({
         sound: StringNode(),
         tick_chance: NumberNode({ min: 0, max: 1 })
-      }, { collapse: true }),
-      music: ObjectNode({
+      })),
+      music: Opt(ObjectNode({
         sound: StringNode(),
         min_delay: NumberNode({ integer: true, min: 0 }),
         max_delay: NumberNode({ integer: true, min: 0 }),
         replace_current_music: BooleanNode()
-      }, { collapse: true }),
-      particle: ObjectNode({
+      })),
+      particle: Opt(ObjectNode({
         options: ObjectNode({
           type: StringNode()
         }),
         probability: NumberNode({ min: 0, max: 1 })
-      }, { collapse: true })
+      }))
     })),
     starts: Force(ListNode(
       EnumNode('configured_structure_feature', { search: true, additional: true })

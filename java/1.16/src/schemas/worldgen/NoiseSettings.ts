@@ -11,6 +11,11 @@ import {
   StringNode,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
+  INode,
+  ModelPath,
+  Errors,
+  NodeOptions,
 } from '@mcschema/core'
 import { DefaultNoiseSettings } from '../Common'
 
@@ -61,19 +66,24 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
   }))
 
   schemas.register('generator_structures', ObjectNode({
-    stronghold: ObjectNode({
-      distance: NumberNode({ integer: true }),
-      spread: NumberNode({ integer: true }),
-      count: NumberNode({ integer: true })
-    }, {
-      collapse: true
-    }),
+    stronghold: Opt(ObjectNode({
+      distance: NumberNode({ integer: true, min: 0, max: 1023 }),
+      spread: NumberNode({ integer: true, min: 0, max: 1023 }),
+      count: NumberNode({ integer: true, min: 1, max: 4095 })
+    })),
     structures: Force(MapNode(
       EnumNode('worldgen/structure_feature', { search: true, additional: true }),
       Mod(ObjectNode({
-        spacing: NumberNode({ integer: true, min: 2, max: 4096 }),
-        separation: NumberNode({ integer: true, min: 1, max: 4096 }),
-        salt: NumberNode({ integer: true })
+        spacing: NumberNode({ integer: true, min: 0, max: 4096 }),
+        separation: Mod(NumberNode({ integer: true, min: 0, max: 4096 }), (node: INode) => ({
+          validate: (path: ModelPath, value: any, errors: Errors, options: NodeOptions) => {
+            if (path.pop().push('spacing').get() <= value) {
+              errors.add(path, 'error.separation_smaller_spacing')
+            }
+            return node.validate(path, value, errors, options)
+          }
+        })),
+        salt: NumberNode({ integer: true, min: 0 })
       }, { context: 'generator_structure' }), {
         default: () => ({
           spacing: 10,

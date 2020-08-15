@@ -20,8 +20,7 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
     return schemas.get(schema).keep.bind(this)()
   },
   optional() {
-    return true
-    // return schemas.get(schema).optional.bind(this)()
+    return schemas.get(schema).optional.bind(this)()
   },
   navigate(path: ModelPath, index: number) {
     return schemas.get(schema).navigate.bind(this)(path, index)

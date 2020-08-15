@@ -337,7 +337,7 @@
   "decorator.water_lake.chance": "機率",
   "dimension": "維度",
   "dimension.generator": "生成器",
-  "dimension.generator.biome_source": "生物群系源",
+  "dimension.generator.biome_source": "生態域源",
   "dimension.overworld": "主世界",
   "dimension.the_end": "終末之界",
   "dimension.the_nether": "地獄",

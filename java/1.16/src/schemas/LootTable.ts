@@ -95,7 +95,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   }))
 
   schemas.register('loot_entry', ObjectNode({
-    type: Resource(EnumNode('loot_pool_entry_type', { defaultValue: 'minecraft:item', validation: { validator: 'resource', params: { pool: 'minecraft:loot_pool_entry_type' } } })),
+    type: Force(Resource(EnumNode('loot_pool_entry_type', { defaultValue: 'minecraft:item', validation: { validator: 'resource', params: { pool: 'minecraft:loot_pool_entry_type' } } }))),
     weight: Mod(NumberNode({ integer: true, min: 1 }), {
       enabled: path => path.pop().get()?.length > 1
         && !['minecraft:alternatives', 'minecraft:group', 'minecraft:sequence'].includes(path.push('type').get())
@@ -145,7 +145,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   }, { context: 'loot_entry' }))
 
   schemas.register('loot_function', ObjectNode({
-    function: functionSwtichNode,
+    function: Force(functionSwtichNode),
     [Switch]: path => path.push('function'),
     [Case]: {
       'minecraft:apply_bonus': {
@@ -274,7 +274,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   }, { category: 'function', context: 'function' }))
 
   schemas.register('loot_condition', Mod(ObjectNode({
-    condition: conditionSwtichNode,
+    condition: Force(conditionSwtichNode),
     [Switch]: path => path.push('condition'),
     [Case]: {
       ...ConditionCases,

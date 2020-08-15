@@ -67,7 +67,6 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
   return ({
     ...Base,
     default: () => ({}),
-    keep: () => config?.collapse ?? false,
     navigate(path, index) {
       const nextIndex = index + 1
       const pathElements = path.getArray()
@@ -98,8 +97,8 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
         ${options?.hideHeader ? '' : `<div class="node-header" ${path.error()} ${path.help()}>
           ${options?.prepend ? options.prepend : `
-            ${(options?.collapse || config?.collapse) ? value === undefined ? `
-              <button class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, { __init: true }))}"></button>
+            ${(this.optional()) ? value === undefined ? `
+              <button class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, this.default()))}"></button>
             `: `
               <button class="collapse open" data-id="${view.registerClick(() => view.model.set(path, undefined))}"></button>
             ` : ``}
@@ -108,7 +107,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
           ${options?.inject ?? ''}
           ${view.nodeInjector(path, view)}
         </div>`}
-        ${(typeof value !== 'object' && value !== undefined) || ((options?.collapse || config?.collapse) && value === undefined) ? `` : `
+        ${(typeof value !== 'object' && value !== undefined) || ((this.optional()) && value === undefined) ? `` : `
           <div class="node-body">
             ${renderFields(path, value, view)}
           </div>
@@ -130,14 +129,13 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         errors.add(path, 'error.expected_object')
         return value
       }
-      const newOptions = (value.__init) ? { ...options, init: true } : options
       let activeFields = defaultFields
       if (filter) {
         const filterPath = filter(path)
         let switchValue = filterPath.get()
         if (path.equals(filterPath.pop())) {
           const filterField = filterPath.last()
-          switchValue = defaultFields[filterField].validate(path.push(filterField), value[filterField], new Errors(), newOptions)
+          switchValue = defaultFields[filterField].validate(path.push(filterField), value[filterField], new Errors(), options)
         }
         activeFields = { ...activeFields, ...cases![switchValue] }
       }
@@ -148,7 +146,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       keys.forEach(k => {
         if (activeKeys.includes(k)) {
           if (!activeFields[k].enabled(path, path.getModel())) return
-          const newValue = activeFields[k].validate(path.push(k), value[k], errors, newOptions)
+          const newValue = activeFields[k].validate(path.push(k), value[k], errors, options)
           if (!activeFields[k].keep()
              && (newValue === undefined
               || (Array.isArray(newValue) && newValue.length === 0)

@@ -1,18 +1,47 @@
 import { INode, NodeOptions } from './Node'
 import { SchemaRegistry } from '../Registries'
+import { ModelPath } from '../model/Path'
+import { SourceView } from '../view/SourceView'
+import { DataModel } from '../model/DataModel'
+import { TreeView } from '../view/TreeView'
+import { Errors } from '../model/Errors'
 
-type Options = NodeOptions
-
-export const Reference = (schemas: SchemaRegistry, schema: string, config?: Options): INode => ({
-  default: (...args) => schemas.get(schema).default(...args),
-  transform: (...args) => schemas.get(schema).transform(...args),
-  enabled: (...args) => schemas.get(schema).enabled(...args),
-  force: (...args) => schemas.get(schema).force(...args),
-  keep: (...args) => config?.collapse || schemas.get(schema).keep(...args),
-  suggest: (p, v) => schemas.get(schema).suggest(p, v),
-  navigate: (p, i) => schemas.get(schema).navigate(p, i),
-  pathPush: (p, k) => schemas.get(schema).pathPush(p, k),
-  render: (p, v, t, options) => schemas.get(schema).render(p, v, t, {...options, ...config}),
-  validate: (p, v, e, options) => schemas.get(schema).validate(p, v, e, {...options, ...config}),
-  validationOption: (v) => schemas.get(schema).validationOption(v),
+export const Reference = <T>(schemas: SchemaRegistry, schema: string, config?: NodeOptions): INode<T> => ({
+  default() {
+    return schemas.get(schema).default.bind(this)()
+  },
+  transform(path: ModelPath, value: T, view: SourceView) {
+    return schemas.get(schema).transform(path, value, view)
+  },
+  enabled(path: ModelPath, model: DataModel) {
+    return schemas.get(schema).enabled.bind(this)(path, model)
+  },
+  force() {
+    return schemas.get(schema).force.bind(this)()
+  },
+  keep() {
+    return schemas.get(schema).keep.bind(this)()
+  },
+  optional() {
+    return true
+    // return schemas.get(schema).optional.bind(this)()
+  },
+  navigate(path: ModelPath, index: number) {
+    return schemas.get(schema).navigate.bind(this)(path, index)
+  },
+  pathPush(path: ModelPath, key: string | number) {
+    return schemas.get(schema).pathPush.bind(this)(path, key)
+  },
+  render(path: ModelPath, value: T, view: TreeView, options?: NodeOptions) {
+    return schemas.get(schema).render.bind(this)(path, value, view, options)
+  },
+  suggest(path: ModelPath, value: T) {
+    return schemas.get(schema).suggest.bind(this)(path, value)
+  },
+  validate(path: ModelPath, value: T, errors: Errors, options: NodeOptions) {
+    return schemas.get(schema).validate(path, value, errors, options)
+  },
+  validationOption(path: ModelPath) {
+    return schemas.get(schema).validationOption(path)
+  }
 })

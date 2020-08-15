@@ -1,5 +1,5 @@
 import { DataModel } from '../model/DataModel'
-import { ModelPath, Path } from '../model/Path'
+import { ModelPath } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { SourceView } from '../view/SourceView'
 import { Errors } from '../model/Errors'
@@ -12,7 +12,6 @@ export type NodeOptions = {
   label?: string
   inject?: string
   loose?: boolean
-  init?: boolean
 }
 
 export interface INode<T = any> {
@@ -44,6 +43,11 @@ export interface INode<T = any> {
    * Determines whether the node should be kept when empty
    */
   keep: () => boolean
+
+  /**
+   * Whether this node is optional and can be collapsed
+   */
+  optional: () => boolean
 
   /**
    * Navigate to the specific child of this node according to the path
@@ -123,7 +127,8 @@ export const Base: INode = ({
   transform: (_, v) => v,
   enabled: () => true,
   force: () => false,
-  keep: () => false,
+  keep: () => true,
+  optional: () => true,
   navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
   pathPush: (p) => p,
   render: () => '',
@@ -140,19 +145,12 @@ export const Has = (key: string, node: INode<any>) => Mod(node, {
   enabled: (p: ModelPath) => p.push(key).get() !== undefined
 })
 
-export function Force<T>(node: INode<T>, defaultValue?: T): INode {
+export function Force<T>(node: INode<T>): INode {
   return {
     ...node,
     force: () => true,
-    keep: () => !node.keep(),
-    default: () => defaultValue ? defaultValue : node.default(),
-    validate: (p, v, e, o) => {
-      if (o.loose && o.init) {
-        return node.validate(p, v ?? defaultValue, e, o)
-      } else {
-        return node.validate(p, v, e, o)
-      }
-    }
+    keep: () => false,
+    optional: () => false
   }
 }
 

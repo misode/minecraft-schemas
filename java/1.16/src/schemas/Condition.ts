@@ -8,6 +8,7 @@ import {
   Switch,
   SchemaRegistry,
   CollectionRegistry,
+  Force,
 } from '@mcschema/core'
 import { ConditionCases } from './Common'
 
@@ -16,7 +17,7 @@ export function initConditionSchemas(schemas: SchemaRegistry, collections: Colle
   const EnumNode = RawEnumNode.bind(undefined, collections)
 
   schemas.register('predicate', ObjectOrList(
-    Reference('condition'), { choiceContext: 'condition' }
+    Force(Reference('condition')), { choiceContext: 'condition' }
   ))
 
   schemas.register('condition', ObjectNode({

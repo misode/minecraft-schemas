@@ -44,12 +44,12 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
 
   schemas.register('advancement', Mod(ObjectNode({
     display: Opt(ObjectNode({
-      icon: Force(ObjectNode({
-        item: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
+      icon: ObjectNode({
+        item: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
         nbt: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } } }))
-      })),
-      title: Force(Reference('text_component')),
-      description: Force(Reference('text_component')),
+      }),
+      title: Reference('text_component'),
+      description: Reference('text_component'),
       background: Opt(StringNode()),
       frame: Opt(EnumNode(['task', 'challenge', 'goal'])),
       show_toast: Opt(BooleanNode()),
@@ -87,7 +87,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
   }))
 
   schemas.register('advancement_criteria', ObjectNode({
-    trigger: Force(Resource(EnumNode('advancement_trigger', { validation: { validator: 'resource', params: { pool: collections.get('advancement_trigger') } } }))),
+    trigger: Resource(EnumNode('advancement_trigger', { validation: { validator: 'resource', params: { pool: collections.get('advancement_trigger') } } })),
     conditions: ObjectNode({
       player: Opt(Mod(PredicateChoice(
         Reference('entity_predicate')

@@ -18,21 +18,21 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
   const EnumNode = RawEnumNode.bind(undefined, collections)
 
   schemas.register('biome', Mod(ObjectNode({
-    surface_builder: Force(Resource(EnumNode('worldgen/surface_builder', { search: true, additional: true }))),
+    surface_builder: Resource(EnumNode('worldgen/surface_builder', { search: true, additional: true })),
     depth: NumberNode(),
     scale: NumberNode(),
     temperature: NumberNode(),
     downfall: NumberNode(),
-    precipitation: Force(EnumNode(['none', 'rain', 'snow'], 'none')),
+    precipitation: EnumNode(['none', 'rain', 'snow'], 'none'),
     temperature_modifier: Opt(EnumNode(['none', 'frozen'])),
-    category: Force(EnumNode('biome_category', 'plains')),
+    category: EnumNode('biome_category', 'plains'),
     player_spawn_friendly: Opt(BooleanNode()),
     creature_spawn_probability: Opt(NumberNode({ min: 0, max: 1 })),
-    effects: Force(ObjectNode({
-      sky_color: Force(NumberNode({ color: true })),
-      fog_color: Force(NumberNode({ color: true })),
-      water_color: Force(NumberNode({ color: true })),
-      water_fog_color: Force(NumberNode({ color: true })),
+    effects: ObjectNode({
+      sky_color: NumberNode({ color: true }),
+      fog_color: NumberNode({ color: true }),
+      water_color: NumberNode({ color: true }),
+      water_fog_color: NumberNode({ color: true }),
       grass_color: Opt(NumberNode({ color: true })),
       foliage_color: Opt(NumberNode({ color: true })),
       grass_color_modifier: Opt(EnumNode(['none', 'dark_forest', 'swamp'])),
@@ -59,11 +59,11 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
         }),
         probability: NumberNode({ min: 0, max: 1 })
       }))
-    })),
-    starts: Force(ListNode(
+    }),
+    starts: ListNode(
       EnumNode('configured_structure_feature', { search: true, additional: true })
-    )),
-    spawners: Force(MapNode(
+    ),
+    spawners: MapNode(
       EnumNode([
         'water_ambient',
         'ambient',
@@ -85,32 +85,32 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
           weight: 1
         }]
       })
-    )),
-    spawn_costs: Force(MapNode(
+    ),
+    spawn_costs: MapNode(
       EnumNode('entity_type', { search: true }),
       Mod(ObjectNode({
-        energy_budget: Force(NumberNode()),
-        charge: Force(NumberNode())
+        energy_budget: NumberNode(),
+        charge: NumberNode()
       }), {
         default: () => ({
           energy_budget: 0.12,
           charge: 1.0
         })
       })
-    )),
-    carvers: Force(MapNode(
+    ),
+    carvers: MapNode(
       EnumNode(['air', 'liquid'], 'air'),
       Mod(ListNode(
         EnumNode('worldgen/carver', { search: true, additional: true })
       ), {
         default: () => ['minecraft:cave']
       })
-    )),
-    features: Force(ListNode(
+    ),
+    features: ListNode(
       ListNode(
         EnumNode('configured_feature', { search: true, additional: true })
       )
-    ))
+    )
   }, { context: 'biome' }), {
     default: () => ({
       surface_builder: 'minecraft:default',

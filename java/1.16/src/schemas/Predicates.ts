@@ -76,36 +76,36 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
 
   schemas.register('statistic_predicate', ObjectNode({
     type: Resource(EnumNode('stat_type', { defaultValue: 'minecraft:custom', validation: { validator: 'resource', params: { pool: 'minecraft:stat_type' } } })),
-    stat: Force(StringNode()),
-    value: Force(Range()),
+    stat: StringNode(),
+    value: Range(),
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:mined': {
-        stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))
+        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })
       },
       'minecraft:crafted': {
-        stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))
+        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })
       },
       'minecraft:used': {
-        stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))
+        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })
       },
       'minecraft:broken': {
-        stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))
+        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })
       },
       'minecraft:picked_up': {
-        stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))
+        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })
       },
       'minecraft:dropped': {
-        stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))
+        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })
       },
       'minecraft:killed': {
-        stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } }))
+        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } })
       },
       'minecraft:killed_by': {
-        stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } }))
+        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } })
       },
       'minecraft:custom': {
-        stat: Force(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:custom_stat' } } }))
+        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:custom_stat' } } })
       }
     }
   }))

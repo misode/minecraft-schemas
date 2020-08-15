@@ -36,9 +36,9 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         mossiness: NumberNode()
       },
       'minecraft:block_ignore': {
-        blocks: Force(ListNode(
+        blocks: ListNode(
           Reference('block_state')
-        ))
+        )
       },
       'minecraft:block_rot': {
         integrity: NumberNode({ min: 0, max: 1 })
@@ -48,18 +48,18 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         offset: NumberNode({ integer: true })
       },
       'minecraft:rule': {
-        rules: Force(ListNode(
+        rules: ListNode(
           Reference('processor_rule')
-        ))
+        )
       }
     }
   }, { context: 'processor' }))
 
   schemas.register('processor_rule', Mod(ObjectNode({
     position_predicate: Opt(Reference('pos_rule_test')),
-    location_predicate: Force(Reference('rule_test')),
-    input_predicate: Force(Reference('rule_test')),
-    output_state: Force(Reference('block_state')),
+    location_predicate: Reference('rule_test'),
+    input_predicate: Reference('rule_test'),
+    output_state: Reference('block_state'),
     output_nbt: StringNode()
   }, { context: 'processor_rule' }), {
     default: () => ({
@@ -79,11 +79,11 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
   }
 
   schemas.register('pos_rule_test', ObjectNode({
-    predicate_type: Force(EnumNode('pos_rule_test', 'minecraft:always_true')),
+    predicate_type: EnumNode('pos_rule_test', 'minecraft:always_true'),
     [Switch]: path => path.push('predicate_type'),
     [Case]: {
       'minecraft:axis_aligned_linear_pos': {
-        axis: Force(EnumNode(['x', 'y', 'z'], 'y')),
+        axis: EnumNode(['x', 'y', 'z'], 'y'),
         ...posTestFields
       },
       'minecraft:linear_pos': posTestFields
@@ -91,25 +91,25 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
   }, { context: 'pos_rule_test', disableSwitchContext: true }))
 
   schemas.register('rule_test', ObjectNode({
-    predicate_type: Force(EnumNode('rule_test', 'minecraft:always_true')),
+    predicate_type: EnumNode('rule_test', 'minecraft:always_true'),
     [Switch]: path => path.push('predicate_type'),
     [Case]: {
       'minecraft:block_match': {
-        block: Force(EnumNode('block', { search: true }))
+        block: EnumNode('block', { search: true })
       },
       'minecraft:blockstate_match': {
-        block_state: Force(Reference('block_state'))
+        block_state: Reference('block_state')
       },
       'minecraft:random_block_match': {
-        block: Force(EnumNode('block', { search: true })),
-        probability: Force(NumberNode({ min: 0, max: 1 }))
+        block: EnumNode('block', { search: true }),
+        probability: NumberNode({ min: 0, max: 1 })
       },
       'minecraft:random_blockstate_match': {
-        block_state: Force(Reference('block_state')),
-        probability: Force(NumberNode({ min: 0, max: 1 }))
+        block_state: Reference('block_state'),
+        probability: NumberNode({ min: 0, max: 1 })
       },
       'minecraft:tag_match': {
-        tag: Force(StringNode())
+        tag: StringNode()
       }
     }
   }, { context: 'rule_test', disableSwitchContext: true }))

@@ -5,7 +5,7 @@ export function initTagsSchemas(schemas: SchemaRegistry, collections: Collection
 
   const TagBase = (type: ResourceType) => Mod(ObjectNode({
     replace: Opt(BooleanNode()),
-    values: Force(ListNode(
+    values: ListNode(
       ChoiceNode([
         {
           type: 'string',
@@ -15,13 +15,13 @@ export function initTagsSchemas(schemas: SchemaRegistry, collections: Collection
         {
           type: 'object',
           node: ObjectNode({
-            id: Force(Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true, allowUnknown: true } } }))),
+            id: Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true, allowUnknown: true } } })),
             required: BooleanNode()
           }),
           change: v => ({ id: v })
         }
       ])
-    )),
+    ),
   }, { context: 'tag' }), {
     default: () => ({
       values: []

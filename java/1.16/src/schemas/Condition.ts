@@ -17,7 +17,7 @@ export function initConditionSchemas(schemas: SchemaRegistry, collections: Colle
   const EnumNode = RawEnumNode.bind(undefined, collections)
 
   schemas.register('predicate', ObjectOrList(
-    Force(Reference('condition')), { choiceContext: 'condition' }
+    Reference('condition'), { choiceContext: 'condition' }
   ))
 
   schemas.register('condition', ObjectNode({

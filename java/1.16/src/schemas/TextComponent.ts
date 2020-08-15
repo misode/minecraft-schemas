@@ -69,8 +69,8 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     translate: Opt(Keep(StringNode())),
     with: Opt(Reference('text_component_list')),
     score: Opt(ObjectNode({
-      name: Force(StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } } })),
-      objective: Force(StringNode({ validation: { validator: 'objective' } })),
+      name: StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } } }),
+      objective: StringNode({ validation: { validator: 'objective' } }),
       value: Opt(StringNode())
     })),
     selector: Opt(StringNode({ validation: { validator: 'entity', params: { amount: 'multiple', type: 'entities' } } })),
@@ -90,7 +90,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     obfuscated: Opt(BooleanNode()),
     insertion: Opt(StringNode()),
     clickEvent: Opt(ObjectNode({
-      action: Force(EnumNode(['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard'])),
+      action: EnumNode(['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard']),
       [Switch]: path => path.push('action'),
       [Case]: {
         'change_page': {
@@ -114,7 +114,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
       }
     })),
     hoverEvent: Opt(ObjectNode({
-      action: Force(EnumNode(['show_text', 'show_item', 'show_entity'])),
+      action: EnumNode(['show_text', 'show_item', 'show_entity']),
       [Switch]: path => path.push('action'),
       [Case]: {
         'show_text': {
@@ -124,7 +124,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
         'show_item': {
           value: Opt(StringNode({ validation: { validator: 'nbt', params: { module: 'util::InventoryItem' } } })),
           contents: Opt(ObjectNode({
-            id: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
+            id: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
             count: Opt(NumberNode({ integer: true })),
             tag: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'id' }] } } } }))
           }))
@@ -137,8 +137,8 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
           })),
           contents: Opt(Mod(ObjectNode({
             name: Opt(Reference('text_component')),
-            type: Force(Resource(EnumNode('entity_type', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } }))),
-            id: Force(StringNode({ validation: { validator: 'uuid' } }))
+            type: Resource(EnumNode('entity_type', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } })),
+            id: StringNode({ validation: { validator: 'uuid' } })
           }), {
             default: () => ({
               type: 'minecraft:pig',

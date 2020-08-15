@@ -24,43 +24,43 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
   const EnumNode = RawEnumNode.bind(undefined, collections)
 
   schemas.register('noise_settings', Mod(ObjectNode({
-    name: Mod(Force(Resource(StringNode())), {
+    name: Mod(Resource(StringNode()), {
       enabled: (path) => path.getArray().length > 0
     }),
-    bedrock_roof_position: Force(NumberNode({ integer: true })),
-    bedrock_floor_position: Force(NumberNode({ integer: true })),
-    sea_level: Force(NumberNode({ integer: true })),
-    disable_mob_generation: Force(BooleanNode()),
-    default_block: Force(Reference('block_state')),
-    default_fluid: Force(Reference('block_state')),
-    noise: Force(ObjectNode({
-      density_factor: Force(NumberNode()),
-      density_offset: Force(NumberNode()),
-      simplex_surface_noise: Force(BooleanNode()),
-      random_density_offset: Force(BooleanNode()),
-      island_noise_override: Force(BooleanNode()),
-      amplified: Force(BooleanNode()),
-      size_horizontal: Force(NumberNode({ integer: true })),
-      size_vertical: Force(NumberNode({ integer: true })),
-      height: Force(NumberNode({ integer: true })),
-      sampling: Force(ObjectNode({
-        xz_scale: Force(NumberNode()),
-        y_scale: Force(NumberNode()),
-        xz_factor: Force(NumberNode()),
-        y_factor: Force(NumberNode())
-      })),
-      bottom_slide: Force(ObjectNode({
-        target: Force(NumberNode({ integer: true })),
-        size: Force(NumberNode({ integer: true })),
-        offset: Force(NumberNode({ integer: true }))
-      })),
-      top_slide: Force(ObjectNode({
-        target: Force(NumberNode({ integer: true })),
-        size: Force(NumberNode({ integer: true })),
-        offset: Force(NumberNode({ integer: true }))
-      }))
-    })),
-    structures: Force(Reference('generator_structures'))
+    bedrock_roof_position: NumberNode({ integer: true }),
+    bedrock_floor_position: NumberNode({ integer: true }),
+    sea_level: NumberNode({ integer: true }),
+    disable_mob_generation: BooleanNode(),
+    default_block: Reference('block_state'),
+    default_fluid: Reference('block_state'),
+    noise: ObjectNode({
+      density_factor: NumberNode(),
+      density_offset: NumberNode(),
+      simplex_surface_noise: BooleanNode(),
+      random_density_offset: BooleanNode(),
+      island_noise_override: BooleanNode(),
+      amplified: BooleanNode(),
+      size_horizontal: NumberNode({ integer: true }),
+      size_vertical: NumberNode({ integer: true }),
+      height: NumberNode({ integer: true }),
+      sampling: ObjectNode({
+        xz_scale: NumberNode(),
+        y_scale: NumberNode(),
+        xz_factor: NumberNode(),
+        y_factor: NumberNode()
+      }),
+      bottom_slide: ObjectNode({
+        target: NumberNode({ integer: true }),
+        size: NumberNode({ integer: true }),
+        offset: NumberNode({ integer: true })
+      }),
+      top_slide: ObjectNode({
+        target: NumberNode({ integer: true }),
+        size: NumberNode({ integer: true }),
+        offset: NumberNode({ integer: true })
+      })
+    }),
+    structures: Reference('generator_structures')
   }, { context: 'noise_settings' }), {
     default: () => DefaultNoiseSettings
   }))
@@ -71,7 +71,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       spread: NumberNode({ integer: true, min: 0, max: 1023 }),
       count: NumberNode({ integer: true, min: 1, max: 4095 })
     })),
-    structures: Force(MapNode(
+    structures: MapNode(
       EnumNode('worldgen/structure_feature', { search: true, additional: true }),
       Mod(ObjectNode({
         spacing: NumberNode({ integer: true, min: 0, max: 4096 }),
@@ -91,12 +91,12 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
           salt: 0
         })
       })
-    ))
+    )
   }))
 
   schemas.register('generator_layer', Mod(ObjectNode({
-    block: Force(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
-    height: Force(NumberNode({ integer: true, min: 1 }))
+    block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
+    height: NumberNode({ integer: true, min: 1 })
   }), {
     default: () => ({
       block: 'minecraft:stone',

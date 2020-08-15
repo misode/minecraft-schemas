@@ -13,10 +13,10 @@ export function initCarverSchemas(schemas: SchemaRegistry, collections: Collecti
   const EnumNode = RawEnumNode.bind(undefined, collections)
 
   schemas.register('configured_carver', Mod(ObjectNode({
-    type: Force(Resource(EnumNode('worldgen/carver', 'minecraft:cave'))),
-    config: Force(ObjectNode({
-      probability: Force(NumberNode({ min: 0, max: 1 }))
-    }))
+    type: Resource(EnumNode('worldgen/carver', 'minecraft:cave')),
+    config: ObjectNode({
+      probability: NumberNode({ min: 0, max: 1 })
+    })
   }, { context: 'carver' }), {
     default: () => ({
       type: 'minecraft:cave',

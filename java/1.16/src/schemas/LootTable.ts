@@ -75,16 +75,16 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
 
   schemas.register('loot_table', Mod(ObjectNode({
     type: Opt(Resource(EnumNode('loot_context_type', { validation: { validator: "resource", params: { pool: collections.get('loot_context_type') } } }))),
-    pools: Force(ListNode(
+    pools: ListNode(
       ObjectNode({
-        rolls: Force(Range({ allowBinomial: true, integer: true, min: 1 })),
+        rolls: Range({ allowBinomial: true, integer: true, min: 1 }),
         bonus_rolls: Opt(Range({ integer: true, min: 1 })),
         entries: ListNode(
           Reference('loot_entry')
         ),
         ...functionsAndConditions
       }, { context: 'loot_pool' })
-    )),
+    ),
     ...functionsAndConditions
   }, { context: 'loot_table' }), {
     default: () => ({
@@ -101,7 +101,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   }
 
   schemas.register('loot_entry', ObjectNode({
-    type: Force(Resource(EnumNode('loot_pool_entry_type', { defaultValue: 'minecraft:item', validation: { validator: 'resource', params: { pool: 'minecraft:loot_pool_entry_type' } } }))),
+    type: Resource(EnumNode('loot_pool_entry_type', { defaultValue: 'minecraft:item', validation: { validator: 'resource', params: { pool: 'minecraft:loot_pool_entry_type' } } })),
     weight: Opt(Mod(NumberNode({ integer: true, min: 1 }), weightMod)),
     quality: Opt(Mod(NumberNode({ integer: true, min: 1 }), weightMod)),
     [Switch]: path => path.push('type'),
@@ -113,7 +113,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...functionsAndConditions
       },
       'minecraft:dynamic': {
-        name: Force(StringNode()),
+        name: StringNode(),
         ...functionsAndConditions
       },
       'minecraft:group': {
@@ -123,11 +123,11 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...functionsAndConditions
       },
       'minecraft:item': {
-        name: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
+        name: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
         ...functionsAndConditions
       },
       'minecraft:loot_table': {
-        name: Force(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })),
+        name: StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } }),
         ...functionsAndConditions
       },
       'minecraft:sequence': {
@@ -137,7 +137,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...functionsAndConditions
       },
       'minecraft:tag': {
-        name: Force(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } })),
+        name: StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } }),
         expand: Opt(BooleanNode()),
         ...functionsAndConditions
       }
@@ -145,11 +145,11 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   }, { context: 'loot_entry' }))
 
   schemas.register('loot_function', ObjectNode({
-    function: Force(functionSwtichNode),
+    function: functionSwtichNode,
     [Switch]: path => path.push('function'),
     [Case]: {
       'minecraft:apply_bonus': {
-        enchantment: Force(Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } }))),
+        enchantment: Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })),
         formula: Resource(Resource(EnumNode('loot_table_apply_bonus_formula', { defaultValue: 'minecraft:uniform_bonus_count', validation: { validator: 'resource', params: { pool: collections.get('loot_table_apply_bonus_formula') } } }))),
         parameters: Mod(ObjectNode({
           bonusMultiplier: Mod(NumberNode(), {
@@ -174,8 +174,8 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         source: copySourceSwtichNode,
         ops: ListNode(
           ObjectNode({
-            source: Force(StringNode({ validation: { validator: 'nbt_path', params: { category: { getter: 'copy_source', path: ['pop', 'pop', 'pop', { push: 'source' }] } } } })),
-            target: Force(StringNode({ validation: { validator: 'nbt_path', params: { category: 'minecraft:item' } } })),
+            source: StringNode({ validation: { validator: 'nbt_path', params: { category: { getter: 'copy_source', path: ['pop', 'pop', 'pop', { push: 'source' }] } } } }),
+            target: StringNode({ validation: { validator: 'nbt_path', params: { category: 'minecraft:item' } } }),
             op: EnumNode(['replace', 'append', 'merge'])
           }, { context: 'nbt_operation' })
         ),
@@ -195,7 +195,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:enchant_with_levels': {
-        levels: Force(Range({ allowBinomial: true })),
+        levels: Range({ allowBinomial: true }),
         treasure: BooleanNode(),
         ...conditions
       },
@@ -233,32 +233,32 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:set_count': {
-        count: Force(Range({ allowBinomial: true })),
+        count: Range({ allowBinomial: true }),
         ...conditions
       },
       'minecraft:set_damage': {
-        damage: Force(Range({ allowBinomial: true })),
+        damage: Range({ allowBinomial: true }),
         ...conditions
       },
       'minecraft:set_loot_table': {
-        name: Force(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })),
+        name: StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } }),
         seed: Opt(NumberNode({ integer: true }))
       },
       'minecraft:set_lore': {
         entity: entitySourceSwtichNode,
-        lore: Force(ListNode(
+        lore: ListNode(
           Reference('text_component')
-        )),
+        ),
         replace: Opt(BooleanNode()),
         ...conditions
       },
       'minecraft:set_name': {
         entity: entitySourceSwtichNode,
-        name: Force(Reference('text_component')),
+        name: Reference('text_component'),
         ...conditions
       },
       'minecraft:set_nbt': {
-        tag: Force(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item' } } } })),
+        tag: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item' } } } }),
         ...conditions
       },
       'minecraft:set_stew_effect': {
@@ -274,7 +274,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   }, { category: 'function', context: 'function' }))
 
   schemas.register('loot_condition', Mod(ObjectNode({
-    condition: Force(conditionSwtichNode),
+    condition: conditionSwtichNode,
     [Switch]: path => path.push('condition'),
     [Case]: {
       ...ConditionCases,

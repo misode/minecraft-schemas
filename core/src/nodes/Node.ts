@@ -138,10 +138,6 @@ export const Has = (key: string, node: INode<any>) => Mod(node, {
   enabled: (p: ModelPath) => p.push(key).get() !== undefined
 })
 
-export function Force<T>(node: INode<T>): INode {
-  return node
-}
-
 export function Opt<T>(node: INode<T>): INode {
   return {
     ...node,

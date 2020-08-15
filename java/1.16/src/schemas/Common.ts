@@ -107,7 +107,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   const Reference = RawReference.bind(undefined, schemas)
 
   schemas.register('block_state', ObjectNode({
-    Name: Force(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
+    Name: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
     Properties: MapNode(
       StringNode(),
       StringNode(),
@@ -116,11 +116,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   }, { context: 'block_state' }))
 
   schemas.register('fluid_state', ObjectNode({
-    Name: Force(Resource(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } }))),
-    Properties: Force(MapNode(
+    Name: Resource(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } })),
+    Properties: MapNode(
       StringNode(),
       StringNode()
-    ))
+    )
   }, { context: 'fluid_state' }))
 
   schemas.register('block_pos', ListNode(
@@ -136,9 +136,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     ...(config?.allowBinomial ? [{
       type: 'binomial',
       node: ObjectNode({
-        type: Force(Resource(EnumNode(['minecraft:binomial']))),
-        n: Force(NumberNode({ integer: true, min: 0 })),
-        p: Force(NumberNode({ min: 0, max: 1 }))
+        type: Resource(EnumNode(['minecraft:binomial'])),
+        n: NumberNode({ integer: true, min: 0 }),
+        p: NumberNode({ min: 0, max: 1 })
       }),
       match: (v: any) => v !== undefined && v.type === 'minecraft:binomial',
       change: (v: any) => ({
@@ -169,8 +169,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     {
       type: 'object',
       node: ObjectNode({
-        base: Force(NumberNode({ integer: true, min: config?.min, max: config?.max })),
-        spread: Force(NumberNode({ integer: true, min: 0, max: config?.maxSpread }))
+        base: NumberNode({ integer: true, min: config?.min, max: config?.max }),
+        spread: NumberNode({ integer: true, min: 0, max: config?.maxSpread })
       }),
       change: v => ({
         base: v,
@@ -181,9 +181,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
 
   ConditionCases = {
     'minecraft:alternative': {
-      terms: Force(ListNode(
+      terms: ListNode(
         Reference('condition')
-      ))
+      )
     },
     'minecraft:block_state_property': {
       block: Resource(EnumNode('block', { validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
@@ -208,7 +208,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       )
     },
     'minecraft:inverted': {
-      term: Force(Reference('condition'))
+      term: Reference('condition')
     },
     'minecraft:killed_by_player': {
       inverse: BooleanNode()
@@ -223,7 +223,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       predicate: Reference('item_predicate')
     },
     'minecraft:random_chance': {
-      chance: Force(NumberNode({ min: 0, max: 1 }))
+      chance: NumberNode({ min: 0, max: 1 })
     },
     'minecraft:random_chance_with_looting': {
       chance: NumberNode({ min: 0, max: 1 }),
@@ -235,16 +235,16 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       ),
     },
     'minecraft:reference': {
-      name: Force(StringNode({ validation: { validator: 'resource', params: { pool: '$predicate' } } }))
+      name: StringNode({ validation: { validator: 'resource', params: { pool: '$predicate' } } })
     },
     'minecraft:table_bonus': {
-      enchantment: Force(Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } }))),
-      chances: Force(ListNode(
+      enchantment: Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })),
+      chances: ListNode(
         NumberNode({ min: 0, max: 1 })
-      ))
+      )
     },
     'minecraft:time_check': {
-      value: Force(Range()),
+      value: Range(),
       period: NumberNode()
     },
     'minecraft:weather_check': {

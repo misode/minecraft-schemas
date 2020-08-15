@@ -61,7 +61,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       x: Range(),
       y: Range(),
       z: Range()
-    }, { collapse: true }),
+    }),
     biome: Resource(EnumNode('worldgen/biome', { search: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
     feature: EnumNode(collections.get('worldgen/structure_feature').map(v => v.slice(10)), { search: true }),
     dimension: Resource(EnumNode('dimension', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension' } } })),
@@ -69,8 +69,8 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       light: Range()
     }),
     smokey: BooleanNode(),
-    block: Reference('block_predicate', { collapse: true }),
-    fluid: Reference('fluid_predicate', { collapse: true })
+    block: Reference('block_predicate'),
+    fluid: Reference('fluid_predicate')
   }, { context: 'location' }))
 
   schemas.register('statistic_predicate', ObjectNode({
@@ -144,22 +144,22 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     type: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type', allowTag: true } } }),
     nbt: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:entity', id: ['pop', { push: 'type' }] } } } }),
     team: StringNode({ validation: { validator: 'team' } }),
-    location: Reference('location_predicate', { collapse: true }),
-    distance: Reference('distance_predicate', { collapse: true }),
+    location: Reference('location_predicate'),
+    distance: Reference('distance_predicate'),
     flags: ObjectNode({
       is_on_fire: BooleanNode(),
       is_sneaking: BooleanNode(),
       is_sprinting: BooleanNode(),
       is_swimming: BooleanNode(),
       is_baby: BooleanNode()
-    }, { collapse: true }),
+    }),
     equipment: MapNode(
       EnumNode('slot', 'mainhand'),
       Reference('item_predicate')
     ),
-    vehicle: Reference('entity_predicate', { collapse: true }),
-    targeted_entity: Reference('entity_predicate', { collapse: true }),
-    player: Reference('player_predicate', { collapse: true }),
+    vehicle: Reference('entity_predicate'),
+    targeted_entity: Reference('entity_predicate'),
+    player: Reference('player_predicate'),
     fishing_hook: ObjectNode({
       in_open_water: BooleanNode()
     }),
@@ -178,15 +178,15 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     bypasses_armor: BooleanNode(),
     bypasses_invulnerability: BooleanNode(),
     bypasses_magic: BooleanNode(),
-    source_entity: Reference('entity_predicate', { collapse: true }),
-    direct_entity: Reference('entity_predicate', { collapse: true })
+    source_entity: Reference('entity_predicate'),
+    direct_entity: Reference('entity_predicate')
   }, { context: 'damage_source' }))
 
   schemas.register('damage_predicate', ObjectNode({
     dealt: Range(),
     taken: Range(),
     blocked: BooleanNode(),
-    source_entity: Reference('entity_predicate', { collapse: true }),
-    type: Reference('damage_source_predicate', { collapse: true })
+    source_entity: Reference('entity_predicate'),
+    type: Reference('damage_source_predicate')
   }, { context: 'damage' }))
 }

@@ -7,7 +7,6 @@ import { ValidationOption } from '../ValidationOption'
 
 export type NodeOptions = {
   hideHeader?: boolean
-  collapse?: boolean
   prepend?: string
   label?: string
   inject?: string
@@ -33,11 +32,6 @@ export interface INode<T = any> {
    * @param model
    */
   enabled: (path: ModelPath, model: DataModel) => boolean
-
-  /**
-   * Determines whether the node should always have a value present
-   */
-  force: () => boolean
 
   /**
    * Determines whether the node should be kept when empty
@@ -126,9 +120,8 @@ export const Base: INode = ({
   default: () => undefined,
   transform: (_, v) => v,
   enabled: () => true,
-  force: () => false,
-  keep: () => true,
-  optional: () => true,
+  keep: () => false,
+  optional: () => false,
   navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
   pathPush: (p) => p,
   render: () => '',
@@ -146,11 +139,14 @@ export const Has = (key: string, node: INode<any>) => Mod(node, {
 })
 
 export function Force<T>(node: INode<T>): INode {
+  return node
+}
+
+export function Opt<T>(node: INode<T>): INode {
   return {
     ...node,
-    force: () => true,
-    keep: () => false,
-    optional: () => false
+    optional: () => true,
+    keep: () => true
   }
 }
 

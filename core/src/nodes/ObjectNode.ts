@@ -140,7 +140,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         activeFields = { ...activeFields, ...cases![switchValue] }
       }
       const activeKeys = Object.keys(activeFields)
-      const forcedKeys = activeKeys.filter(k => activeFields[k].force())
+      const forcedKeys = activeKeys.filter(k => !activeFields[k].optional())
       const keys = new Set([...forcedKeys, ...Object.keys(value)])
       let res: any = {}
       keys.forEach(k => {

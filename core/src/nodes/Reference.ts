@@ -6,7 +6,7 @@ import { DataModel } from '../model/DataModel'
 import { TreeView } from '../view/TreeView'
 import { Errors } from '../model/Errors'
 
-export const Reference = <T>(schemas: SchemaRegistry, schema: string, config?: NodeOptions): INode<T> => ({
+export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> => ({
   default() {
     return schemas.get(schema).default.bind(this)()
   },
@@ -15,9 +15,6 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string, config?: N
   },
   enabled(path: ModelPath, model: DataModel) {
     return schemas.get(schema).enabled.bind(this)(path, model)
-  },
-  force() {
-    return schemas.get(schema).force.bind(this)()
   },
   keep() {
     return schemas.get(schema).keep.bind(this)()

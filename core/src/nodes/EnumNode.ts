@@ -33,9 +33,6 @@ export const EnumNode = (collections: CollectionRegistry, values: string[] | str
     default() {
       return defaultValue ?? ''
     },
-    force() {
-      return defaultValue !== undefined
-    },
     render(path, value, view, options) {
       const inputId = view.register(el => {
         (el as HTMLSelectElement).value = value ?? ''

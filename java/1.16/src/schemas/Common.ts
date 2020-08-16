@@ -107,19 +107,19 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
 
   schemas.register('block_state', ObjectNode({
     Name: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
-    Properties: MapNode(
+    Properties: Opt(MapNode(
       StringNode(),
       StringNode(),
       { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'Name' }] } } }
-    )
+    ))
   }, { context: 'block_state' }))
 
   schemas.register('fluid_state', ObjectNode({
     Name: Resource(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } })),
-    Properties: MapNode(
+    Properties: Opt(MapNode(
       StringNode(),
       StringNode()
-    )
+    ))
   }, { context: 'fluid_state' }))
 
   schemas.register('block_pos', ListNode(
@@ -149,8 +149,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     {
       type: 'object',
       node: ObjectNode({
-        min: NumberNode(config),
-        max: NumberNode(config)
+        min: Opt(NumberNode(config)),
+        max: Opt(NumberNode(config))
       }),
       change: (v: any) => ({
         min: typeof v === 'number' ? v : v === undefined ? 1 : v.n,

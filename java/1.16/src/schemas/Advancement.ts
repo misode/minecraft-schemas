@@ -60,21 +60,21 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
       StringNode(),
       Reference('advancement_criteria')
     ),
-    requirements: ListNode(
+    requirements: Opt(ListNode(
       ListNode(
         StringNode()
       )
-    ),
-    rewards: ObjectNode({
-      function: StringNode({ validation: { validator: 'resource', params: { pool: '$function' } } }),
-      loot: ListNode(
+    )),
+    rewards: Opt(ObjectNode({
+      function: Opt(StringNode({ validation: { validator: 'resource', params: { pool: '$function' } } })),
+      loot: Opt(ListNode(
         StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })
-      ),
-      recipes: ListNode(
+      )),
+      recipes: Opt(ListNode(
         StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } })
-      ),
-      experience: NumberNode({ integer: true })
-    }),
+      )),
+      experience: Opt(NumberNode({ integer: true }))
+    })),
   }, { context: 'advancement' }), {
     default: () => ({
       criteria: {
@@ -96,169 +96,169 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
       [Switch]: path => path.pop().push('trigger'),
       [Case]: {
         'minecraft:bee_nest_destroyed': {
-          block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
-          num_bees_inside: NumberNode({ integer: true }),
-          item: Reference('item_predicate')
+          block: Opt(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
+          num_bees_inside: Opt(NumberNode({ integer: true })),
+          item: Opt(Reference('item_predicate'))
         },
         'minecraft:bred_animals': {
-          parent: PredicateChoice(Reference('entity_predicate')),
-          partner: PredicateChoice(Reference('entity_predicate')),
-          child: PredicateChoice(Reference('entity_predicate'))
+          parent: Opt(PredicateChoice(Reference('entity_predicate'))),
+          partner: Opt(PredicateChoice(Reference('entity_predicate'))),
+          child: Opt(PredicateChoice(Reference('entity_predicate')))
         },
         'minecraft:brewed_potion': {
-          potion: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:potion' } } })
+          potion: Opt(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:potion' } } }))
         },
         'minecraft:changed_dimension': {
-          from: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimension' } } })),
-          to: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimension' } } }))
+          from: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimension' } } }))),
+          to: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimension' } } })))
         },
         'minecraft:channeled_lightning': {
-          victims: ListNode(
+          victims: Opt(ListNode(
             PredicateChoice(Reference('entity_predicate'))
-          )
+          ))
         },
         'minecraft:construct_beacon': {
-          level: Range()
+          level: Opt(Range())
         },
         'minecraft:consume_item': {
-          item: Reference('item_predicate')
+          item: Opt(Reference('item_predicate'))
         },
         'minecraft:cured_zombie_villager': {
-          villager: PredicateChoice(Reference('entity_predicate')),
-          zombie: PredicateChoice(Reference('entity_predicate'))
+          villager: Opt(PredicateChoice(Reference('entity_predicate'))),
+          zombie: Opt(PredicateChoice(Reference('entity_predicate')))
         },
         'minecraft:effects_changed': {
-          effects: MapNode(
+          effects: Opt(MapNode(
             Resource(EnumNode('mob_effect', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:mob_effect' } } })),
             ObjectNode({
               amplifier: Range(),
               duration: Range()
             })
-          )
+          ))
         },
         'minecraft:enter_block': {
-          block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
-          state: MapNode(
+          block: Opt(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
+          state: Opt(MapNode(
             StringNode(),
             StringNode(),
             { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'block' }] } } }
-          )
+          ))
         },
         'minecraft:enchanted_item': {
-          levels: Range(),
-          item: Reference('item_predicate')
+          levels: Opt(Range()),
+          item: Opt(Reference('item_predicate'))
         },
         'minecraft:entity_hurt_player': {
-          damage: Reference('damage_predicate')
+          damage: Opt(Reference('damage_predicate'))
         },
         'minecraft:entity_killed_player': {
-          entity: PredicateChoice(Reference('entity_predicate')),
-          killing_blow: Reference('damage_source_predicate')
+          entity: Opt(PredicateChoice(Reference('entity_predicate'))),
+          killing_blow: Opt(Reference('damage_source_predicate'))
         },
         'minecraft:filled_bucket': {
-          item: Reference('item_predicate')
+          item: Opt(Reference('item_predicate'))
         },
         'minecraft:fishing_rod_hooked': {
-          entity: PredicateChoice(Reference('entity_predicate')),
-          item: Reference('item_predicate')
+          entity: Opt(PredicateChoice(Reference('entity_predicate'))),
+          item: Opt(Reference('item_predicate'))
         },
         'minecraft:hero_of_the_village': {
-          location: Reference('location_predicate')
+          location: Opt(Reference('location_predicate'))
         },
         'minecraft:inventory_changed': {
-          slots: ObjectNode({
-            empty: Range(),
-            occupied: Range(),
-            full: Range()
-          }),
-          items: ListNode(
+          slots: Opt(ObjectNode({
+            empty: Opt(Range()),
+            occupied: Opt(Range()),
+            full: Opt(Range())
+          })),
+          items: Opt(ListNode(
             Reference('item_predicate')
-          )
+          ))
         },
         'minecraft:item_durability_changed': {
-          delta: Range(),
-          durability: Range(),
-          item: Reference('item_predicate')
+          delta: Opt(Range()),
+          durability: Opt(Range()),
+          item: Opt(Reference('item_predicate'))
         },
         'minecraft:item_used_on_block': {
-          item: Reference('item_predicate'),
-          location: Reference('location_predicate')
+          item: Opt(Reference('item_predicate')),
+          location: Opt(Reference('location_predicate'))
         },
         'minecraft:killed_by_crossbow': {
-          unique_entity_types: Range(),
-          victims: ListNode(
+          unique_entity_types: Opt(Range()),
+          victims: Opt(ListNode(
             PredicateChoice(Reference('entity_predicate'))
-          )
+          ))
         },
         'minecraft:levitation': {
-          distance: Range(),
-          duration: Range()
+          distance: Opt(Range()),
+          duration: Opt(Range())
         },
         'minecraft:location': {
-          location: Reference('location_predicate')
+          location: Opt(Reference('location_predicate'))
         },
         'minecraft:nether_travel': {
-          distance: Range(),
-          entered: Reference('location_predicate'),
-          exited: Reference('location_predicate')
+          distance: Opt(Range()),
+          entered: Opt(Reference('location_predicate')),
+          exited: Opt(Reference('location_predicate'))
         },
         'minecraft:placed_block': {
-          block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
-          state: MapNode(
+          block: Opt(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
+          state: Opt(MapNode(
             StringNode(),
             StringNode(),
             { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'block' }] } } }
-          ),
-          item: Reference('item_predicate'),
-          location: Reference('location_predicate')
+          )),
+          item: Opt(Reference('item_predicate')),
+          location: Opt(Reference('location_predicate'))
         },
         'minecraft:player_generates_container_loot': {
           loot_table: StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })
         },
         'minecraft:player_hurt_entity': {
-          damage: Reference('damage_predicate'),
-          entity: PredicateChoice(Reference('entity_predicate'))
+          damage: Opt(Reference('damage_predicate')),
+          entity: Opt(PredicateChoice(Reference('entity_predicate')))
         },
         'minecraft:player_killed_entity': {
-          entity: PredicateChoice(Reference('entity_predicate')),
-          killing_blow: Reference('damage_source_predicate')
+          entity: Opt(PredicateChoice(Reference('entity_predicate'))),
+          killing_blow: Opt(Reference('damage_source_predicate'))
         },
         'minecraft:recipe_unlocked': {
           recipe: StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } })
         },
         'minecraft:slept_in_bed': {
-          location: Reference('location_predicate')
+          location: Opt(Reference('location_predicate'))
         },
         'minecraft:slide_down_block': {
-          block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))
+          block: Opt(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })))
         },
         'minecraft:shot_crossbow': {
-          item: Reference('item_predicate')
+          item: Opt(Reference('item_predicate'))
         },
         'minecraft:summoned_entity': {
-          entity: PredicateChoice(Reference('entity_predicate'))
+          entity: Opt(PredicateChoice(Reference('entity_predicate')))
         },
         'minecraft:tame_animal': {
-          entity: PredicateChoice(Reference('entity_predicate'))
+          entity: Opt(PredicateChoice(Reference('entity_predicate')))
         },
         'minecraft:target_hit': {
-          projectile: PredicateChoice(Reference('entity_predicate')),
-          shooter: PredicateChoice(Reference('entity_predicate')),
-          signal_strength: Range({ integer: true })
+          projectile: Opt(PredicateChoice(Reference('entity_predicate'))),
+          shooter: Opt(PredicateChoice(Reference('entity_predicate'))),
+          signal_strength: Opt(Range({ integer: true }))
         },
         'minecraft:thrown_item_picked_up_by_entity': {
-          entity: Reference('entity_predicate'),
-          item: Reference('item_predicate')
+          entity: Opt(Reference('entity_predicate')),
+          item: Opt(Reference('item_predicate'))
         },
         'minecraft:used_ender_eye': {
-          distance: Range()
+          distance: Opt(Range())
         },
         'minecraft:used_totem': {
-          item: Reference('item_predicate')
+          item: Opt(Reference('item_predicate'))
         },
         'minecraft:villager_trade': {
-          villager: Reference('entity_predicate'),
-          item: Reference('item_predicate')
+          villager: Opt(Reference('entity_predicate')),
+          item: Opt(Reference('item_predicate'))
         },
         'minecraft:voluntary_exile': {
           location: Reference('location_predicate')

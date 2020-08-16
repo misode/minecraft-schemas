@@ -74,7 +74,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
 
   schemas.register('loot_table', Mod(ObjectNode({
     type: Opt(Resource(EnumNode('loot_context_type', { validation: { validator: "resource", params: { pool: collections.get('loot_context_type') } } }))),
-    pools: ListNode(
+    pools: Opt(ListNode(
       ObjectNode({
         rolls: Range({ allowBinomial: true, integer: true, min: 1 }),
         bonus_rolls: Opt(Range({ integer: true, min: 1 })),
@@ -83,7 +83,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ),
         ...functionsAndConditions
       }, { context: 'loot_pool' })
-    ),
+    )),
     ...functionsAndConditions
   }, { context: 'loot_table' }), {
     default: () => ({

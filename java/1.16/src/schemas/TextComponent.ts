@@ -3,7 +3,6 @@ import {
   Case,
   ChoiceNode,
   EnumNode as RawEnumNode,
-  Force,
   Has,
   Keep,
   ListNode,
@@ -16,6 +15,7 @@ import {
   Switch,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
 } from '@mcschema/core'
 
 
@@ -64,32 +64,32 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
   }))
 
   schemas.register('text_component_object', Mod(ObjectNode({
-    text: Keep(StringNode()),
-    translate: Keep(StringNode()),
-    with: Reference('text_component_list'),
-    score: ObjectNode({
-      name: Force(StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } } })),
-      objective: Force(StringNode({ validation: { validator: 'objective' } })),
-      value: StringNode()
-    }, { collapse: true }),
-    selector: StringNode({ validation: { validator: 'entity', params: { amount: 'multiple', type: 'entities' } } }),
-    keybind: EnumNode('keybind', { additional: true }),
-    nbt: StringNode({ validation: { validator: 'nbt_path' } }),
-    interpret: Has('nbt', BooleanNode()),
+    text: Opt(Keep(StringNode())),
+    translate: Opt(Keep(StringNode())),
+    with: Opt(Reference('text_component_list')),
+    score: Opt(ObjectNode({
+      name: StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } } }),
+      objective: StringNode({ validation: { validator: 'objective' } }),
+      value: Opt(StringNode())
+    })),
+    selector: Opt(StringNode({ validation: { validator: 'entity', params: { amount: 'multiple', type: 'entities' } } })),
+    keybind: Opt(EnumNode('keybind', { additional: true })),
+    nbt: Opt(StringNode({ validation: { validator: 'nbt_path' } })),
+    interpret: Opt(Has('nbt', BooleanNode())),
     block: Has('nbt', StringNode({ validation: { validator: 'vector', params: { dimension: 3, isInteger: true } } })),
     entity: Has('nbt', StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities' } } })),
     storage: Has('nbt', Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$storage' } } }))),
-    extra: Reference('text_component_list'),
-    color: StringNode() /* TODO */,
-    font: Resource(StringNode()),
-    bold: BooleanNode(),
-    italic: BooleanNode(),
-    underlined: BooleanNode(),
-    strikethrough: BooleanNode(),
-    obfuscated: BooleanNode(),
-    insertion: StringNode(),
-    clickEvent: ObjectNode({
-      action: Force(EnumNode(['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard'])),
+    extra: Opt(Reference('text_component_list')),
+    color: Opt(StringNode()) /* TODO */,
+    font: Opt(Resource(StringNode())),
+    bold: Opt(BooleanNode()),
+    italic: Opt(BooleanNode()),
+    underlined: Opt(BooleanNode()),
+    strikethrough: Opt(BooleanNode()),
+    obfuscated: Opt(BooleanNode()),
+    insertion: Opt(StringNode()),
+    clickEvent: Opt(ObjectNode({
+      action: EnumNode(['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard']),
       [Switch]: path => path.push('action'),
       [Case]: {
         'change_page': {
@@ -111,42 +111,42 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
           value: StringNode({ validation: { validator: 'command', params: { leadingSlash: true, allowPartial: true } } })
         }
       }
-    }, { collapse: true }),
-    hoverEvent: ObjectNode({
-      action: Force(EnumNode(['show_text', 'show_item', 'show_entity'])),
+    })),
+    hoverEvent: Opt(ObjectNode({
+      action: EnumNode(['show_text', 'show_item', 'show_entity']),
       [Switch]: path => path.push('action'),
       [Case]: {
         'show_text': {
-          value: Reference('text_component'),
-          contents: Reference('text_component')
+          value: Opt(Reference('text_component')),
+          contents: Opt(Reference('text_component'))
         },
         'show_item': {
-          value: StringNode({ validation: { validator: 'nbt', params: { module: 'util::InventoryItem' } } }),
-          contents: ObjectNode({
-            id: Force(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
-            count: NumberNode({ integer: true }),
-            tag: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'id' }] } } } })
-          }, { collapse: true })
+          value: Opt(StringNode({ validation: { validator: 'nbt', params: { module: 'util::InventoryItem' } } })),
+          contents: Opt(ObjectNode({
+            id: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
+            count: Opt(NumberNode({ integer: true })),
+            tag: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'id' }] } } } }))
+          }))
         },
         'show_entity': {
-          value: ObjectNode({
-            name: StringNode(),
-            type: StringNode(),
-            id: StringNode()
-          }, { collapse: true }),
-          contents: Mod(ObjectNode({
-            name: Reference('text_component'),
-            type: Force(Resource(EnumNode('entity_type', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } }))),
-            id: Force(StringNode({ validation: { validator: 'uuid' } }))
-          }, { collapse: true }), {
+          value: Opt(ObjectNode({
+            name: Opt(StringNode()),
+            type: Opt(StringNode()),
+            id: Opt(StringNode())
+          })),
+          contents: Opt(Mod(ObjectNode({
+            name: Opt(Reference('text_component')),
+            type: Resource(EnumNode('entity_type', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } })),
+            id: StringNode({ validation: { validator: 'uuid' } })
+          }), {
             default: () => ({
               type: 'minecraft:pig',
               id: '00000001-0001-0001-0001-000000000001'
             })
-          })
+          }))
         }
       }
-    }, { collapse: true })
+    }))
   }, { context: 'text_component_object', collapse: true }), {
     default: () => ({
       text: ""

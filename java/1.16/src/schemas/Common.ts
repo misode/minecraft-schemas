@@ -1,6 +1,5 @@
 import {
   EnumNode as RawEnumNode,
-  Force,
   ObjectNode,
   MapNode,
   StringNode,
@@ -15,6 +14,7 @@ import {
   NestedNodeChildren,
   BooleanNode,
   ObjectOrPreset,
+  Opt,
 } from '@mcschema/core'
 
 export let ConditionCases: NestedNodeChildren
@@ -106,17 +106,17 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   const Reference = RawReference.bind(undefined, schemas)
 
   schemas.register('block_state', ObjectNode({
-    Name: Force(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
-    Properties: MapNode(
+    Name: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
+    Properties: Opt(MapNode(
       StringNode(),
       StringNode(),
       { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'Name' }] } } }
-    )
+    ))
   }, { context: 'block_state' }))
 
   schemas.register('fluid_state', ObjectNode({
-    Name: Force(Resource(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } }))),
-    Properties: Force(MapNode(
+    Name: Resource(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } })),
+    Properties: Opt(MapNode(
       StringNode(),
       StringNode()
     ))
@@ -135,9 +135,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     ...(config?.allowBinomial ? [{
       type: 'binomial',
       node: ObjectNode({
-        type: Force(Resource(EnumNode(['minecraft:binomial']))),
-        n: Force(NumberNode({ integer: true, min: 0 })),
-        p: Force(NumberNode({ min: 0, max: 1 }))
+        type: Resource(EnumNode(['minecraft:binomial'])),
+        n: NumberNode({ integer: true, min: 0 }),
+        p: NumberNode({ min: 0, max: 1 })
       }),
       match: (v: any) => v !== undefined && v.type === 'minecraft:binomial',
       change: (v: any) => ({
@@ -149,8 +149,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     {
       type: 'object',
       node: ObjectNode({
-        min: NumberNode(config),
-        max: NumberNode(config)
+        min: Opt(NumberNode(config)),
+        max: Opt(NumberNode(config))
       }),
       change: (v: any) => ({
         min: typeof v === 'number' ? v : v === undefined ? 1 : v.n,
@@ -168,8 +168,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     {
       type: 'object',
       node: ObjectNode({
-        base: Force(NumberNode({ integer: true, min: config?.min, max: config?.max })),
-        spread: Force(NumberNode({ integer: true, min: 0, max: config?.maxSpread }))
+        base: NumberNode({ integer: true, min: config?.min, max: config?.max }),
+        spread: NumberNode({ integer: true, min: 0, max: config?.maxSpread })
       }),
       change: v => ({
         base: v,
@@ -180,9 +180,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
 
   ConditionCases = {
     'minecraft:alternative': {
-      terms: Force(ListNode(
+      terms: ListNode(
         Reference('condition')
-      ))
+      )
     },
     'minecraft:block_state_property': {
       block: Resource(EnumNode('block', { validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
@@ -207,22 +207,22 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       )
     },
     'minecraft:inverted': {
-      term: Force(Reference('condition'))
+      term: Reference('condition')
     },
     'minecraft:killed_by_player': {
       inverse: BooleanNode()
     },
     'minecraft:location_check': {
-      offsetX: NumberNode({ integer: true }),
-      offsetY: NumberNode({ integer: true }),
-      offsetZ: NumberNode({ integer: true }),
+      offsetX: Opt(NumberNode({ integer: true })),
+      offsetY: Opt(NumberNode({ integer: true })),
+      offsetZ: Opt(NumberNode({ integer: true })),
       predicate: Reference('location_predicate')
     },
     'minecraft:match_tool': {
       predicate: Reference('item_predicate')
     },
     'minecraft:random_chance': {
-      chance: Force(NumberNode({ min: 0, max: 1 }))
+      chance: NumberNode({ min: 0, max: 1 })
     },
     'minecraft:random_chance_with_looting': {
       chance: NumberNode({ min: 0, max: 1 }),
@@ -234,16 +234,16 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       ),
     },
     'minecraft:reference': {
-      name: Force(StringNode({ validation: { validator: 'resource', params: { pool: '$predicate' } } }))
+      name: StringNode({ validation: { validator: 'resource', params: { pool: '$predicate' } } })
     },
     'minecraft:table_bonus': {
-      enchantment: Force(Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } }))),
-      chances: Force(ListNode(
+      enchantment: Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })),
+      chances: ListNode(
         NumberNode({ min: 0, max: 1 })
-      ))
+      )
     },
     'minecraft:time_check': {
-      value: Force(Range()),
+      value: Range(),
       period: NumberNode()
     },
     'minecraft:weather_check': {

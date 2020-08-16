@@ -1,6 +1,5 @@
 import {
   EnumNode as RawEnumNode,
-  Force,
   Mod,
   ObjectNode,
   Reference as RawReference,
@@ -14,12 +13,12 @@ export function initSurfaceBuilderSchemas(schemas: SchemaRegistry, collections: 
   const Reference = RawReference.bind(undefined, schemas)
 
   schemas.register('configured_surface_builder', Mod(ObjectNode({
-    type: Force(Resource(EnumNode('worldgen/surface_builder'))),
-    config: Force(ObjectNode({
-      top_material: Force(Reference('block_state')),
-      under_material: Force(Reference('block_state')),
-      underwater_material: Force(Reference('block_state')),
-    }, { context: 'surface_builder' }))
+    type: Resource(EnumNode('worldgen/surface_builder')),
+    config: ObjectNode({
+      top_material: Reference('block_state'),
+      under_material: Reference('block_state'),
+      underwater_material: Reference('block_state'),
+    }, { context: 'surface_builder' })
   }, { context: 'surface_builder' }), {
     default: () => ({
       type: 'minecraft:default',

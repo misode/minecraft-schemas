@@ -2,7 +2,6 @@ import {
   Case,
   ChoiceNode,
   EnumNode as RawEnumNode,
-  Force,
   ListNode,
   Mod,
   NumberNode,
@@ -36,11 +35,11 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
   ])
 
   schemas.register('template_pool', Mod(ObjectNode({
-    name: Force(StringNode()),
-    fallback: Force(StringNode()),
-    elements: Force(ListNode(
+    name: StringNode(),
+    fallback: StringNode(),
+    elements: ListNode(
       Reference('template_weighted_element')
-    ))
+    )
   }, { context: 'template_pool' }), {
     default: () => ({
       fallback: 'minecraft:empty',
@@ -56,8 +55,8 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
   }))
 
   schemas.register('template_weighted_element', Mod(ObjectNode({
-    weight: Force(NumberNode({ integer: true, min: 1 })),
-    element: Force(Reference('template_element'))
+    weight: NumberNode({ integer: true, min: 1 }),
+    element: Reference('template_element')
   }), {
     default: () => ({
       weight: 1,
@@ -68,26 +67,26 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
   }))
 
   schemas.register('template_element', ObjectNode({
-    element_type: Force(EnumNode('worldgen/structure_pool_element', 'minecraft:single_pool_element')),
-    projection: Force(Projection),
+    element_type: EnumNode('worldgen/structure_pool_element', 'minecraft:single_pool_element'),
+    projection: Projection,
     [Switch]: path => path.push('element_type'),
     [Case]: {
       'minecraft:feature_pool_element': {
-        feature: Force(EnumNode('configured_feature', { search: true, additional: true })),
-        processors: Force(Processors)
+        feature: EnumNode('configured_feature', { search: true, additional: true }),
+        processors: Processors
       },
       'minecraft:legacy_single_pool_element': {
-        location: Force(StringNode()),
-        processors: Force(Processors)
+        location: StringNode(),
+        processors: Processors
       },
       'minecraft:list_pool_element': {
-        elements: Force(ListNode(
+        elements: ListNode(
           Reference('template_element')
-        ))
+        )
       },
       'minecraft:single_pool_element': {
         location: StringNode(),
-        processors: Force(Processors)
+        processors: Processors
       }
     }
   }, { context: 'template_element', disableSwitchContext: true }))

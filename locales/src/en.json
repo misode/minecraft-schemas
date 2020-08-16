@@ -453,6 +453,7 @@
   "error.invalid_range.smaller": "Value %0% is smaller than minimum %1%",
   "error.recipe.invalid_key": "only single character is allowed as a key",
   "error.recipe.invalid_pattern": "invalid crafting pattern",
+  "error.separation_smaller_spacing": "Separation has to be smaller than spacing",
   "false": "False",
   "feature.bamboo.probability": "Probability",
   "feature.basalt_columns.height": "Height",

@@ -1,11 +1,23 @@
-import { BooleanNode, EnumNode as RawEnumNode, Force, ListNode, Mod, ObjectNode, Resource, ResourceType, ChoiceNode, SchemaRegistry, CollectionRegistry } from '@mcschema/core'
+import {
+  BooleanNode,
+  EnumNode as RawEnumNode,
+  ListNode,
+  Mod,
+  ObjectNode,
+  Resource,
+  ResourceType,
+  ChoiceNode,
+  SchemaRegistry,
+  CollectionRegistry,
+  Opt,
+} from '@mcschema/core'
 
 export function initTagsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const EnumNode = RawEnumNode.bind(undefined, collections)
 
   const TagBase = (type: ResourceType) => Mod(ObjectNode({
-    replace: BooleanNode(),
-    values: Force(ListNode(
+    replace: Opt(BooleanNode()),
+    values: ListNode(
       ChoiceNode([
         {
           type: 'string',
@@ -15,13 +27,13 @@ export function initTagsSchemas(schemas: SchemaRegistry, collections: Collection
         {
           type: 'object',
           node: ObjectNode({
-            id: Force(Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true, allowUnknown: true } } }))),
+            id: Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true, allowUnknown: true } } })),
             required: BooleanNode()
           }),
           change: v => ({ id: v })
         }
       ])
-    )),
+    ),
   }, { context: 'tag' }), {
     default: () => ({
       values: []

@@ -59,7 +59,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     value = value ?? {}
     const activeFields = getActiveFields(path)
     return Object.keys(activeFields)
-      .filter(k => activeFields[k].enabled(path, view.model))
+      .filter(k => activeFields[k].enabled(path))
       .map(k => activeFields[k].render(getChildModelPath(path, k), value[k], view))
       .join('')
   }
@@ -90,7 +90,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       let res: any = {}
       const activeFields = getActiveFields(path)
       Object.keys(activeFields)
-        .filter(k => activeFields[k].enabled(path, view.model))
+        .filter(k => activeFields[k].enabled(path))
         .forEach(f => {
           res[f] = activeFields[f].transform(path.push(f), value[f], view)
         })
@@ -148,7 +148,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       let res: any = {}
       keys.forEach(k => {
         if (activeKeys.includes(k)) {
-          if (!activeFields[k].enabled(path, path.getModel())) return
+          if (!activeFields[k].enabled(path)) return
           const newValue = activeFields[k].validate(path.push(k), value[k], errors, options)
           if (!activeFields[k].keep()
              && (newValue === undefined

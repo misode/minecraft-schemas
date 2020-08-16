@@ -29,9 +29,8 @@ export interface INode<T = any> {
   /**
    * Determines whether the node should be enabled for this path
    * @param path
-   * @param model
    */
-  enabled: (path: ModelPath, model: DataModel) => boolean
+  enabled: (path: ModelPath) => boolean
 
   /**
    * Determines whether the node should be kept when empty

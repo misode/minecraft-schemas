@@ -13,8 +13,8 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
   transform(path: ModelPath, value: T, view: SourceView) {
     return schemas.get(schema).transform(path, value, view)
   },
-  enabled(path: ModelPath, model: DataModel) {
-    return schemas.get(schema).enabled.bind(this)(path, model)
+  enabled(path: ModelPath) {
+    return schemas.get(schema).enabled.bind(this)(path)
   },
   keep() {
     return schemas.get(schema).keep.bind(this)()

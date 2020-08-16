@@ -234,7 +234,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       ),
     },
     'minecraft:reference': {
-      name: StringNode({ validation: { validator: 'resource', params: { pool: '$predicate' } } })
+      name: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$predicate' } } }))
     },
     'minecraft:table_bonus': {
       enchantment: Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })),

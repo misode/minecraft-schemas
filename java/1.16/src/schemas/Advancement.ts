@@ -62,16 +62,16 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
     ),
     requirements: Opt(ListNode(
       ListNode(
-        StringNode()
+        StringNode() // TODO: add validation
       )
     )),
     rewards: Opt(ObjectNode({
-      function: Opt(StringNode({ validation: { validator: 'resource', params: { pool: '$function' } } })),
+      function: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$function' } } }))),
       loot: Opt(ListNode(
-        StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })
+        Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } }))
       )),
       recipes: Opt(ListNode(
-        StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } })
+        Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } }))
       )),
       experience: Opt(NumberNode({ integer: true }))
     })),
@@ -213,7 +213,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           location: Opt(Reference('location_predicate'))
         },
         'minecraft:player_generates_container_loot': {
-          loot_table: StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })
+          loot_table: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } }))
         },
         'minecraft:player_hurt_entity': {
           damage: Opt(Reference('damage_predicate')),
@@ -224,7 +224,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           killing_blow: Opt(Reference('damage_source_predicate'))
         },
         'minecraft:recipe_unlocked': {
-          recipe: StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } })
+          recipe: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } }))
         },
         'minecraft:slept_in_bed': {
           location: Opt(Reference('location_predicate'))

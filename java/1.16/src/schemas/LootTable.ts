@@ -126,7 +126,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...functionsAndConditions
       },
       'minecraft:loot_table': {
-        name: StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } }),
+        name: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })),
         ...functionsAndConditions
       },
       'minecraft:sequence': {
@@ -136,7 +136,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...functionsAndConditions
       },
       'minecraft:tag': {
-        name: StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } }),
+        name: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } })),
         expand: Opt(BooleanNode()),
         ...functionsAndConditions
       }
@@ -240,7 +240,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:set_loot_table': {
-        name: StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } }),
+        name: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })),
         seed: Opt(NumberNode({ integer: true }))
       },
       'minecraft:set_lore': {

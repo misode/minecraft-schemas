@@ -21,7 +21,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
 
   schemas.register('item_predicate', ObjectNode({
     item: Opt(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
-    tag: Opt(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } })),
+    tag: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } }))),
     count: Opt(Range()),
     durability: Opt(Range()),
     potion: Opt(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:potion' } } })),
@@ -38,7 +38,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
 
   schemas.register('block_predicate', ObjectNode({
     block: Opt(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
-    tag: Opt(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/block' } } })),
+    tag: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/block' } } }))),
     nbt: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:block', id: ['pop', { push: 'block' }] } } } })),
     state: Opt(MapNode(
       StringNode(),
@@ -49,7 +49,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
 
   schemas.register('fluid_predicate', ObjectNode({
     fluid: Opt(Resource(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } }))),
-    tag: Opt(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/fluid' } } })),
+    tag: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/fluid' } } }))),
     state: Opt(MapNode(
       StringNode(),
       StringNode()

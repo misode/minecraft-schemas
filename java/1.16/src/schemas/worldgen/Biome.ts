@@ -17,7 +17,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
   const EnumNode = RawEnumNode.bind(undefined, collections)
 
   schemas.register('biome', Mod(ObjectNode({
-    surface_builder: Resource(EnumNode('worldgen/surface_builder', { search: true, additional: true })),
+    surface_builder: Resource(EnumNode('worldgen/surface_builder', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_surface_builder' } } })),
     depth: NumberNode(),
     scale: NumberNode(),
     temperature: NumberNode(),
@@ -60,7 +60,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       }))
     }),
     starts: ListNode(
-      EnumNode('configured_structure_feature', { search: true, additional: true })
+      EnumNode('configured_structure_feature', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_structure_feature' } } })
     ),
     spawners: MapNode(
       EnumNode([
@@ -100,14 +100,14 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
     carvers: MapNode(
       EnumNode(['air', 'liquid'], 'air'),
       Mod(ListNode(
-        EnumNode('worldgen/carver', { search: true, additional: true })
+        EnumNode('worldgen/carver', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_carver' } } })
       ), {
         default: () => ['minecraft:cave']
       })
     ),
     features: ListNode(
       ListNode(
-        EnumNode('configured_feature', { search: true, additional: true })
+        EnumNode('configured_feature', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_feature' } } })
       )
     )
   }, { context: 'biome' }), {

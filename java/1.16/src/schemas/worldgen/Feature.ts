@@ -10,7 +10,6 @@ import {
   Switch,
   BooleanNode,
   ListNode,
-  StringNode,
   ChoiceNode,
   SchemaRegistry,
   CollectionRegistry,
@@ -69,7 +68,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   const Feature = ChoiceNode([
     {
       type: 'string',
-      node: StringNode()
+      node: EnumNode('configured_feature', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_feature' } } })
     },
     {
       type: 'object',

@@ -59,7 +59,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
     location_predicate: Reference('rule_test'),
     input_predicate: Reference('rule_test'),
     output_state: Reference('block_state'),
-    output_nbt: StringNode()
+    output_nbt: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:block' } } } })
   }, { context: 'processor_rule' }), {
     default: () => ({
       location_predicate: {},

@@ -11,6 +11,7 @@ import {
   Switch,
   SchemaRegistry,
   CollectionRegistry,
+  Resource,
 } from '@mcschema/core'
 import './ProcessorList'
 
@@ -72,11 +73,11 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
     [Switch]: path => path.push('element_type'),
     [Case]: {
       'minecraft:feature_pool_element': {
-        feature: EnumNode('configured_feature', { search: true, additional: true }),
+        feature: EnumNode('configured_feature', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_feature' } } }),
         processors: Processors
       },
       'minecraft:legacy_single_pool_element': {
-        location: StringNode(),
+        location: Resource(StringNode()),
         processors: Processors
       },
       'minecraft:list_pool_element': {
@@ -85,7 +86,7 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
         )
       },
       'minecraft:single_pool_element': {
-        location: StringNode(),
+        location: Resource(StringNode()),
         processors: Processors
       }
     }

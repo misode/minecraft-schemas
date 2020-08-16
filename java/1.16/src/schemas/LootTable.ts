@@ -75,21 +75,32 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   schemas.register('loot_table', Mod(ObjectNode({
     type: Opt(Resource(EnumNode('loot_context_type', { validation: { validator: "resource", params: { pool: collections.get('loot_context_type') } } }))),
     pools: Opt(ListNode(
-      ObjectNode({
+      Mod(ObjectNode({
         rolls: Range({ allowBinomial: true, integer: true, min: 1 }),
         bonus_rolls: Opt(Range({ integer: true, min: 1 })),
         entries: ListNode(
           Reference('loot_entry')
         ),
         ...functionsAndConditions
-      }, { context: 'loot_pool' })
+      }, { context: 'loot_pool' }), {
+        default: () => ({
+          rolls: 1,
+          entries: [{
+            type: 'minecraft:item',
+            name: 'minecraft:stone'
+          }]
+        })
+      })
     )),
     ...functionsAndConditions
   }, { context: 'loot_table' }), {
     default: () => ({
       pools: [{
         rolls: 1,
-        entries: [{}]
+        entries: [{
+          type: 'minecraft:item',
+          name: 'minecraft:stone'
+        }]
       }]
     })
   }))
@@ -99,7 +110,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
       && !['minecraft:alternatives', 'minecraft:group', 'minecraft:sequence'].includes(path.push('type').get())
   }
 
-  schemas.register('loot_entry', ObjectNode({
+  schemas.register('loot_entry', Mod(ObjectNode({
     type: Resource(EnumNode('loot_pool_entry_type', { defaultValue: 'minecraft:item', validation: { validator: 'resource', params: { pool: 'minecraft:loot_pool_entry_type' } } })),
     weight: Opt(Mod(NumberNode({ integer: true, min: 1 }), weightMod)),
     quality: Opt(Mod(NumberNode({ integer: true, min: 1 }), weightMod)),
@@ -141,9 +152,14 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...functionsAndConditions
       }
     }
-  }, { context: 'loot_entry' }))
+  }, { context: 'loot_entry' }), {
+    default: () => ({
+      type: 'minecraft:item',
+      name: 'minecraft:stone'
+    })
+  }))
 
-  schemas.register('loot_function', ObjectNode({
+  schemas.register('loot_function', Mod(ObjectNode({
     function: functionSwtichNode,
     [Switch]: path => path.push('function'),
     [Case]: {
@@ -270,7 +286,12 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       }
     }
-  }, { category: 'function', context: 'function' }))
+  }, { category: 'function', context: 'function' }), {
+    default: () => ({
+      function: 'minecraft:set_count',
+      count: 1
+    })
+  }))
 
   schemas.register('loot_condition', Mod(ObjectNode({
     condition: conditionSwtichNode,
@@ -289,9 +310,14 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         )
       }
     }
-  }), { category: 'predicate', context: 'condition' }))
+  }, { category: 'predicate', context: 'condition' }), {
+    default: () => ({
+      condition: 'minecraft:random_chance',
+      chance: 0.5
+    })
+  }))
 
-  schemas.register('attribute_modifier', ObjectNode({
+  schemas.register('attribute_modifier', Mod(ObjectNode({
     attribute: Resource(EnumNode('attribute', { validation: { validator: 'resource', params: { pool: 'minecraft:attribute' } } })),
     name: StringNode(),
     amount: Range({ allowBinomial: true }),
@@ -299,5 +325,13 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     slot: StringOrList(
       EnumNode('slot')
     )
-  }, { context: 'attribute_modifier' }))
+  }, { context: 'attribute_modifier' }), {
+    default: () => ({
+      attribute: 'minecraft:generic.max_health',
+      name: '',
+      amount: 1,
+      operation: 'addition',
+      slot: 'mainhand'
+    })
+  }))
 }

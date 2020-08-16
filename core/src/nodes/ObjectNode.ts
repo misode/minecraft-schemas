@@ -150,7 +150,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         if (activeKeys.includes(k)) {
           if (!activeFields[k].enabled(path)) return
           const newValue = activeFields[k].validate(path.push(k), value[k], errors, options)
-          if (!activeFields[k].keep()
+          if (!activeFields[k].keep() && activeFields[k].optional()
              && (newValue === undefined
               || (Array.isArray(newValue) && newValue.length === 0)
               || (newValue.constructor === Object && Object.keys(newValue).length === 0))) {

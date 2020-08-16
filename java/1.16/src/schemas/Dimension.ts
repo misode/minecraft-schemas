@@ -12,6 +12,7 @@ import {
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  INode,
 } from '@mcschema/core'
 import { DimensionTypePresets, NoiseSettingsPresets } from './Common'
 
@@ -19,36 +20,40 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
   const Reference = RawReference.bind(undefined, schemas)
   const EnumNode = RawEnumNode.bind(undefined, collections)
 
+  const NoPreset = (node: INode) => Mod(node, {
+    enabled: path => path.push('preset').get() === undefined
+  })
+
   schemas.register('dimension', Mod(ObjectNode({
     type: DimensionTypePresets(Reference('dimension_type')),
     generator: ObjectNode({
-      type: Resource(EnumNode('worldgen/chunk_generator', { defaultValue: 'minecraft:noise', validation: { validator: 'resource', params: { pool: 'minecraft:worldgen/chunk_generator' } } })),
+      type: Resource(EnumNode('worldgen/chunk_generator', { validation: { validator: 'resource', params: { pool: 'minecraft:worldgen/chunk_generator' } } })),
       seed: NumberNode({ integer: true }),
       [Switch]: path => path.push('type'),
       [Case]: {
         'minecraft:noise': {
           biome_source: ObjectNode({
-            type: Resource(EnumNode('worldgen/biome_source', { defaultValue: 'minecraft:multi_noise', validation: { validator: 'resource', params: { pool: 'minecraft:worldgen/biome_source' } } })),
+            type: Resource(EnumNode('worldgen/biome_source', { validation: { validator: 'resource', params: { pool: 'minecraft:worldgen/biome_source' } } })),
             seed: NumberNode({ integer: true }),
             [Switch]: path => path.push('type'),
             [Case]: {
               'minecraft:fixed': {
-                biome: Resource(EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))
+                biome: Resource(EnumNode('worldgen/biome', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))
               },
               'minecraft:multi_noise': {
                 preset: Opt(EnumNode(['nether'])),
-                altitude_noise: Opt(Reference('generator_biome_noise')),
-                temperature_noise: Opt(Reference('generator_biome_noise')),
-                humidity_noise: Opt(Reference('generator_biome_noise')),
-                weirdness_noise: Opt(Reference('generator_biome_noise')),
-                biomes: Opt(ListNode(
+                altitude_noise: NoPreset(Reference('generator_biome_noise')),
+                temperature_noise: NoPreset(Reference('generator_biome_noise')),
+                humidity_noise: NoPreset(Reference('generator_biome_noise')),
+                weirdness_noise: NoPreset(Reference('generator_biome_noise')),
+                biomes: NoPreset(ListNode(
                   Reference('generator_biome')
                 ))
               },
               'minecraft:checkerboard': {
                 scale: Opt(NumberNode({ integer: true, min: 0, max: 62 })),
                 biomes: ListNode(
-                  Resource(EnumNode('worldgen/biome', { defaultValue: 'minecraft:plains', search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))
+                  Resource(EnumNode('worldgen/biome', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))
                 )
               },
               'minecraft:vanilla_layered': {
@@ -73,30 +78,21 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
       }
     }, { disableSwitchContext: true })
   }, { context: 'dimension' }), {
-    default: () => ({
+    default: () => {
+      const seed = Math.floor(Math.random() * (4294967296)) - 2147483648
+      return {
       type: 'minecraft:overworld',
       generator: {
+        type: 'minecraft:noise',
+        seed,
         biome_source: {
-          altitude_noise: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          temperature_noise: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          humidity_noise: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          weirdness_noise: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          }
+          type: 'minecraft:fixed',
+          seed,
+          biome: 'minecraft:plains'
         },
         settings: 'minecraft:overworld'
       }
-    })
+    }}
   }))
 
   schemas.register('generator_biome', Mod(ObjectNode({

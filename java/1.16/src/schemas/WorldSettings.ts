@@ -32,14 +32,13 @@ export function initWorldSettingsSchemas(schemas: SchemaRegistry, collections: C
         'minecraft:overworld': {
           type: "minecraft:overworld",
           generator: {
-            biome_source: {
-              seed: 0,
-              large_biomes: false,
-              type: 'minecraft:vanilla_layered'
-            },
+            type: 'minecraft:noise',
             seed: 0,
+            biome_source: {
+              type: 'minecraft:vanilla_layered',
+              seed: 0
+            },
             settings: 'minecraft:overworld',
-            type: 'minecraft:noise'
           }
         }
       }

@@ -42,7 +42,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
   }
 
   schemas.register('advancement', Mod(ObjectNode({
-    display: Opt(ObjectNode({
+    display: Opt(Mod(ObjectNode({
       icon: ObjectNode({
         item: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
         nbt: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } } }))
@@ -54,6 +54,14 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
       show_toast: Opt(BooleanNode()),
       announce_to_chat: Opt(BooleanNode()),
       hidden: Opt(BooleanNode())
+    }), {
+      default: () => ({
+        icon: {
+          item: 'minecraft:stone'
+        },
+        title: '',
+        description: ''
+      })
     })),
     parent: Opt(StringNode({ validation: { validator: 'resource', params: { pool: '$advancement' } } })),
     criteria: MapNode(

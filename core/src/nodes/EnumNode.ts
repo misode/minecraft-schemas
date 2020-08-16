@@ -80,7 +80,7 @@ export const EnumNode = (collections: CollectionRegistry, values: string[] | str
       const pathWithContext = (typeof values === 'string') ?
         new ModelPath(path.getModel(), new Path(path.getArray(), [values])) : path
       return `<select data-id="${inputId}">
-        ${defaultValue ? `` : `<option value="">${locale('unset')}</option>`}
+        ${this.optional() ? `<option value="">${locale('unset')}</option>` : ''}
         ${valuesList.map(v =>
         `<option value="${v}">${pathWithContext.push(v).locale()}</option>`
       ).join('')}

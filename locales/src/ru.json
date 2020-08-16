@@ -760,7 +760,6 @@
   "noise_settings.noise.size_horizontal": "Размер по горизонтали",
   "noise_settings.noise.size_horizontal.help": "Значение должно быть 1, 2 или 4. Значения выше 4 приведут к исчезновению ландшафта. Чем выше значение, тем ровнее ландшафт.",
   "noise_settings.noise.size_vertical": "Размер по вертикали",
-  "noise_settings.noise.size_vertical.help": "Значение от 1 до 4.",
   "noise_settings.noise.top_slide": "Верх кривой",
   "noise_settings.noise.top_slide.offset": "Смещение верха кривой",
   "noise_settings.noise.top_slide.size": "Размер верха кривой",

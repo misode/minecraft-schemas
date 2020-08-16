@@ -599,7 +599,6 @@
   "noise_settings.noise.size_horizontal": "Taille horizontale",
   "noise_settings.noise.size_horizontal.help": "La valeur doit être soit 1, soit 2, soit 4. Des valeurs au dessus de 4 font qu'aucun terrain ne se génère. Des valeurs plus élevées provoquent un terrain plus lisse.",
   "noise_settings.noise.size_vertical": "Taille verticale",
-  "noise_settings.noise.size_vertical.help": "Valeur entre 1 et 4",
   "noise_settings.noise.top_slide": "Glissement en haut",
   "noise_settings.noise.top_slide.offset": "Décalage du glissement en haut",
   "noise_settings.noise.top_slide.size": "Taille du glissement en haut",

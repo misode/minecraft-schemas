@@ -868,7 +868,6 @@
   "noise_settings.noise.size_horizontal": "水平大小",
   "noise_settings.noise.size_horizontal.help": "值必須為 1、2 或 4。大於 4 的值會導致沒有地形生成。值越大地形越平滑。",
   "noise_settings.noise.size_vertical": "垂直大小",
-  "noise_settings.noise.size_vertical.help": "位於 1 和 4 之間的值。",
   "noise_settings.noise.top_slide": "頂部曲線",
   "noise_settings.noise.top_slide.offset": "頂部曲線偏移",
   "noise_settings.noise.top_slide.size": "頂部曲線大小",

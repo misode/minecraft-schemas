@@ -868,7 +868,6 @@
   "noise_settings.noise.size_horizontal": "Horizontale Größe",
   "noise_settings.noise.size_horizontal.help": "Wert muss entweder 1, 2 oder 4 sein. Werte höher als 4 erzeugen kein Terrain. Höhere Were erzeugen gleichmäßigeres Terrain.",
   "noise_settings.noise.size_vertical": "Vertikale Größe",
-  "noise_settings.noise.size_vertical.help": "Wert zwischen 1 und 4.",
   "noise_settings.noise.top_slide": "Obere Schicht",
   "noise_settings.noise.top_slide.offset": "Verschiebung der oberen Schicht",
   "noise_settings.noise.top_slide.size": "Größe der oberen Schicht",

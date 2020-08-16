@@ -485,6 +485,32 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:village_taiga'
   ])
 
+  collections.register('configured_surface_builder', [
+    'minecraft:badlands',
+    'minecraft:basalt_deltas',
+    'minecraft:crimson_forest',
+    'minecraft:desert',
+    'minecraft:end',
+    'minecraft:eroded_badlands',
+    'minecraft:frozen_ocean',
+    'minecraft:full_sand',
+    'minecraft:giant_tree_taiga',
+    'minecraft:grass',
+    'minecraft:gravelly_mountain',
+    'minecraft:ice_spikes',
+    'minecraft:mountain',
+    'minecraft:mycelium',
+    'minecraft:nether',
+    'minecraft:nope',
+    'minecraft:ocean_sand',
+    'minecraft:shattered_savanna',
+    'minecraft:soul_sand_valley',
+    'minecraft:stone',
+    'minecraft:swamp',
+    'minecraft:warped_forest',
+    'minecraft:wooded_badlands'
+  ])
+
   collections.register('biome_category', [
     'beach',
     'desert',

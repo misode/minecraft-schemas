@@ -17,7 +17,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
   const EnumNode = RawEnumNode.bind(undefined, collections)
 
   schemas.register('biome', Mod(ObjectNode({
-    surface_builder: Resource(EnumNode('worldgen/surface_builder', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_surface_builder' } } })),
+    surface_builder: Resource(EnumNode('configured_surface_builder', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_surface_builder' } } })),
     depth: NumberNode(),
     scale: NumberNode(),
     temperature: NumberNode(),
@@ -112,7 +112,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
     )
   }, { context: 'biome' }), {
     default: () => ({
-      surface_builder: 'minecraft:default',
+      surface_builder: 'minecraft:grass',
       depth: 0.125,
       scale: 0.05,
       temperature: 0.8,

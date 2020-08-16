@@ -1,4 +1,16 @@
-import { BooleanNode, EnumNode as RawEnumNode, Force, ListNode, Mod, ObjectNode, Resource, ResourceType, ChoiceNode, SchemaRegistry, CollectionRegistry, Opt } from '@mcschema/core'
+import {
+  BooleanNode,
+  EnumNode as RawEnumNode,
+  ListNode,
+  Mod,
+  ObjectNode,
+  Resource,
+  ResourceType,
+  ChoiceNode,
+  SchemaRegistry,
+  CollectionRegistry,
+  Opt,
+} from '@mcschema/core'
 
 export function initTagsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const EnumNode = RawEnumNode.bind(undefined, collections)

@@ -8,7 +8,6 @@ import {
   Switch,
   SchemaRegistry,
   CollectionRegistry,
-  Force,
 } from '@mcschema/core'
 import { ConditionCases } from './Common'
 

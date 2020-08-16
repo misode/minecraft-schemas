@@ -13,6 +13,7 @@ import {
   ChoiceNode,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
 } from '@mcschema/core'
 import { UniformInt } from '../Common'
 import './Decorator'
@@ -205,20 +206,20 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           heightmap: EnumNode('heightmap_type', 'OCEAN_FLOOR'),
           minimum_size: ObjectNode({
             type: EnumNode('worldgen/feature_size_type', 'minecraft:two_layers_feature_size'),
-            min_clipped_height: NumberNode({ min: 0, max: 80 }),
+            min_clipped_height: Opt(NumberNode({ min: 0, max: 80 })),
             [Switch]: path => path.push('type'),
             [Case]: {
               'minecraft:two_layers_feature_size': {
-                limit: NumberNode({ integer: true, min: 0, max: 81 }),
-                lower_size: NumberNode({ integer: true, min: 0, max: 16 }),
-                upper_size: NumberNode({ integer: true, min: 0, max: 16 })
+                limit: Opt(NumberNode({ integer: true, min: 0, max: 81 })),
+                lower_size: Opt(NumberNode({ integer: true, min: 0, max: 16 })),
+                upper_size: Opt(NumberNode({ integer: true, min: 0, max: 16 }))
               },
               'minecraft:three_layers_feature_size': {
-                limit: NumberNode({ integer: true, min: 0, max: 80 }),
-                upper_limit: NumberNode({ integer: true, min: 0, max: 80 }),
-                lower_size: NumberNode({ integer: true, min: 0, max: 16 }),
-                middle_size: NumberNode({ integer: true, min: 0, max: 16 }),
-                upper_size: NumberNode({ integer: true, min: 0, max: 16 })
+                limit: Opt(NumberNode({ integer: true, min: 0, max: 80 })),
+                upper_limit: Opt(NumberNode({ integer: true, min: 0, max: 80 })),
+                lower_size: Opt(NumberNode({ integer: true, min: 0, max: 16 })),
+                middle_size: Opt(NumberNode({ integer: true, min: 0, max: 16 })),
+                upper_size: Opt(NumberNode({ integer: true, min: 0, max: 16 }))
               }
             }
           }, { disableSwitchContext: true }),
@@ -294,11 +295,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           config: {
             max_water_depth: 0,
             ignore_vines: true,
-            minimum_size: {
-              limit: 1,
-              lower_size: 0,
-              upper_size: 1
-            },
+            minimum_size: {},
             trunk_placer: {
               base_height: 5,
               height_rand_a: 2,

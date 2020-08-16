@@ -11,6 +11,7 @@ import {
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  Resource,
 } from '@mcschema/core'
 
 export function initProcessorListSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -59,7 +60,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
     location_predicate: Reference('rule_test'),
     input_predicate: Reference('rule_test'),
     output_state: Reference('block_state'),
-    output_nbt: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:block' } } } })
+    output_nbt: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:block' } } } }))
   }, { context: 'processor_rule' }), {
     default: () => ({
       location_predicate: {},
@@ -94,13 +95,13 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
     [Switch]: path => path.push('predicate_type'),
     [Case]: {
       'minecraft:block_match': {
-        block: EnumNode('block', { search: true })
+        block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))
       },
       'minecraft:blockstate_match': {
         block_state: Reference('block_state')
       },
       'minecraft:random_block_match': {
-        block: EnumNode('block', { search: true }),
+        block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
         probability: NumberNode({ min: 0, max: 1 })
       },
       'minecraft:random_blockstate_match': {

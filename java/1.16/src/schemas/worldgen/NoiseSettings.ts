@@ -1,13 +1,11 @@
 import {
   BooleanNode,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   Mod,
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  Resource,
   MapNode,
-  StringNode,
   SchemaRegistry,
   CollectionRegistry,
   Opt,
@@ -20,10 +18,10 @@ import { DefaultNoiseSettings } from '../Common'
 
 export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('noise_settings', Mod(ObjectNode({
-    name: Mod(Resource(StringNode()), {
+    name: Mod(StringNode({ validator: 'resource', params: { pool: '$worldgen/noise_settings', isDefinition: true } }), {
       enabled: (path) => path.getArray().length > 0
     }),
     bedrock_roof_position: NumberNode({ integer: true }),
@@ -71,7 +69,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       count: NumberNode({ integer: true, min: 1, max: 4095 })
     })),
     structures: MapNode(
-      EnumNode('worldgen/structure_feature', { search: true, additional: true }),
+      StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature' } }),
       Mod(ObjectNode({
         spacing: NumberNode({ integer: true, min: 0, max: 4096 }),
         separation: Mod(NumberNode({ integer: true, min: 0, max: 4096 }), (node: INode) => ({
@@ -94,7 +92,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
   }))
 
   schemas.register('generator_layer', Mod(ObjectNode({
-    block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
+    block: StringNode({ validator: 'resource', params: { pool: 'block' } }),
     height: NumberNode({ integer: true, min: 1 })
   }), {
     default: () => ({

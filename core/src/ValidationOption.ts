@@ -164,7 +164,11 @@ type ResourceValidationOption = {
     /**
      * Whether resource locations not contained in `pool` are allowed.
      */
-    allowUnknown?: boolean
+    allowUnknown?: boolean,
+    /**
+     * Whether the field is a definition for the `pool`. Any resource will be allowed.
+     */
+    isDefinition?: boolean
   }
 }
 
@@ -218,6 +222,7 @@ export type ResourceType =
   | '$predicate'
   | '$recipe'
   | '$storage'
+  | '$structure'
   | '$tag/block'
   | '$tag/entity_type'
   | '$tag/fluid'
@@ -232,19 +237,34 @@ export type ResourceType =
   | '$worldgen/noise_settings'
   | '$worldgen/processor_list'
   | '$worldgen/template_pool'
-  | 'minecraft:attribute'
-  | 'minecraft:block'
-  | 'minecraft:custom_stat'
-  | 'minecraft:enchantment'
-  | 'minecraft:entity_type'
-  | 'minecraft:fluid'
-  | 'minecraft:item'
-  | 'minecraft:loot_condition_type'
-  | 'minecraft:loot_function_type'
-  | 'minecraft:loot_pool_entry_type'
-  | 'minecraft:mob_effect'
-  | 'minecraft:potion'
-  | 'minecraft:recipe_serializer'
-  | 'minecraft:stat_type'
-  | 'minecraft:worldgen/biome_source'
-  | 'minecraft:worldgen/chunk_generator'
+  | 'attribute'
+  | 'block'
+  | 'custom_stat'
+  | 'enchantment'
+  | 'entity_type'
+  | 'fluid'
+  | 'item'
+  | 'loot_condition_type'
+  | 'loot_function_type'
+  | 'loot_pool_entry_type'
+  | 'mob_effect'
+  | 'pos_rule_test'
+  | 'potion'
+  | 'recipe_serializer'
+  | 'rule_test'
+  | 'stat_type'
+  | 'worldgen/block_state_provider_type'
+  | 'worldgen/block_placer_type'
+  | 'worldgen/biome_source'
+  | 'worldgen/carver'
+  | 'worldgen/chunk_generator'
+  | 'worldgen/decorator'
+  | 'worldgen/feature'
+  | 'worldgen/feature_size_type'
+  | 'worldgen/foliage_placer_type'
+  | 'worldgen/structure_feature'
+  | 'worldgen/structure_pool_element'
+  | 'worldgen/structure_processor'
+  | 'worldgen/surface_builder'
+  | 'worldgen/tree_decorator_type'
+  | 'worldgen/trunk_placer_type'

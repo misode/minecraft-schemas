@@ -1,14 +1,12 @@
 import {
   BooleanNode,
   Case,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   ListNode,
   Mod,
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  Resource,
-  StringNode,
   StringOrList,
   Switch,
   SwitchNode,
@@ -33,7 +31,7 @@ import { ConditionCases, Range } from './Common'
 
 export function initLootTableSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   const conditions: NestedNodeChildren = {
     conditions: ListNode(
@@ -67,13 +65,13 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     return SwitchNode(cases)
   }
 
-  const conditionSwtichNode = compileSwitchNode(LootConditions, 'loot_condition_type', type => Resource(EnumNode(type, { defaultValue: 'minecraft:random_chance', validation: { validator: 'resource', params: { pool: type instanceof Array ? type : `minecraft:loot_condition_type` } } })))
-  const functionSwtichNode = compileSwitchNode(LootFunctions, 'loot_function_type', type => Resource(EnumNode(type, { defaultValue: 'minecraft:set_count', validation: { validator: 'resource', params: { pool: type instanceof Array ? type : `minecraft:loot_function_type` } } })))
-  const entitySourceSwtichNode = compileSwitchNode(LootEntitySources, 'entity_source', type => EnumNode(type, 'this'))
-  const copySourceSwtichNode = compileSwitchNode(LootCopySources, 'copy_source', type => EnumNode(type, 'this'))
+  const conditionSwtichNode = compileSwitchNode(LootConditions, 'loot_condition_type', type => StringNode({ validator: 'resource', params: { pool: type instanceof Array ? type : `loot_condition_type` } }))
+  const functionSwtichNode = compileSwitchNode(LootFunctions, 'loot_function_type', type => StringNode({ validator: 'resource', params: { pool: type instanceof Array ? type : `loot_function_type` } }))
+  const entitySourceSwtichNode = compileSwitchNode(LootEntitySources, 'entity_source', type => StringNode({ enum: type }))
+  const copySourceSwtichNode = compileSwitchNode(LootCopySources, 'copy_source', type => StringNode({ enum: type}))
 
   schemas.register('loot_table', Mod(ObjectNode({
-    type: Opt(Resource(EnumNode('loot_context_type', { validation: { validator: "resource", params: { pool: collections.get('loot_context_type') } } }))),
+    type: Opt(StringNode({ validator: "resource", params: { pool: collections.get('loot_context_type') } })),
     pools: Opt(ListNode(
       Mod(ObjectNode({
         rolls: Range({ allowBinomial: true, integer: true, min: 1 }),
@@ -111,7 +109,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   }
 
   schemas.register('loot_entry', Mod(ObjectNode({
-    type: Resource(EnumNode('loot_pool_entry_type', { defaultValue: 'minecraft:item', validation: { validator: 'resource', params: { pool: 'minecraft:loot_pool_entry_type' } } })),
+    type: StringNode({ validator: 'resource', params: { pool: 'loot_pool_entry_type' } }),
     weight: Opt(Mod(NumberNode({ integer: true, min: 1 }), weightMod)),
     quality: Opt(Mod(NumberNode({ integer: true, min: 1 }), weightMod)),
     [Switch]: path => path.push('type'),
@@ -133,11 +131,11 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...functionsAndConditions
       },
       'minecraft:item': {
-        name: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
+        name: StringNode({ validator: 'resource', params: { pool: 'item' } }),
         ...functionsAndConditions
       },
       'minecraft:loot_table': {
-        name: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })),
+        name: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
         ...functionsAndConditions
       },
       'minecraft:sequence': {
@@ -147,7 +145,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...functionsAndConditions
       },
       'minecraft:tag': {
-        name: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } })),
+        name: StringNode({ validator: 'resource', params: { pool: '$tag/item' } }),
         expand: Opt(BooleanNode()),
         ...functionsAndConditions
       }
@@ -164,8 +162,8 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     [Switch]: path => path.push('function'),
     [Case]: {
       'minecraft:apply_bonus': {
-        enchantment: Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })),
-        formula: Resource(Resource(EnumNode('loot_table_apply_bonus_formula', { defaultValue: 'minecraft:uniform_bonus_count', validation: { validator: 'resource', params: { pool: collections.get('loot_table_apply_bonus_formula') } } }))),
+        enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+        formula: StringNode({ validator: 'resource', params: { pool: collections.get('loot_table_apply_bonus_formula') } }),
         parameters: Mod(ObjectNode({
           bonusMultiplier: Mod(NumberNode(), {
             enabled: path => path.pop().push('formula').get() === 'minecraft:uniform_bonus_count'
@@ -189,23 +187,23 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         source: copySourceSwtichNode,
         ops: ListNode(
           ObjectNode({
-            source: StringNode({ validation: { validator: 'nbt_path', params: { category: { getter: 'copy_source', path: ['pop', 'pop', 'pop', { push: 'source' }] } } } }),
-            target: StringNode({ validation: { validator: 'nbt_path', params: { category: 'minecraft:item' } } }),
-            op: EnumNode(['replace', 'append', 'merge'])
+            source: StringNode({ validator: 'nbt_path', params: { category: { getter: 'copy_source', path: ['pop', 'pop', 'pop', { push: 'source' }] } } }),
+            target: StringNode({ validator: 'nbt_path', params: { category: 'minecraft:item' } }),
+            op: StringNode({ enum: ['replace', 'append', 'merge'] })
           }, { context: 'nbt_operation' })
         ),
         ...conditions
       },
       'minecraft:copy_state': {
-        block: Resource(EnumNode('block', { validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
+        block: StringNode({ validator: 'resource', params: { pool: 'block' } }),
         properties: ListNode(
-          StringNode({ validation: { validator: 'block_state_key', params: { id: ['pop', 'pop', { push: 'block' }] } } })
+          StringNode({ validator: 'block_state_key', params: { id: ['pop', 'pop', { push: 'block' }] } })
         ),
         ...conditions
       },
       'minecraft:enchant_randomly': {
         enchantments: ListNode(
-          Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } }))
+          StringNode({ validator: 'resource', params: { pool: 'enchantment' } })
         ),
         ...conditions
       },
@@ -215,8 +213,8 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:exploration_map': {
-        destination: Opt(EnumNode('worldgen/structure_feature')),
-        decoration: Opt(Resource(EnumNode('map_decoration', { validation: { validator: 'resource', params: { pool: collections.get('map_decoration') } } }))),
+        destination: Opt(StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature' } })),
+        decoration: Opt(StringNode({ validator: 'resource', params: { pool: collections.get('map_decoration') } })),
         zoom: Opt(NumberNode({ integer: true })),
         search_radius: Opt(NumberNode({ integer: true })),
         skip_existing_chunks: Opt(BooleanNode()),
@@ -256,7 +254,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:set_loot_table': {
-        name: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } })),
+        name: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
         seed: Opt(NumberNode({ integer: true }))
       },
       'minecraft:set_lore': {
@@ -273,13 +271,13 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:set_nbt': {
-        tag: StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item' } } } }),
+        tag: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item' } } }),
         ...conditions
       },
       'minecraft:set_stew_effect': {
         effects: Opt(ListNode(
           ObjectNode({
-            type: EnumNode('mob_effect', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:mob_effect' } } }),
+            type: StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
             duration: Range()
           })
         )),
@@ -305,7 +303,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
       'minecraft:entity_scores': {
         entity: entitySourceSwtichNode,
         scores: MapNode(
-          StringNode({ validation: { validator: 'objective' } }),
+          StringNode({ validator: 'objective' }),
           Range({ forceRange: true })
         )
       }
@@ -318,12 +316,12 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   }))
 
   schemas.register('attribute_modifier', Mod(ObjectNode({
-    attribute: Resource(EnumNode('attribute', { validation: { validator: 'resource', params: { pool: 'minecraft:attribute' } } })),
+    attribute: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
     name: StringNode(),
     amount: Range({ allowBinomial: true }),
-    operation: EnumNode(['addition', 'multiply_base', 'multiply_total']),
+    operation: StringNode({ enum: ['addition', 'multiply_base', 'multiply_total'] }),
     slot: StringOrList(
-      EnumNode('slot')
+      StringNode({ enum: 'slot' })
     )
   }, { context: 'attribute_modifier' }), {
     default: () => ({

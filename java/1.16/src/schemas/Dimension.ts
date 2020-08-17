@@ -1,13 +1,12 @@
 import {
   BooleanNode,
   Case,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   ListNode,
   Mod,
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  Resource,
   Switch,
   SchemaRegistry,
   CollectionRegistry,
@@ -18,7 +17,7 @@ import { DimensionTypePresets, NoiseSettingsPresets } from './Common'
 
 export function initDimensionSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   const NoPreset = (node: INode) => Mod(node, {
     enabled: path => path.push('preset').get() === undefined
@@ -27,21 +26,21 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
   schemas.register('dimension', Mod(ObjectNode({
     type: DimensionTypePresets(Reference('dimension_type')),
     generator: ObjectNode({
-      type: Resource(EnumNode('worldgen/chunk_generator', { validation: { validator: 'resource', params: { pool: 'minecraft:worldgen/chunk_generator' } } })),
+      type: StringNode({ validator: 'resource', params: { pool: 'worldgen/chunk_generator' } }),
       seed: NumberNode({ integer: true }),
       [Switch]: path => path.push('type'),
       [Case]: {
         'minecraft:noise': {
           biome_source: ObjectNode({
-            type: Resource(EnumNode('worldgen/biome_source', { validation: { validator: 'resource', params: { pool: 'minecraft:worldgen/biome_source' } } })),
+            type: StringNode({ validator: 'resource', params: { pool: 'worldgen/biome_source' } }),
             seed: NumberNode({ integer: true }),
             [Switch]: path => path.push('type'),
             [Case]: {
               'minecraft:fixed': {
-                biome: Resource(EnumNode('worldgen/biome', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))
+                biome: StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })
               },
               'minecraft:multi_noise': {
-                preset: Opt(EnumNode(['nether'])),
+                preset: Opt(StringNode({ enum: ['nether'] })),
                 altitude_noise: NoPreset(Reference('generator_biome_noise')),
                 temperature_noise: NoPreset(Reference('generator_biome_noise')),
                 humidity_noise: NoPreset(Reference('generator_biome_noise')),
@@ -53,7 +52,7 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
               'minecraft:checkerboard': {
                 scale: Opt(NumberNode({ integer: true, min: 0, max: 62 })),
                 biomes: ListNode(
-                  Resource(EnumNode('worldgen/biome', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))
+                  StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })
                 )
               },
               'minecraft:vanilla_layered': {
@@ -66,7 +65,7 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
         },
         'minecraft:flat': {
           settings: ObjectNode({
-            biome: Opt(Resource(EnumNode('worldgen/biome', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))),
+            biome: Opt(StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })),
             lakes: Opt(BooleanNode()),
             features: Opt(BooleanNode()),
             layers: ListNode(
@@ -96,7 +95,7 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
   }))
 
   schemas.register('generator_biome', Mod(ObjectNode({
-    biome: Resource(EnumNode('worldgen/biome', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } })),
+    biome: StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } }),
     parameters: ObjectNode({
       altitude: NumberNode({ min: -1, max: 1 }),
       temperature: NumberNode({ min: -1, max: 1 }),

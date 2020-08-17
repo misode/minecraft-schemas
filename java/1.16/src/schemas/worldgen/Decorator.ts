@@ -1,10 +1,9 @@
 import {
   Case,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  Resource,
   Switch,
   NodeChildren,
   SchemaRegistry,
@@ -14,7 +13,7 @@ import { UniformInt } from '../Common'
 
 export function initDecoratorSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   const RangeConfig: NodeChildren = {
     maximum: NumberNode({ integer: true }),
@@ -31,12 +30,12 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
   }
 
   schemas.register('configured_decorator', ObjectNode({
-    type: Resource(EnumNode('worldgen/decorator', 'minecraft:count')),
+    type: StringNode({ validator: 'resource', params: { pool: 'worldgen/decorator' } }),
     config: ObjectNode({
       [Switch]: path => path.pop().push('type'),
       [Case]: {
         'minecraft:carving_mask': {
-          step: EnumNode('generation_step', 'air'),
+          step: StringNode({ enum: 'generation_step' }),
           probability: NumberNode({ min: 0, max: 1 })
         },
         'minecraft:chance': ChanceConfig,

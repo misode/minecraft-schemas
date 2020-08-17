@@ -1,12 +1,11 @@
 import {
   Case,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   Mod,
   NodeChildren,
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  Resource,
   Switch,
   BooleanNode,
   ListNode,
@@ -21,7 +20,7 @@ import './ProcessorList'
 
 export function initFeatureSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   const RandomPatchConfig: NodeChildren = {
     can_replace: BooleanNode(),
@@ -69,7 +68,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   const Feature = ChoiceNode([
     {
       type: 'string',
-      node: EnumNode('configured_feature', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_feature' } } })
+      node: StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_feature' } })
     },
     {
       type: 'object',
@@ -78,7 +77,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   ], { choiceContext: 'feature' })
 
   schemas.register('configured_feature', Mod(ObjectNode({
-    type: Resource(EnumNode('worldgen/feature', 'minecraft:tree')),
+    type: StringNode({ validator: 'resource', params: { pool: 'worldgen/feature' } }),
     config: ObjectNode({
       [Switch]: path => path.pop().push('type'),
       [Case]: {
@@ -197,15 +196,15 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           hole_count: NumberNode({ integer: true }),
           required_block_below: BooleanNode(),
           valid_blocks: ListNode(
-            EnumNode('block')
+            StringNode({ validator: 'resource', params: { pool: 'block' } })
           )
         },
         'minecraft:tree': {
           max_water_depth: NumberNode({ integer: true }),
           ignore_vines: BooleanNode(),
-          heightmap: EnumNode('heightmap_type', 'OCEAN_FLOOR'),
+          heightmap: StringNode({ enum: 'heightmap_type' }),
           minimum_size: ObjectNode({
-            type: EnumNode('worldgen/feature_size_type', 'minecraft:two_layers_feature_size'),
+            type: StringNode({ validator: 'resource', params: { pool: 'worldgen/feature_size_type' } }),
             min_clipped_height: Opt(NumberNode({ min: 0, max: 80 })),
             [Switch]: path => path.push('type'),
             [Case]: {
@@ -226,13 +225,13 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           trunk_provider: Reference('block_state_provider'),
           leaves_provider: Reference('block_state_provider'),
           trunk_placer: ObjectNode({
-            type: EnumNode('worldgen/trunk_placer_type', 'minecraft:straight_trunk_placer'),
+            type: StringNode({ validator: 'resource', params: { pool: 'worldgen/trunk_placer_type' } }),
             base_height: NumberNode({ integer: true, min: 0, max: 32 }),
             height_rand_a: NumberNode({ integer: true, min: 0, max: 24 }),
             height_rand_b: NumberNode({ integer: true, min: 0, max: 24 })
           }, { context: 'trunk_placer' }),
           foliage_placer: ObjectNode({
-            type: EnumNode('worldgen/foliage_placer_type', 'minecraft:blob_foliage_placer'),
+            type: StringNode({ validator: 'resource', params: { pool: 'worldgen/foliage_placer_type' } }),
             radius: UniformInt({ min: 0, max: 8, maxSpread: 8 }),
             offset: UniformInt({ min: 0, max: 8, maxSpread: 8 }),
             [Switch]: path => path.push('type'),
@@ -262,7 +261,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           }, { context: 'foliage_placer', disableSwitchContext: true }),
           decorators: ListNode(
             ObjectNode({
-              type: EnumNode('worldgen/tree_decorator_type', 'minecraft:alter_ground'),
+              type: StringNode({ validator: 'resource', params: { pool: 'worldgen/tree_decorator_type' } }),
               [Switch]: path => path.push('type'),
               [Case]: {
                 'minecraft:alter_ground': {
@@ -313,7 +312,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   }))
 
   schemas.register('block_state_provider', ObjectNode({
-    type: EnumNode('worldgen/block_state_provider_type', 'minecraft:simple_state_provider'),
+    type: StringNode({ validator: 'resource', params: { pool: 'worldgen/block_state_provider_type' } }),
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:rotated_block_provider': {
@@ -338,7 +337,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   }, { context: 'block_state_provider' }))
 
   schemas.register('block_placer', ObjectNode({
-    type: EnumNode('worldgen/block_placer_type', 'minecraft:simple_block_placer'),
+    type: StringNode({ validator: 'resource', params: { pool: 'worldgen/block_placer_type' } }),
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:column_placer': {

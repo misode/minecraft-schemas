@@ -2,7 +2,7 @@ import {
   BooleanNode,
   Case,
   ChoiceNode,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   Has,
   Keep,
   ListNode,
@@ -10,8 +10,6 @@ import {
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  Resource,
-  StringNode,
   Switch,
   SchemaRegistry,
   CollectionRegistry,
@@ -21,7 +19,7 @@ import {
 
 export function initTextComponentSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   const getSimpleString = (jsonText: any): string => jsonText instanceof Array ? getSimpleString(jsonText[0]) : jsonText?.text ?? jsonText?.toString() ?? ''
 
@@ -68,20 +66,20 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     translate: Opt(Keep(StringNode())),
     with: Opt(Reference('text_component_list')),
     score: Opt(ObjectNode({
-      name: StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } } }),
-      objective: StringNode({ validation: { validator: 'objective' } }),
+      name: StringNode({ validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } }),
+      objective: StringNode({ validator: 'objective' }),
       value: Opt(StringNode())
     })),
-    selector: Opt(StringNode({ validation: { validator: 'entity', params: { amount: 'multiple', type: 'entities' } } })),
-    keybind: Opt(EnumNode('keybind', { additional: true })),
-    nbt: Opt(StringNode({ validation: { validator: 'nbt_path' } })),
+    selector: Opt(StringNode({ validator: 'entity', params: { amount: 'multiple', type: 'entities' } })),
+    keybind: Opt(StringNode({ enum: 'keybind', additional: true })),
+    nbt: Opt(StringNode({ validator: 'nbt_path' })),
     interpret: Opt(Has('nbt', BooleanNode())),
-    block: Has('nbt', StringNode({ validation: { validator: 'vector', params: { dimension: 3, isInteger: true } } })),
-    entity: Has('nbt', StringNode({ validation: { validator: 'entity', params: { amount: 'single', type: 'entities' } } })),
-    storage: Has('nbt', Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$storage' } } }))),
+    block: Has('nbt', StringNode({ validator: 'vector', params: { dimension: 3, isInteger: true } })),
+    entity: Has('nbt', StringNode({ validator: 'entity', params: { amount: 'single', type: 'entities' } })),
+    storage: Has('nbt', StringNode({ validator: 'resource', params: { pool: '$storage' } })),
     extra: Opt(Reference('text_component_list')),
     color: Opt(StringNode()) /* TODO */,
-    font: Opt(Resource(StringNode())),
+    font: Opt(StringNode()), // TODO: add validation
     bold: Opt(BooleanNode()),
     italic: Opt(BooleanNode()),
     underlined: Opt(BooleanNode()),
@@ -89,7 +87,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     obfuscated: Opt(BooleanNode()),
     insertion: Opt(StringNode()),
     clickEvent: Opt(ObjectNode({
-      action: EnumNode(['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard']),
+      action: StringNode({ enum: ['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard'] }),
       [Switch]: path => path.push('action'),
       [Case]: {
         'change_page': {
@@ -105,15 +103,15 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
           value: StringNode()
         },
         'run_command': {
-          value: StringNode({ validation: { validator: 'command', params: { leadingSlash: true, allowPartial: true } } })
+          value: StringNode({ validator: 'command', params: { leadingSlash: true, allowPartial: true } })
         },
         'suggest_command': {
-          value: StringNode({ validation: { validator: 'command', params: { leadingSlash: true, allowPartial: true } } })
+          value: StringNode({ validator: 'command', params: { leadingSlash: true, allowPartial: true } })
         }
       }
     })),
     hoverEvent: Opt(ObjectNode({
-      action: EnumNode(['show_text', 'show_item', 'show_entity']),
+      action: StringNode({ enum: ['show_text', 'show_item', 'show_entity'] }),
       [Switch]: path => path.push('action'),
       [Case]: {
         'show_text': {
@@ -121,11 +119,11 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
           contents: Opt(Reference('text_component'))
         },
         'show_item': {
-          value: Opt(StringNode({ validation: { validator: 'nbt', params: { module: 'util::InventoryItem' } } })),
+          value: Opt(StringNode({ validator: 'nbt', params: { module: 'util::InventoryItem' } })),
           contents: Opt(ObjectNode({
-            id: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
+            id: StringNode({ validator: 'resource', params: { pool: 'item' } }),
             count: Opt(NumberNode({ integer: true })),
-            tag: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'id' }] } } } }))
+            tag: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'id' }] } } }))
           }))
         },
         'show_entity': {
@@ -136,8 +134,8 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
           })),
           contents: Opt(Mod(ObjectNode({
             name: Opt(Reference('text_component')),
-            type: Resource(EnumNode('entity_type', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } })),
-            id: StringNode({ validation: { validator: 'uuid' } })
+            type: StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
+            id: StringNode({ validator: 'uuid' })
           }), {
             default: () => ({
               type: 'minecraft:pig',

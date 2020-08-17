@@ -1,10 +1,9 @@
 import {
   BooleanNode,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  Resource,
   SchemaRegistry,
   CollectionRegistry,
   MapNode,
@@ -13,14 +12,14 @@ import {
 
 export function initWorldSettingsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('world_settings', Mod(ObjectNode({
     generate_features: BooleanNode({ radio: true }),
     bonus_chest: BooleanNode({ radio: true }),
     seed: NumberNode({ integer: true }),
     dimensions: MapNode(
-      Resource(EnumNode('dimension', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension' } } })),
+      StringNode({ validator: 'resource', params: { pool: '$dimension' } }),
       Reference('dimension')
     )
   }, { context: 'world_settings' }), {

@@ -1,29 +1,26 @@
 import {
   Case,
   ChoiceNode,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   ListNode,
   Mod,
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  StringNode,
   Switch,
   SchemaRegistry,
   CollectionRegistry,
-  Resource,
 } from '@mcschema/core'
 import './ProcessorList'
 
 export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
-  const Projection = EnumNode(['rigid', 'terrain_matching'], 'rigid')
   const Processors = ChoiceNode([
     {
       type: 'string',
-      node: StringNode(),
+      node: StringNode({ validator: 'resource', params: { pool: '$worldgen/processor_list' }}),
       change: v => undefined
     },
     {
@@ -68,16 +65,16 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
   }))
 
   schemas.register('template_element', ObjectNode({
-    element_type: EnumNode('worldgen/structure_pool_element', 'minecraft:single_pool_element'),
-    projection: Projection,
+    element_type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_pool_element' } }),
+    projection: StringNode({ enum: ['rigid', 'terrain_matching'] }),
     [Switch]: path => path.push('element_type'),
     [Case]: {
       'minecraft:feature_pool_element': {
-        feature: EnumNode('configured_feature', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_feature' } } }),
+        feature: StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_feature' } }),
         processors: Processors
       },
       'minecraft:legacy_single_pool_element': {
-        location: Resource(StringNode()),
+        location: StringNode({ validator: 'resource', params: { pool: '$structure' }}),
         processors: Processors
       },
       'minecraft:list_pool_element': {
@@ -86,7 +83,7 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
         )
       },
       'minecraft:single_pool_element': {
-        location: Resource(StringNode()),
+        location: StringNode({ validator: 'resource', params: { pool: '$structure' }}),
         processors: Processors
       }
     }

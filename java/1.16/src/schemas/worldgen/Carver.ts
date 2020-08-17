@@ -1,18 +1,17 @@
 import {
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   Mod,
   NumberNode,
   ObjectNode,
-  Resource,
   SchemaRegistry,
   CollectionRegistry,
 } from '@mcschema/core'
 
 export function initCarverSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('configured_carver', Mod(ObjectNode({
-    type: Resource(EnumNode('worldgen/carver', 'minecraft:cave')),
+    type: StringNode({ validator: 'resource', params: { pool: 'worldgen/carver' } }),
     config: ObjectNode({
       probability: NumberNode({ min: 0, max: 1 })
     })

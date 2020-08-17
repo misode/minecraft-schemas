@@ -1,30 +1,28 @@
 import {
   BooleanNode,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   ListNode,
   MapNode,
   Mod,
   NumberNode,
   ObjectNode,
-  Resource,
-  StringNode,
   SchemaRegistry,
   CollectionRegistry,
   Opt,
 } from '@mcschema/core'
 
 export function initBiomeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('biome', Mod(ObjectNode({
-    surface_builder: Resource(EnumNode('configured_surface_builder', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_surface_builder' } } })),
+    surface_builder: StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_surface_builder' } }),
     depth: NumberNode(),
     scale: NumberNode(),
     temperature: NumberNode(),
     downfall: NumberNode(),
-    precipitation: EnumNode(['none', 'rain', 'snow'], 'none'),
-    temperature_modifier: Opt(EnumNode(['none', 'frozen'])),
-    category: EnumNode('biome_category', 'plains'),
+    precipitation: StringNode({ enum: ['none', 'rain', 'snow'] }),
+    temperature_modifier: Opt(StringNode({ enum: ['none', 'frozen'] })),
+    category: StringNode({ enum: 'biome_category' }),
     player_spawn_friendly: Opt(BooleanNode()),
     creature_spawn_probability: Opt(NumberNode({ min: 0, max: 1 })),
     effects: ObjectNode({
@@ -34,7 +32,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       water_fog_color: NumberNode({ color: true }),
       grass_color: Opt(NumberNode({ color: true })),
       foliage_color: Opt(NumberNode({ color: true })),
-      grass_color_modifier: Opt(EnumNode(['none', 'dark_forest', 'swamp'])),
+      grass_color_modifier: Opt(StringNode({ enum: ['none', 'dark_forest', 'swamp'] })),
       ambient_sound: Opt(StringNode()),
       mood_sound: Opt(ObjectNode({
         sound: StringNode(),
@@ -60,20 +58,20 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       }))
     }),
     starts: ListNode(
-      EnumNode('configured_structure_feature', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_structure_feature' } } })
+      StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_structure_feature' } })
     ),
     spawners: MapNode(
-      EnumNode([
+      StringNode({ enum: [
         'water_ambient',
         'ambient',
         'misc',
         'water_creature',
         'creature',
         'monster'
-      ], 'creature'),
+      ] }),
       Mod(ListNode(
         ObjectNode({
-          type: EnumNode('entity_type'),
+          type: StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
           weight: NumberNode({ integer: true }),
           minCount: NumberNode({ integer: true }),
           maxCount: NumberNode({ integer: true })
@@ -86,7 +84,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       })
     ),
     spawn_costs: MapNode(
-      EnumNode('entity_type', { search: true }),
+      StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
       Mod(ObjectNode({
         energy_budget: NumberNode(),
         charge: NumberNode()
@@ -98,16 +96,16 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       })
     ),
     carvers: MapNode(
-      EnumNode(['air', 'liquid'], 'air'),
+      StringNode({ enum: ['air', 'liquid'] }),
       Mod(ListNode(
-        EnumNode('worldgen/carver', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_carver' } } })
+        StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_carver' } })
       ), {
         default: () => ['minecraft:cave']
       })
     ),
     features: ListNode(
       ListNode(
-        EnumNode('configured_feature', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$worldgen/configured_feature' } } })
+        StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_feature' } })
       )
     )
   }, { context: 'biome' }), {

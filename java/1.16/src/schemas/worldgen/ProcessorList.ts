@@ -1,22 +1,20 @@
 import {
   Case,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   ListNode,
   Mod,
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  StringNode,
   Switch,
   SchemaRegistry,
   CollectionRegistry,
   Opt,
-  Resource,
 } from '@mcschema/core'
 
 export function initProcessorListSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('processor_list', Mod(ObjectNode({
     processors: ListNode(
@@ -29,7 +27,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
   }))
 
   schemas.register('processor', ObjectNode({
-    processor_type: EnumNode('worldgen/structure_processor', 'minecraft:rule'),
+    processor_type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_processor' } }),
     [Switch]: path => path.push('processor_type'),
     [Case]: {
       'minecraft:block_age': {
@@ -44,7 +42,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         integrity: NumberNode({ min: 0, max: 1 })
       },
       'minecraft:gravity': {
-        heightmap: EnumNode('heightmap_type'),
+        heightmap: StringNode({ enum: 'heightmap_type' }),
         offset: NumberNode({ integer: true })
       },
       'minecraft:rule': {
@@ -60,7 +58,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
     location_predicate: Reference('rule_test'),
     input_predicate: Reference('rule_test'),
     output_state: Reference('block_state'),
-    output_nbt: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:block' } } } }))
+    output_nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:block' } } }))
   }, { context: 'processor_rule' }), {
     default: () => ({
       location_predicate: {},
@@ -79,11 +77,11 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
   }
 
   schemas.register('pos_rule_test', ObjectNode({
-    predicate_type: EnumNode('pos_rule_test', 'minecraft:always_true'),
+    predicate_type: StringNode({ validator: 'resource', params: { pool: 'pos_rule_test' } }),
     [Switch]: path => path.push('predicate_type'),
     [Case]: {
       'minecraft:axis_aligned_linear_pos': {
-        axis: EnumNode(['x', 'y', 'z'], 'y'),
+        axis: StringNode({ enum: ['x', 'y', 'z'] }),
         ...posTestFields
       },
       'minecraft:linear_pos': posTestFields
@@ -91,17 +89,17 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
   }, { context: 'pos_rule_test', disableSwitchContext: true }))
 
   schemas.register('rule_test', ObjectNode({
-    predicate_type: EnumNode('rule_test', 'minecraft:always_true'),
+    predicate_type: StringNode({ validator: 'resource', params: { pool: 'rule_test' } }),
     [Switch]: path => path.push('predicate_type'),
     [Case]: {
       'minecraft:block_match': {
-        block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))
+        block: StringNode({ validator: 'resource', params: { pool: 'block' } })
       },
       'minecraft:blockstate_match': {
         block_state: Reference('block_state')
       },
       'minecraft:random_block_match': {
-        block: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
+        block: StringNode({ validator: 'resource', params: { pool: 'block' } }),
         probability: NumberNode({ min: 0, max: 1 })
       },
       'minecraft:random_blockstate_match': {

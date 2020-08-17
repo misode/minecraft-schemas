@@ -99,7 +99,7 @@ export interface INode<T = any> {
    * or add an error and retain the original value
    * @param value value to be validated
    */
-  validate: (path: ModelPath, value: T, errors: Errors, options: NodeOptions) => any
+  validate: (path: ModelPath, value: any, errors: Errors, options: NodeOptions) => any
 
   /**
    * Get the validation option of this node. The client of this schema may

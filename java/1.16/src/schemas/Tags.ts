@@ -1,10 +1,10 @@
 import {
   BooleanNode,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   ListNode,
   Mod,
   ObjectNode,
-  Resource,
+  StringNode,
   ResourceType,
   ChoiceNode,
   SchemaRegistry,
@@ -13,7 +13,7 @@ import {
 } from '@mcschema/core'
 
 export function initTagsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   const TagBase = (type: ResourceType) => Mod(ObjectNode({
     replace: Opt(BooleanNode()),
@@ -21,13 +21,13 @@ export function initTagsSchemas(schemas: SchemaRegistry, collections: Collection
       ChoiceNode([
         {
           type: 'string',
-          node: Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true } } })),
+          node: StringNode({ validator: 'resource', params: { pool: type, allowTag: true } }),
           change: v => v.id
         },
         {
           type: 'object',
           node: ObjectNode({
-            id: Resource(EnumNode(type, { search: true, additional: true, validation: { validator: 'resource', params: { pool: type, allowTag: true, allowUnknown: true } } })),
+            id: StringNode({ validator: 'resource', params: { pool: type, allowTag: true, allowUnknown: true } }),
             required: BooleanNode()
           }),
           change: v => ({ id: v })
@@ -40,9 +40,9 @@ export function initTagsSchemas(schemas: SchemaRegistry, collections: Collection
     })
   })
 
-  schemas.register('block_tag', TagBase('minecraft:block'))
-  schemas.register('entity_type_tag', TagBase('minecraft:entity_type'))
-  schemas.register('fluid_tag', TagBase('minecraft:fluid'))
+  schemas.register('block_tag', TagBase('block'))
+  schemas.register('entity_type_tag', TagBase('entity_type'))
+  schemas.register('fluid_tag', TagBase('fluid'))
   schemas.register('function_tag', TagBase('$function'))
-  schemas.register('item_tag', TagBase('minecraft:item'))
+  schemas.register('item_tag', TagBase('item'))
 }

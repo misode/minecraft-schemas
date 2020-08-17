@@ -2,7 +2,7 @@ import {
   BooleanNode,
   Case,
   ChoiceNode,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   INode,
   ListNode,
   MapNode,
@@ -10,8 +10,6 @@ import {
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  Resource,
-  StringNode,
   Switch,
   SchemaRegistry,
   CollectionRegistry,
@@ -21,7 +19,7 @@ import { Range } from './Common'
 
 export function initAdvancementSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   const PredicateChoice = (node: INode<any>): INode<any> => {
     return ChoiceNode([
@@ -44,13 +42,13 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
   schemas.register('advancement', Mod(ObjectNode({
     display: Opt(Mod(ObjectNode({
       icon: ObjectNode({
-        item: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
-        nbt: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } } }))
+        item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
+        nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } }))
       }),
       title: Reference('text_component'),
       description: Reference('text_component'),
       background: Opt(StringNode()),
-      frame: Opt(EnumNode(['task', 'challenge', 'goal'])),
+      frame: Opt(StringNode({ enum: ['task', 'challenge', 'goal'] })),
       show_toast: Opt(BooleanNode()),
       announce_to_chat: Opt(BooleanNode()),
       hidden: Opt(BooleanNode())
@@ -63,7 +61,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         description: ''
       })
     })),
-    parent: Opt(StringNode({ validation: { validator: 'resource', params: { pool: '$advancement' } } })),
+    parent: Opt(StringNode({ validator: 'resource', params: { pool: '$advancement' } })),
     criteria: MapNode(
       StringNode(),
       Reference('advancement_criteria')
@@ -74,12 +72,12 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
       )
     )),
     rewards: Opt(ObjectNode({
-      function: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$function' } } }))),
+      function: Opt(StringNode({ validator: 'resource', params: { pool: '$function' } })),
       loot: Opt(ListNode(
-        Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } }))
+        StringNode({ validator: 'resource', params: { pool: '$loot_table' } })
       )),
       recipes: Opt(ListNode(
-        Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } }))
+        StringNode({ validator: 'resource', params: { pool: '$recipe' } })
       )),
       experience: Opt(NumberNode({ integer: true }))
     })),
@@ -94,7 +92,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
   }))
 
   schemas.register('advancement_criteria', ObjectNode({
-    trigger: Resource(EnumNode('advancement_trigger', { validation: { validator: 'resource', params: { pool: collections.get('advancement_trigger') } } })),
+    trigger: StringNode({ validator: 'resource', params: { pool: collections.get('advancement_trigger') } }),
     conditions: ObjectNode({
       player: Opt(Mod(PredicateChoice(
         Reference('entity_predicate')
@@ -104,7 +102,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
       [Switch]: path => path.pop().push('trigger'),
       [Case]: {
         'minecraft:bee_nest_destroyed': {
-          block: Opt(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
+          block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
           num_bees_inside: Opt(NumberNode({ integer: true })),
           item: Opt(Reference('item_predicate'))
         },
@@ -114,11 +112,11 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           child: Opt(PredicateChoice(Reference('entity_predicate')))
         },
         'minecraft:brewed_potion': {
-          potion: Opt(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:potion' } } }))
+          potion: Opt(StringNode({ validator: 'resource', params: { pool: 'potion' } }))
         },
         'minecraft:changed_dimension': {
-          from: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimension' } } }))),
-          to: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$dimension' } } })))
+          from: Opt(StringNode({ validator: 'resource', params: { pool: '$dimension' } })),
+          to: Opt(StringNode({ validator: 'resource', params: { pool: '$dimension' } }))
         },
         'minecraft:channeled_lightning': {
           victims: Opt(ListNode(
@@ -137,7 +135,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         },
         'minecraft:effects_changed': {
           effects: Opt(MapNode(
-            Resource(EnumNode('mob_effect', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:mob_effect' } } })),
+            StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
             ObjectNode({
               amplifier: Range(),
               duration: Range()
@@ -145,7 +143,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           ))
         },
         'minecraft:enter_block': {
-          block: Opt(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
+          block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
           state: Opt(MapNode(
             StringNode(),
             StringNode(),
@@ -211,7 +209,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           exited: Opt(Reference('location_predicate'))
         },
         'minecraft:placed_block': {
-          block: Opt(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
+          block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
           state: Opt(MapNode(
             StringNode(),
             StringNode(),
@@ -221,7 +219,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           location: Opt(Reference('location_predicate'))
         },
         'minecraft:player_generates_container_loot': {
-          loot_table: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$loot_table' } } }))
+          loot_table: StringNode({ validator: 'resource', params: { pool: '$loot_table' } })
         },
         'minecraft:player_hurt_entity': {
           damage: Opt(Reference('damage_predicate')),
@@ -232,13 +230,13 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           killing_blow: Opt(Reference('damage_source_predicate'))
         },
         'minecraft:recipe_unlocked': {
-          recipe: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } }))
+          recipe: StringNode({ validator: 'resource', params: { pool: '$recipe' } })
         },
         'minecraft:slept_in_bed': {
           location: Opt(Reference('location_predicate'))
         },
         'minecraft:slide_down_block': {
-          block: Opt(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })))
+          block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } }))
         },
         'minecraft:shot_crossbow': {
           item: Opt(Reference('item_predicate'))

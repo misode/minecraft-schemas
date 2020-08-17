@@ -1,13 +1,11 @@
 import {
   BooleanNode,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   ListNode,
   MapNode,
   ObjectNode,
   Opt,
   Reference as RawReference,
-  Resource,
-  StringNode,
   Switch,
   Case,
   SchemaRegistry,
@@ -17,29 +15,29 @@ import { Range } from './Common'
 
 export function initPredicatesSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('item_predicate', ObjectNode({
-    item: Opt(Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } }))),
-    tag: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } }))),
+    item: Opt(StringNode({ validator: 'resource', params: { pool: 'item' } })),
+    tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/item' } })),
     count: Opt(Range()),
     durability: Opt(Range()),
-    potion: Opt(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:potion' } } })),
-    nbt: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } } })),
+    potion: Opt(StringNode({ validator: 'resource', params: { pool: 'potion' } })),
+    nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } })),
     enchantments: Opt(ListNode(
       Reference('enchantment_predicate')
     ))
   }, { context: 'item' }))
 
   schemas.register('enchantment_predicate', ObjectNode({
-    enchantment: Opt(Resource(EnumNode('enchantment', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } }))),
+    enchantment: Opt(StringNode({ validator: 'resource', params: { pool: 'enchantment' } })),
     levels: Opt(Range())
   }, { context: 'enchantment' }))
 
   schemas.register('block_predicate', ObjectNode({
-    block: Opt(Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } }))),
-    tag: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/block' } } }))),
-    nbt: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:block', id: ['pop', { push: 'block' }] } } } })),
+    block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
+    tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/block' } })),
+    nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:block', id: ['pop', { push: 'block' }] } } })),
     state: Opt(MapNode(
       StringNode(),
       StringNode(),
@@ -48,8 +46,8 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   }, { context: 'block' }))
 
   schemas.register('fluid_predicate', ObjectNode({
-    fluid: Opt(Resource(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } }))),
-    tag: Opt(Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/fluid' } } }))),
+    fluid: Opt(StringNode({ validator: 'resource', params: { pool: 'fluid' } })),
+    tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/fluid' } })),
     state: Opt(MapNode(
       StringNode(),
       StringNode()
@@ -62,9 +60,9 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       y: Opt(Range()),
       z: Opt(Range())
     })),
-    biome: Opt(Resource(EnumNode('worldgen/biome', { search: true, validation: { validator: 'resource', params: { pool: '$worldgen/biome' } } }))),
-    feature: Opt(EnumNode(collections.get('worldgen/structure_feature').map(v => v.slice(10)), { search: true })),
-    dimension: Opt(Resource(EnumNode('dimension', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension' } } }))),
+    biome: Opt(StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })),
+    feature: Opt(StringNode({ enum: collections.get('worldgen/structure_feature').map(v => v.slice(10)) })),
+    dimension: Opt(StringNode({ validator: 'resource', params: { pool: '$dimension' } })),
     light: Opt(ObjectNode({
       light: Opt(Range({ integer: true, min: 0, max: 15 }))
     })),
@@ -74,50 +72,50 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   }, { context: 'location' }))
 
   schemas.register('statistic_predicate', ObjectNode({
-    type: Resource(EnumNode('stat_type', { defaultValue: 'minecraft:custom', validation: { validator: 'resource', params: { pool: 'minecraft:stat_type' } } })),
+    type: StringNode({ validator: 'resource', params: { pool: 'stat_type' } }),
     stat: StringNode(),
     value: Range(),
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:mined': {
-        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })
+        stat: StringNode({ validator: 'resource', params: { pool: 'block' } })
       },
       'minecraft:crafted': {
-        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })
+        stat: StringNode({ validator: 'resource', params: { pool: 'item' } })
       },
       'minecraft:used': {
-        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })
+        stat: StringNode({ validator: 'resource', params: { pool: 'item' } })
       },
       'minecraft:broken': {
-        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })
+        stat: StringNode({ validator: 'resource', params: { pool: 'item' } })
       },
       'minecraft:picked_up': {
-        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })
+        stat: StringNode({ validator: 'resource', params: { pool: 'item' } })
       },
       'minecraft:dropped': {
-        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })
+        stat: StringNode({ validator: 'resource', params: { pool: 'item' } })
       },
       'minecraft:killed': {
-        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } })
+        stat: StringNode({ validator: 'resource', params: { pool: 'entity_type' } })
       },
       'minecraft:killed_by': {
-        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type' } } })
+        stat: StringNode({ validator: 'resource', params: { pool: 'entity_type' } })
       },
       'minecraft:custom': {
-        stat: StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:custom_stat' } } })
+        stat: StringNode({ validator: 'resource', params: { pool: 'custom_stat' } })
       }
     }
   }))
 
   schemas.register('player_predicate', ObjectNode({
-    gamemode: Opt(EnumNode('gamemode')),
+    gamemode: Opt(StringNode({ enum: 'gamemode' })),
     level: Opt(Range()),
     advancements: Opt(MapNode(
-      StringNode({ validation: { validator: 'resource', params: { pool: '$advancement' } } }),
+      StringNode({ validator: 'resource', params: { pool: '$advancement' } }),
       BooleanNode()
     )),
     recipes: Opt(MapNode(
-      StringNode({ validation: { validator: 'resource', params: { pool: '$recipe' } } }),
+      StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
       BooleanNode()
     )),
     stats: Opt(ListNode(
@@ -141,9 +139,9 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   }, { context: 'distance' }))
 
   schemas.register('entity_predicate', ObjectNode({
-    type: Opt(StringNode({ validation: { validator: 'resource', params: { pool: 'minecraft:entity_type', allowTag: true } } })),
-    nbt: Opt(StringNode({ validation: { validator: 'nbt', params: { registry: { category: 'minecraft:entity', id: ['pop', { push: 'type' }] } } } })),
-    team: Opt(StringNode({ validation: { validator: 'team' } })),
+    type: Opt(StringNode({ validator: 'resource', params: { pool: 'entity_type', allowTag: true } })),
+    nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:entity', id: ['pop', { push: 'type' }] } } })),
+    team: Opt(StringNode({ validator: 'team' })),
     location: Opt(Reference('location_predicate')),
     distance: Opt(Reference('distance_predicate')),
     flags: Opt(ObjectNode({
@@ -154,7 +152,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       is_baby: Opt(BooleanNode())
     })),
     equipment: Opt(MapNode(
-      EnumNode('slot', 'mainhand'),
+      StringNode({ enum: 'slot' }),
       Reference('item_predicate')
     )),
     vehicle: Opt(Reference('entity_predicate')),
@@ -164,7 +162,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       in_open_water: Opt(BooleanNode())
     })),
     effects: Opt(MapNode(
-      Resource(EnumNode('mob_effect', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:mob_effect' } } })),
+      StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
       Reference('status_effect_predicate')
     ))
   }, { context: 'entity' }))

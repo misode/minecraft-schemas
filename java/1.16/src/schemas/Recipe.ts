@@ -1,15 +1,13 @@
 import {
   Case,
   ChoiceNode,
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   ListNode,
   MapNode,
   Mod,
   NumberNode,
   ObjectNode,
   Reference as RawReference,
-  Resource,
-  StringNode,
   Switch,
   SchemaRegistry,
   CollectionRegistry,
@@ -18,17 +16,17 @@ import {
 
 export function initRecipeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('recipe', Mod(ObjectNode({
-    type: Resource(EnumNode('recipe_serializer', { defaultValue: 'minecraft:crafting_shaped', validation: { validator: 'resource', params: { pool: 'minecraft:recipe_serializer' } } })),
+    type: StringNode({ validator: 'resource', params: { pool: 'recipe_serializer' } }),
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:crafting_shaped': {
         group: Opt(StringNode()),
-        pattern: ListNode(StringNode({ pattern: /^.{0,3}$/, patternError: 'error.recipe.invalid_pattern' })),
+        pattern: ListNode(StringNode()), // TODO: add validation
         key: MapNode(
-          StringNode({ pattern: /^.$/, patternError: 'error.recipe.invalid_key' }),
+          StringNode(), // TODO: add validation
           Reference('recipe_ingredient')
         ),
         result: Reference('recipe_result')
@@ -41,42 +39,42 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:smelting': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
+        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 200 }))
       },
       'minecraft:blasting': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
+        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:smoking': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
+        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:campfire_cooking': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
+        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:stonecutting': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
+        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
         count: NumberNode({ integer: true })
       },
       'minecraft:smithing': {
         group: Opt(StringNode()),
         base: Reference('recipe_ingredient_object'),
         addition: Reference('recipe_ingredient_object'),
-        result: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
+        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
       }
     }
   }, { context: 'recipe' }), {
@@ -103,8 +101,8 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
   }))
 
   schemas.register('recipe_ingredient_object', Mod(ObjectNode({
-    item: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
-    tag: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$tag/item' } } }))
+    item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
+    tag: StringNode({ validator: 'resource', params: { pool: '$tag/item' } })
   }), {
     default: () => ({
       item: 'minecraft:stone'
@@ -112,7 +110,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
   }))
 
   schemas.register('recipe_result', Mod(ObjectNode({
-    item: Resource(EnumNode('item', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:item' } } })),
+    item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
     count: Mod(NumberNode({ integer: true }), { default: () => 1 })
   }), {
     default: () => ({

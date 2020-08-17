@@ -1,5 +1,5 @@
 import {
-  EnumNode as RawEnumNode,
+  StringNode as RawStringNode,
   ObjectNode,
   MapNode,
   StringNode,
@@ -7,7 +7,6 @@ import {
   NumberNode,
   ChoiceNode,
   Reference as RawReference,
-  Resource,
   INode,
   SchemaRegistry,
   CollectionRegistry,
@@ -102,11 +101,11 @@ type UniformIntConfig = {
 export let UniformInt: (config?: UniformIntConfig) => INode
 
 export function initCommonSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
-  const EnumNode = RawEnumNode.bind(undefined, collections)
+  const StringNode = RawStringNode.bind(undefined, collections)
   const Reference = RawReference.bind(undefined, schemas)
 
   schemas.register('block_state', ObjectNode({
-    Name: Resource(EnumNode('block', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
+    Name: StringNode({ validator: 'resource', params: { pool: 'block' } }),
     Properties: Opt(MapNode(
       StringNode(),
       StringNode(),
@@ -115,7 +114,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   }, { context: 'block_state' }))
 
   schemas.register('fluid_state', ObjectNode({
-    Name: Resource(EnumNode('fluid', { search: true, validation: { validator: 'resource', params: { pool: 'minecraft:fluid' } } })),
+    Name: StringNode({ validator: 'resource', params: { pool: 'fluid' } }),
     Properties: Opt(MapNode(
       StringNode(),
       StringNode()
@@ -135,7 +134,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     ...(config?.allowBinomial ? [{
       type: 'binomial',
       node: ObjectNode({
-        type: Resource(EnumNode(['minecraft:binomial'])),
+        type: StringNode({enum: ['minecraft:binomial'] }),
         n: NumberNode({ integer: true, min: 0 }),
         p: NumberNode({ min: 0, max: 1 })
       }),
@@ -185,7 +184,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       )
     },
     'minecraft:block_state_property': {
-      block: Resource(EnumNode('block', { validation: { validator: 'resource', params: { pool: 'minecraft:block' } } })),
+      block: StringNode({ validator: 'resource', params: { pool: 'block' } }),
       properties: MapNode(
         StringNode(),
         StringNode(),
@@ -196,13 +195,13 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       predicate: Reference('damage_source_predicate')
     },
     'minecraft:entity_properties': {
-      entity: EnumNode('entity_source', 'this'),
+      entity: StringNode({ enum: 'entity_source' }),
       predicate: Reference('entity_predicate')
     },
     'minecraft:entity_scores': {
-      entity: EnumNode('entity_source', 'this'),
+      entity: StringNode({ enum: 'entity_source' }),
       scores: MapNode(
-        StringNode({ validation: { validator: 'objective' } }),
+        StringNode({ validator: 'objective' }),
         Range({ forceRange: true })
       )
     },
@@ -234,10 +233,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       ),
     },
     'minecraft:reference': {
-      name: Resource(StringNode({ validation: { validator: 'resource', params: { pool: '$predicate' } } }))
+      name: StringNode({ validator: 'resource', params: { pool: '$predicate' } })
     },
     'minecraft:table_bonus': {
-      enchantment: Resource(EnumNode('enchantment', { validation: { validator: 'resource', params: { pool: 'minecraft:enchantment' } } })),
+      enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
       chances: ListNode(
         NumberNode({ min: 0, max: 1 })
       )
@@ -253,7 +252,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   }
 
   DimensionTypePresets = (node: INode<any>) => ObjectOrPreset(
-    Resource(EnumNode('dimension_type', { search: true, additional: true, validation: { validator: 'resource', params: { pool: '$dimension_type' } } })),
+    StringNode({ validator: 'resource', params: { pool: '$dimension_type' } }),
     node,
     {
       'minecraft:overworld': DefaultDimensionType,
@@ -295,7 +294,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   )
   
   NoiseSettingsPresets = (node: INode<any>) => ObjectOrPreset(
-    Resource(EnumNode('dimension_generator_setting_preset', { search: true, additional: true, validation: { validator: 'resource', params: { pool: collections.get('dimension_generator_setting_preset') } } })),
+    StringNode({ validator: 'resource', params: { pool: collections.get('dimension_generator_setting_preset') } }),
     node,
     {
       'minecraft:overworld': DefaultNoiseSettings,

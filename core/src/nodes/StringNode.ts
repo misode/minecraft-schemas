@@ -1,7 +1,7 @@
 import { INode, Base } from './Node'
 import { locale, CollectionRegistry } from '../Registries'
 import { ValidationOption } from '../ValidationOption'
-import { ModelPath } from '../model/Path'
+import { ModelPath, Path } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { hexId, quoteString } from '../utils'
 
@@ -74,13 +74,27 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
     },
     suggest: () => getValues().map(quoteString),
     getState(el: HTMLElement) {
-      return el.getElementsByTagName('input')[0].value
+      return (el.getElementsByTagName('input')[0] ?? el.getElementsByTagName('select')[0]).value
     },
     validationOption() {
       return isValidator(config) ? config : undefined
     },
     renderRaw(path: ModelPath, view: TreeView, inputId?: string) {
       const values = getValues()
+      if (isEnum(config) && !config.additional) {
+        const contextPath = typeof config.enum === 'string' ?
+          new Path(path.getArray(), [config.enum]) : path
+        return this.renderSelect(contextPath, values, inputId)
+      }
+      if (config && isValidator(config)
+          && config.validator === 'resource'
+          && typeof config.params.pool === 'string'
+          && values.length > 0) {
+        const contextPath = new Path(path.getArray(), [config.params.pool])
+        if (contextPath.localePush(values[0]).strictLocale()) {
+          return this.renderSelect(contextPath, values, inputId)
+        }
+      }
       const datalistId = hexId()
       return `<input data-id="${inputId}" ${values.length === 0 ? '' : `list="${datalistId}"`}>
       ${values.length === 0 ? '' :
@@ -89,6 +103,14 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
           `<option value="${v}">`
         ).join('')}
       </datalist>`}`
+    },
+    renderSelect(contextPath: Path, values: string[], inputId: string) {
+      return `<select data-id="${inputId}">
+        ${this.optional() ? `<option value="">${locale('unset')}</option>` : ''}
+        ${values.map(v =>
+          `<option value="${v}">${contextPath.localePush(v).locale()}</option>`
+        ).join('')}
+      </select>`
     }
   }
 }

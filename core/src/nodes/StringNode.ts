@@ -29,7 +29,9 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
       : () => config.enum as string[])
     : ((config?.validator === 'resource')
       ? ((typeof config.params.pool === 'string')
-        ? () => collections?.get(config.params.pool as string) ?? []
+        ? (config.params.pool.startsWith('$')
+          ? () => collections?.get((config.params.pool as string).slice(1)) ?? []
+          : () => collections?.get(config.params.pool as string) ?? [])
         : () => config.params.pool as string[])
       : () => [])
 
@@ -37,15 +39,19 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
     ...Base,
     default: () => '',
     render(path, value, view, options) {
-      const onChange = view.registerChange(el => {
-        const value = (el as HTMLInputElement).value
-        view.model.set(path, value)
+      const inputId = view.register(el => {
+        (el as HTMLSelectElement).value = value ?? ''
+        el.addEventListener('change', evt => {
+          const newValue = (el as HTMLSelectElement).value
+          view.model.set(path, newValue.length === 0 ? undefined : newValue)
+          evt.stopPropagation()
+        })
       })
       return `<div class="node string-node node-header" ${path.error()} ${path.help()}>
         ${options?.prepend ?? ''}
         <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}
-        <input data-id="${onChange}" value="${value ?? ''}">
+        ${this.renderRaw(path, view, inputId)}
       </div>`
     },
     validate(path, value, errors) {
@@ -73,8 +79,16 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
     validationOption() {
       return isValidator(config) ? config : undefined
     },
-    renderRaw() {
-      return `<input>`
+    renderRaw(path: ModelPath, view: TreeView, inputId?: string) {
+      const values = getValues()
+      const datalistId = hexId()
+      return `<input data-id="${inputId}" ${values.length === 0 ? '' : `list="${datalistId}"`}>
+      ${values.length === 0 ? '' :
+        `<datalist id="${datalistId}">
+        ${values.map(v =>
+          `<option value="${v}">`
+        ).join('')}
+      </datalist>`}`
     }
   }
 }

@@ -23,17 +23,17 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
     render(path, value, view, options) {
       const onChange = view.registerChange(el => {
         const value = (el as HTMLInputElement).value
-        let parsed = integer ? parseInt(value) : parseFloat(value)
+        let parsed = config?.color
+          ? parseInt(value.slice(1), 16)
+          : integer ? parseInt(value) : parseFloat(value)
         view.model.set(path, parsed)
       })
       return `<div class="node number-node node-header" ${path.error()} ${path.help()}>
         ${options?.prepend ?? ''}
         <label>${options?.label ?? path.locale()}</label>
         ${options?.inject ?? ''}
-        <input data-id="${onChange}" value="${value ?? ''}">
-        ${value && config?.color
-          ? `<button class="color" style="background: #${value.toString(16)}"></button>`
-          : ''}
+        <input ${config?.color ? `type="color"` : ''} data-id="${onChange}"
+          value="${config?.color ? '#' + (value?.toString(16).padStart(6, '0') ?? '000000') : value ?? ''}">
       </div>`
     },
     validate(path, value, errors, options) {

@@ -109,19 +109,13 @@ export function initCollections(collections: CollectionRegistry) {
     'spectator'
   ])
 
-  collections.register('dimension_generator_setting_preset', [
+  collections.register('worldgen/noise_settings', [
     'minecraft:overworld',
     'minecraft:nether',
     'minecraft:end',
     'minecraft:amplified',
     'minecraft:caves',
     'minecraft:floating_islands'
-  ])
-
-  collections.register('dimension_type_infiniburn', [
-    'minecraft:infiniburn_overworld',
-    'minecraft:infiniburn_nether',
-    'minecraft:infiniburn_end'
   ])
 
   collections.register('entity_source', [
@@ -257,7 +251,7 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:basalt_deltas'
   ])
 
-  collections.register('configured_feature', [
+  collections.register('worldgen/configured_feature', [
     'minecraft:acacia',
     'minecraft:bamboo_light',
     'minecraft:bamboo_vegetation',
@@ -451,7 +445,7 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:weeping_vines'
   ])
 
-  collections.register('configured_structure_feature', [
+  collections.register('worldgen/configured_structure_feature', [
     'minecraft:bastion_remnant',
     'minecraft:buried_treasure',
     'minecraft:desert_pyramid',
@@ -485,7 +479,7 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:village_taiga'
   ])
 
-  collections.register('configured_surface_builder', [
+  collections.register('worldgen/configured_surface_builder', [
     'minecraft:badlands',
     'minecraft:basalt_deltas',
     'minecraft:crimson_forest',

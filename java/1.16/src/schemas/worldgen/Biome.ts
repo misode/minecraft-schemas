@@ -115,6 +115,8 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       scale: 0.05,
       temperature: 0.8,
       downfall: 0.4,
+      precipitation: 'rain',
+      category: 'plains',
       effects: {
         sky_color: 7907327,
         fog_color: 12638463,

@@ -294,7 +294,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   )
   
   NoiseSettingsPresets = (node: INode<any>) => ObjectOrPreset(
-    StringNode({ validator: 'resource', params: { pool: collections.get('dimension_generator_setting_preset') } }),
+    StringNode({ validator: 'resource', params: { pool: '$worldgen/noise_settings' } }),
     node,
     {
       'minecraft:overworld': DefaultNoiseSettings,

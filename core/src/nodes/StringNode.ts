@@ -63,12 +63,16 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
         if (config.validator === 'resource' && value.length > 0 && !value.includes(':')) {
           value = 'minecraft:' + value
         }
+        if (config.validator === 'resource' && typeof config.params.pool === 'string' && config.params.pool.startsWith('$')) {
+          return value
+        }
+      }
+      if ((isEnum(config) && config.additional)) {
+        return value
       }
       const values = getValues()
-      if (values.length > 0 && !getValues().includes(value)) {
-        if (!(isEnum(config) && config.additional)) {
-          errors.add(path, 'error.invalid_enum_option', value)
-        }
+      if (values.length > 0 && !values.includes(value)) {
+        errors.add(path, 'error.invalid_enum_option', value)
       }
       return value
     },

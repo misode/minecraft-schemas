@@ -225,6 +225,10 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           damage: Opt(Reference('damage_predicate')),
           entity: Opt(PredicateChoice(Reference('entity_predicate')))
         },
+        'minecraft:player_interacted_with_entity': {
+          item: Opt(Reference('item_predicate')),
+          entity: Opt(PredicateChoice(Reference('entity_predicate')))
+        },
         'minecraft:player_killed_entity': {
           entity: Opt(PredicateChoice(Reference('entity_predicate'))),
           killing_blow: Opt(Reference('damage_source_predicate'))

@@ -3,7 +3,6 @@ import {
   Case,
   ChoiceNode,
   StringNode as RawStringNode,
-  INode,
   ListNode,
   MapNode,
   Mod,
@@ -13,7 +12,7 @@ import {
   Switch,
   SchemaRegistry,
   CollectionRegistry,
-  Opt
+  Opt,
 } from '@mcschema/core'
 import { Range } from './Common'
 
@@ -21,11 +20,10 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  const PredicateChoice = (node: INode<any>): INode<any> => {
-    return ChoiceNode([
+  const EntityPredicate = ChoiceNode([
       {
         type: 'object',
-        node,
+        node: Opt(Reference('entity_predicate')),
         change: v => v[0]?.predicate ?? ({})
       },
       {
@@ -37,7 +35,6 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         }]
       }
     ], { choiceContext: 'conditions' })
-  }
 
   schemas.register('advancement', Mod(ObjectNode({
     display: Opt(Mod(ObjectNode({
@@ -94,11 +91,9 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
   schemas.register('advancement_criteria', ObjectNode({
     trigger: StringNode({ validator: 'resource', params: { pool: collections.get('advancement_trigger') } }),
     conditions: ObjectNode({
-      player: Opt(Mod(PredicateChoice(
-        Reference('entity_predicate')
-      ), {
+      player: Mod(EntityPredicate, {
         enabled: path => path.pop().push('trigger').get() !== 'minecraft:impossible'
-      })),
+      }),
       [Switch]: path => path.pop().push('trigger'),
       [Case]: {
         'minecraft:bee_nest_destroyed': {
@@ -107,9 +102,9 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:bred_animals': {
-          parent: Opt(PredicateChoice(Reference('entity_predicate'))),
-          partner: Opt(PredicateChoice(Reference('entity_predicate'))),
-          child: Opt(PredicateChoice(Reference('entity_predicate')))
+          parent: EntityPredicate,
+          partner: EntityPredicate,
+          child: EntityPredicate
         },
         'minecraft:brewed_potion': {
           potion: Opt(StringNode({ validator: 'resource', params: { pool: 'potion' } }))
@@ -120,7 +115,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         },
         'minecraft:channeled_lightning': {
           victims: Opt(ListNode(
-            PredicateChoice(Reference('entity_predicate'))
+            EntityPredicate
           ))
         },
         'minecraft:construct_beacon': {
@@ -130,8 +125,8 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:cured_zombie_villager': {
-          villager: Opt(PredicateChoice(Reference('entity_predicate'))),
-          zombie: Opt(PredicateChoice(Reference('entity_predicate')))
+          villager: EntityPredicate,
+          zombie: EntityPredicate
         },
         'minecraft:effects_changed': {
           effects: Opt(MapNode(
@@ -158,14 +153,14 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           damage: Opt(Reference('damage_predicate'))
         },
         'minecraft:entity_killed_player': {
-          entity: Opt(PredicateChoice(Reference('entity_predicate'))),
+          entity: EntityPredicate,
           killing_blow: Opt(Reference('damage_source_predicate'))
         },
         'minecraft:filled_bucket': {
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:fishing_rod_hooked': {
-          entity: Opt(PredicateChoice(Reference('entity_predicate'))),
+          entity: EntityPredicate,
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:hero_of_the_village': {
@@ -193,7 +188,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         'minecraft:killed_by_crossbow': {
           unique_entity_types: Opt(Range()),
           victims: Opt(ListNode(
-            PredicateChoice(Reference('entity_predicate'))
+            EntityPredicate
           ))
         },
         'minecraft:levitation': {
@@ -223,14 +218,14 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         },
         'minecraft:player_hurt_entity': {
           damage: Opt(Reference('damage_predicate')),
-          entity: Opt(PredicateChoice(Reference('entity_predicate')))
+          entity: EntityPredicate
         },
         'minecraft:player_interacted_with_entity': {
           item: Opt(Reference('item_predicate')),
-          entity: Opt(PredicateChoice(Reference('entity_predicate')))
+          entity: EntityPredicate
         },
         'minecraft:player_killed_entity': {
-          entity: Opt(PredicateChoice(Reference('entity_predicate'))),
+          entity: EntityPredicate,
           killing_blow: Opt(Reference('damage_source_predicate'))
         },
         'minecraft:recipe_unlocked': {
@@ -246,14 +241,14 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:summoned_entity': {
-          entity: Opt(PredicateChoice(Reference('entity_predicate')))
+          entity: EntityPredicate
         },
         'minecraft:tame_animal': {
-          entity: Opt(PredicateChoice(Reference('entity_predicate')))
+          entity: EntityPredicate
         },
         'minecraft:target_hit': {
-          projectile: Opt(PredicateChoice(Reference('entity_predicate'))),
-          shooter: Opt(PredicateChoice(Reference('entity_predicate'))),
+          projectile: EntityPredicate,
+          shooter: EntityPredicate,
           signal_strength: Opt(Range({ integer: true }))
         },
         'minecraft:thrown_item_picked_up_by_entity': {

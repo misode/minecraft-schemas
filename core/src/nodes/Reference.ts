@@ -2,7 +2,6 @@ import { INode, NodeOptions } from './Node'
 import { SchemaRegistry } from '../Registries'
 import { ModelPath } from '../model/Path'
 import { SourceView } from '../view/SourceView'
-import { DataModel } from '../model/DataModel'
 import { TreeView } from '../view/TreeView'
 import { Errors } from '../model/Errors'
 
@@ -35,9 +34,9 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
     return schemas.get(schema).suggest.bind(this)(path, value)
   },
   validate(path: ModelPath, value: T, errors: Errors, options: NodeOptions) {
-    return schemas.get(schema).validate(path, value, errors, options)
+    return schemas.get(schema).validate.bind(this)(path, value, errors, options)
   },
   validationOption(path: ModelPath) {
-    return schemas.get(schema).validationOption(path)
+    return schemas.get(schema).validationOption.bind(this)(path)
   }
 })

@@ -69,6 +69,9 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
           return value
         }
       }
+      if (choice.node.optional()) {
+        return value
+      }
       return choice.node.validate(path, value, errors, options)
     }
   }
@@ -84,7 +87,7 @@ const XOrList = (x: string): ((node: INode<any>, config?: ChoiceNodeConfig) => I
     {
       type: 'list',
       node: ListNode(node),
-      change: v => [v]
+      change: v => v ? [v] : []
     }
   ], config)
 })

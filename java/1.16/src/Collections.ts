@@ -29,6 +29,7 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:placed_block',
     'minecraft:player_generates_container_loot',
     'minecraft:player_hurt_entity',
+    'minecraft:player_interacted_with_entity',
     'minecraft:player_killed_entity',
     'minecraft:recipe_unlocked',
     'minecraft:shot_crossbow',

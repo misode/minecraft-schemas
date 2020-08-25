@@ -34,15 +34,15 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   const StringNode = RawStringNode.bind(undefined, collections)
 
   const conditions: NestedNodeChildren = {
-    conditions: ListNode(
+    conditions: Opt(ListNode(
       Reference('loot_condition')
-    )
+    ))
   }
 
   const functionsAndConditions: NestedNodeChildren = {
-    functions: ListNode(
+    functions: Opt(ListNode(
       Reference('loot_function')
-    ),
+    )),
     ...conditions
   }
 

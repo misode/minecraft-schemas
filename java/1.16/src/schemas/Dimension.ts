@@ -45,9 +45,13 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
                 temperature_noise: NoPreset(Reference('generator_biome_noise')),
                 humidity_noise: NoPreset(Reference('generator_biome_noise')),
                 weirdness_noise: NoPreset(Reference('generator_biome_noise')),
-                biomes: NoPreset(ListNode(
+                biomes: NoPreset(Mod(ListNode(
                   Reference('generator_biome')
-                ))
+                ), {
+                  default: () => [{
+                    biome: 'minecraft:plains'
+                  }]
+                }))
               },
               'minecraft:checkerboard': {
                 scale: Opt(NumberNode({ integer: true, min: 0, max: 62 })),

@@ -25,7 +25,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     }
     switch (choice.type) {
       case 'list': return Array.isArray(value)
-      case 'object': return typeof value === 'object' && !(value instanceof Array)
+      case 'object': return typeof value === 'object' && !Array.isArray(value)
       default: return typeof value === choice.type
     }
   }

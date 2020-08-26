@@ -16,7 +16,7 @@ export const ListNode = (children: INode): INode<any[]> => {
       return path.push(parseInt(index.toString())).localePush('entry')
     },
     transform(path, value, view) {
-      if (!(value instanceof Array)) return value
+      if (!Array.isArray(value)) return value
       return value.map((obj, index) =>
         children.transform(path.push(index), obj, view)
       )
@@ -24,7 +24,7 @@ export const ListNode = (children: INode): INode<any[]> => {
     render(path, value, view, options) {
       value = value ?? []
       const onAdd = view.registerClick(el => {
-        if (!(value instanceof Array)) value = []
+        if (!Array.isArray(value)) value = []
         view.model.set(path, [...value, children.default()])
       })
       return `<div class="node list-node">
@@ -35,7 +35,7 @@ export const ListNode = (children: INode): INode<any[]> => {
           <button class="add" data-id="${onAdd}"></button>
           ${view.nodeInjector(path, view)}
         </div>
-        ${!(value instanceof Array) ? `` :
+        ${!Array.isArray(value) ? `` :
           `<div class="node-body">
           ${(value ?? []).map((obj, index) => {
             const removeId = view.registerClick(el => view.model.set(path.push(index), undefined))
@@ -50,10 +50,10 @@ export const ListNode = (children: INode): INode<any[]> => {
       </div>`
     },
     validate(path, value, errors, options) {
-      if (options.loose && value === undefined) {
-        return this.default()
+      if (options.loose && !Array.isArray(value)) {
+        value = this.default()
       }
-      if (!(value instanceof Array)) {
+      if (!Array.isArray(value)) {
         errors.add(path, 'error.expected_list')
         return value
       }

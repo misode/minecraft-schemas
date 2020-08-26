@@ -74,7 +74,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
         group: Opt(StringNode()),
         base: Reference('recipe_ingredient_object'),
         addition: Reference('recipe_ingredient_object'),
-        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
+        result: Reference('recipe_result')
       }
     }
   }, { context: 'recipe' }), {

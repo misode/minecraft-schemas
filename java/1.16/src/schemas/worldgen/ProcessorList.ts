@@ -22,11 +22,21 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
     )
   }, { context: 'processor_list' }), {
     default: () => ({
-      processors: [{}]
+      processors: [{
+        processor_type: 'minecraft:rule',
+        rules: [{
+          location_predicate: {
+            predicate_type: 'minecraft:always_true'
+          },
+          input_predicate: {
+            predicate_type: 'minecraft:always_true'
+          }
+        }]
+      }]
     })
   }))
 
-  schemas.register('processor', ObjectNode({
+  schemas.register('processor', Mod(ObjectNode({
     processor_type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_processor' } }),
     [Switch]: path => path.push('processor_type'),
     [Case]: {
@@ -51,7 +61,19 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         )
       }
     }
-  }, { context: 'processor' }))
+  }, { context: 'processor' }), {
+    default: () => ({
+      processor_type: 'minecraft:rule',
+      rules: [{
+        location_predicate: {
+          predicate_type: 'minecraft:always_true'
+        },
+        input_predicate: {
+          predicate_type: 'minecraft:always_true'
+        }
+      }]
+    })
+  }))
 
   schemas.register('processor_rule', Mod(ObjectNode({
     position_predicate: Opt(Reference('pos_rule_test')),
@@ -61,10 +83,11 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
     output_nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:block' } } }))
   }, { context: 'processor_rule' }), {
     default: () => ({
-      location_predicate: {},
-      input_predicate: {},
-      output_state: {
-        Name: 'minecraft:air'
+      location_predicate: {
+        predicate_type: 'minecraft:always_true'
+      },
+      input_predicate: {
+        predicate_type: 'minecraft:always_true'
       }
     })
   }))

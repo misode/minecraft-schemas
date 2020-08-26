@@ -54,7 +54,10 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
         ${this.renderRaw(path, view, inputId)}
       </div>`
     },
-    validate(path, value, errors) {
+    validate(path, value, errors, options) {
+      if (options.loose && typeof value !== 'string') {
+        value = this.default() || undefined
+      }
       if (typeof value !== 'string') {
         errors.add(path, 'error.expected_string')
         return value

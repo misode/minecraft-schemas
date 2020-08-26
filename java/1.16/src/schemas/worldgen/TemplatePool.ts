@@ -45,7 +45,9 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
         {
           weight: 1,
           element: {
-            element_type: 'minecraft:list_pool_element'
+            element_type: 'minecraft:single_pool_element',
+            projection: 'rigid',
+            processors: 'minecraft:empty'
           }
         }
       ]
@@ -59,12 +61,14 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
     default: () => ({
       weight: 1,
       element: {
-        element_type: 'minecraft:single_pool_element'
+        element_type: 'minecraft:single_pool_element',
+        projection: 'rigid',
+        processors: 'minecraft:empty'
       }
     })
   }))
 
-  schemas.register('template_element', ObjectNode({
+  schemas.register('template_element', Mod(ObjectNode({
     element_type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_pool_element' } }),
     projection: StringNode({ enum: ['rigid', 'terrain_matching'] }),
     [Switch]: path => path.push('element_type'),
@@ -87,5 +91,11 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
         processors: Processors
       }
     }
-  }, { context: 'template_element', disableSwitchContext: true }))
+  }, { context: 'template_element', disableSwitchContext: true }), {
+    default: () => ({
+      element_type: 'minecraft:single_pool_element',
+      projection: 'rigid',
+      processors: 'minecraft:empty'
+    })
+  }))
 }

@@ -51,7 +51,7 @@ export const ListNode = (children: INode): INode<any[]> => {
     },
     validate(path, value, errors, options) {
       if (options.loose && value === undefined) {
-        return []
+        return this.default()
       }
       if (!(value instanceof Array)) {
         errors.add(path, 'error.expected_list')

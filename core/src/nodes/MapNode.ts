@@ -67,7 +67,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
       .map(quoteString),
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'object') {
-        value = {}
+        value = this.default()
       }
       if (value === null || typeof value !== 'object') {
         errors.add(path, 'error.expected_object')

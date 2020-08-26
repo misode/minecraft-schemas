@@ -82,7 +82,7 @@ const XOrList = (x: string): ((node: INode<any>, config?: ChoiceNodeConfig) => I
     {
       type: x,
       node,
-      change: v => v[0]
+      change: v => v[0] ?? node.default()
     },
     {
       type: 'list',

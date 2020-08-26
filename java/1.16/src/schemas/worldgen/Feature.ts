@@ -203,25 +203,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           max_water_depth: NumberNode({ integer: true }),
           ignore_vines: BooleanNode(),
           heightmap: StringNode({ enum: 'heightmap_type' }),
-          minimum_size: ObjectNode({
-            type: StringNode({ validator: 'resource', params: { pool: 'worldgen/feature_size_type' } }),
-            min_clipped_height: Opt(NumberNode({ min: 0, max: 80 })),
-            [Switch]: path => path.push('type'),
-            [Case]: {
-              'minecraft:two_layers_feature_size': {
-                limit: Opt(NumberNode({ integer: true, min: 0, max: 81 })),
-                lower_size: Opt(NumberNode({ integer: true, min: 0, max: 16 })),
-                upper_size: Opt(NumberNode({ integer: true, min: 0, max: 16 }))
-              },
-              'minecraft:three_layers_feature_size': {
-                limit: Opt(NumberNode({ integer: true, min: 0, max: 80 })),
-                upper_limit: Opt(NumberNode({ integer: true, min: 0, max: 80 })),
-                lower_size: Opt(NumberNode({ integer: true, min: 0, max: 16 })),
-                middle_size: Opt(NumberNode({ integer: true, min: 0, max: 16 })),
-                upper_size: Opt(NumberNode({ integer: true, min: 0, max: 16 }))
-              }
-            }
-          }, { disableSwitchContext: true }),
+          minimum_size: Reference('feature_size'),
           trunk_provider: Reference('block_state_provider'),
           leaves_provider: Reference('block_state_provider'),
           trunk_placer: ObjectNode({
@@ -311,7 +293,31 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     })
   }))
 
-  schemas.register('block_state_provider', ObjectNode({
+  schemas.register('feature_size', Mod(ObjectNode({
+    type: StringNode({ validator: 'resource', params: { pool: 'worldgen/feature_size_type' } }),
+    min_clipped_height: Opt(NumberNode({ min: 0, max: 80 })),
+    [Switch]: path => path.push('type'),
+    [Case]: {
+      'minecraft:two_layers_feature_size': {
+        limit: Opt(NumberNode({ integer: true, min: 0, max: 81 })),
+        lower_size: Opt(NumberNode({ integer: true, min: 0, max: 16 })),
+        upper_size: Opt(NumberNode({ integer: true, min: 0, max: 16 }))
+      },
+      'minecraft:three_layers_feature_size': {
+        limit: Opt(NumberNode({ integer: true, min: 0, max: 80 })),
+        upper_limit: Opt(NumberNode({ integer: true, min: 0, max: 80 })),
+        lower_size: Opt(NumberNode({ integer: true, min: 0, max: 16 })),
+        middle_size: Opt(NumberNode({ integer: true, min: 0, max: 16 })),
+        upper_size: Opt(NumberNode({ integer: true, min: 0, max: 16 }))
+      }
+    }
+  }, { disableSwitchContext: true }), {
+    default: () => ({
+      type: 'minecraft:two_layers_feature_size'
+    })
+  }))
+
+  schemas.register('block_state_provider', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/block_state_provider_type' } }),
     [Switch]: path => path.push('type'),
     [Case]: {
@@ -334,9 +340,13 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         )
       }
     }
-  }, { context: 'block_state_provider' }))
+  }, { context: 'block_state_provider' }), {
+    default: () => ({
+      type: 'minecraft:simple_state_provider'
+    })
+  }))
 
-  schemas.register('block_placer', ObjectNode({
+  schemas.register('block_placer', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/block_placer_type' } }),
     [Switch]: path => path.push('type'),
     [Case]: {
@@ -345,5 +355,9 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         extra_size: NumberNode({ integer: true })
       }
     }
-  }, { context: 'block_placer' }))
+  }, { context: 'block_placer' }), {
+    default: () => ({
+      type: 'minecraft:simple_block_placer'
+    })
+  }))
 }

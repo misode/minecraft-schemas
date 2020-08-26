@@ -16,10 +16,10 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
     default: () => false,
     render(path, value, view, options) {
       const onFalse = view.registerClick(el => {
-        view.model.set(path, !config?.radio && value === false ? undefined : false)
+        view.model.set(path, this.optional() && value === false ? undefined : false)
       })
       const onTrue = view.registerClick(el => {
-        view.model.set(path, !config?.radio && value === true ? undefined : true)
+        view.model.set(path, this.optional() && value === true ? undefined : true)
       })
       return `<div class="node boolean-node node-header" ${path.error()} ${path.help()}>
         ${options?.prepend ?? ''}
@@ -32,7 +32,10 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
       </div>`
     },
     suggest: () => ['false', 'true'],
-    validate(path, value, errors) {
+    validate(path, value, errors, options) {
+      if (options.loose && typeof value !== 'boolean') {
+        value = this.default()
+      }
       if (typeof value !== 'boolean' || value === undefined) {
         errors.add(path, 'error.expected_boolean')
       }

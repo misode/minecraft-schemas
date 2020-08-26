@@ -126,7 +126,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     },
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'object') {
-        value = {}
+        value = this.default()
       }
       if (typeof value !== 'object') {
         errors.add(path, 'error.expected_object')

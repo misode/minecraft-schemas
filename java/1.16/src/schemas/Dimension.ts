@@ -116,10 +116,15 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
     })
   }))
 
-  schemas.register('generator_biome_noise', ObjectNode({
+  schemas.register('generator_biome_noise',Mod(ObjectNode({
     firstOctave: NumberNode({ integer: true }),
     amplitudes: ListNode(
       NumberNode()
     )
-  }, { context: 'generator_biome_noise' }))
+  }, { context: 'generator_biome_noise' }), {
+    default: () => ({
+      firstOctave: -7,
+      amplitudes: [1, 1]
+    })
+  }))
 }

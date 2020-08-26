@@ -14,6 +14,7 @@ import {
   BooleanNode,
   ObjectOrPreset,
   Opt,
+  Mod,
 } from '@mcschema/core'
 
 export let ConditionCases: NestedNodeChildren
@@ -104,26 +105,39 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   const StringNode = RawStringNode.bind(undefined, collections)
   const Reference = RawReference.bind(undefined, schemas)
 
-  schemas.register('block_state', ObjectNode({
+  schemas.register('block_state', Mod(ObjectNode({
     Name: StringNode({ validator: 'resource', params: { pool: 'block' } }),
     Properties: Opt(MapNode(
       StringNode(),
       StringNode(),
       { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'Name' }] } } }
     ))
-  }, { context: 'block_state' }))
+  }, { context: 'block_state' }), {
+    default: () => ({
+      Name: 'minecraft:stone'
+    })
+  }))
 
-  schemas.register('fluid_state', ObjectNode({
+  schemas.register('fluid_state', Mod(ObjectNode({
     Name: StringNode({ validator: 'resource', params: { pool: 'fluid' } }),
     Properties: Opt(MapNode(
       StringNode(),
       StringNode()
     ))
-  }, { context: 'fluid_state' }))
+  }, { context: 'fluid_state' }), {
+    default: () => ({
+      Name: 'minecraft:water',
+      Properties: {
+        'level': '0'
+      }
+    })
+  }))
 
-  schemas.register('block_pos', ListNode(
+  schemas.register('block_pos', Mod(ListNode(
     NumberNode({ integer: true })
-  ))
+  ), {
+    default: () => [0, 0, 0]
+  }))
 
   Range = (config?: RangeConfig) => ChoiceNode([
     ...(config?.forceRange ? [] : [{
@@ -209,7 +223,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       term: Reference('condition')
     },
     'minecraft:killed_by_player': {
-      inverse: BooleanNode()
+      inverse: Opt(BooleanNode())
     },
     'minecraft:location_check': {
       offsetX: Opt(NumberNode({ integer: true })),
@@ -243,11 +257,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     },
     'minecraft:time_check': {
       value: Range(),
-      period: NumberNode()
+      period: Opt(NumberNode())
     },
     'minecraft:weather_check': {
-      raining: BooleanNode(),
-      thundering: BooleanNode()
+      raining: Opt(BooleanNode()),
+      thundering: Opt(BooleanNode())
     }
   }
 

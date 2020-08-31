@@ -685,6 +685,7 @@
   "generator_biome.parameters.weirdness": "奇妙さ",
   "generator_biome_noise.amplitudes": "広大さ",
   "generator_biome_noise.amplitudes.entry": "オクターブ %0%",
+  "generator_structure.separation": "間隔",
   "hide_source": "ソースを隠す",
   "item.count": "個数",
   "item.durability": "耐久値",

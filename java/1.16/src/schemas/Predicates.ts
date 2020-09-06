@@ -9,7 +9,8 @@ import {
   Switch,
   Case,
   SchemaRegistry,
-  CollectionRegistry,, ChoiceNode
+  ChoiceNode,
+  CollectionRegistry,
 } from '@mcschema/core'
 import { Range } from './Common'
 

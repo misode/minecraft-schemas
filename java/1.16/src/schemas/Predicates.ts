@@ -9,7 +9,7 @@ import {
   Switch,
   Case,
   SchemaRegistry,
-  CollectionRegistry,
+  CollectionRegistry,, ChoiceNode
 } from '@mcschema/core'
 import { Range } from './Common'
 
@@ -112,7 +112,15 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     level: Opt(Range()),
     advancements: Opt(MapNode(
       StringNode({ validator: 'resource', params: { pool: '$advancement' } }),
-      BooleanNode()
+      ChoiceNode([
+        { type: 'boolean', node: BooleanNode(), change: _ => true },
+        { 
+          type: 'object', node: MapNode(
+            StringNode(),
+            BooleanNode()
+          ) 
+        }
+      ])
     )),
     recipes: Opt(MapNode(
       StringNode({ validator: 'resource', params: { pool: '$recipe' } }),

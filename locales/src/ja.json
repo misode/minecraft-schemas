@@ -329,7 +329,7 @@
   "decorator.range_very_biased.top_offset": "上部オフセット",
   "decorator.type": "種類",
   "decorator.water_lake.chance": "確率",
-  "dimension": "ディメンション (Dimension)",
+  "dimension": "ディメンション",
   "dimension.generator": "ジェネレーター",
   "dimension.generator.biome_source": "バイオームの生成法則",
   "dimension.overworld": "オーバーワールド",

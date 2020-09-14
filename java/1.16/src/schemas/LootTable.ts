@@ -74,8 +74,8 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     type: Opt(StringNode({ validator: "resource", params: { pool: collections.get('loot_context_type') } })),
     pools: Opt(ListNode(
       Mod(ObjectNode({
-        rolls: Range({ allowBinomial: true, integer: true, min: 1 }),
-        bonus_rolls: Opt(Range({ integer: true, min: 1 })),
+        rolls: Range({ allowBinomial: true, integer: true }),
+        bonus_rolls: Opt(Range({ integer: true })),
         entries: ListNode(
           Reference('loot_entry')
         ),

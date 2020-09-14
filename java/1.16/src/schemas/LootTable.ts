@@ -214,7 +214,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
       },
       'minecraft:exploration_map': {
         destination: Opt(StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature' } })),
-        decoration: Opt(StringNode({ validator: 'resource', params: { pool: collections.get('map_decoration') } })),
+        decoration: Opt(StringNode({ enum: 'map_decoration' })),
         zoom: Opt(NumberNode({ integer: true })),
         search_radius: Opt(NumberNode({ integer: true })),
         skip_existing_chunks: Opt(BooleanNode()),

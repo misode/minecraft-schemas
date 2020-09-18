@@ -37,8 +37,9 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
 
   return {
     ...Base,
+    type: () => 'string',
     default: () => '',
-    render(path, value, view, options) {
+    render(path, value, view) {
       const inputId = view.register(el => {
         (el as HTMLSelectElement).value = value ?? ''
         el.addEventListener('change', evt => {
@@ -47,12 +48,7 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
           evt.stopPropagation()
         })
       })
-      return `<div class="node string-node node-header" ${path.error()} ${path.help()}>
-        ${options?.prepend ?? ''}
-        <label>${options?.label ?? path.locale()}</label>
-        ${options?.inject ?? ''}
-        ${this.renderRaw(path, view, inputId)}
-      </div>`
+      return ['', this.renderRaw(path, view, inputId), '']
     },
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'string') {

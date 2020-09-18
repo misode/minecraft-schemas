@@ -1,4 +1,4 @@
-import { INode, Base } from './Node'
+import { INode } from './Node'
 import { Path, ModelPath } from '../model/Path'
 import { ListNode } from './ListNode'
 import { SwitchNode } from './SwitchNode'
@@ -38,12 +38,12 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
   return {
     ...switchNode,
     keep: () => true,
-    render(path, value, view, options) {
+    render(path, value, view) {
       const choice = switchNode.activeCase(path) ?? choices[0]
       const pathWithContext = (config?.context) ?
         new ModelPath(path.getModel(), new Path(path.getArray(), [config.context])) : path
       const pathWithChoiceContext = config?.choiceContext ? new Path([], [config.choiceContext]) : config?.context ? new Path([], [config.context]) : path
-      let inject = choices.map(c => {
+      const inject = choices.map(c => {
         if (c.type === choice.type) {
           return `<button class="selected" disabled>${pathWithChoiceContext.push(c.type).locale()}</button>`
         }
@@ -53,12 +53,8 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
         return `<button data-id="${buttonId}">${pathWithChoiceContext.push(c.type).locale()}</button>`
       }).join('')
 
-      return choice.node.render(pathWithContext, value, view, {
-        ...options,
-        label: path.locale(),
-        hideHeader: false,
-        inject
-      })
+      const [prefix, suffix, body] = choice.node.render(pathWithContext, value, view)
+      return [prefix, inject + suffix, body]
     },
     validate(path, value, errors, options) {
       let choice = switchNode.activeCase(path)

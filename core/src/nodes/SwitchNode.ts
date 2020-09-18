@@ -12,6 +12,10 @@ type Case<T> = {
 export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
   return {
     ...Base,
+    type(path) {
+      return (this.activeCase(path) ?? cases[cases.length - 1])
+        .node.type(path) ?? cases
+    },
     default: () => cases[0].node.default(),
     navigate(path, index) {
       const nextIndex = index + 1
@@ -25,9 +29,9 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
     transform(path, value, view) {
       return this.activeCase(path)?.node.transform(path, value, view) ?? value
     },
-    render(path, value, view, options) {
+    render(path, value, view) {
       return (this.activeCase(path) ?? cases[cases.length - 1])
-        .node.render(path, value, view, options)
+        .node.render(path, value, view)
     },
     suggest(path, value) {
       return this.activeCase(path)

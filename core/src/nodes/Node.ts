@@ -1,4 +1,3 @@
-import { DataModel } from '../model/DataModel'
 import { ModelPath } from '../model/Path'
 import { TreeView } from '../view/TreeView'
 import { SourceView } from '../view/SourceView'
@@ -6,14 +5,15 @@ import { Errors } from '../model/Errors'
 import { ValidationOption } from '../ValidationOption'
 
 export type NodeOptions = {
-  hideHeader?: boolean
-  prepend?: string
-  label?: string
-  inject?: string
   loose?: boolean
 }
 
 export interface INode<T = any> {
+
+  /**
+   * Type of the node
+   */
+  type: (path: ModelPath) => string
 
   /**
    * The default value of this node
@@ -68,10 +68,9 @@ export interface INode<T = any> {
    * @param path 
    * @param value 
    * @param view tree view context, containing the model
-   * @param options optional render options
    * @returns string HTML representation of this node using the given data
    */
-  render: (path: ModelPath, value: T, view: TreeView, options?: NodeOptions) => string
+  render: (path: ModelPath, value: T, view: TreeView) => [string, string, string]
 
   /**
    * Provide code suggestions for this node. The result are valid JSON strings that can be used
@@ -116,6 +115,7 @@ export interface INode<T = any> {
 }
 
 export const Base: INode = ({
+  type: () => 'base',
   default: () => undefined,
   transform: (_, v) => v,
   enabled: () => true,
@@ -123,7 +123,7 @@ export const Base: INode = ({
   optional: () => false,
   navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
   pathPush: (p) => p,
-  render: () => '',
+  render: () => ['', '', ''],
   suggest: () => [],
   validate: (_, v) => v,
   validationOption: () => undefined

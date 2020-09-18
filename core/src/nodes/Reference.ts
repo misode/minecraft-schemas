@@ -6,6 +6,9 @@ import { TreeView } from '../view/TreeView'
 import { Errors } from '../model/Errors'
 
 export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> => ({
+  type(path: ModelPath) {
+    return schemas.get(schema).type.bind(this)(path)
+  },
   default() {
     return schemas.get(schema).default.bind(this)()
   },
@@ -27,8 +30,8 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
   pathPush(path: ModelPath, key: string | number) {
     return schemas.get(schema).pathPush.bind(this)(path, key)
   },
-  render(path: ModelPath, value: T, view: TreeView, options?: NodeOptions) {
-    return schemas.get(schema).render.bind(this)(path, value, view, options)
+  render(path: ModelPath, value: T, view: TreeView) {
+    return schemas.get(schema).render.bind(this)(path, value, view)
   },
   suggest(path: ModelPath, value: T) {
     return schemas.get(schema).suggest.bind(this)(path, value)

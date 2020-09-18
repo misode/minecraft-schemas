@@ -16,6 +16,7 @@ type MapNodeConfig = {
 export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeConfig): INode<IMap> => {
   return {
     ...Base,
+    type: () => 'map',
     default: () => ({}),
     navigate(path, index) {
       const nextIndex = index + 1
@@ -36,31 +37,32 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
       )
       return res;
     },
-    render(path, value, view, options) {
+    render(path, value, view) {
       const onAdd = view.registerClick(el => {
         const key = keys.getState(el.parentElement!)
         view.model.set(path.push(key), children.default())
       })
-      return `<div class="node map-node">
-        <div class="node-header" ${path.help()}>
-          ${options?.prepend ?? ''}
-          <label>${options?.label ?? path.locale()}</label>
-          ${options?.inject ?? ''}
-          ${keys.renderRaw(path, view)}
-          <button class="add" data-id="${onAdd}"></button>
-          ${view.nodeInjector(path, view)}
-        </div>
-        <div class="node-body">
-          ${Object.keys(value ?? []).map(key => {
+      const suffix = `${keys.renderRaw(path, view)}<button class="add" data-id="${onAdd}"></button>${view.nodeInjector(path, view)}`
+      let body = ''
+      if (typeof value === 'object' && value !== undefined) {
+        body = Object.keys(value)
+          .map(key => {
             const removeId = view.registerClick(el => view.model.set(path.push(key), undefined))
-            return `<div class="node-entry">
-            ${children.render(path.modelPush(key), value[key], view, {
-              prepend: `<button class="remove" data-id="${removeId}"></button>`,
-              label: key
-            })}
-          </div>`}).join('')}
-        </div>
-      </div>`
+            const childPath = path.modelPush(key)
+            const [cPrefix, cSuffix, cBody] = children.render(childPath, value[key], view)
+            return `<div class="node-entry"><div class="node ${children.type(childPath)}-node" ${childPath.error()} ${childPath.help()}>
+              <div class="node-header">
+                <button class="remove" data-id="${removeId}"></button>
+                ${cPrefix}
+                <label>${key}</label>
+                ${cSuffix}
+              </div>
+              ${cBody ? `<div class="node-body">${cBody}</div>` : ''}
+              </div></div>`
+          })
+          .join('')
+      }
+      return ['', suffix, body]
     },
     suggest: (path) => keys
       .suggest(path, '')

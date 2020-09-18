@@ -3,6 +3,7 @@ import { INode, Base } from './Node'
 export const ListNode = (children: INode): INode<any[]> => {
   return ({
     ...Base,
+    type: () => 'list',
     default: () => [],
     navigate(path, index) {
       const nextIndex = index + 1
@@ -21,33 +22,44 @@ export const ListNode = (children: INode): INode<any[]> => {
         children.transform(path.push(index), obj, view)
       )
     },
-    render(path, value, view, options) {
-      value = value ?? []
+    render(path, value, view) {
       const onAdd = view.registerClick(el => {
+        if (!Array.isArray(value)) value = []
+        view.model.set(path, [children.default(), ...value])
+      })
+      const onAddBottom = view.registerClick(el => {
         if (!Array.isArray(value)) value = []
         view.model.set(path, [...value, children.default()])
       })
-      return `<div class="node list-node">
-        <div class="node-header" ${path.error()} ${path.help()}>
-          ${options?.prepend ?? ''}
-          <label>${options?.label ?? path.locale()}</label>
-          ${options?.inject ?? ''}
-          <button class="add" data-id="${onAdd}"></button>
-          ${view.nodeInjector(path, view)}
-        </div>
-        ${!Array.isArray(value) ? `` :
-          `<div class="node-body">
-          ${(value ?? []).map((obj, index) => {
-            const removeId = view.registerClick(el => view.model.set(path.push(index), undefined))
-            return `<div class="node-entry">
-            ${children.render(path.push(index).localePush('entry'), obj, view, {
-              prepend: `<button class="remove" data-id="${removeId}"></button>`,
-              label: path.localePush('entry').locale([`${index}`])
-            })}
+      const suffix = `<button class="add" data-id="${onAdd}"></button>`
+        + view.nodeInjector(path, view)
+
+      let body = ''
+      if (Array.isArray(value)) {
+        body =value.map((childValue, index) => {
+          const removeId = view.registerClick(el => view.model.set(path.push(index), undefined))
+          const childPath = path.push(index).localePush('entry')
+          const label = path.localePush('entry').locale([`${index}`])
+          const [cPrefix, cSuffix, cBody] = children.render(childPath, childValue, view)
+          return `<div class="node-entry"><div class="node ${children.type(childPath)}-node" ${childPath.error()} ${childPath.help()}>
+            <div class="node-header">
+              <button class="remove" data-id="${removeId}"></button>
+              ${cPrefix}
+              <label>${label}</label>
+              ${cSuffix}
+            </div>
+            ${cBody ? `<div class="node-body">${cBody}</div>` : ''}
+            </div></div>`
+        }).join('')
+        if (value.length > 2) {
+          body += `<div class="node-entry">
+            <div class="node node-header">
+              <button class="add" data-id="${onAddBottom}"></button>
+            </div>
           </div>`
-          }).join('')}
-        </div>`}
-      </div>`
+        }
+      }
+      return ['', suffix, body]
     },
     validate(path, value, errors, options) {
       if (options.loose && !Array.isArray(value)) {

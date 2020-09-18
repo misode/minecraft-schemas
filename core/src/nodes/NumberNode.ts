@@ -19,8 +19,9 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
 
   return {
     ...Base,
+    type: () => 'number',
     default: () => 0,
-    render(path, value, view, options) {
+    render(path, value, view) {
       const onChange = view.registerChange(el => {
         const value = (el as HTMLInputElement).value
         let parsed = config?.color
@@ -28,13 +29,8 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
           : integer ? parseInt(value) : parseFloat(value)
         view.model.set(path, parsed)
       })
-      return `<div class="node number-node node-header" ${path.error()} ${path.help()}>
-        ${options?.prepend ?? ''}
-        <label>${options?.label ?? path.locale()}</label>
-        ${options?.inject ?? ''}
-        <input ${config?.color ? `type="color"` : ''} data-id="${onChange}"
-          value="${config?.color ? '#' + (value?.toString(16).padStart(6, '0') ?? '000000') : value ?? ''}">
-      </div>`
+      return ['', `<input ${config?.color ? `type="color"` : ''} data-id="${onChange}"
+        value="${config?.color ? '#' + (value?.toString(16).padStart(6, '0') ?? '000000') : value ?? ''}">`, '']
     },
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'number') {

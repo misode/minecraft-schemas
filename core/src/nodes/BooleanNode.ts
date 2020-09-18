@@ -1,6 +1,4 @@
-import { INode, Base, NodeOptions } from './Node'
-import { Path } from '../model/Path'
-import { TreeView } from '../view/TreeView'
+import { INode, Base } from './Node'
 import { locale } from '../Registries'
 
 type BooleanNodeConfig = {
@@ -13,23 +11,19 @@ type BooleanNodeConfig = {
 export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
   return {
     ...Base,
+    type: () => 'boolean',
     default: () => false,
-    render(path, value, view, options) {
+    render(path, value, view) {
       const onFalse = view.registerClick(el => {
         view.model.set(path, this.optional() && value === false ? undefined : false)
       })
       const onTrue = view.registerClick(el => {
         view.model.set(path, this.optional() && value === true ? undefined : true)
       })
-      return `<div class="node boolean-node node-header" ${path.error()} ${path.help()}>
-        ${options?.prepend ?? ''}
-        <label>${options?.label ?? path.locale()}</label>
-        ${options?.inject ?? ''}
-        <button${value === false ? ' class="selected"' : ' '} 
+      return ['', `<button${value === false ? ' class="selected"' : ' '} 
           data-id="${onFalse}">${locale('false')}</button>
         <button${value === true ? ' class="selected"' : ' '} 
-          data-id="${onTrue}">${locale('true')}</button>
-      </div>`
+          data-id="${onTrue}">${locale('true')}</button>`, '']
     },
     suggest: () => ['false', 'true'],
     validate(path, value, errors, options) {

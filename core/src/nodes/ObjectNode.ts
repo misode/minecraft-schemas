@@ -1,6 +1,5 @@
 import { INode, Base } from './Node'
 import { Path, ModelPath } from '../model/Path'
-import { TreeView } from '../view/TreeView'
 import { Errors } from '../model/Errors'
 import { quoteString } from '../utils'
 
@@ -55,17 +54,9 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     return pathWithFilter.push(childKey)
   }
 
-  const renderFields = (path: ModelPath, value: IObject, view: TreeView) => {
-    value = value ?? {}
-    const activeFields = getActiveFields(path)
-    return Object.keys(activeFields)
-      .filter(k => activeFields[k].enabled(path))
-      .map(k => activeFields[k].render(getChildModelPath(path, k), value[k], view))
-      .join('')
-  }
-
   return ({
     ...Base,
+    type: () => 'object',
     default: () => ({}),
     keep() {
       return this.optional()
@@ -96,26 +87,37 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         })
       return res
     },
-    render(path, value, view, options) {
-      return `<div class="node object-node"${config?.category ? `data-category="${config?.category}"` : ''}>
-        ${options?.hideHeader ? '' : `<div class="node-header" ${path.error()} ${path.help()}>
-          ${options?.prepend ? options.prepend : `
-            ${(this.optional()) ? value === undefined ? `
-              <button class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, this.default()))}"></button>
-            `: `
-              <button class="collapse open" data-id="${view.registerClick(() => view.model.set(path, undefined))}"></button>
-            ` : ``}
-          `}
-          <label>${options?.label ?? path.locale()}</label>
-          ${options?.inject ?? ''}
-          ${view.nodeInjector(path, view)}
-        </div>`}
-        ${(typeof value !== 'object' && value !== undefined) || ((this.optional()) && value === undefined) ? `` : `
-          <div class="node-body">
-            ${renderFields(path, value, view)}
-          </div>
-        `}
-      </div>`
+    render(path, value, view) {
+      let prefix = ''
+      if (this.optional()) {
+        if (value === undefined) {
+          prefix = `<button class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, this.default()))}"></button>`
+        } else {
+          prefix = `<button class="collapse open" data-id="${view.registerClick(() => view.model.set(path, undefined))}"></button>`
+        }
+      }
+      let suffix = view.nodeInjector(path, view)
+      let body = ''
+      if (typeof value === 'object' && value !== undefined && (!(this.optional() && value === undefined))) {
+        const activeFields = getActiveFields(path)
+        body = Object.keys(activeFields)
+          .filter(k => activeFields[k].enabled(path))
+          .map(k => {
+            const field = activeFields[k]
+            const childPath = getChildModelPath(path, k)
+            const [cPrefix, cSuffix, cBody] = field.render(childPath, value[k], view)
+            return `<div class="node ${field.type(childPath)}-node" ${childPath.error()} ${childPath.help()}>
+              <div class="node-header">
+                ${cPrefix}
+                <label>${childPath.locale()}</label>
+                ${cSuffix}
+              </div>
+              ${cBody ? `<div class="node-body">${cBody}</div>` : ''}
+              </div>`
+          })
+          .join('')
+      }
+      return [prefix, suffix, body]
     },
     suggest(path, value) {
       const activeFields = getActiveFields(path)

@@ -83,8 +83,11 @@ export class TreeView extends AbstractView {
    * @override
    */
   invalidated() {
-    this.target.innerHTML = this.model.schema.render(
-      new ModelPath(this.model), this.model.data, this, {hideHeader: true})
+    const rendered = this.model.schema.render(
+      new ModelPath(this.model), this.model.data, this)
+    this.target.innerHTML = `<div class="node object-node"><div class="node-body">
+      ${rendered[2]}
+    </div></div>`
     for (const id in this.registry) {
       const element = this.target.querySelector(`[data-id="${id}"]`)
       if (element !== null) this.registry[id](element)

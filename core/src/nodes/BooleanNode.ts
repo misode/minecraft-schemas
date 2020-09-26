@@ -1,14 +1,10 @@
 import { INode, Base } from './Node'
 import { locale } from '../Registries'
 
-type BooleanNodeConfig = {
-  radio?: boolean
-}
-
 /**
  * Boolean node with two buttons for true/false
  */
-export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
+export const BooleanNode = (): INode<boolean> => {
   return {
     ...Base,
     type: () => 'boolean',

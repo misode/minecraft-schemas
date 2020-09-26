@@ -15,8 +15,8 @@ export function initWorldSettingsSchemas(schemas: SchemaRegistry, collections: C
   const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('world_settings', Mod(ObjectNode({
-    generate_features: BooleanNode({ radio: true }),
-    bonus_chest: BooleanNode({ radio: true }),
+    generate_features: BooleanNode(),
+    bonus_chest: BooleanNode(),
     seed: NumberNode({ integer: true }),
     dimensions: MapNode(
       StringNode({ validator: 'resource', params: { pool: '$dimension' } }),

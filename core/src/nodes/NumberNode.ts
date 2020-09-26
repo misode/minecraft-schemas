@@ -29,8 +29,11 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
           : integer ? parseInt(value) : parseFloat(value)
           path.model.set(path, parsed)
       })
-      return ['', `<input ${config?.color ? `type="color"` : ''} data-id="${onChange}"
-        value="${config?.color ? '#' + (value?.toString(16).padStart(6, '0') ?? '000000') : value ?? ''}">`, '']
+      if (config?.color) {
+        const hex = (value?.toString(16).padStart(6, '0') ?? '000000')
+        return ['', `<input type="color" data-id="${onChange}" value="#${hex}">`, '']
+      }
+      return ['', `<input data-id="${onChange}" value="${value ?? ''}">`, '']
     },
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'number') {

@@ -49,7 +49,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     },
     {
       type: 'boolean',
-      node: BooleanNode({ radio: true }),
+      node: BooleanNode(),
       change: v => {
         const s = getSimpleString(v)
         return s === 'true' || s === 'false' ? s === 'true' : !!s

@@ -39,13 +39,12 @@ export const ListNode = (children: INode): INode<any[]> => {
         body =value.map((childValue, index) => {
           const removeId = mounter.registerClick(el => path.model.set(path.push(index), undefined))
           const childPath = path.push(index).localePush('entry')
-          const label = path.localePush('entry').locale([`${index}`])
           const [cPrefix, cSuffix, cBody] = children.render(childPath, childValue, mounter)
           return `<div class="node-entry"><div class="node ${children.type(childPath)}-node" ${childPath.error()} ${childPath.help()}>
             <div class="node-header">
               <button class="remove" data-id="${removeId}"></button>
               ${cPrefix}
-              <label>${label}</label>
+              <label>${path.localePush('entry').locale([`${index}`])}</label>
               ${cSuffix}
             </div>
             ${cBody ? `<div class="node-body">${cBody}</div>` : ''}

@@ -40,5 +40,11 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
   },
   validationOption(path: ModelPath) {
     return schemas.get(schema).validationOption.bind(this)(path)
+  },
+  activeCase(path: ModelPath) {
+    return schemas.get(schema).activeCase.bind(this)(path)
+  },
+  renderRaw(path: ModelPath, mounter: Mounter, inputId?: string) {
+    return schemas.get(schema).renderRaw.bind(this)(path, mounter, inputId)
   }
 })

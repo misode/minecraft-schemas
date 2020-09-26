@@ -1,6 +1,5 @@
 import { ModelPath } from '../model/Path'
-import { TreeView } from '../view/TreeView'
-import { SourceView } from '../view/SourceView'
+import { Mounter } from '../Mounter'
 import { Errors } from '../model/Errors'
 import { ValidationOption } from '../ValidationOption'
 
@@ -24,7 +23,7 @@ export interface INode<T = any> {
   /**
    * Transforms the data model to the final output format
    */
-  transform: (path: ModelPath, value: T, view: SourceView) => any
+  transform: (path: ModelPath, value: T) => any
 
   /**
    * Determines whether the node should be enabled for this path
@@ -65,12 +64,9 @@ export interface INode<T = any> {
 
   /**
    * Renders the node and handles events to update the model
-   * @param path 
-   * @param value 
-   * @param view tree view context, containing the model
    * @returns string HTML representation of this node using the given data
    */
-  render: (path: ModelPath, value: T, view: TreeView) => [string, string, string]
+  render: (path: ModelPath, value: T, mounter: Mounter) => [string, string, string]
 
   /**
    * Provide code suggestions for this node. The result are valid JSON strings that can be used

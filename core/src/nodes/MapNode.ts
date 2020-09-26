@@ -29,27 +29,27 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
     pathPush(path, key) {
       return path.modelPush(key)
     },
-    transform(path, value, view) {
+    transform(path, value) {
       if (value === undefined) return undefined
       let res: any = {}
       Object.keys(value).forEach(f =>
-        res[f] = children.transform(path.push(f), value[f], view)
+        res[f] = children.transform(path.push(f), value[f])
       )
       return res;
     },
-    render(path, value, view) {
-      const onAdd = view.registerClick(el => {
+    render(path, value, mounter) {
+      const onAdd = mounter.registerClick(el => {
         const key = keys.getState(el.parentElement!)
-        view.model.set(path.push(key), children.default())
+        path.model.set(path.push(key), children.default())
       })
-      const suffix = `${keys.renderRaw(path, view)}<button class="add" data-id="${onAdd}"></button>${view.nodeInjector(path, view)}`
+      const suffix = `${keys.renderRaw(path, mounter)}<button class="add" data-id="${onAdd}"></button>${mounter.nodeInjector(path, mounter)}`
       let body = ''
       if (typeof value === 'object' && value !== undefined) {
         body = Object.keys(value)
           .map(key => {
-            const removeId = view.registerClick(el => view.model.set(path.push(key), undefined))
+            const removeId = mounter.registerClick(el => path.model.set(path.push(key), undefined))
             const childPath = path.modelPush(key)
-            const [cPrefix, cSuffix, cBody] = children.render(childPath, value[key], view)
+            const [cPrefix, cSuffix, cBody] = children.render(childPath, value[key], mounter)
             return `<div class="node-entry"><div class="node ${children.type(childPath)}-node" ${childPath.error()} ${childPath.help()}>
               <div class="node-header">
                 <button class="remove" data-id="${removeId}"></button>

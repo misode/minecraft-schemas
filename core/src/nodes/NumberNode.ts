@@ -21,13 +21,13 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
     ...Base,
     type: () => 'number',
     default: () => 0,
-    render(path, value, view) {
-      const onChange = view.registerChange(el => {
+    render(path, value, mounter) {
+      const onChange = mounter.registerChange(el => {
         const value = (el as HTMLInputElement).value
         let parsed = config?.color
           ? parseInt(value.slice(1), 16)
           : integer ? parseInt(value) : parseFloat(value)
-        view.model.set(path, parsed)
+          path.model.set(path, parsed)
       })
       return ['', `<input ${config?.color ? `type="color"` : ''} data-id="${onChange}"
         value="${config?.color ? '#' + (value?.toString(16).padStart(6, '0') ?? '000000') : value ?? ''}">`, '']

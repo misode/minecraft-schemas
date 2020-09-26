@@ -16,31 +16,31 @@ export const ListNode = (children: INode): INode<any[]> => {
     pathPush(path, index) {
       return path.push(parseInt(index.toString())).localePush('entry')
     },
-    transform(path, value, view) {
+    transform(path, value) {
       if (!Array.isArray(value)) return value
       return value.map((obj, index) =>
-        children.transform(path.push(index), obj, view)
+        children.transform(path.push(index), obj)
       )
     },
-    render(path, value, view) {
-      const onAdd = view.registerClick(el => {
+    render(path, value, mounter) {
+      const onAdd = mounter.registerClick(el => {
         if (!Array.isArray(value)) value = []
-        view.model.set(path, [children.default(), ...value])
+        path.model.set(path, [children.default(), ...value])
       })
-      const onAddBottom = view.registerClick(el => {
+      const onAddBottom = mounter.registerClick(el => {
         if (!Array.isArray(value)) value = []
-        view.model.set(path, [...value, children.default()])
+        path.model.set(path, [...value, children.default()])
       })
       const suffix = `<button class="add" data-id="${onAdd}"></button>`
-        + view.nodeInjector(path, view)
+        + mounter.nodeInjector(path, mounter)
 
       let body = ''
       if (Array.isArray(value)) {
         body =value.map((childValue, index) => {
-          const removeId = view.registerClick(el => view.model.set(path.push(index), undefined))
+          const removeId = mounter.registerClick(el => path.model.set(path.push(index), undefined))
           const childPath = path.push(index).localePush('entry')
           const label = path.localePush('entry').locale([`${index}`])
-          const [cPrefix, cSuffix, cBody] = children.render(childPath, childValue, view)
+          const [cPrefix, cSuffix, cBody] = children.render(childPath, childValue, mounter)
           return `<div class="node-entry"><div class="node ${children.type(childPath)}-node" ${childPath.error()} ${childPath.help()}>
             <div class="node-header">
               <button class="remove" data-id="${removeId}"></button>

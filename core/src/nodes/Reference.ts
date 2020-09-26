@@ -1,8 +1,7 @@
 import { INode, NodeOptions } from './Node'
 import { SchemaRegistry } from '../Registries'
 import { ModelPath } from '../model/Path'
-import { SourceView } from '../view/SourceView'
-import { TreeView } from '../view/TreeView'
+import { Mounter } from '../Mounter'
 import { Errors } from '../model/Errors'
 
 export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> => ({
@@ -12,8 +11,8 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
   default() {
     return schemas.get(schema).default.bind(this)()
   },
-  transform(path: ModelPath, value: T, view: SourceView) {
-    return schemas.get(schema).transform(path, value, view)
+  transform(path: ModelPath, value: T) {
+    return schemas.get(schema).transform(path, value)
   },
   enabled(path: ModelPath) {
     return schemas.get(schema).enabled.bind(this)(path)
@@ -30,8 +29,8 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
   pathPush(path: ModelPath, key: string | number) {
     return schemas.get(schema).pathPush.bind(this)(path, key)
   },
-  render(path: ModelPath, value: T, view: TreeView) {
-    return schemas.get(schema).render.bind(this)(path, value, view)
+  render(path: ModelPath, value: T, mounter: Mounter) {
+    return schemas.get(schema).render.bind(this)(path, value, mounter)
   },
   suggest(path: ModelPath, value: T) {
     return schemas.get(schema).suggest.bind(this)(path, value)

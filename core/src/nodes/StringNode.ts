@@ -2,7 +2,7 @@ import { INode, Base } from './Node'
 import { locale, CollectionRegistry } from '../Registries'
 import { ValidationOption } from '../ValidationOption'
 import { ModelPath, Path } from '../model/Path'
-import { TreeView } from '../view/TreeView'
+import { Mounter } from '../Mounter'
 import { hexId, quoteString } from '../utils'
 
 type EnumOption = {
@@ -39,16 +39,16 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
     ...Base,
     type: () => 'string',
     default: () => '',
-    render(path, value, view) {
-      const inputId = view.register(el => {
+    render(path, value, mounter) {
+      const inputId = mounter.register(el => {
         (el as HTMLSelectElement).value = value ?? ''
         el.addEventListener('change', evt => {
           const newValue = (el as HTMLSelectElement).value
-          view.model.set(path, newValue.length === 0 ? undefined : newValue)
+          path.model.set(path, newValue.length === 0 ? undefined : newValue)
           evt.stopPropagation()
         })
       })
-      return ['', this.renderRaw(path, view, inputId), '']
+      return ['', this.renderRaw(path, mounter, inputId), '']
     },
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'string') {
@@ -82,7 +82,7 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
     validationOption() {
       return isValidator(config) ? config : undefined
     },
-    renderRaw(path: ModelPath, view: TreeView, inputId?: string) {
+    renderRaw(path: ModelPath, mounter: Mounter, inputId?: string) {
       const values = getValues()
       if (isEnum(config) && !config.additional) {
         const contextPath = typeof config.enum === 'string' ?

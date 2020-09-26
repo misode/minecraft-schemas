@@ -1,37 +1,30 @@
-import { DataModel } from '../model/DataModel'
-import { ModelPath } from '../model/Path'
-import { AbstractView } from './AbstractView'
-import { hexId } from '../utils'
+import { ModelPath } from './model/Path'
+import { hexId } from './utils'
 
 type Registry = {
   [id: string]: (el: Element) => void
 }
 
+type NodeInjector = (path: ModelPath, mounter: Mounter) => string
+
 type TreeViewOptions = {
-  showErrors?: boolean
-  observer?: (el: HTMLElement) => void
-  nodeInjector?: (path: ModelPath, view: TreeView) => string
+  nodeInjector?: NodeInjector
 }
 
-/**
- * DOM representation view of the model.
- */
-export class TreeView extends AbstractView {
-  target: HTMLElement
-  registry: Registry = {}
-  showErrors: boolean
-  observer: (el: HTMLElement) => void
-  nodeInjector: (path: ModelPath, view: TreeView) => string
+export interface Mounter {
+  register(callback: (el: Element) => void): string
+  registerEvent(type: string, callback: (el: Element) => void): string
+  registerChange(callback: (el: Element) => void): string
+  registerClick(callback: (el: Element) => void): string
+  nodeInjector(path: ModelPath, mounter: Mounter): string
+  mount(el: HTMLElement): void
+}
 
-  /**
-   * @param model data model this view represents and listens to
-   * @param target DOM element to render the view
-   */
-  constructor(model: DataModel, target: HTMLElement, options?: TreeViewOptions) {
-    super(model)
-    this.target = target
-    this.showErrors = options?.showErrors ?? false
-    this.observer = options?.observer ?? (() => {})
+export class Mounter implements Mounter {
+  registry: Registry = {}
+  nodeInjector: NodeInjector
+
+  constructor(options?: TreeViewOptions) {
     this.nodeInjector = options?.nodeInjector ?? (() => '')
   }
 
@@ -79,20 +72,11 @@ export class TreeView extends AbstractView {
     return this.registerEvent('click', callback)
   }
 
-  /**
-   * @override
-   */
-  invalidated() {
-    const rendered = this.model.schema.render(
-      new ModelPath(this.model), this.model.data, this)
-    this.target.innerHTML = `<div class="node object-node"><div class="node-body">
-      ${rendered[2]}
-    </div></div>`
+  mount(el: HTMLElement): void {
     for (const id in this.registry) {
-      const element = this.target.querySelector(`[data-id="${id}"]`)
+      const element = el.querySelector(`[data-id="${id}"]`)
       if (element !== null) this.registry[id](element)
     }
     this.registry = {}
-    this.observer(this.target)
   }
 }

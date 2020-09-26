@@ -38,7 +38,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
   return {
     ...switchNode,
     keep: () => true,
-    render(path, value, view) {
+    render(path, value, mounter) {
       const choice = switchNode.activeCase(path) ?? choices[0]
       const pathWithContext = (config?.context) ?
         new ModelPath(path.getModel(), new Path(path.getArray(), [config.context])) : path
@@ -47,13 +47,13 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
         if (c.type === choice.type) {
           return `<button class="selected" disabled>${pathWithChoiceContext.push(c.type).locale()}</button>`
         }
-        const buttonId = view.registerClick(el => {
-          view.model.set(path, c.change ? c.change(value) : c.node.default())
+        const buttonId = mounter.registerClick(el => {
+          path.model.set(path, c.change ? c.change(value) : c.node.default())
         })
         return `<button data-id="${buttonId}">${pathWithChoiceContext.push(c.type).locale()}</button>`
       }).join('')
 
-      const [prefix, suffix, body] = choice.node.render(pathWithContext, value, view)
+      const [prefix, suffix, body] = choice.node.render(pathWithContext, value, mounter)
       return [prefix, inject + suffix, body]
     },
     validate(path, value, errors, options) {

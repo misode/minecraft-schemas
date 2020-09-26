@@ -13,12 +13,12 @@ export const BooleanNode = (config?: BooleanNodeConfig): INode<boolean> => {
     ...Base,
     type: () => 'boolean',
     default: () => false,
-    render(path, value, view) {
-      const onFalse = view.registerClick(el => {
-        view.model.set(path, this.optional() && value === false ? undefined : false)
+    render(path, value, mounter) {
+      const onFalse = mounter.registerClick(el => {
+        path.model.set(path, this.optional() && value === false ? undefined : false)
       })
-      const onTrue = view.registerClick(el => {
-        view.model.set(path, this.optional() && value === true ? undefined : true)
+      const onTrue = mounter.registerClick(el => {
+        path.model.set(path, this.optional() && value === true ? undefined : true)
       })
       return ['', `<button${value === false ? ' class="selected"' : ' '} 
           data-id="${onFalse}">${locale('false')}</button>

@@ -74,7 +74,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     pathPush(path, key) {
       return getChildModelPath(path, key.toString())
     },
-    transform(path, value, view) {
+    transform(path, value) {
       if (value === undefined || value === null || typeof value !== 'object') {
         return value
       }
@@ -83,20 +83,20 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       Object.keys(activeFields)
         .filter(k => activeFields[k].enabled(path))
         .forEach(f => {
-          res[f] = activeFields[f].transform(path.push(f), value[f], view)
+          res[f] = activeFields[f].transform(path.push(f), value[f])
         })
       return res
     },
-    render(path, value, view) {
+    render(path, value, mounter) {
       let prefix = ''
       if (this.optional()) {
         if (value === undefined) {
-          prefix = `<button class="collapse closed" data-id="${view.registerClick(() => view.model.set(path, this.default()))}"></button>`
+          prefix = `<button class="collapse closed" data-id="${mounter.registerClick(() => path.model.set(path, this.default()))}"></button>`
         } else {
-          prefix = `<button class="collapse open" data-id="${view.registerClick(() => view.model.set(path, undefined))}"></button>`
+          prefix = `<button class="collapse open" data-id="${mounter.registerClick(() => path.model.set(path, undefined))}"></button>`
         }
       }
-      let suffix = view.nodeInjector(path, view)
+      let suffix = mounter.nodeInjector(path, mounter)
       let body = ''
       if (typeof value === 'object' && value !== undefined && (!(this.optional() && value === undefined))) {
         const activeFields = getActiveFields(path)
@@ -105,7 +105,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
           .map(k => {
             const field = activeFields[k]
             const childPath = getChildModelPath(path, k)
-            const [cPrefix, cSuffix, cBody] = field.render(childPath, value[k], view)
+            const [cPrefix, cSuffix, cBody] = field.render(childPath, value[k], mounter)
             return `<div class="node ${field.type(childPath)}-node" ${childPath.error()} ${childPath.help()}>
               <div class="node-header">
                 ${cPrefix}

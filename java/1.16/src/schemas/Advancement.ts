@@ -90,7 +90,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
 
   schemas.register('advancement_criteria', ObjectNode({
     trigger: StringNode({ validator: 'resource', params: { pool: collections.get('advancement_trigger') } }),
-    conditions: ObjectNode({
+    conditions: Opt(ObjectNode({
       player: Mod(EntityPredicate, {
         enabled: path => path.pop().push('trigger').get() !== 'minecraft:impossible'
       }),
@@ -269,6 +269,6 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           location: Reference('location_predicate')
         }
       }
-    }, { context: 'criterion' })
+    }, { context: 'criterion' }))
   }, { category: 'predicate', context: 'criterion' }))
 }

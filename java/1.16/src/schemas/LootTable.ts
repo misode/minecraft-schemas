@@ -221,7 +221,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:fill_player_head': {
-        entity: entitySourceSwtichNode,
+        entity: Opt(entitySourceSwtichNode),
         ...conditions
       },
       'minecraft:limit_count': {
@@ -258,7 +258,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         seed: Opt(NumberNode({ integer: true }))
       },
       'minecraft:set_lore': {
-        entity: entitySourceSwtichNode,
+        entity: Opt(entitySourceSwtichNode),
         lore: ListNode(
           Reference('text_component')
         ),
@@ -266,7 +266,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:set_name': {
-        entity: entitySourceSwtichNode,
+        entity: Opt(entitySourceSwtichNode),
         name: Reference('text_component'),
         ...conditions
       },

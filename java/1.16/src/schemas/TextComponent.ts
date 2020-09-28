@@ -74,9 +74,9 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     keybind: Opt(StringNode({ enum: 'keybind', additional: true })),
     nbt: Opt(StringNode({ validator: 'nbt_path' })),
     interpret: Opt(Has('nbt', BooleanNode())),
-    block: Has('nbt', StringNode({ validator: 'vector', params: { dimension: 3, isInteger: true } })),
-    entity: Has('nbt', StringNode({ validator: 'entity', params: { amount: 'single', type: 'entities' } })),
-    storage: Has('nbt', StringNode({ validator: 'resource', params: { pool: '$storage' } })),
+    block: Opt(Has('nbt', StringNode({ validator: 'vector', params: { dimension: 3, isInteger: true } }))),
+    entity: Opt(Has('nbt', StringNode({ validator: 'entity', params: { amount: 'single', type: 'entities' } }))),
+    storage: Opt(Has('nbt', StringNode({ validator: 'resource', params: { pool: '$storage' } }))),
     extra: Opt(Reference('text_component_list')),
     color: Opt(StringNode()) /* TODO */,
     font: Opt(StringNode()), // TODO: add validation

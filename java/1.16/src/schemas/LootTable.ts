@@ -79,7 +79,9 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         entries: ListNode(
           Reference('loot_entry')
         ),
-        ...functionsAndConditions
+        functions: Opt(ListNode(
+          Reference('loot_function')
+        ))
       }, { context: 'loot_pool' }), {
         default: () => ({
           rolls: 1,

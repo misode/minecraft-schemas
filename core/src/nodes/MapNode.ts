@@ -49,8 +49,9 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
           .map(key => {
             const removeId = mounter.registerClick(el => path.model.set(path.push(key), undefined))
             const childPath = path.modelPush(key)
+            const category = children.category(childPath)
             const [cPrefix, cSuffix, cBody] = children.render(childPath, value[key], mounter)
-            return `<div class="node-entry"><div class="node ${children.type(childPath)}-node" ${childPath.error()} ${childPath.help()}>
+            return `<div class="node-entry"><div class="node ${children.type(childPath)}-node" ${category ? `data-category="${category}"` : ''} ${childPath.error()} ${childPath.help()}>
               <div class="node-header">
                 <button class="remove" data-id="${removeId}"></button>
                 ${cPrefix}

@@ -57,6 +57,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
   return ({
     ...Base,
     type: () => 'object',
+    category: () => config?.category,
     default: () => ({}),
     keep() {
       return this.optional()
@@ -105,8 +106,10 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
           .map(k => {
             const field = activeFields[k]
             const childPath = getChildModelPath(path, k)
+            const category = field.category(childPath)
+            console.log(category)
             const [cPrefix, cSuffix, cBody] = field.render(childPath, value[k], mounter)
-            return `<div class="node ${field.type(childPath)}-node" ${childPath.error()} ${childPath.help()}>
+            return `<div class="node ${field.type(childPath)}-node" ${category ? `data-category="${category}"` : ''} ${childPath.error()} ${childPath.help()}>
               <div class="node-header">
                 ${cPrefix}
                 <label>${childPath.locale()}</label>

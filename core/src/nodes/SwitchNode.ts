@@ -14,7 +14,11 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
     ...Base,
     type(path) {
       return (this.activeCase(path) ?? cases[cases.length - 1])
-        .node.type(path) ?? cases
+        .node.type(path)
+    },
+    category(path) {
+      return (this.activeCase(path) ?? cases[cases.length - 1])
+        .node.category(path)
     },
     default: () => cases[0].node.default(),
     navigate(path, index) {

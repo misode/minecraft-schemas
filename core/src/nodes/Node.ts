@@ -15,6 +15,11 @@ export interface INode<T = any> {
   type: (path: ModelPath) => string
 
   /**
+   * Category of the node. Can be used for coloring
+   */
+  category: (path: ModelPath) => string | undefined
+
+  /**
    * The default value of this node
    * @param value optional original value
    */
@@ -112,6 +117,7 @@ export interface INode<T = any> {
 
 export const Base: INode = ({
   type: () => 'base',
+  category: () => undefined,
   default: () => undefined,
   transform: (_, v) => v,
   enabled: () => true,

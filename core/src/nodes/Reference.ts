@@ -8,6 +8,9 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
   type(path: ModelPath) {
     return schemas.get(schema).type.bind(this)(path)
   },
+  category(path: ModelPath) {
+    return schemas.get(schema).category.bind(this)(path)
+  },
   default() {
     return schemas.get(schema).default.bind(this)()
   },

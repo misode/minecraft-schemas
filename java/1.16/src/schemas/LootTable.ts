@@ -79,10 +79,8 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         entries: ListNode(
           Reference('loot_entry')
         ),
-        functions: Opt(ListNode(
-          Reference('loot_function')
-        ))
-      }, { context: 'loot_pool' }), {
+        ...functionsAndConditions
+      }, { category: 'pool', context: 'loot_pool' }), {
         default: () => ({
           rolls: 1,
           entries: [{
@@ -92,7 +90,9 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         })
       })
     )),
-    ...functionsAndConditions
+    functions: Opt(ListNode(
+      Reference('loot_function')
+    ))
   }, { context: 'loot_table' }), {
     default: () => ({
       pools: [{

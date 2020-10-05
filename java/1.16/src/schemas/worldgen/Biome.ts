@@ -77,6 +77,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
           maxCount: NumberNode({ integer: true })
         })
       ), {
+        category: () => 'pool',
         default: () => [{
           type: 'minecraft:bat',
           weight: 1
@@ -88,7 +89,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       Mod(ObjectNode({
         energy_budget: NumberNode(),
         charge: NumberNode()
-      }), {
+      }, { category: 'function' }), {
         default: () => ({
           energy_budget: 0.12,
           charge: 1.0
@@ -104,9 +105,9 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       })
     ),
     features: ListNode(
-      ListNode(
+      Mod(ListNode(
         StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_feature' } })
-      )
+      ), { category: () => 'predicate' })
     )
   }, { context: 'biome' }), {
     default: () => ({

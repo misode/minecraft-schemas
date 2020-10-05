@@ -61,7 +61,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         )
       }
     }
-  }, { context: 'processor' }), {
+  }, { category: 'function', context: 'processor' }), {
     default: () => ({
       processor_type: 'minecraft:rule',
       rules: [{
@@ -81,7 +81,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
     input_predicate: Reference('rule_test'),
     output_state: Reference('block_state'),
     output_nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:block' } } }))
-  }, { context: 'processor_rule' }), {
+  }, { category: 'predicate', context: 'processor_rule' }), {
     default: () => ({
       location_predicate: {
         predicate_type: 'minecraft:always_true'

@@ -80,7 +80,7 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
         }
       }
     }, { disableSwitchContext: true })
-  }, { context: 'dimension' }), {
+  }, { category: 'pool', context: 'dimension' }), {
     default: () => {
       const seed = Math.floor(Math.random() * (4294967296)) - 2147483648
       return {

@@ -27,7 +27,9 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
       type: 'object',
       node: Reference('processor_list'),
       change: v => ({
-        processors: [{}]
+        processors: [{
+          "processor_type": "minecraft:nop"
+        }]
       })
     }
   ])
@@ -57,7 +59,7 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
   schemas.register('template_weighted_element', Mod(ObjectNode({
     weight: NumberNode({ integer: true, min: 1 }),
     element: Reference('template_element')
-  }), {
+  }, { category: 'pool' }), {
     default: () => ({
       weight: 1,
       element: {

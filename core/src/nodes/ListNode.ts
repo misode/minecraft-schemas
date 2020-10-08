@@ -1,4 +1,5 @@
 import { Hook } from '../Hook'
+import { ModelPath } from '../model/Path'
 import { INode, Base } from './Node'
 
 export type ListHookParams = {
@@ -39,8 +40,8 @@ export const ListNode = (children: INode): INode<any[]> => {
         children.validate(path.push(index), obj, errors, options)
       )
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
-      return hook.list({ node: this, children }, ...args)
+    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+      return hook.list({ node: this, children }, path, ...args)
     }
   })
 }

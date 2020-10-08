@@ -145,8 +145,8 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       })
       return res
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
-      return hook.object({ node: this, fields: defaultFields, filter, cases, getActiveFields, getChildModelPath }, ...args)
+    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+      return hook.object({ node: this, fields: defaultFields, filter, cases, getActiveFields, getChildModelPath }, path, ...args)
     }
   })
 }

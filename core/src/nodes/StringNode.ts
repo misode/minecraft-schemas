@@ -3,6 +3,7 @@ import { CollectionRegistry } from '../Registries'
 import { ValidationOption } from '../ValidationOption'
 import { quoteString } from '../utils'
 import { Hook } from '../Hook'
+import { ModelPath } from '../model/Path'
 
 export type EnumOption = {
   enum: string | string[]
@@ -69,14 +70,11 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
       return value
     },
     suggest: () => getValues().map(quoteString),
-    getState(el: HTMLElement) {
-      return (el.getElementsByTagName('input')[0] ?? el.getElementsByTagName('select')[0]).value
-    },
     validationOption() {
       return isValidator(config) ? config : undefined
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
-      return hook.string({ node: this, getValues, config }, ...args)
+    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+      return hook.string({ node: this, getValues, config }, path, ...args)
     }
   }
 }

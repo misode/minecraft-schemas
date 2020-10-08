@@ -7,10 +7,6 @@ type Case<T> = {
   node: INode<T>
 }
 
-export type SwitchHookParams = {
-
-}
-
 /**
  * Node that allows multiple types
  */
@@ -63,8 +59,9 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
       if (index === -1) return undefined
       return cases[index]
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
-      return hook.switch({ node: this }, ...args)
-    }
+    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+      return (this.activeCase(path) ?? cases[cases.length - 1])
+        .node.call(hook, path, ...args)
+    },
   }
 }

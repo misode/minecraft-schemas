@@ -2,6 +2,7 @@ import { INode, Base } from './Node'
 import { ValidationOption } from '../ValidationOption'
 import { quoteString } from '../utils'
 import { Hook } from '../Hook'
+import { ModelPath } from '../model/Path'
 
 export type IMap = {
   [name: string]: any
@@ -65,8 +66,8 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
     validationOption(path) {
       return config?.validation ?? keys.validationOption(path.push(''))
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
-      return hook.map({ node: this, keys, children, config: config ?? {} }, ...args)
+    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+      return hook.map({ node: this, keys, children, config: config ?? {} }, path, ...args)
     }
   }
 }

@@ -2,6 +2,7 @@ import { INode } from './Node'
 import { ListNode } from './ListNode'
 import { SwitchNode } from './SwitchNode'
 import { Hook } from '../Hook'
+import { ModelPath } from '../model/Path'
 
 type Choice = {
   type: string
@@ -58,8 +59,8 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
       }
       return choice.node.validate(path, value, errors, options)
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
-      return hook.choice({ node: this, choices, config: config ?? {}, switchNode}, ...args)
+    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+      return hook.choice({ node: this, choices, config: config ?? {}, switchNode}, path, ...args)
     }
   }
 }

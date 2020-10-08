@@ -41,8 +41,8 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
   validationOption(path: ModelPath) {
     return schemas.get(schema).validationOption.bind(this)(path)
   },
-  hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
-    return schemas.get(schema).hook.bind(this)(hook, ...args)
+  hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+    return schemas.get(schema).hook.bind(this)(hook, path, ...args)
   },
   activeCase(path: ModelPath) {
     return schemas.get(schema).activeCase.bind(this)(path)

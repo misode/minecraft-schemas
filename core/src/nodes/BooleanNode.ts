@@ -1,5 +1,6 @@
 import { INode, Base } from './Node'
 import { Hook } from '../Hook'
+import { ModelPath } from '../model/Path'
 
 export type BooleanHookParams = {}
 
@@ -21,8 +22,8 @@ export const BooleanNode = (): INode<boolean> => {
       }
       return value
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
-      return hook.boolean({ node: this}, ...args)
+    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+      return hook.boolean({ node: this}, path, ...args)
     }
   }
 }

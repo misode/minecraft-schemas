@@ -1,4 +1,5 @@
 import { Hook } from '../Hook'
+import { ModelPath } from '../model/Path'
 import { INode, Base } from './Node'
 
 type NumberNodeConfig = {
@@ -47,8 +48,8 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
       }
       return value
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
-      return hook.number({ node: this, integer, min, max, between, config: config ?? {} }, ...args)
+    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+      return hook.number({ node: this, integer, min, max, between, config: config ?? {} }, path, ...args)
     }
   }
 }

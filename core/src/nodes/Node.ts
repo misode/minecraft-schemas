@@ -106,7 +106,7 @@ export interface INode<T = any> {
    */
   validationOption: (path: ModelPath) => ValidationOption | undefined
 
-  hook: <U extends any[], V>(hook: Hook<U, V>, ...args: U) => V
+  hook: <U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) => V
 
   [custom: string]: any
 }
@@ -124,7 +124,7 @@ export const Base: INode = ({
   suggest: () => [],
   validate: (_, v) => v,
   validationOption: () => undefined,
-  hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) { return hook.base({ node: this }, ...args) }
+  hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) { return hook.base({ node: this }, path, ...args) }
 })
 
 export const Mod = (node: INode, mods: Partial<INode> | ((node: INode) => Partial<INode>)): INode => ({

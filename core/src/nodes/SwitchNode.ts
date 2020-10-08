@@ -61,7 +61,7 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
     },
     hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
       return (this.activeCase(path) ?? cases[cases.length - 1])
-        .node.call(hook, path, ...args)
+        .node.hook(hook, path, ...args)
     },
   }
 }

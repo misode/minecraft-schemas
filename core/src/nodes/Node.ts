@@ -1,7 +1,7 @@
 import { ModelPath } from '../model/Path'
-import { Mounter } from '../Mounter'
 import { Errors } from '../model/Errors'
 import { ValidationOption } from '../ValidationOption'
+import { Hook } from '../Hook'
 
 export type NodeOptions = {
   loose?: boolean
@@ -68,12 +68,6 @@ export interface INode<T = any> {
   pathPush: (path: ModelPath, key: string | number) => ModelPath
 
   /**
-   * Renders the node and handles events to update the model
-   * @returns string HTML representation of this node using the given data
-   */
-  render: (path: ModelPath, value: T, mounter: Mounter) => [string, string, string]
-
-  /**
    * Provide code suggestions for this node. The result are valid JSON strings that can be used
    * in JSON directly without triggering any syntax errors; e.g. string suggestions, including
    * object key suggestions, have double quotation marks surrounding them, while boolean suggestions
@@ -112,6 +106,8 @@ export interface INode<T = any> {
    */
   validationOption: (path: ModelPath) => ValidationOption | undefined
 
+  hook: <U extends any[], V>(hook: Hook<U, V>, ...args: U) => V
+
   [custom: string]: any
 }
 
@@ -125,10 +121,10 @@ export const Base: INode = ({
   optional: () => false,
   navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
   pathPush: (p) => p,
-  render: () => ['', '', ''],
   suggest: () => [],
   validate: (_, v) => v,
-  validationOption: () => undefined
+  validationOption: () => undefined,
+  hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) { return hook.base({ node: this }, ...args) }
 })
 
 export const Mod = (node: INode, mods: Partial<INode> | ((node: INode) => Partial<INode>)): INode => ({

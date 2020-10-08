@@ -2,6 +2,7 @@ import { INode, Base } from './Node'
 import { Path, ModelPath } from '../model/Path'
 import { Errors } from '../model/Errors'
 import { quoteString } from '../utils'
+import { Hook } from '../Hook'
 
 export const Switch = Symbol('switch')
 export const Case = Symbol('case')
@@ -31,6 +32,14 @@ type ObjectNodeConfig = {
   context?: string,
   disableSwitchContext?: boolean,
   category?: string
+}
+
+export type ObjectHookParams = {
+  fields: NodeChildren,
+  filter?: (path: ModelPath) => ModelPath,
+  cases?: NestedNodeChildren,
+  getActiveFields: (path: ModelPath) => NodeChildren
+  getChildModelPath: (path: ModelPath, childKey: string) => ModelPath
 }
 
 export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig): INode<IObject> => {
@@ -88,39 +97,6 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         })
       return res
     },
-    render(path, value, mounter) {
-      let prefix = ''
-      if (this.optional()) {
-        if (value === undefined) {
-          prefix = `<button class="collapse closed" data-id="${mounter.registerClick(() => path.model.set(path, this.default()))}"></button>`
-        } else {
-          prefix = `<button class="collapse open" data-id="${mounter.registerClick(() => path.model.set(path, undefined))}"></button>`
-        }
-      }
-      let suffix = mounter.nodeInjector(path, mounter)
-      let body = ''
-      if (typeof value === 'object' && value !== undefined && (!(this.optional() && value === undefined))) {
-        const activeFields = getActiveFields(path)
-        body = Object.keys(activeFields)
-          .filter(k => activeFields[k].enabled(path))
-          .map(k => {
-            const field = activeFields[k]
-            const childPath = getChildModelPath(path, k)
-            const category = field.category(childPath)
-            const [cPrefix, cSuffix, cBody] = field.render(childPath, value[k], mounter)
-            return `<div class="node ${field.type(childPath)}-node" ${category ? `data-category="${category}"` : ''} ${childPath.error()} ${childPath.help()}>
-              <div class="node-header">
-                ${cPrefix}
-                <label>${childPath.locale()}</label>
-                ${cSuffix}
-              </div>
-              ${cBody ? `<div class="node-body">${cBody}</div>` : ''}
-              </div>`
-          })
-          .join('')
-      }
-      return [prefix, suffix, body]
-    },
     suggest(path, value) {
       const activeFields = getActiveFields(path)
       const existingKeys = Object.keys(typeof value === 'object' ? value : {})
@@ -168,6 +144,9 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         }
       })
       return res
+    },
+    hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
+      return hook.object({ node: this, fields: defaultFields, filter, cases, getActiveFields, getChildModelPath }, ...args)
     }
   })
 }

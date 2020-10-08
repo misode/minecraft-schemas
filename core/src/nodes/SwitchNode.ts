@@ -1,9 +1,14 @@
 import { INode, Base } from './Node'
 import { ModelPath } from '../model/Path'
+import { Hook } from '../Hook'
 
 type Case<T> = {
   match: (path: ModelPath) => boolean
   node: INode<T>
+}
+
+export type SwitchHookParams = {
+
 }
 
 /**
@@ -33,10 +38,6 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
     transform(path, value) {
       return this.activeCase(path)?.node.transform(path, value) ?? value
     },
-    render(path, value, view) {
-      return (this.activeCase(path) ?? cases[cases.length - 1])
-        .node.render(path, value, view)
-    },
     suggest(path, value) {
       return this.activeCase(path)
         ?.node
@@ -61,6 +62,9 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
       const index = cases.map(c => c.match(path)).indexOf(true)
       if (index === -1) return undefined
       return cases[index]
+    },
+    hook<U extends any[], V>(hook: Hook<U, V>, ...args: U) {
+      return hook.switch({ node: this }, ...args)
     }
   }
 }

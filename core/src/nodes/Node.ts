@@ -26,11 +26,6 @@ export interface INode<T = any> {
   default: () => T
 
   /**
-   * Transforms the data model to the final output format
-   */
-  transform: (path: ModelPath, value: T) => any
-
-  /**
    * Determines whether the node should be enabled for this path
    * @param path
    */
@@ -106,6 +101,9 @@ export interface INode<T = any> {
    */
   validationOption: (path: ModelPath) => ValidationOption | undefined
 
+  /**
+   * Allows users of this library to give custom functionality by hooking into each node type.
+   */
   hook: <U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) => V
 
   [custom: string]: any
@@ -115,16 +113,15 @@ export const Base: INode = ({
   type: () => 'base',
   category: () => undefined,
   default: () => undefined,
-  transform: (_, v) => v,
   enabled: () => true,
   keep: () => false,
   optional: () => false,
-  navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
+  navigate() { return this },
   pathPush: (p) => p,
   suggest: () => [],
   validate: (_, v) => v,
   validationOption: () => undefined,
-  hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) { return hook.base({ node: this }, path, ...args) }
+  hook(hook, path, ...args) { return hook.base({ node: this }, path, ...args) }
 })
 
 export const Mod = (node: INode, mods: Partial<INode> | ((node: INode) => Partial<INode>)): INode => ({

@@ -1,5 +1,3 @@
-import { Hook } from '../Hook'
-import { ModelPath } from '../model/Path'
 import { INode, Base } from './Node'
 
 export type ListHookParams = {
@@ -22,12 +20,6 @@ export const ListNode = (children: INode): INode<any[]> => {
     pathPush(path, index) {
       return path.push(parseInt(index.toString())).localePush('entry')
     },
-    transform(path, value) {
-      if (!Array.isArray(value)) return value
-      return value.map((obj, index) =>
-        children.transform(path.push(index), obj)
-      )
-    },
     validate(path, value, errors, options) {
       if (options.loose && !Array.isArray(value)) {
         value = this.default()
@@ -40,7 +32,7 @@ export const ListNode = (children: INode): INode<any[]> => {
         children.validate(path.push(index), obj, errors, options)
       )
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+    hook(hook, path, ...args) {
       return hook.list({ node: this, children }, path, ...args)
     }
   })

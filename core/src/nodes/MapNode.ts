@@ -1,8 +1,6 @@
 import { INode, Base } from './Node'
 import { ValidationOption } from '../ValidationOption'
 import { quoteString } from '../utils'
-import { Hook } from '../Hook'
-import { ModelPath } from '../model/Path'
 
 export type IMap = {
   [name: string]: any
@@ -37,14 +35,6 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
     pathPush(path, key) {
       return path.modelPush(key)
     },
-    transform(path, value) {
-      if (value === undefined) return undefined
-      let res: any = {}
-      Object.keys(value).forEach(f =>
-        res[f] = children.transform(path.push(f), value[f])
-      )
-      return res;
-    },
     suggest: (path) => keys
       .suggest(path, '')
       .map(quoteString),
@@ -66,7 +56,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
     validationOption(path) {
       return config?.validation ?? keys.validationOption(path.push(''))
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+    hook(hook, path, ...args) {
       return hook.map({ node: this, keys, children, config: config ?? {} }, path, ...args)
     }
   }

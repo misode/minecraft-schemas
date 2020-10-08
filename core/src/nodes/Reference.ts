@@ -1,10 +1,10 @@
 import { INode, NodeOptions } from './Node'
-import { SchemaRegistry } from '../Registries'
+import { Registry } from '../Registries'
 import { ModelPath } from '../model/Path'
 import { Errors } from '../model/Errors'
 import { Hook } from '../Hook'
 
-export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> => ({
+export const Reference = <T>(schemas: Registry<INode>, schema: string): INode<T> => ({
   type(path: ModelPath) {
     return schemas.get(schema).type.bind(this)(path)
   },

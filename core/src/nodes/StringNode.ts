@@ -1,9 +1,7 @@
 import { INode, Base } from './Node'
-import { CollectionRegistry } from '../Registries'
+import { Registry } from '../Registries'
 import { ValidationOption } from '../ValidationOption'
 import { quoteString } from '../utils'
-import { Hook } from '../Hook'
-import { ModelPath } from '../model/Path'
 
 export type EnumOption = {
   enum: string | string[]
@@ -26,7 +24,7 @@ export type StringHookParams = {
 /**
  * Simple string node with one text field
  */
-export const StringNode = (collections?: CollectionRegistry, config?: ValidationOption | EnumOption): INode<string> => {
+export const StringNode = (collections?: Registry<string[]>, config?: ValidationOption | EnumOption): INode<string> => {
   const getValues = 
     isEnum(config)
     ? ((typeof config.enum === 'string')
@@ -73,7 +71,7 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
     validationOption() {
       return isValidator(config) ? config : undefined
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+    hook(hook, path, ...args) {
       return hook.string({ node: this, getValues, config }, path, ...args)
     }
   }

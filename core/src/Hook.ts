@@ -8,13 +8,13 @@ import { ObjectHookParams } from "./nodes/ObjectNode"
 import { StringHookParams } from "./nodes/StringNode"
 import { ModelPath } from "./model/Path"
 
-export type Hook<T extends any[], S> = {
-  base: (params: {node: INode}, path: ModelPath, ...t: T) => S
-  boolean: (params: {node: INode} & BooleanHookParams, path: ModelPath, ...t: T) => S
-  choice: (params: {node: INode} & ChoiceHookParams, path: ModelPath, ...t: T) => S
-  list: (params: {node: INode} & ListHookParams, path: ModelPath, ...t: T) => S
-  map: (params: {node: INode} & MapHookParams, path: ModelPath, ...t: T) => S
-  number: (params: {node: INode} & NumberHookParams, path: ModelPath, ...t: T) => S
-  object: (params: {node: INode} & ObjectHookParams, path: ModelPath, ...t: T) => S
-  string: (params: {node: INode} & StringHookParams, path: ModelPath, ...t: T) => S
+export type Hook<U extends any[], V> = {
+  base: (params: {node: INode}, path: ModelPath, ...t: U) => V
+  boolean: (params: {node: INode} & BooleanHookParams, path: ModelPath, ...t: U) => V
+  choice: (params: {node: INode} & ChoiceHookParams, path: ModelPath, ...t: U) => V
+  list: (params: {node: INode} & ListHookParams, path: ModelPath, ...t: U) => V
+  map: (params: {node: INode} & MapHookParams, path: ModelPath, ...t: U) => V
+  number: (params: {node: INode} & NumberHookParams, path: ModelPath, ...t: U) => V
+  object: (params: {node: INode} & ObjectHookParams, path: ModelPath, ...t: U) => V
+  string: (params: {node: INode} & StringHookParams, path: ModelPath, ...t: U) => V
 }

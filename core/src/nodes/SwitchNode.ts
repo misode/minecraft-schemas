@@ -1,6 +1,5 @@
 import { INode, Base } from './Node'
 import { ModelPath } from '../model/Path'
-import { Hook } from '../Hook'
 
 type Case<T> = {
   match: (path: ModelPath) => boolean
@@ -31,9 +30,6 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
     pathPush(path, key) {
       return this.activeCase(path)?.node.pathPush(path, key) ?? path
     },
-    transform(path, value) {
-      return this.activeCase(path)?.node.transform(path, value) ?? value
-    },
     suggest(path, value) {
       return this.activeCase(path)
         ?.node
@@ -59,7 +55,7 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
       if (index === -1) return undefined
       return cases[index]
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+    hook(hook, path, ...args) {
       return (this.activeCase(path) ?? cases[cases.length - 1])
         .node.hook(hook, path, ...args)
     },

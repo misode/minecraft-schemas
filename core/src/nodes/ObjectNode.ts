@@ -2,7 +2,6 @@ import { INode, Base } from './Node'
 import { Path, ModelPath } from '../model/Path'
 import { Errors } from '../model/Errors'
 import { quoteString } from '../utils'
-import { Hook } from '../Hook'
 
 export const Switch = Symbol('switch')
 export const Case = Symbol('case')
@@ -84,19 +83,6 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     pathPush(path, key) {
       return getChildModelPath(path, key.toString())
     },
-    transform(path, value) {
-      if (value === undefined || value === null || typeof value !== 'object') {
-        return value
-      }
-      let res: any = {}
-      const activeFields = getActiveFields(path)
-      Object.keys(activeFields)
-        .filter(k => activeFields[k].enabled(path))
-        .forEach(f => {
-          res[f] = activeFields[f].transform(path.push(f), value[f])
-        })
-      return res
-    },
     suggest(path, value) {
       const activeFields = getActiveFields(path)
       const existingKeys = Object.keys(typeof value === 'object' ? value : {})
@@ -145,7 +131,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       })
       return res
     },
-    hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+    hook(hook, path, ...args) {
       return hook.object({ node: this, fields: defaultFields, filter, cases, getActiveFields, getChildModelPath }, path, ...args)
     }
   })

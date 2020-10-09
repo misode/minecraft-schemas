@@ -60,9 +60,16 @@ export const StringNode = (collections?: CollectionRegistry, config?: Validation
       }
       if (isValidator(config)) {
         if (config.validator === 'resource' && value.length > 0 && !value.includes(':')) {
-          value = 'minecraft:' + value
+          value = value[0] === '#' 
+            ? '#minecraft:' + value.slice(1)
+            : 'minecraft:' + value
         }
-        if (config.validator === 'resource' && typeof config.params.pool === 'string' && config.params.pool.startsWith('$')) {
+        if (config.validator === 'resource' && (
+          (typeof config.params.pool === 'string' && config.params.pool.startsWith('$')) ||
+          (config.params.allowTag && value[0] === '#') ||
+          config.params.isDefinition || 
+          config.params.allowUnknown
+        )) {
           return value
         }
       }

@@ -516,6 +516,7 @@ export function initCollections(collections: CollectionRegistry) {
     'mesa',
     'mushroom',
     'nether',
+    'none',
     'ocean',
     'plains',
     'river',

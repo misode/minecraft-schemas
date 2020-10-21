@@ -101,8 +101,8 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
   }))
 
   schemas.register('recipe_ingredient_object', Mod(ObjectNode({
-    item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-    tag: StringNode({ validator: 'resource', params: { pool: '$tag/item' } })
+    item: Opt(StringNode({ validator: 'resource', params: { pool: 'item' } })),
+    tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/item' } }))
   }), {
     default: () => ({
       item: 'minecraft:stone'

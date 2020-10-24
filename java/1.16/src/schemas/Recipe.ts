@@ -111,7 +111,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
 
   schemas.register('recipe_result', Mod(ObjectNode({
     item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-    count: Mod(NumberNode({ integer: true }), { default: () => 1 })
+    count: Opt(Mod(NumberNode({ integer: true }), { default: () => 1 }))
   }), {
     default: () => ({
       item: 'minecraft:stone'

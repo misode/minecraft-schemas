@@ -204,9 +204,9 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:enchant_randomly': {
-        enchantments: ListNode(
+        enchantments: Opt(ListNode(
           StringNode({ validator: 'resource', params: { pool: 'enchantment' } })
-        ),
+        )),
         ...conditions
       },
       'minecraft:enchant_with_levels': {

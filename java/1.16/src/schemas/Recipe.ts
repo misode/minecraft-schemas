@@ -23,7 +23,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:crafting_shaped': {
-        group: Opt(StringNode()),
+        group: Opt(StringNode({ enum: 'recipe_group', additional: true })),
         pattern: ListNode(StringNode()), // TODO: add validation
         key: MapNode(
           StringNode(), // TODO: add validation

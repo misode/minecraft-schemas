@@ -23,7 +23,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:crafting_shaped': {
-        group: Opt(StringNode()),
+        group: Opt(StringNode({ enum: 'recipe_group', additional: true })),
         pattern: ListNode(StringNode()), // TODO: add validation
         key: MapNode(
           StringNode(), // TODO: add validation
@@ -101,8 +101,8 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
   }))
 
   schemas.register('recipe_ingredient_object', Mod(ObjectNode({
-    item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-    tag: StringNode({ validator: 'resource', params: { pool: '$tag/item' } })
+    item: Opt(StringNode({ validator: 'resource', params: { pool: 'item' } })),
+    tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/item' } }))
   }), {
     default: () => ({
       item: 'minecraft:stone'
@@ -111,7 +111,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
 
   schemas.register('recipe_result', Mod(ObjectNode({
     item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-    count: Mod(NumberNode({ integer: true }), { default: () => 1 })
+    count: Opt(Mod(NumberNode({ integer: true }), { default: () => 1 }))
   }), {
     default: () => ({
       item: 'minecraft:stone'

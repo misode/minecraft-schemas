@@ -58,7 +58,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   const OreConfig: NodeChildren = {
     state: Reference('block_state'),
     size: NumberNode({ integer: true, min: 0, max: 64 }),
-    target: Reference('block_predicate')
+    target: Reference('rule_test')
   }
 
   const CountConfig: NodeChildren = {
@@ -194,7 +194,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           state: Reference('fluid_state'),
           rock_count: NumberNode({ integer: true }),
           hole_count: NumberNode({ integer: true }),
-          required_block_below: BooleanNode(),
+          requires_block_below: BooleanNode(),
           valid_blocks: ListNode(
             StringNode({ validator: 'resource', params: { pool: 'block' } })
           )

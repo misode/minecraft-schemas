@@ -88,6 +88,7 @@ export const LootFunctions = new Map<string, LootContext[]>([
     ['minecraft:limit_count', []],
     ['minecraft:looting_enchant', [LootContext.KillerEntity]],
     ['minecraft:set_attributes', []],
+    ['minecraft:set_banner_pattern', []],
     ['minecraft:set_contents', []],
     ['minecraft:set_count', []],
     ['minecraft:set_damage', []],

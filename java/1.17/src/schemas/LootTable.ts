@@ -241,6 +241,14 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ),
         ...conditions
       },
+      'minecraft:set_banner_pattern': {
+        patterns: ListNode(
+          ObjectNode({
+            pattern: StringNode({ enum: 'banner_pattern' }),
+            color: StringNode({ enum: 'dye_color' })
+          })
+        )
+      },
       'minecraft:set_contents': {
         entries: ListNode(
           Reference('loot_entry')

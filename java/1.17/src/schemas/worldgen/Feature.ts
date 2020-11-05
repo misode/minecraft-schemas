@@ -135,6 +135,41 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         'minecraft:forest_rock': {
           state: Reference('block_state')
         },
+        'minecraft:geode': {
+          blocks: ObjectNode({
+            filling_provider: Reference('block_state_provider'),
+            inner_layer_provider: Reference('block_state_provider'),
+            alternate_inner_layer_provider: Reference('block_state_provider'),
+            middle_layer_provider: Reference('block_state_provider'),
+            outer_layer_provider: Reference('block_state_provider'),
+            inner_placements: ListNode(
+              Reference('block_state')
+            )
+          }),
+          layers: ObjectNode({
+            filling: Opt(NumberNode({ min: 0.01, max: 50 })),
+            inner_layer: Opt(NumberNode({ min: 0.01, max: 50 })),
+            middle_layer: Opt(NumberNode({ min: 0.01, max: 50 })),
+            outer_layer: Opt(NumberNode({ min: 0.01, max: 50 })),
+          }),
+          crack: ObjectNode({
+            generate_crack_chance: Opt(NumberNode({ min: 0, max: 1 })),
+            base_crack_size: Opt(NumberNode({ min: 0, max: 5 })),
+            crack_point_offset: Opt(NumberNode({ min: 0, max: 10, integer: true })),
+          }),
+          noise_multiplier: Opt(NumberNode({ min: 0, max: 1 })),
+          use_potential_placements_chance: Opt(NumberNode({ min: 0, max: 1 })),
+          use_alternate_layer0_chance: Opt(NumberNode({ min: 0, max: 1 })),
+          placements_require_layer0_alternate: Opt(BooleanNode()),
+          min_outer_wall_distance: Opt(NumberNode({ min: 1, max: 10, integer: true })),
+          max_outer_wall_distance: Opt(NumberNode({ min: 1, max: 20, integer: true })),
+          min_distribution_points: Opt(NumberNode({ min: 1, max: 10, integer: true })),
+          max_distribution_points: Opt(NumberNode({ min: 1, max: 20, integer: true })),
+          min_point_offset: Opt(NumberNode({ min: 1, max: 10, integer: true })),
+          max_point_offset: Opt(NumberNode({ min: 1, max: 10, integer: true })),
+          min_gen_offset: Opt(NumberNode({ integer: true })),
+          max_gen_offset: Opt(NumberNode({ integer: true })),
+        },
         'minecraft:huge_brown_mushroom': HugeMushroomConfig,
         'minecraft:huge_fungus': {
           hat_state: Reference('block_state'),

@@ -7,15 +7,15 @@ export type PathElement = number | string
  */
 export class Path {
   modelArr: PathElement[]
-  localeArr: string[]
+  contextArr: string[]
 
   /**
    * @param modelArr Initial array of path model elements. Empty if not given
-   * @param localeArr Initial array of path locale elements. Empty if not given
+   * @param contextArr Initial array of path context elements. Empty if not given
    */
-  constructor(modelArr?: PathElement[], localeArr?: string[]) {
+  constructor(modelArr?: PathElement[], contextArr?: string[]) {
     this.modelArr = modelArr ?? []
-    this.localeArr = localeArr ?? []
+    this.contextArr = contextArr ?? []
   }
 
   /**
@@ -29,21 +29,21 @@ export class Path {
    * A new path with the specific sliced module elements
    */
   slice(start?: number, end?: number): Path {
-    return new Path(this.modelArr.slice(start, end), this.localeArr)
+    return new Path(this.modelArr.slice(start, end), this.contextArr)
   }
 
   /**
    * A new path with the first model element removed
    */
   shift(): Path {
-    return new Path(this.modelArr.slice(1), this.localeArr)
+    return new Path(this.modelArr.slice(1), this.contextArr)
   }
 
   /**
    * A new path with the last model element removed
    */
   pop(): Path {
-    return new Path(this.modelArr.slice(0, -1), this.localeArr)
+    return new Path(this.modelArr.slice(0, -1), this.contextArr)
   }
 
   /**
@@ -51,7 +51,7 @@ export class Path {
    * @param element element to push at the end of the array
    */
   push(element: PathElement): Path {
-    return this.modelPush(element).localePush(element)
+    return this.modelPush(element).contextPush(element)
   }
 
   /**
@@ -59,21 +59,21 @@ export class Path {
    * @param element 
    */
   modelPush(element: PathElement) {
-    return new Path([...this.modelArr, element], [...this.localeArr])
+    return new Path([...this.modelArr, element], [...this.contextArr])
   }
 
   /**
-   * Push an element exclusivly to the locale array
+   * Push an element exclusivly to the context array
    * @param element 
    */
-  localePush(element: PathElement) {
+  contextPush(element: PathElement) {
     if (typeof element === 'number') return this.copy()
     const newElement = element.startsWith('minecraft:') ? element.slice(10) : element
-    return new Path([...this.modelArr], [...this.localeArr, newElement])
+    return new Path([...this.modelArr], [...this.contextArr, newElement])
   }
 
   copy(): Path {
-    return new Path([...this.modelArr], [...this.localeArr])
+    return new Path([...this.modelArr], [...this.contextArr])
   }
 
   getArray(): PathElement[] {
@@ -88,8 +88,8 @@ export class Path {
     return new ModelPath(model, this)
   }
 
-  locale(): string[] {
-    return this.localeArr
+  getContext(): string[] {
+    return this.contextArr
   }
 
   /**
@@ -136,7 +136,7 @@ export class ModelPath extends Path {
   model: DataModel
 
   constructor(model: DataModel, path?: Path) {
-    super(path?.modelArr, path?.localeArr) 
+    super(path?.modelArr, path?.contextArr) 
     this.model = model
   }
 
@@ -185,7 +185,7 @@ export class ModelPath extends Path {
    * @param element element to push at the end of the array
    */
   push(element: PathElement): ModelPath {
-    return this.modelPush(element).localePush(element)
+    return this.modelPush(element).contextPush(element)
   }
 
   /**
@@ -197,11 +197,11 @@ export class ModelPath extends Path {
   }
 
   /**
-   * Push an element exclusivly to the locale array
+   * Push an element exclusivly to the context array
    * @param element 
    */
-  localePush(element: PathElement): ModelPath {
-    return new ModelPath(this.model, super.localePush(element))
+  contextPush(element: PathElement): ModelPath {
+    return new ModelPath(this.model, super.contextPush(element))
   }
 
   copy(): ModelPath {

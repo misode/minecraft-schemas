@@ -57,7 +57,7 @@ export interface INode<T = any> {
    * Get the path to the child node corresponding to the `key`
    * - For `ChoiceNode`: Call the `pathPush` method from the matched node.
    * - For `ListNode`: Returns the path of the specific child.
-   * - For `ObjectNode`: Returns the path of the specific child, with the locale arrays handled.
+   * - For `ObjectNode`: Returns the path of the specific child, with the context arrays handled.
    * - For other nodes: Returns the path without changes.
    */
   pathPush: (path: ModelPath, key: string | number) => ModelPath

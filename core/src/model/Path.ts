@@ -1,5 +1,4 @@
 import { DataModel } from './DataModel'
-import { LOCALES, locale } from '../Registries'
 
 export type PathElement = number | string
 
@@ -89,41 +88,8 @@ export class Path {
     return new ModelPath(model, this)
   }
 
-  /**
-   * Gets the locale of a key from the locale registry.
-   * 
-   * @param params optional locale parameters
-   * @returns the key itself if it isn't found
-   */
-  locale (params?: string[]): string {
-    const res = this.strictLocale(params)
-    if (res !== undefined) return res
-    // return this.localeArr.slice(-5).join('.')
-    return this.localeArr[this.localeArr.length - 1] ?? ''
-  }
-
-  /**
-   * Gets the locale of a key from the locale registry.
-   * 
-   * @param params optional locale parameters
-   * @param depth path depth to start, defaults to 5
-   * @param minDepth minimum length of the path, defaults to 1
-   * @returns undefined if the key isn't found
-   */
-  strictLocale(params?: string[], depth = 5, minDepth = 1): string | undefined {
-    let path = this.localeArr.slice(-depth)
-    while (path.length >= minDepth) {
-      const locale = LOCALES.getLocale(path.join('.'), params)
-      if (locale !== undefined) return locale
-      path.shift()
-    }
-    path = this.localeArr.slice(-depth)
-    while (path.length >= minDepth) {
-      const locale = LOCALES.getLocale(path.join('.'), params, 'en')
-      if (locale !== undefined) return locale
-      path.shift()
-    }
-    return undefined
+  locale(): string[] {
+    return this.localeArr
   }
 
   /**
@@ -191,26 +157,6 @@ export class ModelPath extends Path {
    */
   set(value: any): void {
     this.model?.set(this, value)
-  }
-
-  /**
-   * Gets the error inside this path if the model is attached
-   * @returns a html attribute containing the error message
-   */
-  error(exact = true): string {
-    const errors = this.model.errors.get(this, exact)
-    if (errors.length === 0) return ''
-    return `data-error="${locale(errors[0].error, errors[0].params)}"`
-  }
-
-  /**
-   * Gets the help message corresponding to this path if the model is attached
-   * @returns a html attribute containing the error message
-   */
-  help(): string {
-    const res = this.localePush('help').strictLocale([], 6)
-    if (res === undefined) return ''
-    return `data-help="${res}"`
   }
 
   /**

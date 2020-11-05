@@ -30,13 +30,6 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
     pathPush(path, key) {
       return this.activeCase(path)?.node.pathPush(path, key) ?? path
     },
-    transform(path, value) {
-      return this.activeCase(path)?.node.transform(path, value) ?? value
-    },
-    render(path, value, view) {
-      return (this.activeCase(path) ?? cases[cases.length - 1])
-        .node.render(path, value, view)
-    },
     suggest(path, value) {
       return this.activeCase(path)
         ?.node
@@ -61,6 +54,10 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
       const index = cases.map(c => c.match(path)).indexOf(true)
       if (index === -1) return undefined
       return cases[index]
-    }
+    },
+    hook(hook, path, ...args) {
+      return (this.activeCase(path) ?? cases[cases.length - 1])
+        .node.hook(hook, path, ...args)
+    },
   }
 }

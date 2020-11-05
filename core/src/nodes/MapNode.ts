@@ -10,6 +10,12 @@ type MapNodeConfig = {
   validation?: ValidationOption
 }
 
+export type MapHookParams = {
+  keys: INode<string>,
+  children: INode,
+  config: MapNodeConfig
+}
+
 /**
  * Map nodes similar to list nodes, but a string key is required to add children
  */
@@ -28,42 +34,6 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
     },
     pathPush(path, key) {
       return path.modelPush(key)
-    },
-    transform(path, value) {
-      if (value === undefined) return undefined
-      let res: any = {}
-      Object.keys(value).forEach(f =>
-        res[f] = children.transform(path.push(f), value[f])
-      )
-      return res;
-    },
-    render(path, value, mounter) {
-      const onAdd = mounter.registerClick(el => {
-        const key = keys.getState(el.parentElement!)
-        path.model.set(path.push(key), children.default())
-      })
-      const suffix = `${keys.renderRaw(path, mounter)}<button class="add" data-id="${onAdd}"></button>${mounter.nodeInjector(path, mounter)}`
-      let body = ''
-      if (typeof value === 'object' && value !== undefined) {
-        body = Object.keys(value)
-          .map(key => {
-            const removeId = mounter.registerClick(el => path.model.set(path.push(key), undefined))
-            const childPath = path.modelPush(key)
-            const category = children.category(childPath)
-            const [cPrefix, cSuffix, cBody] = children.render(childPath, value[key], mounter)
-            return `<div class="node-entry"><div class="node ${children.type(childPath)}-node" ${category ? `data-category="${category}"` : ''} ${childPath.error()} ${childPath.help()}>
-              <div class="node-header">
-                <button class="remove" data-id="${removeId}"></button>
-                ${cPrefix}
-                <label>${key}</label>
-                ${cSuffix}
-              </div>
-              ${cBody ? `<div class="node-body">${cBody}</div>` : ''}
-              </div></div>`
-          })
-          .join('')
-      }
-      return ['', suffix, body]
     },
     suggest: (path) => keys
       .suggest(path, '')
@@ -85,6 +55,9 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
     },
     validationOption(path) {
       return config?.validation ?? keys.validationOption(path.push(''))
+    },
+    hook(hook, path, ...args) {
+      return hook.map({ node: this, keys, children, config: config ?? {} }, path, ...args)
     }
   }
 }

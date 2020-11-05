@@ -11,6 +11,14 @@ type NumberNodeConfig = {
   color?: boolean
 }
 
+export type NumberHookParams = {
+  integer: boolean,
+  min: number,
+  max: number,
+  between: boolean,
+  config: NumberNodeConfig
+}
+
 export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
   const integer = config?.color ? true : config?.integer ?? false
   const min = config?.color ? 0 : config?.min ?? -Infinity
@@ -21,20 +29,6 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
     ...Base,
     type: () => 'number',
     default: () => 0,
-    render(path, value, mounter) {
-      const onChange = mounter.registerChange(el => {
-        const value = (el as HTMLInputElement).value
-        let parsed = config?.color
-          ? parseInt(value.slice(1), 16)
-          : integer ? parseInt(value) : parseFloat(value)
-          path.model.set(path, parsed)
-      })
-      if (config?.color) {
-        const hex = (value?.toString(16).padStart(6, '0') ?? '000000')
-        return ['', `<input type="color" data-id="${onChange}" value="#${hex}">`, '']
-      }
-      return ['', `<input data-id="${onChange}" value="${value ?? ''}">`, '']
-    },
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'number') {
         value = this.default()
@@ -51,6 +45,9 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
         errors.add(path, 'error.invalid_range.larger', value, max)
       }
       return value
+    },
+    hook(hook, path, ...args) {
+      return hook.number({ node: this, integer, min, max, between, config: config ?? {} }, path, ...args)
     }
   }
 }

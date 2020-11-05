@@ -1,7 +1,7 @@
 import { ModelPath } from '../model/Path'
-import { Mounter } from '../Mounter'
 import { Errors } from '../model/Errors'
 import { ValidationOption } from '../ValidationOption'
+import { Hook } from '../Hook'
 
 export type NodeOptions = {
   loose?: boolean
@@ -24,11 +24,6 @@ export interface INode<T = any> {
    * @param value optional original value
    */
   default: () => T
-
-  /**
-   * Transforms the data model to the final output format
-   */
-  transform: (path: ModelPath, value: T) => any
 
   /**
    * Determines whether the node should be enabled for this path
@@ -66,12 +61,6 @@ export interface INode<T = any> {
    * - For other nodes: Returns the path without changes.
    */
   pathPush: (path: ModelPath, key: string | number) => ModelPath
-
-  /**
-   * Renders the node and handles events to update the model
-   * @returns string HTML representation of this node using the given data
-   */
-  render: (path: ModelPath, value: T, mounter: Mounter) => [string, string, string]
 
   /**
    * Provide code suggestions for this node. The result are valid JSON strings that can be used
@@ -112,6 +101,11 @@ export interface INode<T = any> {
    */
   validationOption: (path: ModelPath) => ValidationOption | undefined
 
+  /**
+   * Allows users of this library to give custom functionality by hooking into each node type.
+   */
+  hook: <U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) => V
+
   [custom: string]: any
 }
 
@@ -119,16 +113,15 @@ export const Base: INode = ({
   type: () => 'base',
   category: () => undefined,
   default: () => undefined,
-  transform: (_, v) => v,
   enabled: () => true,
   keep: () => false,
   optional: () => false,
-  navigate() { return this }, // Not using arrow functions, because we want `this` here binds to the actual node.
+  navigate() { return this },
   pathPush: (p) => p,
-  render: () => ['', '', ''],
   suggest: () => [],
   validate: (_, v) => v,
-  validationOption: () => undefined
+  validationOption: () => undefined,
+  hook(hook, path, ...args) { return hook.base({ node: this }, path, ...args) }
 })
 
 export const Mod = (node: INode, mods: Partial<INode> | ((node: INode) => Partial<INode>)): INode => ({

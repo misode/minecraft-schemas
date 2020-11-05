@@ -1,10 +1,10 @@
 import { INode, NodeOptions } from './Node'
-import { SchemaRegistry } from '../Registries'
+import { Registry } from '../Registries'
 import { ModelPath } from '../model/Path'
-import { Mounter } from '../Mounter'
 import { Errors } from '../model/Errors'
+import { Hook } from '../Hook'
 
-export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> => ({
+export const Reference = <T>(schemas: Registry<INode>, schema: string): INode<T> => ({
   type(path: ModelPath) {
     return schemas.get(schema).type.bind(this)(path)
   },
@@ -32,9 +32,6 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
   pathPush(path: ModelPath, key: string | number) {
     return schemas.get(schema).pathPush.bind(this)(path, key)
   },
-  render(path: ModelPath, value: T, mounter: Mounter) {
-    return schemas.get(schema).render.bind(this)(path, value, mounter)
-  },
   suggest(path: ModelPath, value: T) {
     return schemas.get(schema).suggest.bind(this)(path, value)
   },
@@ -44,10 +41,10 @@ export const Reference = <T>(schemas: SchemaRegistry, schema: string): INode<T> 
   validationOption(path: ModelPath) {
     return schemas.get(schema).validationOption.bind(this)(path)
   },
+  hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
+    return schemas.get(schema).hook.bind(this)(hook, path, ...args)
+  },
   activeCase(path: ModelPath) {
     return schemas.get(schema).activeCase.bind(this)(path)
-  },
-  renderRaw(path: ModelPath, mounter: Mounter, inputId?: string) {
-    return schemas.get(schema).renderRaw.bind(this)(path, mounter, inputId)
   }
 })

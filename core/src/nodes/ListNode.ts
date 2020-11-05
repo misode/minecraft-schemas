@@ -18,7 +18,7 @@ export const ListNode = (children: INode): INode<any[]> => {
       return children.navigate(path, nextIndex)
     },
     pathPush(path, index) {
-      return path.push(parseInt(index.toString())).localePush('entry')
+      return path.push(parseInt(index.toString())).contextPush('entry')
     },
     validate(path, value, errors, options) {
       if (options.loose && !Array.isArray(value)) {

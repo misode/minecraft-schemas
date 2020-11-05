@@ -1,5 +1,4 @@
 import { DataModel } from './DataModel'
-import { LOCALES, locale } from '../Registries'
 
 export type PathElement = number | string
 
@@ -8,15 +7,15 @@ export type PathElement = number | string
  */
 export class Path {
   modelArr: PathElement[]
-  localeArr: string[]
+  contextArr: string[]
 
   /**
    * @param modelArr Initial array of path model elements. Empty if not given
-   * @param localeArr Initial array of path locale elements. Empty if not given
+   * @param contextArr Initial array of path context elements. Empty if not given
    */
-  constructor(modelArr?: PathElement[], localeArr?: string[]) {
+  constructor(modelArr?: PathElement[], contextArr?: string[]) {
     this.modelArr = modelArr ?? []
-    this.localeArr = localeArr ?? []
+    this.contextArr = contextArr ?? []
   }
 
   /**
@@ -30,21 +29,21 @@ export class Path {
    * A new path with the specific sliced module elements
    */
   slice(start?: number, end?: number): Path {
-    return new Path(this.modelArr.slice(start, end), this.localeArr)
+    return new Path(this.modelArr.slice(start, end), this.contextArr)
   }
 
   /**
    * A new path with the first model element removed
    */
   shift(): Path {
-    return new Path(this.modelArr.slice(1), this.localeArr)
+    return new Path(this.modelArr.slice(1), this.contextArr)
   }
 
   /**
    * A new path with the last model element removed
    */
   pop(): Path {
-    return new Path(this.modelArr.slice(0, -1), this.localeArr)
+    return new Path(this.modelArr.slice(0, -1), this.contextArr)
   }
 
   /**
@@ -52,7 +51,7 @@ export class Path {
    * @param element element to push at the end of the array
    */
   push(element: PathElement): Path {
-    return this.modelPush(element).localePush(element)
+    return this.modelPush(element).contextPush(element)
   }
 
   /**
@@ -60,21 +59,21 @@ export class Path {
    * @param element 
    */
   modelPush(element: PathElement) {
-    return new Path([...this.modelArr, element], [...this.localeArr])
+    return new Path([...this.modelArr, element], [...this.contextArr])
   }
 
   /**
-   * Push an element exclusivly to the locale array
+   * Push an element exclusivly to the context array
    * @param element 
    */
-  localePush(element: PathElement) {
+  contextPush(element: PathElement) {
     if (typeof element === 'number') return this.copy()
     const newElement = element.startsWith('minecraft:') ? element.slice(10) : element
-    return new Path([...this.modelArr], [...this.localeArr, newElement])
+    return new Path([...this.modelArr], [...this.contextArr, newElement])
   }
 
   copy(): Path {
-    return new Path([...this.modelArr], [...this.localeArr])
+    return new Path([...this.modelArr], [...this.contextArr])
   }
 
   getArray(): PathElement[] {
@@ -89,41 +88,8 @@ export class Path {
     return new ModelPath(model, this)
   }
 
-  /**
-   * Gets the locale of a key from the locale registry.
-   * 
-   * @param params optional locale parameters
-   * @returns the key itself if it isn't found
-   */
-  locale (params?: string[]): string {
-    const res = this.strictLocale(params)
-    if (res !== undefined) return res
-    // return this.localeArr.slice(-5).join('.')
-    return this.localeArr[this.localeArr.length - 1] ?? ''
-  }
-
-  /**
-   * Gets the locale of a key from the locale registry.
-   * 
-   * @param params optional locale parameters
-   * @param depth path depth to start, defaults to 5
-   * @param minDepth minimum length of the path, defaults to 1
-   * @returns undefined if the key isn't found
-   */
-  strictLocale(params?: string[], depth = 5, minDepth = 1): string | undefined {
-    let path = this.localeArr.slice(-depth)
-    while (path.length >= minDepth) {
-      const locale = LOCALES.getLocale(path.join('.'), params)
-      if (locale !== undefined) return locale
-      path.shift()
-    }
-    path = this.localeArr.slice(-depth)
-    while (path.length >= minDepth) {
-      const locale = LOCALES.getLocale(path.join('.'), params, 'en')
-      if (locale !== undefined) return locale
-      path.shift()
-    }
-    return undefined
+  getContext(): string[] {
+    return this.contextArr
   }
 
   /**
@@ -170,7 +136,7 @@ export class ModelPath extends Path {
   model: DataModel
 
   constructor(model: DataModel, path?: Path) {
-    super(path?.modelArr, path?.localeArr) 
+    super(path?.modelArr, path?.contextArr) 
     this.model = model
   }
 
@@ -191,26 +157,6 @@ export class ModelPath extends Path {
    */
   set(value: any): void {
     this.model?.set(this, value)
-  }
-
-  /**
-   * Gets the error inside this path if the model is attached
-   * @returns a html attribute containing the error message
-   */
-  error(exact = true): string {
-    const errors = this.model.errors.get(this, exact)
-    if (errors.length === 0) return ''
-    return `data-error="${locale(errors[0].error, errors[0].params)}"`
-  }
-
-  /**
-   * Gets the help message corresponding to this path if the model is attached
-   * @returns a html attribute containing the error message
-   */
-  help(): string {
-    const res = this.localePush('help').strictLocale([], 6)
-    if (res === undefined) return ''
-    return `data-help="${res}"`
   }
 
   /**
@@ -239,7 +185,7 @@ export class ModelPath extends Path {
    * @param element element to push at the end of the array
    */
   push(element: PathElement): ModelPath {
-    return this.modelPush(element).localePush(element)
+    return this.modelPush(element).contextPush(element)
   }
 
   /**
@@ -251,11 +197,11 @@ export class ModelPath extends Path {
   }
 
   /**
-   * Push an element exclusivly to the locale array
+   * Push an element exclusivly to the context array
    * @param element 
    */
-  localePush(element: PathElement): ModelPath {
-    return new ModelPath(this.model, super.localePush(element))
+  contextPush(element: PathElement): ModelPath {
+    return new ModelPath(this.model, super.contextPush(element))
   }
 
   copy(): ModelPath {

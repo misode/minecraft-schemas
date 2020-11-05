@@ -58,7 +58,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     const pathWithContext = (config?.context) ?
       new ModelPath(path.getModel(), new Path(path.getArray(), [config.context])) : path
     const pathWithFilter = !config?.disableSwitchContext && switchValue && caseKeys.includes(childKey) ?
-      pathWithContext.localePush(switchValue) : pathWithContext
+      pathWithContext.contextPush(switchValue) : pathWithContext
     return pathWithFilter.push(childKey)
   }
 

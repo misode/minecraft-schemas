@@ -247,7 +247,9 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
             pattern: StringNode({ enum: 'banner_pattern' }),
             color: StringNode({ enum: 'dye_color' })
           })
-        )
+        ),
+        append: Opt(BooleanNode()),
+        ...conditions
       },
       'minecraft:set_contents': {
         entries: ListNode(

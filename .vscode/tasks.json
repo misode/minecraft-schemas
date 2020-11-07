@@ -9,7 +9,12 @@
       {
         "label": "Start Java 1.16",
         "type": "shell",
-        "command": "cd \"./core\" && npm link && cd \"../java/1.16\" && rm -r \"./node_modules/@mcschema\" && npm link @mcschema/core && npm run watch"
-     }
+        "command": "cd \"./java/1.16\" && rm -r \"./node_modules/@mcschema\" && npm link @mcschema/core && npm run watch"
+     },
+     {
+       "label": "Start Java 1.17",
+       "type": "shell",
+       "command": "cd \"./java/1.17\" && rm -r \"./node_modules/@mcschema\" && npm link @mcschema/core && npm run watch"
+    }
    ]
 }

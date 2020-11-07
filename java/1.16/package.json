@@ -1,13 +1,13 @@
 {
   "name": "@mcschema/java-1.16",
-  "version": "0.5.12",
+  "version": "0.5.13",
   "description": "Schemas for Java Edition 1.16",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [],
   "author": "Misode",
@@ -17,7 +17,7 @@
     "url": "https://github.com/misode/minecraft-schemas.git"
   },
   "dependencies": {
-    "@mcschema/core": "^0.11.0"
+    "@mcschema/core": "^0.11.1"
   },
   "publishConfig": {
     "access": "public"

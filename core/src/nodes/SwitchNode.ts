@@ -3,6 +3,7 @@ import { ModelPath } from '../model/Path'
 
 type Case<T> = {
   match: (path: ModelPath) => boolean
+  priority?: number
   node: INode<T>
 }
 
@@ -13,11 +14,11 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
   return {
     ...Base,
     type(path) {
-      return (this.activeCase(path) ?? cases[cases.length - 1])
+      return this.activeCase(path, true)
         .node.type(path)
     },
     category(path) {
-      return (this.activeCase(path) ?? cases[cases.length - 1])
+      return this.activeCase(path, true)
         .node.category(path)
     },
     default: () => cases[0].node.default(),
@@ -50,13 +51,16 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
         ?.node
         .validationOption(path)
     },
-    activeCase(path: ModelPath): Case<T> | undefined {
-      const index = cases.map(c => c.match(path)).indexOf(true)
-      if (index === -1) return undefined
-      return cases[index]
+    activeCase(path: ModelPath, fallback?: boolean): Case<T> | undefined {
+      const sorter = (a: Case<T>, b: Case<T>) => (b.priority ?? 0) - (a.priority ?? 0)
+      const matchedCases = cases.filter(c => c.match(path)).sort(sorter)
+      if (fallback && matchedCases.length === 0) {
+        return cases.sort(sorter)[0]
+      }
+      return (matchedCases.length > 0 ? matchedCases[0] : undefined)
     },
     hook(hook, path, ...args) {
-      return (this.activeCase(path) ?? cases[cases.length - 1])
+      return this.activeCase(path, true)
         .node.hook(hook, path, ...args)
     },
   }

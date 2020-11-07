@@ -145,6 +145,18 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       node: NumberNode(config),
       change: (v: any) => v === undefined ? 0 : v.min ?? v.max ?? v.n ?? 0
     }]),
+    {
+      type: 'object',
+      priority: -1,
+      node: ObjectNode({
+        min: Opt(NumberNode(config)),
+        max: Opt(NumberNode(config))
+      }),
+      change: (v: any) => ({
+        min: typeof v === 'number' ? v : v === undefined ? 1 : v.n,
+        max: typeof v === 'number' ? v : v === undefined ? 1 : v.n
+      })
+    },
     ...(config?.allowBinomial ? [{
       type: 'binomial',
       node: ObjectNode({
@@ -158,18 +170,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         n: typeof v === 'number' ? v : v === undefined ? 1 : (v.min ?? v.max ?? 1),
         p: 0.5
       })
-    }] : []),
-    {
-      type: 'object',
-      node: ObjectNode({
-        min: Opt(NumberNode(config)),
-        max: Opt(NumberNode(config))
-      }),
-      change: (v: any) => ({
-        min: typeof v === 'number' ? v : v === undefined ? 1 : v.n,
-        max: typeof v === 'number' ? v : v === undefined ? 1 : v.n
-      })
-    }
+    }] : [])
   ], { choiceContext: 'range' })
 
   UniformInt = (config?: UniformIntConfig) => ChoiceNode([

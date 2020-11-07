@@ -36,6 +36,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     },
     {
       type: 'string',
+      priority: 1,
       node: StringNode(),
       change: getSimpleString
     },

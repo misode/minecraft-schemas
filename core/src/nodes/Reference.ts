@@ -44,7 +44,7 @@ export const Reference = <T>(schemas: Registry<INode>, schema: string): INode<T>
   hook<U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) {
     return schemas.get(schema).hook.bind(this)(hook, path, ...args)
   },
-  activeCase(path: ModelPath) {
-    return schemas.get(schema).activeCase.bind(this)(path)
+  activeCase(path: ModelPath, fallback?: boolean) {
+    return schemas.get(schema).activeCase.bind(this)(path, fallback)
   }
 })

@@ -4,6 +4,7 @@ import { SwitchNode } from './SwitchNode'
 
 type Choice = {
   type: string
+  priority?: number,
   node: INode<any>
   match?: (value: any) => boolean
   change?: (old: any) => any
@@ -36,22 +37,16 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
   }
   const switchNode = SwitchNode(choices.map(c => ({
     type: c.type,
+    priority: c.priority,
     match: (path) => isValid(c, path.get()),
     node: c.node
   })))
 
   return {
     ...switchNode,
-    keep: () => true,
     validate(path, value, errors, options) {
-      let choice = switchNode.activeCase(path)
-      if (choice === undefined) {
-        if (options.loose) {
-          choice = choices[0]
-        } else {
-          return value
-        }
-      }
+      let choice = switchNode.activeCase(path, true)
+      console.log(path.toString(), choice.type)
       if (choice.node.optional()) {
         return value
       }
@@ -86,6 +81,7 @@ export const ObjectOrPreset = (presetNode: INode<string>, objectNode: INode<any>
   return ChoiceNode([
     {
       type: 'string',
+      priority: 1,
       node: presetNode,
       change: v => Object.keys(presets)[0]
     },

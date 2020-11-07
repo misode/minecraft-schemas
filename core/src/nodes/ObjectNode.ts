@@ -125,7 +125,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
             res[k] = newValue
             path.getModel()!.set(path.push(k), newValue, true)
           }
-        } else if (!k.startsWith('__')) {
+        } else {
           res[k] = value[k]
         }
       })

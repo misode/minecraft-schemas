@@ -10,3 +10,4 @@ Schemas to parse and render JSON structures
 |Schemas|
 |---|
 |[![Java 1.16](https://img.shields.io/npm/v/@mcschema/java-1.16?color=green&label=Java%201.16)](https://www.npmjs.com/package/@mcschema/java-1.16)|
+|[![Java 1.17](https://img.shields.io/npm/v/@mcschema/java-1.17?color=green&label=Java%201.17)](https://www.npmjs.com/package/@mcschema/java-1.17)|

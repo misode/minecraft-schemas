@@ -46,7 +46,6 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
     ...switchNode,
     validate(path, value, errors, options) {
       let choice = switchNode.activeCase(path, true)
-      console.log(path.toString(), choice.type)
       if (choice.node.optional()) {
         return value
       }

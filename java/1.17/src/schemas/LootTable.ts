@@ -211,7 +211,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
       },
       'minecraft:enchant_with_levels': {
         levels: Range({ allowBinomial: true }),
-        treasure: BooleanNode(),
+        treasure: Opt(BooleanNode()),
         ...conditions
       },
       'minecraft:exploration_map': {
@@ -223,15 +223,15 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:fill_player_head': {
-        entity: Opt(entitySourceSwtichNode),
+        entity: entitySourceSwtichNode,
         ...conditions
       },
       'minecraft:limit_count': {
-        limit: Range(),
+        limit: Range({ bounds: true }),
         ...conditions
       },
       'minecraft:looting_enchant': {
-        count: Range({ allowBinomial: true }),
+        count: Range({ bounds: true }),
         limit: Opt(NumberNode({ integer: true })),
         ...conditions
       },
@@ -262,7 +262,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:set_damage': {
-        damage: Range({ allowBinomial: true }),
+        damage: Range({ forceRange: true }),
         ...conditions
       },
       'minecraft:set_loot_table': {
@@ -279,7 +279,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
       },
       'minecraft:set_name': {
         entity: Opt(entitySourceSwtichNode),
-        name: Reference('text_component'),
+        name: Opt(Reference('text_component')),
         ...conditions
       },
       'minecraft:set_nbt': {
@@ -316,7 +316,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         entity: entitySourceSwtichNode,
         scores: MapNode(
           StringNode({ validator: 'objective' }),
-          Range({ forceRange: true })
+          Range({ bounds: true })
         )
       }
     }
@@ -330,7 +330,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   schemas.register('attribute_modifier', Mod(ObjectNode({
     attribute: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
     name: StringNode(),
-    amount: Range({ allowBinomial: true }),
+    amount: Range({ bounds: true }),
     operation: StringNode({ enum: ['addition', 'multiply_base', 'multiply_total'] }),
     slot: StringOrList(
       StringNode({ enum: 'slot' })

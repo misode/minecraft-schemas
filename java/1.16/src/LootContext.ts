@@ -43,7 +43,6 @@ export const LootEntitySources = new Map<string, LootContext[]>([
  */
 export const LootCopySources = new Map<string, LootContext[]>([
     ['block_entity', [LootContext.BlockEntity]],
-    ['direct_killer', [LootContext.DirectKillerEntity]],
     ['killer', [LootContext.KillerEntity]],
     ['killer_player', [LootContext.KillerEntity]],
     ['this', [LootContext.ThisEntity]]

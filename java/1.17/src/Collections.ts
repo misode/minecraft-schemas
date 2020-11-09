@@ -129,7 +129,6 @@ export function initCollections(collections: CollectionRegistry) {
   collections.register('copy_source', [
     'block_entity',
     'this',
-    'direct_killer',
     'killer',
     'killer_player'
   ])

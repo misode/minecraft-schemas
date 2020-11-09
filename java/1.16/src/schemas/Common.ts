@@ -91,6 +91,8 @@ type RangeConfig = {
   allowBinomial?: boolean
   /** If true, only ranges are allowed */
   forceRange?: boolean
+  /** If true, min and max are both required */
+  bounds?: boolean
 }
 export let Range: (config?: RangeConfig) => INode
 
@@ -113,7 +115,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'Name' }] } } }
     ))
   }, { context: 'block_state' }), {
-    default: () => ({
+    default: () => ({  
       Name: 'minecraft:stone'
     })
   }))
@@ -149,9 +151,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       type: 'object',
       priority: -1,
       node: ObjectNode({
-        min: Opt(NumberNode(config)),
-        max: Opt(NumberNode(config))
-      }),
+        min: config?.bounds ? NumberNode(config) : Opt(NumberNode(config)),
+        max: config?.bounds ? NumberNode(config) : Opt(NumberNode(config))
+      }, { context: 'range' }),
       change: (v: any) => ({
         min: typeof v === 'number' ? v : v === undefined ? 1 : v.n,
         max: typeof v === 'number' ? v : v === undefined ? 1 : v.n
@@ -163,7 +165,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         type: StringNode({enum: ['minecraft:binomial'] }),
         n: NumberNode({ integer: true, min: 0 }),
         p: NumberNode({ min: 0, max: 1 })
-      }),
+      }, { context: 'range' }),
       match: (v: any) => v !== undefined && v.type === 'minecraft:binomial',
       change: (v: any) => ({
         type: 'minecraft:binomial',

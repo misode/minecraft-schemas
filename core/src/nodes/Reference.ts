@@ -46,5 +46,11 @@ export const Reference = <T>(schemas: Registry<INode>, schema: string): INode<T>
   },
   activeCase(path: ModelPath, fallback?: boolean) {
     return schemas.get(schema).activeCase.bind(this)(path, fallback)
+  },
+  canUpdate(value: any) {
+    return schemas.get(schema).canUpdate.bind(this)(value)
+  },
+  update(value: any) {
+    return schemas.get(schema).update.bind(this)(value)
   }
 })

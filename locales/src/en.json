@@ -1084,6 +1084,7 @@
   "uniform_int.object": "Uniform",
   "uniform_int.spread": "Spread",
   "unset": "Unset",
+  "update.pack_format": "Update the pack_format to %0%",
   "world.bonus_chest": "Spawn Bonus Chest",
   "world.generate_features": "Generate Features",
   "world.seed": "Seed",

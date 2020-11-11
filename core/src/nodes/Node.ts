@@ -2,6 +2,7 @@ import { ModelPath } from '../model/Path'
 import { Errors } from '../model/Errors'
 import { ValidationOption } from '../ValidationOption'
 import { Hook } from '../Hook'
+import { JsonUpdate } from '../JsonUpdate'
 
 export type NodeOptions = {
   loose?: boolean
@@ -106,6 +107,16 @@ export interface INode<T = any> {
    */
   hook: <U extends any[], V>(hook: Hook<U, V>, path: ModelPath, ...args: U) => V
 
+  /**
+   * Determines if the input `value` can be updated.
+   */
+  canUpdate: (path: ModelPath, value: any) => boolean
+
+  /**
+   * Get the updates for the input `value`.
+   */
+  update: (path: ModelPath, value: any) => JsonUpdate[]
+
   [custom: string]: any
 }
 
@@ -121,7 +132,9 @@ export const Base: INode = ({
   suggest: () => [],
   validate: (_, v) => v,
   validationOption: () => undefined,
-  hook(hook, path, ...args) { return hook.base({ node: this }, path, ...args) }
+  hook(hook, path, ...args) { return hook.base({ node: this }, path, ...args) },
+  canUpdate: () => false,
+  update: () => []
 })
 
 export const Mod = (node: INode, mods: Partial<INode> | ((node: INode) => Partial<INode>)): INode => ({

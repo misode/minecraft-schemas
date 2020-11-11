@@ -12,18 +12,18 @@ export function initPackMcmetaSchemas(schemas: SchemaRegistry, _: CollectionRegi
 
   schemas.register('pack_mcmeta', Mod(ObjectNode({
     pack: Mod(ObjectNode({
-      pack_format: Mod(NumberNode({ integer: true, min: 6, max: 6 }), { default: () => 6 }),
+      pack_format: Mod(NumberNode({ integer: true, min: 7, max: 7 }), { default: () => 7 }),
       description: Reference(schemas, 'text_component')
     }), {
       default: () => ({
-        pack_format: 6,
+        pack_format: 7,
         description: ''
       })
     })
   }), {
     default: () => ({
       pack: {
-        pack_format: 6,
+        pack_format: 7,
         description: ''
       }
     })

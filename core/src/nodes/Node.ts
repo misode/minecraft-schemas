@@ -110,12 +110,12 @@ export interface INode<T = any> {
   /**
    * Determines if the input `value` can be updated.
    */
-  canUpdate: (value: any) => boolean
+  canUpdate: (path: ModelPath, value: any) => boolean
 
   /**
    * Get the updates for the input `value`.
    */
-  update: (value: any) => JsonUpdate[]
+  update: (path: ModelPath, value: any) => JsonUpdate[]
 
   [custom: string]: any
 }

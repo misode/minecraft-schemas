@@ -16,7 +16,7 @@ export function initPackMcmetaSchemas(schemas: SchemaRegistry, _: CollectionRegi
     pack: Mod(ObjectNode({
       pack_format: Mod(NumberNode({ integer: true, min: CURRENT_PACK_FORMAT, max: CURRENT_PACK_FORMAT }), { 
         default: () => CURRENT_PACK_FORMAT,
-        canUpdate: (v) => v !== CURRENT_PACK_FORMAT,
+        canUpdate: (_p, v) => v !== CURRENT_PACK_FORMAT,
         update: () => [{ name: 'pack_format', params: [CURRENT_PACK_FORMAT],  newValue: CURRENT_PACK_FORMAT }]
       }),
       description: Reference(schemas, 'text_component')

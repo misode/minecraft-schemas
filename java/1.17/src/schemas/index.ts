@@ -4,6 +4,7 @@ import { initCommonSchemas } from './Common'
 import { initConditionSchemas } from './Condition'
 import { initDimensionSchemas } from './Dimension'
 import { initDimensionTypeSchemas } from './DimensionType'
+import { initItemModifierSchemas } from './ItemModifier'
 import { initLootTableSchemas } from './LootTable'
 import { initPackMcmetaSchemas } from './PackMcmeta'
 import { initPredicatesSchemas } from './Predicates'
@@ -20,6 +21,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initConditionSchemas(schemas, collections)
     initDimensionTypeSchemas(schemas, collections)
     initDimensionSchemas(schemas, collections)
+    initItemModifierSchemas(schemas, collections)
     initLootTableSchemas(schemas, collections)
     initPackMcmetaSchemas(schemas, collections)
     initPredicatesSchemas(schemas, collections)

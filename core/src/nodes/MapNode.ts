@@ -35,9 +35,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
     pathPush(path, key) {
       return path.modelPush(key)
     },
-    suggest: (path) => keys
-      .suggest(path, '')
-      .map(quoteString),
+    suggest: (path) => keys.suggest(path, ''),
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'object') {
         value = this.default()

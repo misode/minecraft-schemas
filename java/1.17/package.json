@@ -1,6 +1,6 @@
 {
   "name": "@mcschema/java-1.17",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Schemas for Java Edition 1.17",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -17,7 +17,7 @@
     "url": "https://github.com/misode/minecraft-schemas.git"
   },
   "dependencies": {
-    "@mcschema/core": "^0.11.3"
+    "@mcschema/core": "^0.11.4"
   },
   "publishConfig": {
     "access": "public"

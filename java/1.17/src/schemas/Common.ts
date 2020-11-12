@@ -16,6 +16,8 @@ import {
   Mod,
   Switch,
   Case,
+  ResourceType,
+  NodeChildren,
 } from '@mcschema/core'
 
 export let ConditionCases: (entitySourceNode?: INode<any>) => NestedNodeChildren
@@ -155,10 +157,52 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     max: Opt(Reference('number_provider'))
   }))
 
-  const NumberProvider = ObjectNode({
-    type: Opt(StringNode({ validator: 'resource', params: { pool: 'loot_number_provider_type' } })),
-    [Switch]: path => path.push('type'),
-    [Case]: {
+  const ObjectWithType = (pool: ResourceType, directType: string, directPath: string, directDefault: string, objectDefault: string | null, context: string, cases: NestedNodeChildren) => {
+    let defaultCase: NodeChildren = {}
+    if (objectDefault) {
+      Object.keys(cases[objectDefault]).forEach(k => {
+        defaultCase[k] = Mod(cases[objectDefault][k], {
+          enabled: path => path.push('type').get() === undefined
+        })
+      })
+    }
+    const provider = ObjectNode({
+      type: Mod(Opt(StringNode({ validator: 'resource', params: { pool } })), {
+        hidden: () => true
+      }),
+      [Switch]: path => path.push('type'),
+      [Case]: cases,
+      ...defaultCase
+    }, { context, disableSwitchContext: true })
+
+    const choices: any[] = [{
+      type: directType,
+      node: cases[directDefault][directPath]
+    }]
+    if (objectDefault) {
+      choices.push({
+        type: 'object',
+        priority: -1,
+        node: provider
+      })
+    }
+    Object.keys(cases).forEach(k => {
+      choices.push({
+        type: k,
+        match: (v: any) => v?.type === k,
+        node: provider,
+        change: (v: any) => ({type: k})
+      })
+    })
+    return ChoiceNode(choices, { context, choiceContext: `${context}.type` })
+  }
+
+  schemas.register('number_provider', ObjectWithType(
+    'loot_number_provider_type',
+    'number', 'value', 'minecraft:constant',
+    'minecraft:uniform',
+    'number_provider',
+    {
       'minecraft:constant': {
         value: NumberNode()
       },
@@ -175,79 +219,36 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         score: StringNode({ validator: 'objective' }),
         scale: Opt(NumberNode())
       }
-    },
-    min: Mod(Reference('number_provider'), {
-      enabled: path => path.push('type').get() === undefined
-    }),
-    max: Mod(Reference('number_provider'), {
-      enabled: path => path.push('type').get() === undefined
-    })
-  })
+    }))
 
-  schemas.register('number_provider', ChoiceNode([
+  schemas.register('scoreboard_name_provider', ObjectWithType(
+    'loot_score_provider_type',
+    'string', 'target', 'minecraft:context',
+    null,
+    'score_provider',
     {
-      type: 'number',
-      node: NumberNode(),
-      change: v => 0
-    },
-    {
-      type: 'object',
-      node: NumberProvider,
-      change: v => ({})
-    }
-  ]))
-
-  const ScoreboardNameProvider = ObjectNode({
-    type: Opt(StringNode({ validator: 'resource', params: { pool: 'loot_score_provider_type' } })),
-    [Switch]: path => path.push('type'),
-    [Case]: {
       'minecraft:fixed': {
         name: StringNode({ validator: 'entity', params: { amount: 'multiple', type: 'entities', isScoreHolder: true } }) // FIXME: doesn't support selectors
       },
       'minecraft:context': {
-        target: StringNode({ enum: 'entity_source' })
+        target: Mod(StringNode({ enum: 'entity_source' }), { default: () => 'this' })
       }
-    }
-  })
+    }))
 
-  schemas.register('scoreboard_name_provider', ChoiceNode([
+  schemas.register('nbt_provider', ObjectWithType(
+    'loot_nbt_provider_type',
+    'string', 'target', 'minecraft:context',
+    null,
+    'nbt_provider',
     {
-      type: 'string',
-      node: StringNode({ enum: 'entity_source' }),
-      change: v => 'this'
-    },
-    {
-      type: 'object',
-      node: ScoreboardNameProvider,
-      change: v => ({})
-    }
-  ]))
-
-  const NbtProvider = ObjectNode({
-    type: Opt(StringNode({ validator: 'resource', params: { pool: 'loot_nbt_provider_type' } })),
-    [Switch]: path => path.push('type'),
-    [Case]: {
       'minecraft:storage': {
         source: StringNode({ validator: 'resource', params: { pool: '$storage' } })
       },
       'minecraft:context': {
-        target: StringNode({ enum: 'copy_source' })
+        target: Mod(StringNode({ enum: 'copy_source' }), { default: () => 'this' })
       }
     }
-  })
-
-  schemas.register('nbt_provider', ChoiceNode([
-    {
-      type: 'string',
-      node: StringNode({ enum: 'copy_source' }),
-      change: v => 'this'
-    },
-    {
-      type: 'object',
-      node: NbtProvider,
-      change: v => ({})
-    }
-  ]))
+  ))
 
   UniformInt = (config?: UniformIntConfig) => ChoiceNode([
     {

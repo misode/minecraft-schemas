@@ -130,7 +130,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         probability: NumberNode({ min: 0, max: 1 })
       },
       'minecraft:tag_match': {
-        tag: StringNode()
+        tag: StringNode({ validator: 'resource', params: { pool: '$tag/block' }})
       }
     }
   }, { context: 'rule_test', disableSwitchContext: true }))

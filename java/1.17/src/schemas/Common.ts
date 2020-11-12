@@ -202,7 +202,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     [Switch]: path => path.push('type'),
     [Case]: {
       'minecraft:fixed': {
-        name: StringNode()
+        name: StringNode({ validator: 'entity', params: { amount: 'multiple', type: 'entities', isScoreHolder: true } }) // FIXME: doesn't support selectors
       },
       'minecraft:context': {
         target: StringNode({ enum: 'entity_source' })

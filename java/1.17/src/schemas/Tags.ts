@@ -4,7 +4,6 @@ import {
   ListNode,
   Mod,
   ObjectNode,
-  StringNode,
   ResourceType,
   ChoiceNode,
   SchemaRegistry,

@@ -14,7 +14,6 @@ import {
   CollectionRegistry,
   Opt,
 } from '@mcschema/core'
-import { Range } from './Common'
 
 export function initAdvancementSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
@@ -119,7 +118,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           ))
         },
         'minecraft:construct_beacon': {
-          level: Opt(Range())
+          level: Reference('int_bounds')
         },
         'minecraft:consume_item': {
           item: Opt(Reference('item_predicate'))
@@ -132,8 +131,8 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           effects: Opt(MapNode(
             StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
             ObjectNode({
-              amplifier: Range(),
-              duration: Range()
+              amplifier: Reference('int_bounds'),
+              duration: Reference('int_bounds')
             })
           ))
         },
@@ -146,7 +145,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           ))
         },
         'minecraft:enchanted_item': {
-          levels: Opt(Range()),
+          levels: Reference('int_bounds'),
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:entity_hurt_player': {
@@ -168,17 +167,17 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         },
         'minecraft:inventory_changed': {
           slots: Opt(ObjectNode({
-            empty: Opt(Range()),
-            occupied: Opt(Range()),
-            full: Opt(Range())
+            empty: Reference('int_bounds'),
+            occupied: Reference('int_bounds'),
+            full: Reference('int_bounds')
           })),
           items: Opt(ListNode(
             Reference('item_predicate')
           ))
         },
         'minecraft:item_durability_changed': {
-          delta: Opt(Range()),
-          durability: Opt(Range()),
+          delta: Reference('int_bounds'),
+          durability: Reference('int_bounds'),
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:item_used_on_block': {
@@ -186,20 +185,20 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           location: Opt(Reference('location_predicate'))
         },
         'minecraft:killed_by_crossbow': {
-          unique_entity_types: Opt(Range()),
+          unique_entity_types: Reference('int_bounds'),
           victims: Opt(ListNode(
             EntityPredicate
           ))
         },
         'minecraft:levitation': {
-          distance: Opt(Range()),
-          duration: Opt(Range())
+          distance: Reference('distance_predicate'),
+          duration: Reference('int_bounds')
         },
         'minecraft:location': {
           location: Opt(Reference('location_predicate'))
         },
         'minecraft:nether_travel': {
-          distance: Opt(Range()),
+          distance: Reference('distance_predicate'),
           entered: Opt(Reference('location_predicate')),
           exited: Opt(Reference('location_predicate'))
         },
@@ -249,14 +248,14 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         'minecraft:target_hit': {
           projectile: EntityPredicate,
           shooter: EntityPredicate,
-          signal_strength: Opt(Range({ integer: true }))
+          signal_strength: Reference('int_bounds')
         },
         'minecraft:thrown_item_picked_up_by_entity': {
           entity: Opt(Reference('entity_predicate')),
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:used_ender_eye': {
-          distance: Opt(Range())
+          distance: Reference('float_bounds')
         },
         'minecraft:used_totem': {
           item: Opt(Reference('item_predicate'))

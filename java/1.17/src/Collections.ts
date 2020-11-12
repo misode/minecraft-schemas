@@ -121,8 +121,8 @@ export function initCollections(collections: CollectionRegistry) {
 
   collections.register('entity_source', [
     'this',
-    'direct_killer',
     'killer',
+    'direct_killer',
     'killer_player'
   ])
 

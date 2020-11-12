@@ -14,6 +14,8 @@ import {
   ObjectOrPreset,
   Opt,
   Mod,
+  Switch,
+  Case,
 } from '@mcschema/core'
 
 export let ConditionCases: (entitySourceNode?: INode<any>) => NestedNodeChildren
@@ -80,22 +82,6 @@ export const DefaultNoiseSettings = {
 }
 export let NoiseSettingsPresets: (node: INode) => INode
 
-type RangeConfig = {
-  /** Whether only integers are allowed */
-  integer?: boolean
-  /** If specified, number will be capped at this minimum */
-  min?: number
-  /** If specified, number will be capped at this maximum */
-  max?: number
-  /** Whether binomials are allowed */
-  allowBinomial?: boolean
-  /** If true, only ranges are allowed */
-  forceRange?: boolean
-  /** If true, min and max are both required */
-  bounds?: boolean
-}
-export let Range: (config?: RangeConfig) => INode
-
 type UniformIntConfig = {
   min?: number
   max?: number
@@ -115,7 +101,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'Name' }] } } }
     ))
   }, { context: 'block_state' }), {
-    default: () => ({  
+    default: () => ({
       Name: 'minecraft:stone'
     })
   }))
@@ -141,39 +127,127 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     default: () => [0, 0, 0]
   }))
 
-  Range = (config?: RangeConfig) => ChoiceNode([
-    ...(config?.forceRange ? [] : [{
+  const Bounds = (integer?: boolean) => Opt(ChoiceNode([
+    {
       type: 'number',
-      node: NumberNode(config),
-      change: (v: any) => v === undefined ? 0 : v.min ?? v.max ?? v.n ?? 0
-    }]),
+      node: NumberNode({ integer }),
+      change: (v: any) => v === undefined ? 0 : v.min ?? v.max ?? 0
+    },
     {
       type: 'object',
-      priority: -1,
       node: ObjectNode({
-        min: config?.bounds ? NumberNode(config) : Opt(NumberNode(config)),
-        max: config?.bounds ? NumberNode(config) : Opt(NumberNode(config))
+        min: Opt(NumberNode({ integer })),
+        max: Opt(NumberNode({ integer }))
       }, { context: 'range' }),
       change: (v: any) => ({
-        min: typeof v === 'number' ? v : v === undefined ? 1 : v.n,
-        max: typeof v === 'number' ? v : v === undefined ? 1 : v.n
+        min: v ?? 0,
+        max: v ?? 0
       })
+    }
+  ]))
+
+  schemas.register('int_bounds', Bounds(true))
+
+  schemas.register('float_bounds', Bounds())
+
+  schemas.register('int_range', ObjectNode({
+    min: Opt(Reference('number_provider')),
+    max: Opt(Reference('number_provider'))
+  }))
+
+  const NumberProvider = ObjectNode({
+    type: Opt(StringNode({ validator: 'resource', params: { pool: 'loot_number_provider_type' } })),
+    [Switch]: path => path.push('type'),
+    [Case]: {
+      'minecraft:constant': {
+        value: NumberNode()
+      },
+      'minecraft:uniform': {
+        min: Reference('number_provider'),
+        max: Reference('number_provider')
+      },
+      'minecraft:binomial': {
+        n: Reference('number_provider'),
+        p: Reference('number_provider')
+      },
+      'minecraft:score': {
+        target: Reference('scoreboard_name_provider'),
+        score: StringNode({ validator: 'objective' }),
+        scale: Opt(NumberNode())
+      }
     },
-    ...(config?.allowBinomial ? [{
-      type: 'binomial',
-      node: ObjectNode({
-        type: StringNode({enum: ['minecraft:binomial'] }),
-        n: NumberNode({ integer: true, min: 0 }),
-        p: NumberNode({ min: 0, max: 1 })
-      }, { context: 'range' }),
-      match: (v: any) => v !== undefined && v.type === 'minecraft:binomial',
-      change: (v: any) => ({
-        type: 'minecraft:binomial',
-        n: typeof v === 'number' ? v : v === undefined ? 1 : (v.min ?? v.max ?? 1),
-        p: 0.5
-      })
-    }] : [])
-  ], { choiceContext: 'range' })
+    min: Mod(Reference('number_provider'), {
+      enabled: path => path.push('type').get() === undefined
+    }),
+    max: Mod(Reference('number_provider'), {
+      enabled: path => path.push('type').get() === undefined
+    })
+  })
+
+  schemas.register('number_provider', ChoiceNode([
+    {
+      type: 'number',
+      node: NumberNode(),
+      change: v => 0
+    },
+    {
+      type: 'object',
+      node: NumberProvider,
+      change: v => ({})
+    }
+  ]))
+
+  const ScoreboardNameProvider = ObjectNode({
+    type: Opt(StringNode({ validator: 'resource', params: { pool: 'loot_score_provider_type' } })),
+    [Switch]: path => path.push('type'),
+    [Case]: {
+      'minecraft:fixed': {
+        name: StringNode()
+      },
+      'minecraft:context': {
+        target: StringNode({ enum: 'entity_source' })
+      }
+    }
+  })
+
+  schemas.register('scoreboard_name_provider', ChoiceNode([
+    {
+      type: 'string',
+      node: StringNode({ enum: 'entity_source' }),
+      change: v => 'this'
+    },
+    {
+      type: 'object',
+      node: ScoreboardNameProvider,
+      change: v => ({})
+    }
+  ]))
+
+  const NbtProvider = ObjectNode({
+    type: Opt(StringNode({ validator: 'resource', params: { pool: 'loot_nbt_provider_type' } })),
+    [Switch]: path => path.push('type'),
+    [Case]: {
+      'minecraft:storage': {
+        source: StringNode({ validator: 'resource', params: { pool: '$storage' } })
+      },
+      'minecraft:context': {
+        target: StringNode({ enum: 'copy_source' })
+      }
+    }
+  })
+
+  schemas.register('nbt_provider', ChoiceNode([
+    {
+      type: 'string',
+      node: StringNode({ enum: 'copy_source' }),
+      change: v => 'this'
+    },
+    {
+      type: 'object',
+      node: NbtProvider,
+      change: v => ({})
+    }
+  ]))
 
   UniformInt = (config?: UniformIntConfig) => ChoiceNode([
     {
@@ -219,7 +293,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       entity: entitySourceNode,
       scores: MapNode(
         StringNode({ validator: 'objective' }),
-        Range({ forceRange: true })
+        Reference('int_range')
       )
     },
     'minecraft:inverted': {
@@ -259,8 +333,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       )
     },
     'minecraft:time_check': {
-      value: Range(),
-      period: Opt(NumberNode())
+      value: Reference('number_provider'),
+      period: Opt(NumberNode({ integer: true }))
     },
     'minecraft:weather_check': {
       raining: Opt(BooleanNode()),
@@ -292,7 +366,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       ...conditions
     },
     'minecraft:copy_nbt': {
-      source: copySourceNode,
+      source: Reference('nbt_provider'),
       ops: ListNode(
         ObjectNode({
           source: StringNode({ validator: 'nbt_path', params: { category: { getter: 'copy_source', path: ['pop', 'pop', 'pop', { push: 'source' }] } } }),
@@ -316,7 +390,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       ...conditions
     },
     'minecraft:enchant_with_levels': {
-      levels: Range({ allowBinomial: true }),
+      levels: Reference('number_provider'),
       treasure: Opt(BooleanNode()),
       ...conditions
     },
@@ -333,11 +407,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       ...conditions
     },
     'minecraft:limit_count': {
-      limit: Range({ bounds: true }),
+      limit: Reference('int_range'),
       ...conditions
     },
     'minecraft:looting_enchant': {
-      count: Range({ bounds: true }),
+      count: Reference('number_provider'),
       limit: Opt(NumberNode({ integer: true })),
       ...conditions
     },
@@ -364,11 +438,13 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       ...conditions
     },
     'minecraft:set_count': {
-      count: Range({ allowBinomial: true }),
+      count: Reference('number_provider'),
+      add: Opt(BooleanNode()),
       ...conditions
     },
     'minecraft:set_damage': {
-      damage: Range({ forceRange: true }),
+      damage: Reference('number_provider'),
+      add: Opt(BooleanNode()),
       ...conditions
     },
     'minecraft:set_loot_table': {
@@ -396,7 +472,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       effects: Opt(ListNode(
         ObjectNode({
           type: StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
-          duration: Range()
+          duration: Reference('number_provider')
         })
       )),
       ...conditions
@@ -444,7 +520,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       }
     }
   )
-  
+
   NoiseSettingsPresets = (node: INode<any>) => ObjectOrPreset(
     StringNode({ validator: 'resource', params: { pool: '$worldgen/noise_settings' } }),
     node,

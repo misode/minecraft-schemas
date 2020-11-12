@@ -27,7 +27,7 @@ import {
   LootEntitySources,
   LootCopySources
 } from '../LootContext'
-import { ConditionCases, FunctionCases, Range } from './Common'
+import { ConditionCases, FunctionCases } from './Common'
 
 export function initLootTableSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
@@ -74,8 +74,8 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     type: Opt(StringNode({ validator: "resource", params: { pool: collections.get('loot_context_type') } })),
     pools: Opt(ListNode(
       Mod(ObjectNode({
-        rolls: Range({ allowBinomial: true, integer: true }),
-        bonus_rolls: Opt(Range({ integer: true })),
+        rolls: Reference('number_provider'),
+        bonus_rolls: Opt(Reference('number_provider')),
         entries: ListNode(
           Reference('loot_entry')
         ),
@@ -184,7 +184,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   schemas.register('attribute_modifier', Mod(ObjectNode({
     attribute: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
     name: StringNode(),
-    amount: Range({ bounds: true }),
+    amount: Reference('number_provider'),
     operation: StringNode({ enum: ['addition', 'multiply_base', 'multiply_total'] }),
     slot: StringOrList(
       StringNode({ enum: 'slot' })

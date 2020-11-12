@@ -32,10 +32,10 @@ export function initItemModifierSchemas(schemas: SchemaRegistry, collections: Co
     function: StringNode({ validator: 'resource', params: { pool: 'loot_function_type' } }),
     [Switch]: path => path.push('function'),
     [Case]: FunctionCases(conditions)
-  }, { category: 'item_modifier', context: 'function' }), {
-    default: () => ({
+  }, { category: 'function', context: 'function' }), {
+    default: () => [{
       function: 'minecraft:set_count',
       count: 1
-    })
+    }]
   }))
 }

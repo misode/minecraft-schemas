@@ -447,6 +447,13 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       add: Opt(BooleanNode()),
       ...conditions
     },
+    'minecraft:set_enchantments': {
+      enchantments: MapNode(
+        StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+        Reference('number_provider')
+      ),
+      add: Opt(BooleanNode())
+    },
     'minecraft:set_loot_table': {
       name: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
       seed: Opt(NumberNode({ integer: true }))

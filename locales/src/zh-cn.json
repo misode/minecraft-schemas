@@ -787,7 +787,6 @@
   "loot_condition_type.random_chance": "随机概率",
   "loot_condition_type.random_chance_with_looting": "受抢夺魔咒影响的随机概率",
   "loot_condition_type.reference": "引用 predicate 文件",
-  "loot_condition_type.requirements": "合取范式（且）",
   "loot_condition_type.survives_explosion": "未被爆炸破坏",
   "loot_condition_type.table_bonus": "附魔奖励",
   "loot_condition_type.time_check": "检查时间",

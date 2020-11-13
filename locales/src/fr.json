@@ -597,7 +597,6 @@
   "loot_condition_type.random_chance": "Probabilité aléatoire",
   "loot_condition_type.random_chance_with_looting": "Probabilité aléatoire avec butin",
   "loot_condition_type.reference": "Référence",
-  "loot_condition_type.requirements": "Conditions requises (ET)",
   "loot_condition_type.survives_explosion": "Survit l'explosion",
   "loot_condition_type.table_bonus": "Bonus d'enchantement",
   "loot_condition_type.time_check": "Temps",

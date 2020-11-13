@@ -337,6 +337,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       value: Reference('number_provider'),
       period: Opt(NumberNode({ integer: true }))
     },
+    'minecraft:value_check': {
+      value: Reference('number_provider'),
+      range: Reference('int_range')
+    },
     'minecraft:weather_check': {
       raining: Opt(BooleanNode()),
       thundering: Opt(BooleanNode())

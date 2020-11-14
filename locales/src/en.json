@@ -1119,7 +1119,7 @@
   "trunk_placer.height_rand_b": "Height Random B",
   "trunk_placer.type": "Type",
   "uniform_int.base": "Base",
-  "uniform_int.number": "Exact",
+  "uniform_int.number": "Constant",
   "uniform_int.object": "Uniform",
   "uniform_int.spread": "Spread",
   "unset": "Unset",

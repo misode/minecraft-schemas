@@ -152,10 +152,19 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
 
   schemas.register('float_bounds', Bounds())
 
-  schemas.register('int_range', ObjectNode({
-    min: Opt(Reference('number_provider')),
-    max: Opt(Reference('number_provider'))
-  }))
+  schemas.register('int_range', ChoiceNode([
+    {
+      type: 'object',
+      node: ObjectNode({
+        min: Opt(Reference('number_provider')),
+        max: Opt(Reference('number_provider'))
+      })
+    },
+    {
+      type: 'number',
+      node: Reference('number_provider')
+    }
+  ], { context: 'range' }))
 
   const ObjectWithType = (pool: ResourceType, directType: string, directPath: string, directDefault: string, objectDefault: string | null, context: string, cases: NestedNodeChildren) => {
     let defaultCase: NodeChildren = {}

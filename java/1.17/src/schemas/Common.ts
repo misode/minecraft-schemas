@@ -162,7 +162,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     },
     {
       type: 'number',
-      node: Reference('number_provider')
+      node: NumberNode({ integer: true })
     }
   ], { context: 'range' }))
 

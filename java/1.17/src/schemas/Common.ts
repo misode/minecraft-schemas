@@ -341,7 +341,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       )
     },
     'minecraft:time_check': {
-      value: Reference('number_provider'),
+      value: Reference('int_range'),
       period: Opt(NumberNode({ integer: true }))
     },
     'minecraft:value_check': {

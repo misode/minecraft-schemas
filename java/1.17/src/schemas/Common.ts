@@ -82,12 +82,13 @@ export const DefaultNoiseSettings = {
 }
 export let NoiseSettingsPresets: (node: INode) => INode
 
-type UniformIntConfig = {
+type UniformConfig = {
   min?: number
   max?: number
   maxSpread?: number
 }
-export let UniformInt: (config?: UniformIntConfig) => INode
+export let UniformInt: (config?: UniformConfig) => INode
+export let UniformFloat: (config?: UniformConfig) => INode
 
 export function initCommonSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
@@ -257,17 +258,17 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     }
   ))
 
-  UniformInt = (config?: UniformIntConfig) => ChoiceNode([
+  const Uniform = (integer?: boolean) => (config?: UniformConfig) => ChoiceNode([
     {
       type: 'number',
-      node: NumberNode({ integer: true, min: config?.min, max: config?.max }),
+      node: NumberNode({ integer, min: config?.min, max: config?.max }),
       change: v => v.base
     },
     {
       type: 'object',
       node: ObjectNode({
-        base: NumberNode({ integer: true, min: config?.min, max: config?.max }),
-        spread: NumberNode({ integer: true, min: 0, max: config?.maxSpread })
+        base: NumberNode({ integer, min: config?.min, max: config?.max }),
+        spread: NumberNode({ integer, min: 0, max: config?.maxSpread })
       }),
       change: v => ({
         base: v,
@@ -275,6 +276,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       })
     }
   ], { context: 'uniform_int' })
+
+  UniformInt = Uniform(true)
+  UniformFloat = Uniform()
 
   ConditionCases = (entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({
     'minecraft:alternative': {

@@ -28,7 +28,7 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
   return {
     ...Base,
     type: () => 'number',
-    default: () => 0,
+    default: () => min > 0 ? min : 0,
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'number') {
         value = this.default()

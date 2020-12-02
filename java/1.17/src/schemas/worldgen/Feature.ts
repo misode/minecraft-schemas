@@ -14,7 +14,7 @@ import {
   CollectionRegistry,
   Opt,
 } from '@mcschema/core'
-import { UniformInt } from '../Common'
+import { UniformFloat, UniformInt } from '../Common'
 import './Decorator'
 import './ProcessorList'
 
@@ -106,6 +106,21 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           rim_size: UniformInt({ min: 0, max: 8, maxSpread: 8 })
         },
         'minecraft:disk': DiskConfig,
+        'minecraft:dripstone_cluster': {
+          floor_to_ceiling_search_range: NumberNode({ integer: true, min: 1, max: 512 }),
+          height: UniformInt({ min: 1, max: 64, maxSpread: 64 }),
+          radius: UniformInt({ min: 1, max: 64, maxSpread: 64 }),
+          max_stalagmite_stalactite_height_diff: NumberNode({ integer: true, min: 0, max: 64 }),
+          height_deviation: NumberNode({ integer: true, min: 1, max: 64 }),
+          dripstone_block_layer_thickness: UniformInt({ min: 0, max: 64, maxSpread: 64 }),
+          density: UniformFloat({ min: 0, max: 1, maxSpread: 1 }),
+          wetness: UniformFloat({ min: 0, max: 1, maxSpread: 1 }),
+          wetness_mean: NumberNode({ min: 0, max: 1 }),
+          wetness_deviation: NumberNode({ min: 0, max: 1 }),
+          chance_of_dripstone_column_at_max_distance_from_center: NumberNode({ min: 0, max: 1 }),
+          max_distance_from_center_affecting_chance_of_dripstone_column: NumberNode({ integer: true, min: 1, max: 64 }),
+          max_distance_from_center_affecting_height_bias: NumberNode({ integer: true, min: 1, max: 64 })
+        },
         'minecraft:emerald_ore': {
           state: Reference('block_state'),
           target: Reference('block_state')
@@ -186,6 +201,17 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         'minecraft:lake': {
           state: Reference('block_state')
         },
+        'minecraft:large_dripstone': {
+          floor_to_ceiling_search_range: Opt(NumberNode({ integer: true, min: 1, max: 512 })),
+          column_radius: UniformInt({ min: 1, max: 30, maxSpread: 30 }),
+          height_scale: UniformFloat({ min: 0, max: 10, maxSpread: 10 }),
+          max_column_radius_to_cave_height_ratio: NumberNode({ min: 0, max: 1 }),
+          stalactite_bluntness: UniformFloat({ min: 0.1, max: 5, maxSpread: 5 }),
+          stalagmite_bluntness: UniformFloat({ min: 0.1, max: 5, maxSpread: 5 }),
+          wind_speed: UniformFloat({ min: 0, max: 1, maxSpread: 1 }),
+          min_radius_for_wind: NumberNode({ integer: true, min: 0, max: 100 }),
+          min_bluntness_for_wind: NumberNode({ min: 0, max: 5 })
+        },
         'minecraft:nether_forest_vegetation': {
           state_provider: Reference('block_state_provider')
         },
@@ -224,6 +250,12 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           features: ListNode(
             Feature
           )
+        },
+        'minecraft:small_dripstone': {
+          max_placements: NumberNode({ integer: true, min: 0, max: 100 }),
+          empty_space_search_radius: NumberNode({ integer: true, min: 0, max: 20 }),
+          max_offset_from_origin: NumberNode({ integer: true, min: 0, max: 20 }),
+          chance_of_taller_dripstone: Opt(NumberNode({ integer: true, min: 0, max: 1 }))
         },
         'minecraft:spring_feature': {
           state: Reference('fluid_state'),

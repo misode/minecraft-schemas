@@ -36,6 +36,8 @@ export const DefaultDimensionType = {
   ambient_light: 0,
   logical_height: 256,
   infiniburn: 'minecraft:infiniburn_overworld',
+  min_y: 0,
+  height: 256,
 }
 export let DimensionTypePresets: (node: INode<any>) => INode<any>
 
@@ -46,13 +48,14 @@ export const DefaultNoiseSettings = {
   sea_level: 63,
   disable_mob_generation: false,
   noise: {
+    min_y: 0,
+    height: 256,
     density_factor: 1,
     density_offset: -0.46875,
     simplex_surface_noise: true,
     random_density_offset: true,
     size_horizontal: 1,
     size_vertical: 2,
-    height: 256,
     sampling: {
       xz_scale: 1,
       y_scale: 1,
@@ -525,6 +528,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         logical_height: 128,
         effects: 'minecraft:the_nether',
         infiniburn: 'minecraft:infiniburn_nether',
+        min_y: 0,
+        height: 256,
       },
       'minecraft:the_end': {
         name: 'minecraft:the_end',
@@ -542,6 +547,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         logical_height: 256,
         effects: 'minecraft:the_end',
         infiniburn: 'minecraft:infiniburn_end',
+        min_y: 0,
+        height: 256,
       }
     }
   )
@@ -558,13 +565,14 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         sea_level: 32,
         disable_mob_generation: true,
         noise: {
+          min_y: 0,
+          height: 128,
           density_factor: 0,
           density_offset: 0.019921875,
           simplex_surface_noise: false,
           random_density_offset: false,
           size_horizontal: 1,
           size_vertical: 2,
-          height: 128,
           sampling: {
             xz_scale: 1,
             y_scale: 3,
@@ -599,6 +607,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         sea_level: 0,
         disable_mob_generation: true,
         noise: {
+          min_y: 0,
+          height: 128,
           density_factor: 0,
           density_offset: 0,
           simplex_surface_noise: true,
@@ -606,7 +616,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           island_noise_override: true,
           size_horizontal: 2,
           size_vertical: 1,
-          height: 128,
           sampling: {
             xz_scale: 2,
             y_scale: 1,
@@ -638,6 +647,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         sea_level: 63,
         disable_mob_generation: false,
         noise: {
+          min_y: 0,
+          height: 256,
           density_factor: 1,
           density_offset: -0.46875,
           simplex_surface_noise: true,
@@ -645,7 +656,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           amplified: true,
           size_horizontal: 1,
           size_vertical: 2,
-          height: 256,
           sampling: {
             xz_scale: 1,
             y_scale: 1,
@@ -680,13 +690,14 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         sea_level: 32,
         disable_mob_generation: true,
         noise: {
+          min_y: 0,
+          height: 128,
           density_factor: 0,
           density_offset: 0.019921875,
           simplex_surface_noise: false,
           random_density_offset: false,
           size_horizontal: 1,
           size_vertical: 2,
-          height: 128,
           sampling: {
             xz_scale: 1,
             y_scale: 3,
@@ -721,6 +732,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         sea_level: 0,
         disable_mob_generation: true,
         noise: {
+          min_y: 0,
+          height: 128,
           density_factor: 0,
           density_offset: 0,
           simplex_surface_noise: true,
@@ -728,7 +741,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           island_noise_override: true,
           size_horizontal: 2,
           size_vertical: 1,
-          height: 128,
           sampling: {
             xz_scale: 2,
             y_scale: 1,

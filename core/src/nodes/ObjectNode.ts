@@ -87,6 +87,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       const activeFields = getActiveFields(path)
       const existingKeys = Object.keys(typeof value === 'object' ? value : {})
       return Object.keys(activeFields)
+        .filter(k => activeFields[k].enabled(path))
         .filter(k => !existingKeys.includes(k))
         .map(quoteString)
     },

@@ -198,10 +198,14 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       })
     }
     Object.keys(cases).forEach(k => {
-      const type = (v: any) => 'minecraft:' + v?.type?.replace(/^minecraft:/, '')
       choices.push({
         type: k,
-        match: (v: any) => (typeof v === 'object' && !Object.keys(cases).includes(type(v))) || type(v) === k,
+        match: (v: any) => {
+          const type = 'minecraft:' + v?.type?.replace(/^minecraft:/, '')
+          if (type === k) return true
+          const keys = v ? Object.keys(v) : []
+          return typeof v === 'object' && (keys?.length === 0 || (keys?.length === 1 && keys?.[0] === 'type'))
+        },
         node: provider,
         change: (v: any) => ({type: k})
       })

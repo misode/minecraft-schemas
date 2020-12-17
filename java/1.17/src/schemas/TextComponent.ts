@@ -3,8 +3,6 @@ import {
   Case,
   ChoiceNode,
   StringNode as RawStringNode,
-  Has,
-  Keep,
   ListNode,
   Mod,
   NumberNode,
@@ -14,6 +12,7 @@ import {
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  NodeChildren,
 } from '@mcschema/core'
 
 
@@ -21,7 +20,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  const getSimpleString = (jsonText: any): string => jsonText instanceof Array ? getSimpleString(jsonText[0]) : jsonText?.text ?? jsonText?.toString() ?? ''
+  const getSimpleString = (v: any): string => v instanceof Array ? getSimpleString(v[0]) : v?.text ?? (typeof v === 'object' ? '' : v?.toString())
 
   schemas.register('text_component', Mod(ChoiceNode([
     {
@@ -62,23 +61,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     })
   }))
 
-  schemas.register('text_component_object', Mod(ObjectNode({
-    text: Opt(Keep(StringNode())),
-    translate: Opt(Keep(StringNode())),
-    with: Opt(Reference('text_component_list')),
-    score: Opt(ObjectNode({
-      name: StringNode({ validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } }),
-      objective: StringNode({ validator: 'objective' }),
-      value: Opt(StringNode())
-    })),
-    selector: Opt(StringNode({ validator: 'entity', params: { amount: 'multiple', type: 'entities' } })),
-    keybind: Opt(StringNode({ enum: 'keybind', additional: true })),
-    nbt: Opt(StringNode({ validator: 'nbt_path' })),
-    interpret: Opt(Has('nbt', BooleanNode())),
-    block: Opt(Has('nbt', StringNode({ validator: 'vector', params: { dimension: 3, isInteger: true } }))),
-    entity: Opt(Has('nbt', StringNode({ validator: 'entity', params: { amount: 'single', type: 'entities' } }))),
-    storage: Opt(Has('nbt', StringNode({ validator: 'resource', params: { pool: '$storage' } }))),
-    extra: Opt(Reference('text_component_list')),
+  const CommonFields: NodeChildren = {
     color: Opt(StringNode()) /* TODO */,
     font: Opt(StringNode()), // TODO: add validation
     bold: Opt(BooleanNode()),
@@ -145,8 +128,76 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
           }))
         }
       }
-    }))
-  }, { context: 'text_component_object', collapse: true }), {
+    })),
+    extra: Opt(Reference('text_component_list'))
+  }
+
+  schemas.register('text_component_object', Mod(ChoiceNode([
+    {
+      type: 'text',
+      match: v => typeof v === 'object',
+      change: v => ({text: ''}),
+      priority: -1,
+      node: ObjectNode({
+        text: StringNode(),
+        ...CommonFields
+      })
+    },
+    {
+      type: 'translation',
+      match: v => v?.translate !== undefined,
+      change: v => ({translate: ''}),
+      node: ObjectNode({
+        translate: StringNode(),
+        with: Opt(Reference('text_component_list')),
+        ...CommonFields
+      })
+    },
+    {
+      type: 'score',
+      match: v => v?.score !== undefined,
+      change: v => ({score: {}}),
+      node: ObjectNode({
+        score: ObjectNode({
+          name: StringNode({ validator: 'entity', params: { amount: 'single', type: 'entities', isScoreHolder: true } }),
+          objective: StringNode({ validator: 'objective' }),
+          value: Opt(StringNode())
+        }),
+        ...CommonFields
+      })
+    },
+    {
+      type: 'selector',
+      match: v => v?.selector !== undefined,
+      change: v => ({selector: ''}),
+      node: ObjectNode({
+        selector: StringNode({ validator: 'entity', params: { amount: 'multiple', type: 'entities' } }),
+        ...CommonFields
+      })
+    },
+    {
+      type: 'keybind',
+      match: v => v?.keybind !== undefined,
+      change: v => ({keybind: ''}),
+      node: ObjectNode({
+        keybind: StringNode({ enum: 'keybind', additional: true }),
+        ...CommonFields
+      })
+    },
+    {
+      type: 'nbt',
+      match: v => v?.nbt !== undefined,
+      change: v => ({nbt: ''}),
+      node: ObjectNode({
+        nbt: StringNode({ validator: 'nbt_path' }),
+        block: Opt(StringNode({ validator: 'vector', params: { dimension: 3, isInteger: true } })),
+        entity: Opt(StringNode({ validator: 'entity', params: { amount: 'single', type: 'entities' } })),
+        storage: Opt(StringNode({ validator: 'resource', params: { pool: '$storage' } })),
+        interpret: Opt(BooleanNode()),
+        ...CommonFields
+      })
+    }
+  ], { context: 'text_component_object', choiceContext: 'text_component.object' }), {
     default: () => ({
       text: ""
     })

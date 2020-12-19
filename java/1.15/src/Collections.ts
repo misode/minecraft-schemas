@@ -21,29 +21,112 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:impossible',
     'minecraft:inventory_changed',
     'minecraft:item_durability_changed',
-    'minecraft:item_used_on_block',
     'minecraft:killed_by_crossbow',
     'minecraft:levitation',
     'minecraft:location',
     'minecraft:nether_travel',
     'minecraft:placed_block',
-    'minecraft:player_generates_container_loot',
     'minecraft:player_hurt_entity',
-    'minecraft:player_interacted_with_entity',
     'minecraft:player_killed_entity',
     'minecraft:recipe_unlocked',
     'minecraft:shot_crossbow',
+    'minecraft:safely_harvest_honey',
     'minecraft:slept_in_bed',
     'minecraft:slide_down_block',
     'minecraft:summoned_entity',
     'minecraft:tame_animal',
-    'minecraft:target_hit',
     'minecraft:tick',
-    'minecraft:thrown_item_picked_up_by_entity',
     'minecraft:used_ender_eye',
     'minecraft:used_totem',
     'minecraft:villager_trade',
     'minecraft:voluntary_exile'
+  ])
+
+  collections.register('loot_pool_entry_type', [
+    'minecraft:empty',
+    'minecraft:item',
+    'minecraft:tag',
+    'minecraft:loot_table',
+    'minecraft:alternatives',
+    'minecraft:sequence',
+    'minecraft:group',
+    'minecraft:dynamic'
+  ])
+
+  collections.register('loot_condition_type', [
+    'minecraft:alternative',
+    'minecraft:inverted',
+    'minecraft:reference',
+    'minecraft:entity_properties',
+    'minecraft:block_state_property',
+    'minecraft:match_tool',
+    'minecraft:damage_source_properties',
+    'minecraft:location_check',
+    'minecraft:weather_check',
+    'minecraft:time_check',
+    'minecraft:entity_scores',
+    'minecraft:random_chance',
+    'minecraft:random_chance_with_looting',
+    'minecraft:table_bonus',
+    'minecraft:killed_by_player',
+    'minecraft:survives_explosion'
+  ])
+
+  collections.register('loot_function_type', [
+    'minecraft:set_count',
+    'minecraft:set_damage',
+    'minecraft:set_name',
+    'minecraft:set_lore',
+    'minecraft:set_nbt',
+    'minecraft:set_attributes',
+    'minecraft:set_contents',
+    'minecraft:enchant_randomly',
+    'minecraft:enchant_with_levels',
+    'minecraft:looting_enchant',
+    'minecraft:limit_count',
+    'minecraft:furnace_smelt',
+    'minecraft:explosion_decay',
+    'minecraft:fill_player_head',
+    'minecraft:copy_name',
+    'minecraft:copy_nbt',
+    'minecraft:copy_state',
+    'minecraft:apply_bonus',
+    'minecraft:exploration_map',
+    'minecraft:set_stew_effect'
+  ])
+
+  collections.register('attribute', [
+    'generic.maxHealth',
+    'generic.followRange',
+    'generic.knockbackResistance',
+    'generic.movementSpeed',
+    'generic.attackDamage',
+    'generic.armor',
+    'generic.armorToughness',
+    'generic.attackSpeed',
+    'generic.luck',
+    'horse.jumpStrength',
+    'generic.attackKnockback',
+    'generic.flyingSpeed',
+    'zombie.spawnReinforcements'
+  ])
+
+  collections.register('structure_feature', [
+    'pillager_outpost',
+    'mineshaft',
+    'mansion',
+    'jungle_pyramid',
+    'desert_pyramid',
+    'igloo',
+    'shipwreck',
+    'swamp_hut',
+    'stronghold',
+    'monument',
+    'ocean_ruin',
+    'fortress',
+    'endcity',
+    'buried_treasure',
+    'village'
   ])
 
   collections.register('dimension', [

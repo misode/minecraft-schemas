@@ -2,7 +2,6 @@ import {
   StringNode as RawStringNode,
   ObjectNode,
   MapNode,
-  StringNode,
   ListNode,
   NumberNode,
   ChoiceNode,
@@ -12,7 +11,6 @@ import {
   CollectionRegistry,
   NestedNodeChildren,
   BooleanNode,
-  ObjectOrPreset,
   Opt,
   Mod,
 } from '@mcschema/core'
@@ -132,7 +130,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       entity: StringNode({ enum: 'entity_source' }),
       scores: MapNode(
         StringNode({ validator: 'objective' }),
-        Range({ forceRange: true })
+        Range({ forceRange: true, bounds: true })
       )
     },
     'minecraft:inverted': {

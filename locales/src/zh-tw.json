@@ -934,7 +934,6 @@
   "noise_settings.noise.sampling.y_scale": "Y 取樣縮放",
   "noise_settings.noise.simplex_surface_noise": "單體表面噪聲",
   "noise_settings.noise.size_horizontal": "水平大小",
-  "noise_settings.noise.size_horizontal.help": "大於 4 的值會導致沒有地形生成。值越大地形越平滑。",
   "noise_settings.noise.size_vertical": "垂直大小",
   "noise_settings.noise.top_slide": "頂部曲線",
   "noise_settings.noise.top_slide.help": "改變世界頂部曲線。當頂部曲線大小（Size）為 0 時不起作用。",

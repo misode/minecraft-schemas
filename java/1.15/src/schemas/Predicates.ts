@@ -12,8 +12,11 @@ import {
   ChoiceNode,
   CollectionRegistry,
   NumberNode,
+  NodeChildren,
 } from '@mcschema/core'
 import { Range } from './Common'
+
+export let LocationFields: NodeChildren
 
 export function initPredicatesSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
@@ -82,22 +85,23 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     ))
   }, { context: 'fluid' }))
 
-  schemas.register('location_predicate', ObjectNode({
+  LocationFields = {
     position: Opt(ObjectNode({
       x: Opt(Range()),
       y: Opt(Range()),
       z: Opt(Range())
     })),
-    biome: Opt(StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })),
-    feature: Opt(StringNode({ enum: collections.get('worldgen/structure_feature').map(v => v.slice(10)) })),
-    dimension: Opt(StringNode({ validator: 'resource', params: { pool: '$dimension' } })),
+    biome: Opt(StringNode({ enum: 'biome' })),
+    feature: Opt(StringNode({ enum: 'structure_feature' })),
+    dimension: Opt(StringNode({ enum: 'dimension' })),
     light: Opt(ObjectNode({
       light: Opt(Range({ integer: true, min: 0, max: 15 }))
     })),
-    smokey: Opt(BooleanNode()),
     block: Opt(Reference('block_predicate')),
     fluid: Opt(Reference('fluid_predicate'))
-  }, { context: 'location' }))
+  }
+
+  schemas.register('location_predicate', ObjectNode(LocationFields, { context: 'location' }))
 
   schemas.register('statistic_predicate', ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'stat_type' } }),
@@ -191,12 +195,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       StringNode({ enum: 'slot' }),
       Reference('item_predicate')
     )),
-    vehicle: Opt(Reference('entity_predicate')),
-    targeted_entity: Opt(Reference('entity_predicate')),
     player: Opt(Reference('player_predicate')),
-    fishing_hook: Opt(ObjectNode({
-      in_open_water: Opt(BooleanNode())
-    })),
     effects: Opt(MapNode(
       StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
       Reference('status_effect_predicate')

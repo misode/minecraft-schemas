@@ -279,6 +279,8 @@
   "criterion.player_killed_entity.killing_blow": "Killing Blow",
   "criterion.recipe_unlocked.recipe": "Recipe",
   "criterion.rod": "Rod",
+  "criterion.safely_harvest_honey.block": "Block",
+  "criterion.safely_harvest_honey.item": "Item",
   "criterion.shot_crossbow.item": "Item",
   "criterion.slept_in_bed.location": "Location",
   "criterion.slide_down_block.block": "Block",

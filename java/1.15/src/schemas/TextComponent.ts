@@ -62,8 +62,6 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
   }))
 
   const CommonFields: NodeChildren = {
-    color: Opt(StringNode()) /* TODO */,
-    font: Opt(StringNode()), // TODO: add validation
     bold: Opt(BooleanNode()),
     italic: Opt(BooleanNode()),
     underlined: Opt(BooleanNode()),
@@ -99,32 +97,16 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
       [Switch]: path => path.push('action'),
       [Case]: {
         'show_text': {
-          value: Opt(Reference('text_component')),
-          contents: Opt(Reference('text_component'))
+          value: Opt(Reference('text_component'))
         },
         'show_item': {
-          value: Opt(StringNode({ validator: 'nbt', params: { module: 'util::InventoryItem' } })),
-          contents: Opt(ObjectNode({
-            id: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-            count: Opt(NumberNode({ integer: true })),
-            tag: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'id' }] } } }))
-          }))
+          value: Opt(StringNode({ validator: 'nbt', params: { module: 'util::InventoryItem' } }))
         },
         'show_entity': {
           value: Opt(ObjectNode({
             name: Opt(StringNode()),
             type: Opt(StringNode()),
             id: Opt(StringNode())
-          })),
-          contents: Opt(Mod(ObjectNode({
-            name: Opt(Reference('text_component')),
-            type: StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
-            id: StringNode({ validator: 'uuid' })
-          }), {
-            default: () => ({
-              type: 'minecraft:pig',
-              id: '00000001-0001-0001-0001-000000000001'
-            })
           }))
         }
       }

@@ -215,7 +215,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...conditions
       },
       'minecraft:exploration_map': {
-        destination: Opt(StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature' } })),
+        destination: Opt(StringNode({ enum: 'structure_feature' })),
         decoration: Opt(StringNode({ enum: 'map_decoration' })),
         zoom: Opt(NumberNode({ integer: true })),
         search_radius: Opt(NumberNode({ integer: true })),

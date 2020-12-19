@@ -32,7 +32,6 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
       return this.activeCase(path)?.node.pathPush(path, key) ?? path
     },
     suggest(path, value) {
-      console.log('suggest switch node')
       return this.activeCase(path)
         ?.node
         .suggest(path, value) ?? cases

@@ -38,11 +38,11 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
       } else if (integer && !Number.isInteger(value)) {
         errors.add(path, 'error.expected_integer')
       } else if (between && (value < min || value > max)) {
-        errors.add(path, 'error.expected_number_between', min, max)
+        errors.add(path, 'error.invalid_number_range.between', value, min, max)
       } else if (value < min) {
-        errors.add(path, 'error.invalid_range.smaller', value, min)
+        errors.add(path, 'error.invalid_number_range.smaller', value, min)
       } else if (value > max) {
-        errors.add(path, 'error.invalid_range.larger', value, max)
+        errors.add(path, 'error.invalid_number_range.larger', value, max)
       }
       return value
     },

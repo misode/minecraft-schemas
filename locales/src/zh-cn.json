@@ -449,7 +449,7 @@
   "error.expected_json": "期望 JSON",
   "error.expected_list": "期望一个数组",
   "error.expected_number": "期望一个数字",
-  "error.expected_number_between": "期望一个位于 %0% 与 %1% 之间的数字",
+  "error.invalid_number_range.between": "期望一个位于 %0% 与 %1% 之间的数字",
   "error.expected_object": "期望一个对象",
   "error.expected_range": "期望一个范围",
   "error.expected_string": "期望一个字符串",

@@ -443,7 +443,7 @@
   "error.expected_json": "Ожидался JSON",
   "error.expected_list": "Ожидался массив (Array)",
   "error.expected_number": "Ожидалось число",
-  "error.expected_number_between": "Ожидалось число в промежутке от %0% до %1%",
+  "error.invalid_number_range.between": "Ожидалось число в промежутке от %0% до %1%",
   "error.expected_object": "Ожидался объект",
   "error.expected_range": "Ожидался диапазон",
   "error.expected_string": "Ожидалась строка",

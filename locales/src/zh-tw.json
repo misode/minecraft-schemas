@@ -449,7 +449,7 @@
   "error.expected_json": "期望 JSON",
   "error.expected_list": "期望一個陣列",
   "error.expected_number": "期望一個數字",
-  "error.expected_number_between": "期望一個位於 %0% 與 %1% 之間的數字",
+  "error.invalid_number_range.between": "期望一個位於 %0% 與 %1% 之間的數字",
   "error.expected_object": "期望一個物件",
   "error.expected_range": "期望一個範圍",
   "error.expected_string": "期望一個字串",

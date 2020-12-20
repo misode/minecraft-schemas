@@ -444,7 +444,7 @@
   "error.expected_json": "Oczekiwano JSON",
   "error.expected_list": "Oczekiwano listy",
   "error.expected_number": "Oczekiwano liczby",
-  "error.expected_number_between": "Oczekiwano liczby między %0% a %1%",
+  "error.invalid_number_range.between": "Oczekiwano liczby między %0% a %1%",
   "error.expected_object": "Oczekiwano obiektu",
   "error.expected_range": "Oczekiwano zakresu",
   "error.expected_string": "Oczekiwano wartości string",

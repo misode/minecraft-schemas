@@ -433,7 +433,7 @@
   "error.expected_json": "JSONが必要です",
   "error.expected_list": "配列が必要です",
   "error.expected_number": "数値が必要です",
-  "error.expected_number_between": "%0% ~ %1%の範囲の数値が必要です",
+  "error.invalid_number_range.between": "%0% ~ %1%の範囲の数値が必要です",
   "error.expected_object": "オブジェクトが必要です",
   "error.expected_range": "範囲が必要です",
   "error.expected_string": "文字列が必要です",

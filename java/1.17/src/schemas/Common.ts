@@ -126,7 +126,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   }))
 
   schemas.register('block_pos', Mod(ListNode(
-    NumberNode({ integer: true })
+    NumberNode({ integer: true }),
+    { minLength: 3, maxLength: 3 }
   ), {
     default: () => [0, 0, 0]
   }))

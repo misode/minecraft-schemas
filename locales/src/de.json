@@ -438,7 +438,7 @@
   "error.expected_json": "JSON erwartet",
   "error.expected_list": "Array erwartet",
   "error.expected_number": "Zahl erwartet",
-  "error.expected_number_between": "Zahl zwischen %0% und %1% erwartet",
+  "error.invalid_number_range.between": "Zahl zwischen %0% und %1% erwartet",
   "error.expected_object": "Objekt erwartet",
   "error.expected_range": "Wertebereich erwartet",
   "error.expected_string": "Zeichenkette erwartet",

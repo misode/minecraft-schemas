@@ -411,7 +411,7 @@
   "error.expected_json": "JSON attendu",
   "error.expected_list": "Tableau attendu",
   "error.expected_number": "Nombre attendu",
-  "error.expected_number_between": "Nombre entre %0% et %1% attendu",
+  "error.invalid_number_range.between": "Nombre entre %0% et %1% attendu",
   "error.expected_object": "Objet attendu",
   "error.expected_range": "Intervalle attendu",
   "error.expected_string": "Chaîne de caractères attendue",

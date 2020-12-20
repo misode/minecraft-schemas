@@ -30,7 +30,7 @@ export function initItemModifierSchemas(schemas: SchemaRegistry, collections: Co
 
   schemas.register('function', Mod(ObjectNode({
     function: StringNode({ validator: 'resource', params: { pool: 'loot_function_type' } }),
-    [Switch]: path => path.push('function'),
+    [Switch]: [{ push: 'function' }],
     [Case]: FunctionCases(conditions)
   }, { category: 'function', context: 'function' }), {
     default: () => [{

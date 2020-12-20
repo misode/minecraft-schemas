@@ -1,3 +1,5 @@
+import { RelativePath } from "./model/Path"
+
 export type ValidationOption =
   | BlockStateKeyValidationOption
   | BlockStateMapValidationOption
@@ -10,8 +12,6 @@ export type ValidationOption =
   | TeamValidationOption
   | UuidValidationOption
   | VectorValidationOption
-
-export type RelativePath = ('pop' | { push: string })[]
 
 type BlockStateKeyValidationOption = {
   validator: 'block_state_key',

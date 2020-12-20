@@ -38,7 +38,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
 
   schemas.register('processor', Mod(ObjectNode({
     processor_type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_processor' } }),
-    [Switch]: path => path.push('processor_type'),
+    [Switch]: [{ push: 'processor_type' }],
     [Case]: {
       'minecraft:block_age': {
         mossiness: NumberNode()
@@ -101,7 +101,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
 
   schemas.register('pos_rule_test', ObjectNode({
     predicate_type: StringNode({ validator: 'resource', params: { pool: 'pos_rule_test' } }),
-    [Switch]: path => path.push('predicate_type'),
+    [Switch]: [{ push: 'predicate_type' }],
     [Case]: {
       'minecraft:axis_aligned_linear_pos': {
         axis: StringNode({ enum: ['x', 'y', 'z'] }),
@@ -113,7 +113,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
 
   schemas.register('rule_test', ObjectNode({
     predicate_type: StringNode({ validator: 'resource', params: { pool: 'rule_test' } }),
-    [Switch]: path => path.push('predicate_type'),
+    [Switch]: [{ push: 'predicate_type' }],
     [Case]: {
       'minecraft:block_match': {
         block: StringNode({ validator: 'resource', params: { pool: 'block' } })

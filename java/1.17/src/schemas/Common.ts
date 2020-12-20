@@ -182,7 +182,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       type: Mod(Opt(StringNode({ validator: 'resource', params: { pool } })), {
         hidden: () => true
       }),
-      [Switch]: path => path.push('type'),
+      [Switch]: [{ push: 'type' }],
       [Case]: cases,
       ...defaultCase
     }, { context, disableSwitchContext: true })

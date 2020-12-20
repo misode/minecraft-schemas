@@ -70,7 +70,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     insertion: Opt(StringNode()),
     clickEvent: Opt(ObjectNode({
       action: StringNode({ enum: ['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard'] }),
-      [Switch]: path => path.push('action'),
+      [Switch]: [{ push: 'action' }],
       [Case]: {
         'change_page': {
           value: StringNode()
@@ -94,7 +94,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     })),
     hoverEvent: Opt(ObjectNode({
       action: StringNode({ enum: ['show_text', 'show_item', 'show_entity'] }),
-      [Switch]: path => path.push('action'),
+      [Switch]: [{ push: 'action' }],
       [Case]: {
         'show_text': {
           value: Opt(Reference('text_component'))

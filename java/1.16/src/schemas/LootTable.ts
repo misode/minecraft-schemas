@@ -114,7 +114,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     type: StringNode({ validator: 'resource', params: { pool: 'loot_pool_entry_type' } }),
     weight: Opt(Mod(NumberNode({ integer: true, min: 1 }), weightMod)),
     quality: Opt(Mod(NumberNode({ integer: true }), weightMod)),
-    [Switch]: path => path.push('type'),
+    [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:alternatives': {
         children: ListNode(
@@ -161,7 +161,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
 
   schemas.register('loot_function', Mod(ObjectNode({
     function: functionSwtichNode,
-    [Switch]: path => path.push('function'),
+    [Switch]: [{ push: 'function' }],
     [Case]: {
       'minecraft:apply_bonus': {
         enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
@@ -295,7 +295,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
 
   schemas.register('loot_condition', Mod(ObjectNode({
     condition: conditionSwtichNode,
-    [Switch]: path => path.push('condition'),
+    [Switch]: [{ push: 'condition' }],
     [Case]: {
       ...ConditionCases,
       'minecraft:entity_properties': {

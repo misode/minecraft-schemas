@@ -75,7 +75,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
   schemas.register('advancement_criteria', ObjectNode({
     trigger: StringNode({ validator: 'resource', params: { pool: collections.get('advancement_trigger') } }),
     conditions: Opt(ObjectNode({
-      [Switch]: path => path.pop().push('trigger'),
+      [Switch]: ['pop', { push: 'trigger' }],
       [Case]: {
         'minecraft:bee_nest_destroyed': {
           block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),

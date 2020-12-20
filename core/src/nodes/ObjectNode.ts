@@ -1,5 +1,5 @@
 import { INode, Base } from './Node'
-import { Path, ModelPath } from '../model/Path'
+import { Path, ModelPath, RelativePath, relativePath } from '../model/Path'
 import { Errors } from '../model/Errors'
 import { quoteString } from '../utils'
 
@@ -21,7 +21,7 @@ export type IObject = {
 export type FilteredChildren = {
   [name: string]: INode
   /** The field to filter on */
-  [Switch]?: (path: ModelPath) => ModelPath
+  [Switch]?: RelativePath
   /** Map of filter values to node fields */
   [Case]?: NestedNodeChildren
 }
@@ -35,7 +35,7 @@ type ObjectNodeConfig = {
 
 export type ObjectHookParams = {
   fields: NodeChildren,
-  filter?: (path: ModelPath) => ModelPath,
+  filter?: RelativePath,
   cases?: NestedNodeChildren,
   getActiveFields: (path: ModelPath) => NodeChildren
   getChildModelPath: (path: ModelPath, childKey: string) => ModelPath
@@ -46,13 +46,13 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
 
   const getActiveFields = (path: ModelPath): NodeChildren => {
     if (filter === undefined) return defaultFields
-    const switchValue = filter(path).get()
+    const switchValue = relativePath(path, filter).get()
     const activeCase = cases![switchValue]
     return { ...defaultFields, ...activeCase }
   }
 
   const getChildModelPath = (path: ModelPath, childKey: string): ModelPath => {
-    const switchValue = filter?.(path).get()
+    const switchValue = filter ? relativePath(path, filter).get() : undefined
     const caseFields = filter ? (cases![switchValue] ?? {}) : {}
     const caseKeys = Object.keys(caseFields)
     const pathWithContext = (config?.context) ?
@@ -101,7 +101,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       }
       let activeFields = defaultFields
       if (filter) {
-        const filterPath = filter(path)
+        const filterPath = relativePath(path, filter)
         let switchValue = filterPath.get()
         if (path.equals(filterPath.pop())) {
           const filterField = filterPath.last()

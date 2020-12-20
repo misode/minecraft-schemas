@@ -79,7 +79,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   schemas.register('configured_feature', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/feature' } }),
     config: ObjectNode({
-      [Switch]: path => path.pop().push('type'),
+      [Switch]: ['pop', { push: 'type' }],
       [Case]: {
         'minecraft:bamboo': {
           probability: NumberNode({ min: 0, max: 1 })
@@ -283,7 +283,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
             type: StringNode({ validator: 'resource', params: { pool: 'worldgen/foliage_placer_type' } }),
             radius: UniformInt({ min: 0, max: 8, maxSpread: 8 }),
             offset: UniformInt({ min: 0, max: 8, maxSpread: 8 }),
-            [Switch]: path => path.push('type'),
+            [Switch]: [{ push: 'type' }],
             [Case]: {
               'minecraft:blob_foliage_placer': {
                 height: NumberNode({ integer: true, min: 0, max: 16 })
@@ -311,7 +311,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           decorators: ListNode(
             ObjectNode({
               type: StringNode({ validator: 'resource', params: { pool: 'worldgen/tree_decorator_type' } }),
-              [Switch]: path => path.push('type'),
+              [Switch]: [{ push: 'type' }],
               [Case]: {
                 'minecraft:alter_ground': {
                   provider: Reference('block_state_provider')
@@ -363,7 +363,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   schemas.register('feature_size', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/feature_size_type' } }),
     min_clipped_height: Opt(NumberNode({ min: 0, max: 80 })),
-    [Switch]: path => path.push('type'),
+    [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:two_layers_feature_size': {
         limit: Opt(NumberNode({ integer: true, min: 0, max: 81 })),
@@ -386,7 +386,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
 
   schemas.register('block_state_provider', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/block_state_provider_type' } }),
-    [Switch]: path => path.push('type'),
+    [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:rotated_block_provider': {
         state: Reference('block_state')
@@ -415,7 +415,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
 
   schemas.register('block_placer', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/block_placer_type' } }),
-    [Switch]: path => path.push('type'),
+    [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:column_placer': {
         min_size: NumberNode({ integer: true }),

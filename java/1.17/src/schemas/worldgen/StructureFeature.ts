@@ -22,7 +22,7 @@ export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections
   schemas.register('configured_structure_feature', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature'}}),
     config: ObjectNode({
-      [Switch]: path => path.pop().push('type'),
+      [Switch]: ['pop', { push: 'type' }],
       [Case]: {
         'minecraft:bastion_remnant': templatePoolConfig,
         'minecraft:buried_treasure': {

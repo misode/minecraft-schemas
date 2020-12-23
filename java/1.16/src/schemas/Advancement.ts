@@ -131,10 +131,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         'minecraft:effects_changed': {
           effects: Opt(MapNode(
             StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
-            ObjectNode({
-              amplifier: Range(),
-              duration: Range()
-            })
+            Reference('status_effect_predicate')
           ))
         },
         'minecraft:enter_block': {

@@ -54,6 +54,15 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
     validationOption(path) {
       return config?.validation ?? keys.validationOption(path.push(''))
     },
+    serialize() {
+      return {
+        type: 'map',
+        optional: this.optional() ? true : undefined,
+        keys: keys.serialize(),
+        values: children.serialize(),
+        ...config?.validation
+      }
+    },
     hook(hook, path, ...args) {
       return hook.map({ node: this, keys, children, config: config ?? {} }, path, ...args)
     }

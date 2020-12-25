@@ -50,6 +50,9 @@ export const Reference = <T>(schemas: Registry<INode>, schema: string): INode<T>
   canUpdate(path: ModelPath, value: any) {
     return schemas.get(schema).canUpdate.bind(this)(path, value)
   },
+  serialize() {
+    return schema
+  },
   update(path: ModelPath, value: any) {
     return schemas.get(schema).update.bind(this)(path, value)
   }

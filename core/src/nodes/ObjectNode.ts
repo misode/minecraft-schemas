@@ -1,7 +1,7 @@
 import { INode, Base } from './Node'
 import { Path, ModelPath, RelativePath, relativePath } from '../model/Path'
 import { Errors } from '../model/Errors'
-import { quoteString } from '../utils'
+import { objMap, quoteString } from '../utils'
 
 export const Switch = Symbol('switch')
 export const Case = Symbol('case')
@@ -131,6 +131,19 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         }
       })
       return res
+    },
+    serialize() {
+      return {
+        type: 'object',
+        optional: this.optional() ? true : undefined,
+        properties: objMap(defaultFields, n => n.serialize()),
+        ...(filter ? {
+          dispatch: {
+            path: filter,
+            cases: objMap(cases!, c => objMap(c, n => n.serialize()))
+          }
+        } : {})
+      }
     },
     hook(hook, path, ...args) {
       return hook.object({ node: this, fields: defaultFields, filter, cases, getActiveFields, getChildModelPath }, path, ...args)

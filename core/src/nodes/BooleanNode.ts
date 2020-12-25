@@ -20,6 +20,12 @@ export const BooleanNode = (): INode<boolean> => {
       }
       return value
     },
+    serialize() {
+      return {
+        type: 'boolean',
+        optional: this.optional() ? true : undefined
+      }
+    },
     hook(hook, path, ...args) {
       return hook.boolean({ node: this}, path, ...args)
     }

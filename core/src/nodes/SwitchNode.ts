@@ -59,6 +59,9 @@ export const SwitchNode = <T>(cases: Case<T>[]): INode<T> => {
       }
       return (matchedCases.length > 0 ? matchedCases[0] : undefined)
     },
+    serialize() {
+      return cases[cases.length - 1].node.serialize()
+    },
     hook(hook, path, ...args) {
       return this.activeCase(path, true)
         .node.hook(hook, path, ...args)

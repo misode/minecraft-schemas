@@ -46,6 +46,13 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
       }
       return value
     },
+    serialize() {
+      return {
+        type: 'number',
+        optional: this.optional() ? true : undefined,
+        ...config
+      }
+    },
     hook(hook, path, ...args) {
       return hook.number({ node: this, integer, min, max, between, config: config ?? {} }, path, ...args)
     }

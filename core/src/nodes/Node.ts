@@ -117,6 +117,8 @@ export interface INode<T = any> {
    */
   update: (path: ModelPath, value: any) => JsonUpdate[]
 
+  serialize: () => any
+
   [custom: string]: any
 }
 
@@ -134,7 +136,8 @@ export const Base: INode = ({
   validationOption: () => undefined,
   hook(hook, path, ...args) { return hook.base({ node: this }, path, ...args) },
   canUpdate: () => false,
-  update: () => []
+  update: () => [],
+  serialize() { return this.optional() ? { optional: true } : {} },
 })
 
 export const Mod = (node: INode, mods: Partial<INode> | ((node: INode) => Partial<INode>)): INode => ({

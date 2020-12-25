@@ -51,6 +51,13 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
       }
       return choice.node.validate(path, value, errors, options)
     },
+    serialize() {
+      return {
+        type: 'choice',
+        optional: this.optional() ? true : undefined,
+        cases: choices.reduce((f, c) => ({...f, [c.type]: c.node.serialize()}), {})
+      }
+    },
     hook(hook, path, ...args) {
       return hook.choice({ node: this, choices, config: config ?? {}, switchNode}, path, ...args)
     }

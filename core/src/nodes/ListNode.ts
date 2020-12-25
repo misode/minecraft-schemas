@@ -51,6 +51,14 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
         children.validate(path.push(index), obj, errors, options)
       )
     },
+    serialize() {
+      return {
+        type: 'list',
+        optional: this.optional() ? true : undefined,
+        values: children.serialize(),
+        ...config
+      }
+    },
     hook(hook, path, ...args) {
       return hook.list({ node: this, children, config: config ?? {} }, path, ...args)
     }

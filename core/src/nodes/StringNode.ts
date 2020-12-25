@@ -78,6 +78,13 @@ export const StringNode = (collections?: Registry<string[]>, config?: Validation
     validationOption() {
       return isValidator(config) ? config : undefined
     },
+    serialize() {
+      return {
+        type: 'string',
+        optional: this.optional() ? true : undefined,
+        ...config
+      }
+    },
     hook(hook, path, ...args) {
       return hook.string({ node: this, getValues, config }, path, ...args)
     }

@@ -34,7 +34,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           predicate: v
         }]
       }
-    ], { choiceContext: 'conditions' })
+    ], { context: 'conditions' })
 
   schemas.register('advancement', Mod(ObjectNode({
     display: Opt(Mod(ObjectNode({

@@ -37,9 +37,11 @@ jobs:
           npm run build
           npm test
 
-      - name: Test Java 1.17
+      - name: Test Java Packages
         run: | 
-          cd java/1.17
-          npm i
-          npm link @mcschema/core
+          cd java
+          cd 1.15 && npm i && npm link @mcschema/core && cd ..
+          cd 1.16 && npm i && npm link @mcschema/core && cd ..
+          cd 1.17 && npm i && npm link @mcschema/core && cd ..
+          cd ..
           npm run build

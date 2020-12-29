@@ -23,6 +23,7 @@
     "access": "public"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "!lib/**/*.tsbuildinfo"
   ]
 }

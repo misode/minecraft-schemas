@@ -13,11 +13,10 @@ import {
   INode,
   Path,
   ModelPath,
-  NestedNodeChildren,
-  MapNode,
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  NodeChildren,
 } from '@mcschema/core'
 import {
   LootTableTypes,
@@ -33,13 +32,13 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  const conditions: NestedNodeChildren = {
+  const conditions: NodeChildren = {
     conditions: Opt(ListNode(
       Reference('loot_condition')
     ))
   }
 
-  const functionsAndConditions: NestedNodeChildren = {
+  const functionsAndConditions: NodeChildren = {
     functions: Opt(ListNode(
       Reference('loot_function')
     )),

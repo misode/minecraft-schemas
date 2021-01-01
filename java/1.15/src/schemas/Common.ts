@@ -155,11 +155,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       chance: NumberNode({ min: 0, max: 1 }),
       looting_multiplier: NumberNode()
     },
-    'minecraft:requirements': {
-      terms: ListNode(
-        Reference('condition')
-      ),
-    },
     'minecraft:reference': {
       name: StringNode({ validator: 'resource', params: { pool: '$predicate' } })
     },

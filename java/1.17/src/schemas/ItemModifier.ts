@@ -9,8 +9,8 @@ import {
   CollectionRegistry,
   Mod,
   ListNode,
-  NestedNodeChildren,
   Opt,
+  NodeChildren,
 } from '@mcschema/core'
 import { FunctionCases } from './Common'
 
@@ -22,7 +22,7 @@ export function initItemModifierSchemas(schemas: SchemaRegistry, collections: Co
     Reference('function'), { choiceContext: 'function' }
   ))
 
-  const conditions: NestedNodeChildren = {
+  const conditions: NodeChildren = {
     conditions: Opt(ListNode(
       Reference('condition')
     ))

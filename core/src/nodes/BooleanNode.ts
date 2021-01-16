@@ -21,7 +21,7 @@ export const BooleanNode = (): INode<boolean> => {
       return value
     },
     hook(hook, path, ...args) {
-      return hook.boolean({ node: this}, path, ...args)
+      return (hook.boolean ?? hook.base)({ node: this}, path, ...args)
     }
   }
 }

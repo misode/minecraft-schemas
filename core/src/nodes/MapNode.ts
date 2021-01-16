@@ -55,7 +55,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
       return config?.validation ?? keys.validationOption(path.push(''))
     },
     hook(hook, path, ...args) {
-      return hook.map({ node: this, keys, children, config: config ?? {} }, path, ...args)
+      return (hook.map ?? hook.base)({ node: this, keys, children, config: config ?? {} }, path, ...args)
     }
   }
 }

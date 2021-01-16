@@ -52,7 +52,7 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
       )
     },
     hook(hook, path, ...args) {
-      return hook.list({ node: this, children, config: config ?? {} }, path, ...args)
+      return (hook.list ?? hook.base)({ node: this, children, config: config ?? {} }, path, ...args)
     }
   })
 }

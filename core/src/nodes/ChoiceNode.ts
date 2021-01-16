@@ -52,7 +52,7 @@ export const ChoiceNode = (choices: Choice[], config?: ChoiceNodeConfig): INode<
       return choice.node.validate(path, value, errors, options)
     },
     hook(hook, path, ...args) {
-      return (hook.choice ?? hook.base)({ node: this, choices, config: config ?? {}, switchNode}, path, ...args)
+      return ((hook.choice ?? hook.base) as any).call(hook, { node: this, choices, config: config ?? {}, switchNode}, path, ...args)
     }
   }
 }

@@ -47,7 +47,7 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
       return value
     },
     hook(hook, path, ...args) {
-      return (hook.number ?? hook.base)({ node: this, integer, min, max, between, config: config ?? {} }, path, ...args)
+      return ((hook.number ?? hook.base) as any).call(hook, { node: this, integer, min, max, between, config: config ?? {} }, path, ...args)
     }
   }
 }

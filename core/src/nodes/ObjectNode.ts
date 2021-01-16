@@ -133,7 +133,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       return res
     },
     hook(hook, path, ...args) {
-      return (hook.object ?? hook.base)({ node: this, fields: defaultFields, filter, cases, getActiveFields, getChildModelPath }, path, ...args)
+      return ((hook.object ?? hook.base) as any).call(hook, { node: this, fields: defaultFields, filter, cases, getActiveFields, getChildModelPath }, path, ...args)
     }
   })
 }

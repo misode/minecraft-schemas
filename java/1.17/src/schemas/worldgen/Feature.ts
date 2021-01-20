@@ -185,6 +185,16 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           min_gen_offset: Opt(NumberNode({ integer: true })),
           max_gen_offset: Opt(NumberNode({ integer: true })),
         },
+        'minecraft:glow_lichen': {
+          search_range: Opt(NumberNode({ min: 1, max: 64, integer: true })),
+          chance_of_spreading: Opt(NumberNode({ min: 0, max: 1 })),
+          can_place_on_floor: Opt(BooleanNode()),
+          can_place_on_ceiling: Opt(BooleanNode()),
+          can_place_on_wall: Opt(BooleanNode()),
+          can_be_placed_on: ListNode(
+            Reference('block_state')
+          )
+        },
         'minecraft:huge_brown_mushroom': HugeMushroomConfig,
         'minecraft:huge_fungus': {
           hat_state: Reference('block_state'),

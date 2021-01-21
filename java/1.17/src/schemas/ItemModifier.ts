@@ -9,8 +9,8 @@ import {
   CollectionRegistry,
   Mod,
   ListNode,
-  NestedNodeChildren,
   Opt,
+  NodeChildren,
 } from '@mcschema/core'
 import { FunctionCases } from './Common'
 
@@ -22,7 +22,7 @@ export function initItemModifierSchemas(schemas: SchemaRegistry, collections: Co
     Reference('function'), { choiceContext: 'function' }
   ))
 
-  const conditions: NestedNodeChildren = {
+  const conditions: NodeChildren = {
     conditions: Opt(ListNode(
       Reference('condition')
     ))
@@ -30,7 +30,7 @@ export function initItemModifierSchemas(schemas: SchemaRegistry, collections: Co
 
   schemas.register('function', Mod(ObjectNode({
     function: StringNode({ validator: 'resource', params: { pool: 'loot_function_type' } }),
-    [Switch]: path => path.push('function'),
+    [Switch]: [{ push: 'function' }],
     [Case]: FunctionCases(conditions)
   }, { category: 'function', context: 'function' }), {
     default: () => [{

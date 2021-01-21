@@ -1,14 +1,23 @@
 import { INode, Base } from './Node'
 
-export type ListHookParams = {
-  children: INode
+type ListNodeConfig = {
+  minLength?: number
+  maxLength?: number
 }
 
-export const ListNode = (children: INode): INode<any[]> => {
+export type ListHookParams = {
+  children: INode
+  config: ListNodeConfig
+}
+
+export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]> => {
+  const min = config?.minLength ?? 0
+  const max = config?.maxLength ?? Infinity
+  const between = config?.minLength && config?.maxLength
   return ({
     ...Base,
     type: () => 'list',
-    default: () => [],
+    default: () => config?.minLength ? [...Array(min)].map(_ => children.default()) : [],
     navigate(path, index) {
       const nextIndex = index + 1
       const pathElements = path.getArray()
@@ -27,13 +36,23 @@ export const ListNode = (children: INode): INode<any[]> => {
       if (!Array.isArray(value)) {
         errors.add(path, 'error.expected_list')
         return value
+      } else if (between && (value.length < min || value.length > max)) {
+        if (min === max) {
+          errors.add(path, 'error.invalid_list_range.exact', value.length, min)
+        } else {
+          errors.add(path, 'error.invalid_list_range.between', value.length, min, max)
+        }
+      } else if (value.length < min) {
+        errors.add(path, 'error.invalid_list_range.smaller', value.length, min)
+      } else if (value.length > max) {
+        errors.add(path, 'error.invalid_list_range.larger', value.length, max)
       }
       return value.map((obj, index) =>
         children.validate(path.push(index), obj, errors, options)
       )
     },
     hook(hook, path, ...args) {
-      return hook.list({ node: this, children }, path, ...args)
+      return ((hook.list ?? hook.base) as any).call(hook, { node: this, children, config: config ?? {} }, path, ...args)
     }
   })
 }

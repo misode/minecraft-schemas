@@ -2,6 +2,18 @@ import { DataModel } from './DataModel'
 
 export type PathElement = number | string
 
+export type RelativePath = ('pop' | { push: string })[]
+
+export function relativePath(start: ModelPath, relativePath: RelativePath) {
+  return relativePath.reduce((path, e) => {
+    if (e === 'pop') {
+      return path.pop()
+    } else {
+      return path.push(e.push)
+    }
+  }, start)
+}
+
 /**
  * Immutable helper class to represent a path in data
  */

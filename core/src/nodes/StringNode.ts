@@ -79,7 +79,7 @@ export const StringNode = (collections?: Registry<string[]>, config?: Validation
       return isValidator(config) ? config : undefined
     },
     hook(hook, path, ...args) {
-      return hook.string({ node: this, getValues, config }, path, ...args)
+      return ((hook.string ?? hook.base) as any).call(hook, { node: this, getValues, config }, path, ...args)
     }
   }
 }

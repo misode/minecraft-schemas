@@ -107,7 +107,8 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
     features: ListNode(
       Mod(ListNode(
         StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_feature' } })
-      ), { category: () => 'predicate' })
+      ), { category: () => 'predicate' }),
+      { maxLength: 10 }
     )
   }, { context: 'biome' }), {
     default: () => ({

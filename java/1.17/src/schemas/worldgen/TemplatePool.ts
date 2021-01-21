@@ -73,7 +73,7 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
   schemas.register('template_element', Mod(ObjectNode({
     element_type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_pool_element' } }),
     projection: StringNode({ enum: ['rigid', 'terrain_matching'] }),
-    [Switch]: path => path.push('element_type'),
+    [Switch]: [{ push: 'element_type' }],
     [Case]: {
       'minecraft:feature_pool_element': {
         feature: StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_feature' } }),

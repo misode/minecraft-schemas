@@ -21,7 +21,7 @@ import {
 } from '@mcschema/core'
 
 export let ConditionCases: (entitySourceNode?: INode<any>) => NestedNodeChildren
-export let FunctionCases: (conditions: NestedNodeChildren, copySourceNode?: INode<any>, entitySourceNode?: INode<any>) => NestedNodeChildren
+export let FunctionCases: (conditions: NodeChildren, copySourceNode?: INode<any>, entitySourceNode?: INode<any>) => NestedNodeChildren
 
 export const DefaultDimensionType = {
   ultrawarm: false,
@@ -126,7 +126,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   }))
 
   schemas.register('block_pos', Mod(ListNode(
-    NumberNode({ integer: true })
+    NumberNode({ integer: true }),
+    { minLength: 3, maxLength: 3 }
   ), {
     default: () => [0, 0, 0]
   }))
@@ -181,7 +182,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       type: Mod(Opt(StringNode({ validator: 'resource', params: { pool } })), {
         hidden: () => true
       }),
-      [Switch]: path => path.push('type'),
+      [Switch]: [{ push: 'type' }],
       [Case]: cases,
       ...defaultCase
     }, { context, disableSwitchContext: true })
@@ -338,11 +339,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       chance: NumberNode({ min: 0, max: 1 }),
       looting_multiplier: NumberNode()
     },
-    'minecraft:requirements': {
-      terms: ListNode(
-        Reference('condition')
-      ),
-    },
     'minecraft:reference': {
       name: StringNode({ validator: 'resource', params: { pool: '$predicate' } })
     },
@@ -366,151 +362,137 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     }
   })
 
-  FunctionCases = (conditions: NestedNodeChildren, copySourceNode: INode<any> = StringNode({ enum: 'copy_source' }), entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({
-    'minecraft:apply_bonus': {
-      enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
-      formula: StringNode({ validator: 'resource', params: { pool: collections.get('loot_table_apply_bonus_formula') } }),
-      parameters: Mod(ObjectNode({
-        bonusMultiplier: Mod(NumberNode(), {
-          enabled: path => path.pop().push('formula').get() === 'minecraft:uniform_bonus_count'
-        }),
-        extra: Mod(NumberNode(), {
-          enabled: path => path.pop().push('formula').get() === 'minecraft:binomial_with_bonus_count'
-        }),
-        probability: Mod(NumberNode(), {
-          enabled: path => path.pop().push('formula').get() === 'minecraft:binomial_with_bonus_count'
+  FunctionCases = (conditions: NodeChildren, copySourceNode: INode<any> = StringNode({ enum: 'copy_source' }), entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => {
+    const cases: NestedNodeChildren = {
+      'minecraft:apply_bonus': {
+        enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+        formula: StringNode({ validator: 'resource', params: { pool: collections.get('loot_table_apply_bonus_formula') } }),
+        parameters: Mod(ObjectNode({
+          bonusMultiplier: Mod(NumberNode(), {
+            enabled: path => path.pop().push('formula').get() === 'minecraft:uniform_bonus_count'
+          }),
+          extra: Mod(NumberNode(), {
+            enabled: path => path.pop().push('formula').get() === 'minecraft:binomial_with_bonus_count'
+          }),
+          probability: Mod(NumberNode(), {
+            enabled: path => path.pop().push('formula').get() === 'minecraft:binomial_with_bonus_count'
+          })
+        }), {
+          enabled: path => path.push('formula').get() !== 'minecraft:ore_drops'
         })
-      }), {
-        enabled: path => path.push('formula').get() !== 'minecraft:ore_drops'
-      }),
-      ...conditions
-    },
-    'minecraft:copy_name': {
-      source: copySourceNode,
-      ...conditions
-    },
-    'minecraft:copy_nbt': {
-      source: Reference('nbt_provider'),
-      ops: ListNode(
-        ObjectNode({
-          source: StringNode({ validator: 'nbt_path', params: { category: { getter: 'copy_source', path: ['pop', 'pop', 'pop', { push: 'source' }] } } }),
-          target: StringNode({ validator: 'nbt_path', params: { category: 'minecraft:item' } }),
-          op: StringNode({ enum: ['replace', 'append', 'merge'] })
-        }, { context: 'nbt_operation' })
-      ),
-      ...conditions
-    },
-    'minecraft:copy_state': {
-      block: StringNode({ validator: 'resource', params: { pool: 'block' } }),
-      properties: ListNode(
-        StringNode({ validator: 'block_state_key', params: { id: ['pop', 'pop', { push: 'block' }] } })
-      ),
-      ...conditions
-    },
-    'minecraft:enchant_randomly': {
-      enchantments: Opt(ListNode(
-        StringNode({ validator: 'resource', params: { pool: 'enchantment' } })
-      )),
-      ...conditions
-    },
-    'minecraft:enchant_with_levels': {
-      levels: Reference('number_provider'),
-      treasure: Opt(BooleanNode()),
-      ...conditions
-    },
-    'minecraft:exploration_map': {
-      destination: Opt(StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature' } })),
-      decoration: Opt(StringNode({ enum: 'map_decoration' })),
-      zoom: Opt(NumberNode({ integer: true })),
-      search_radius: Opt(NumberNode({ integer: true })),
-      skip_existing_chunks: Opt(BooleanNode()),
-      ...conditions
-    },
-    'minecraft:fill_player_head': {
-      entity: entitySourceNode,
-      ...conditions
-    },
-    'minecraft:limit_count': {
-      limit: Reference('int_range'),
-      ...conditions
-    },
-    'minecraft:looting_enchant': {
-      count: Reference('number_provider'),
-      limit: Opt(NumberNode({ integer: true })),
-      ...conditions
-    },
-    'minecraft:set_attributes': {
-      modifiers: ListNode(
-        Reference('attribute_modifier')
-      ),
-      ...conditions
-    },
-    'minecraft:set_banner_pattern': {
-      patterns: ListNode(
-        ObjectNode({
-          pattern: StringNode({ enum: 'banner_pattern' }),
-          color: StringNode({ enum: 'dye_color' })
-        })
-      ),
-      append: Opt(BooleanNode()),
-      ...conditions
-    },
-    'minecraft:set_contents': {
-      entries: ListNode(
-        Reference('loot_entry')
-      ),
-      ...conditions
-    },
-    'minecraft:set_count': {
-      count: Reference('number_provider'),
-      add: Opt(BooleanNode()),
-      ...conditions
-    },
-    'minecraft:set_damage': {
-      damage: Reference('number_provider'),
-      add: Opt(BooleanNode()),
-      ...conditions
-    },
-    'minecraft:set_enchantments': {
-      enchantments: MapNode(
-        StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
-        Reference('number_provider')
-      ),
-      add: Opt(BooleanNode()),
-      ...conditions
-    },
-    'minecraft:set_loot_table': {
-      name: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
-      seed: Opt(NumberNode({ integer: true })),
-      ...conditions
-    },
-    'minecraft:set_lore': {
-      entity: Opt(entitySourceNode),
-      lore: ListNode(
-        Reference('text_component')
-      ),
-      replace: Opt(BooleanNode()),
-      ...conditions
-    },
-    'minecraft:set_name': {
-      entity: Opt(entitySourceNode),
-      name: Opt(Reference('text_component')),
-      ...conditions
-    },
-    'minecraft:set_nbt': {
-      tag: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item' } } }),
-      ...conditions
-    },
-    'minecraft:set_stew_effect': {
-      effects: Opt(ListNode(
-        ObjectNode({
-          type: StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
-          duration: Reference('number_provider')
-        })
-      )),
-      ...conditions
+      },
+      'minecraft:copy_name': {
+        source: copySourceNode
+      },
+      'minecraft:copy_nbt': {
+        source: Reference('nbt_provider'),
+        ops: ListNode(
+          ObjectNode({
+            source: StringNode({ validator: 'nbt_path', params: { category: { getter: 'copy_source', path: ['pop', 'pop', 'pop', { push: 'source' }] } } }),
+            target: StringNode({ validator: 'nbt_path', params: { category: 'minecraft:item' } }),
+            op: StringNode({ enum: ['replace', 'append', 'merge'] })
+          }, { context: 'nbt_operation' })
+        )
+      },
+      'minecraft:copy_state': {
+        block: StringNode({ validator: 'resource', params: { pool: 'block' } }),
+        properties: ListNode(
+          StringNode({ validator: 'block_state_key', params: { id: ['pop', 'pop', { push: 'block' }] } })
+        )
+      },
+      'minecraft:enchant_randomly': {
+        enchantments: Opt(ListNode(
+          StringNode({ validator: 'resource', params: { pool: 'enchantment' } })
+        ))
+      },
+      'minecraft:enchant_with_levels': {
+        levels: Reference('number_provider'),
+        treasure: Opt(BooleanNode())
+      },
+      'minecraft:exploration_map': {
+        destination: Opt(StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature' } })),
+        decoration: Opt(StringNode({ enum: 'map_decoration' })),
+        zoom: Opt(NumberNode({ integer: true })),
+        search_radius: Opt(NumberNode({ integer: true })),
+        skip_existing_chunks: Opt(BooleanNode())
+      },
+      'minecraft:fill_player_head': {
+        entity: entitySourceNode
+      },
+      'minecraft:limit_count': {
+        limit: Reference('int_range')
+      },
+      'minecraft:looting_enchant': {
+        count: Reference('number_provider'),
+        limit: Opt(NumberNode({ integer: true }))
+      },
+      'minecraft:set_attributes': {
+        modifiers: ListNode(
+          Reference('attribute_modifier')
+        )
+      },
+      'minecraft:set_banner_pattern': {
+        patterns: ListNode(
+          ObjectNode({
+            pattern: StringNode({ enum: 'banner_pattern' }),
+            color: StringNode({ enum: 'dye_color' })
+          })
+        ),
+        append: Opt(BooleanNode())
+      },
+      'minecraft:set_contents': {
+        entries: ListNode(
+          Reference('loot_entry')
+        )
+      },
+      'minecraft:set_count': {
+        count: Reference('number_provider'),
+        add: Opt(BooleanNode())
+      },
+      'minecraft:set_damage': {
+        damage: Reference('number_provider'),
+        add: Opt(BooleanNode())
+      },
+      'minecraft:set_enchantments': {
+        enchantments: MapNode(
+          StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+          Reference('number_provider')
+        ),
+        add: Opt(BooleanNode())
+      },
+      'minecraft:set_loot_table': {
+        name: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
+        seed: Opt(NumberNode({ integer: true }))
+      },
+      'minecraft:set_lore': {
+        entity: Opt(entitySourceNode),
+        lore: ListNode(
+          Reference('text_component')
+        ),
+        replace: Opt(BooleanNode())
+      },
+      'minecraft:set_name': {
+        entity: Opt(entitySourceNode),
+        name: Opt(Reference('text_component'))
+      },
+      'minecraft:set_nbt': {
+        tag: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item' } } })
+      },
+      'minecraft:set_stew_effect': {
+        effects: Opt(ListNode(
+          ObjectNode({
+            type: StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
+            duration: Reference('number_provider')
+          })
+        ))
+      }
     }
-  })
+    const res: NestedNodeChildren = {}
+    collections.get('loot_function_type').forEach(f => {
+      res[f] = {...cases[f], ...conditions }
+    })
+    return res
+  }
 
   DimensionTypePresets = (node: INode<any>) => ObjectOrPreset(
     StringNode({ validator: 'resource', params: { pool: '$dimension_type' } }),

@@ -11,13 +11,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         
-      - name: Cache Core Node Modules
-        uses: actions/cache@v1
+      - name: Cache Node Modules
+        uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/core/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+            ${{ runner.os }}-
+        
+      - name: Cache Build Info
+        uses: actions/cache@v2
+        with:
+          path: '**/*.tsbuildinfo'
+          key: ${{ runner.os }}-tsbuildinfo
+          restore-keys: |
+            ${{ runner.os }}-tsbuildinfo-
             ${{ runner.os }}-
 
       - name: Test Core
@@ -27,19 +36,12 @@ jobs:
           sudo npm link
           npm run build
           npm test
-        
-      - name: Cache Java 1.16 Node Modules
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/java/1.16/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
 
-      - name: Test Java 1.16
+      - name: Test Java Packages
         run: | 
-          cd java/1.16
-          npm i
-          npm link @mcschema/core
+          cd java
+          cd 1.15 && npm i && npm link @mcschema/core && cd ..
+          cd 1.16 && npm i && npm link @mcschema/core && cd ..
+          cd 1.17 && npm i && npm link @mcschema/core && cd ..
+          cd ..
           npm run build

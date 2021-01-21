@@ -32,7 +32,7 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
   schemas.register('configured_decorator', ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/decorator' } }),
     config: ObjectNode({
-      [Switch]: path => path.pop().push('type'),
+      [Switch]: ['pop', { push: 'type' }],
       [Case]: {
         'minecraft:carving_mask': {
           step: StringNode({ enum: 'generation_step' }),

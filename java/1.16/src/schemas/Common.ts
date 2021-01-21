@@ -134,7 +134,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   }))
 
   schemas.register('block_pos', Mod(ListNode(
-    NumberNode({ integer: true })
+    NumberNode({ integer: true }),
+    { minLength: 3, maxLength: 3 }
   ), {
     default: () => [0, 0, 0]
   }))
@@ -241,11 +242,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     'minecraft:random_chance_with_looting': {
       chance: NumberNode({ min: 0, max: 1 }),
       looting_multiplier: NumberNode()
-    },
-    'minecraft:requirements': {
-      terms: ListNode(
-        Reference('condition')
-      ),
     },
     'minecraft:reference': {
       name: StringNode({ validator: 'resource', params: { pool: '$predicate' } })

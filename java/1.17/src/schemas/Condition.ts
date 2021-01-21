@@ -21,7 +21,7 @@ export function initConditionSchemas(schemas: SchemaRegistry, collections: Colle
 
   schemas.register('condition', Mod(ObjectNode({
     condition: StringNode({ validator: 'resource', params: { pool: 'loot_condition_type' } }),
-    [Switch]: path => path.push('condition'),
+    [Switch]: [{ push: 'condition' }],
     [Case]: ConditionCases()
   }, { category: 'predicate', context: 'condition' }), {
     default: () => ({

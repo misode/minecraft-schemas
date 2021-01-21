@@ -102,7 +102,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     type: StringNode({ validator: 'resource', params: { pool: 'stat_type' } }),
     stat: StringNode(),
     value: Reference('int_bounds'),
-    [Switch]: path => path.push('type'),
+    [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:mined': {
         stat: StringNode({ validator: 'resource', params: { pool: 'block' } })

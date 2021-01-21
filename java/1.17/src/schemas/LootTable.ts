@@ -13,11 +13,10 @@ import {
   INode,
   Path,
   ModelPath,
-  NestedNodeChildren,
-  MapNode,
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  NodeChildren,
 } from '@mcschema/core'
 import {
   LootTableTypes,
@@ -33,13 +32,13 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  const conditions: NestedNodeChildren = {
+  const conditions: NodeChildren = {
     conditions: Opt(ListNode(
       Reference('loot_condition')
     ))
   }
 
-  const functionsAndConditions: NestedNodeChildren = {
+  const functionsAndConditions: NodeChildren = {
     functions: Opt(ListNode(
       Reference('loot_function')
     )),
@@ -114,7 +113,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     type: StringNode({ validator: 'resource', params: { pool: 'loot_pool_entry_type' } }),
     weight: Opt(Mod(NumberNode({ integer: true, min: 1 }), weightMod)),
     quality: Opt(Mod(NumberNode({ integer: true }), weightMod)),
-    [Switch]: path => path.push('type'),
+    [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:alternatives': {
         children: ListNode(
@@ -161,7 +160,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
 
   schemas.register('loot_function', Mod(ObjectNode({
     function: functionIDSwtichNode,
-    [Switch]: path => path.push('function'),
+    [Switch]: [{ push: 'function' }],
     [Case]: FunctionCases(conditions, copySourceSwtichNode, entitySourceSwtichNode)
   }, { category: 'function', context: 'function' }), {
     default: () => ({
@@ -172,7 +171,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
 
   schemas.register('loot_condition', Mod(ObjectNode({
     condition: conditionIDSwtichNode,
-    [Switch]: path => path.push('condition'),
+    [Switch]: [{ push: 'condition' }],
     [Case]: ConditionCases(entitySourceSwtichNode)
   }, { category: 'predicate', context: 'condition' }), {
     default: () => ({

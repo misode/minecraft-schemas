@@ -33,7 +33,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           predicate: v
         }]
       }
-    ], { choiceContext: 'conditions' })
+    ], { context: 'conditions' })
 
   schemas.register('advancement', Mod(ObjectNode({
     display: Opt(Mod(ObjectNode({
@@ -93,7 +93,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
       player: Mod(EntityPredicate, {
         enabled: path => path.pop().push('trigger').get() !== 'minecraft:impossible'
       }),
-      [Switch]: path => path.pop().push('trigger'),
+      [Switch]: ['pop', { push: 'trigger' }],
       [Case]: {
         'minecraft:bee_nest_destroyed': {
           block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),

@@ -28,13 +28,13 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
     generator: ObjectNode({
       type: StringNode({ validator: 'resource', params: { pool: 'worldgen/chunk_generator' } }),
       seed: NumberNode({ integer: true }),
-      [Switch]: path => path.push('type'),
+      [Switch]: [{ push: 'type' }],
       [Case]: {
         'minecraft:noise': {
           biome_source: ObjectNode({
             type: StringNode({ validator: 'resource', params: { pool: 'worldgen/biome_source' } }),
             seed: NumberNode({ integer: true }),
-            [Switch]: path => path.push('type'),
+            [Switch]: [{ push: 'type' }],
             [Case]: {
               'minecraft:fixed': {
                 biome: StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })

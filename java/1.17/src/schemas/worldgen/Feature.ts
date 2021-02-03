@@ -118,7 +118,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           wetness_mean: NumberNode({ min: 0, max: 1 }),
           wetness_deviation: NumberNode({ min: 0, max: 1 }),
           chance_of_dripstone_column_at_max_distance_from_center: NumberNode({ min: 0, max: 1 }),
-          max_distance_from_center_affecting_chance_of_dripstone_column: NumberNode({ integer: true, min: 1, max: 64 }),
+          max_distance_from_edge_affecting_chance_of_dripstone_column: NumberNode({ integer: true, min: 1, max: 64 }),
           max_distance_from_center_affecting_height_bias: NumberNode({ integer: true, min: 1, max: 64 })
         },
         'minecraft:emerald_ore': {

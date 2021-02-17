@@ -305,7 +305,6 @@
   "damage_source.is_magic": "Magie",
   "damage_source.is_projectile": "Projectile",
   "damage_source.source_entity": "Entité source",
-  "decorator.carving_mask.probability": "Probabilité",
   "decorator.carving_mask.step": "Étape de génération",
   "decorator.config": "Configuration",
   "decorator.count.count": "Taille de la pile",

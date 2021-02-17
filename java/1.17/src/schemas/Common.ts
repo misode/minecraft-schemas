@@ -47,6 +47,9 @@ export const DefaultNoiseSettings = {
   bedrock_floor_position: 0,
   sea_level: 63,
   disable_mob_generation: false,
+  noise_caves_enabled: true,
+  aquifers_enabled: true,
+  grimstone_enabled: true,
   noise: {
     min_y: 0,
     height: 256,
@@ -551,6 +554,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         bedrock_floor_position: 0,
         sea_level: 32,
         disable_mob_generation: true,
+        noise_caves_enabled: false,
+        aquifers_enabled: false,
+        grimstone_enabled: false,
         noise: {
           min_y: 0,
           height: 128,
@@ -593,6 +599,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         bedrock_floor_position: -10,
         sea_level: 0,
         disable_mob_generation: true,
+        noise_caves_enabled: false,
+        aquifers_enabled: false,
+        grimstone_enabled: false,
         noise: {
           min_y: 0,
           height: 128,
@@ -633,6 +642,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         bedrock_floor_position: 0,
         sea_level: 63,
         disable_mob_generation: false,
+        noise_caves_enabled: true,
+        aquifers_enabled: true,
+        grimstone_enabled: true,
         noise: {
           min_y: 0,
           height: 256,
@@ -676,6 +688,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         bedrock_floor_position: 0,
         sea_level: 32,
         disable_mob_generation: true,
+        noise_caves_enabled: false,
+        aquifers_enabled: false,
+        grimstone_enabled: false,
         noise: {
           min_y: 0,
           height: 128,
@@ -718,6 +733,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         bedrock_floor_position: -10,
         sea_level: 0,
         disable_mob_generation: true,
+        noise_caves_enabled: false,
+        aquifers_enabled: false,
+        grimstone_enabled: false,
         noise: {
           min_y: 0,
           height: 128,

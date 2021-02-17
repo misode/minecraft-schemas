@@ -28,6 +28,9 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
     bedrock_floor_position: NumberNode({ integer: true }),
     sea_level: NumberNode({ integer: true }),
     disable_mob_generation: BooleanNode(),
+    noise_caves_enabled: BooleanNode(),
+    aquifers_enabled: BooleanNode(),
+    grimstone_enabled: BooleanNode(),
     default_block: Reference('block_state'),
     default_fluid: Reference('block_state'),
     noise: ObjectNode({

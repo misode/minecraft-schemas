@@ -42,6 +42,7 @@ Registries with a star (⭐) are not added by the schema and need to be added af
 |`worldgen/decorator`||⭐|⭐|
 |`worldgen/feature`||⭐|⭐|
 |`worldgen/feature_size_type`||⭐|⭐|
+|`worldgen/float_provider_type`|||⭐|
 |`worldgen/foliage_placer_type`||⭐|⭐|
 |`worldgen/structure_feature`||⭐|⭐|
 |`worldgen/structure_pool_element`||⭐|⭐|

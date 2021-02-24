@@ -265,6 +265,7 @@ export type ResourceType =
   | 'worldgen/decorator'
   | 'worldgen/feature'
   | 'worldgen/feature_size_type'
+  | 'worldgen/float_provider_type'
   | 'worldgen/foliage_placer_type'
   | 'worldgen/structure_feature'
   | 'worldgen/structure_pool_element'

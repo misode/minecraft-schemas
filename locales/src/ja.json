@@ -503,8 +503,6 @@
   "feature.no_surface_ore.target": "目標",
   "feature.object": "カスタム",
   "feature.ore.size": "サイズ",
-  "feature.ore.state": "状態",
-  "feature.ore.target": "目標",
   "feature.random_boolean_selector.feature_false": "生成物１",
   "feature.random_boolean_selector.feature_true": "生成物２",
   "feature.random_patch.blacklist": "ブラックリスト",

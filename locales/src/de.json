@@ -509,8 +509,6 @@
   "feature.no_surface_ore.target": "Ziel",
   "feature.object": "Benutzerdefiniert",
   "feature.ore.size": "Größe",
-  "feature.ore.state": "Zustand",
-  "feature.ore.target": "Ziel",
   "feature.random_boolean_selector.feature_false": "Merkmal 1",
   "feature.random_boolean_selector.feature_true": "Merkmal 2",
   "feature.random_patch.blacklist": "Blacklist",

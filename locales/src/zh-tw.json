@@ -565,8 +565,6 @@
   "feature.no_surface_ore.target": "目標",
   "feature.object": "自訂",
   "feature.ore.size": "尺寸",
-  "feature.ore.state": "狀態",
-  "feature.ore.target": "目標",
   "feature.random_boolean_selector.feature_false": "地物 1",
   "feature.random_boolean_selector.feature_true": "地物 2",
   "feature.random_patch.blacklist": "黑名單",

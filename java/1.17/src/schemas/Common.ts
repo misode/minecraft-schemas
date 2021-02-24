@@ -49,7 +49,7 @@ export const DefaultNoiseSettings = {
   disable_mob_generation: false,
   noise_caves_enabled: true,
   aquifers_enabled: true,
-  grimstone_enabled: true,
+  deepslate_enabled: true,
   noise: {
     min_y: 0,
     height: 256,
@@ -95,6 +95,12 @@ type UniformConfig = {
 }
 export let UniformInt: (config?: UniformConfig) => INode
 export let UniformFloat: (config?: UniformConfig) => INode
+
+type FloatProviderConfig = {
+  min: number
+  max: number
+}
+export let FloatProvider: (config?: FloatProviderConfig) => INode
 
 export function initCommonSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
@@ -291,6 +297,35 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
 
   UniformInt = Uniform(true)
   UniformFloat = Uniform()
+
+  FloatProvider = (config?: FloatProviderConfig) => ObjectWithType(
+    'worldgen/float_provider_type',
+    'number', 'value', 'minecraft:constant',
+    null,
+    'float_provider',
+    {
+      'minecraft:constant': {
+        value: NumberNode(config)
+      },
+      'minecraft:uniform': {
+        value: ObjectNode({
+          base: NumberNode(config),
+          spread: NumberNode({ min: 0 })
+        })
+      },
+      'minecraft:clamped_normal': {
+        min: NumberNode(),
+        max: NumberNode(),
+        mean: NumberNode(),
+        deviation: NumberNode()
+      },
+      'minecraft:trapezoid': {
+        min: NumberNode(),
+        max: NumberNode(),
+        plateau: NumberNode()
+      }
+    }
+  )
 
   ConditionCases = (entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({
     'minecraft:alternative': {
@@ -556,7 +591,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         disable_mob_generation: true,
         noise_caves_enabled: false,
         aquifers_enabled: false,
-        grimstone_enabled: false,
+        deepslate_enabled: false,
         noise: {
           min_y: 0,
           height: 128,
@@ -601,7 +636,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         disable_mob_generation: true,
         noise_caves_enabled: false,
         aquifers_enabled: false,
-        grimstone_enabled: false,
+        deepslate_enabled: false,
         noise: {
           min_y: 0,
           height: 128,
@@ -644,7 +679,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         disable_mob_generation: false,
         noise_caves_enabled: true,
         aquifers_enabled: true,
-        grimstone_enabled: true,
+        deepslate_enabled: true,
         noise: {
           min_y: 0,
           height: 256,
@@ -690,7 +725,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         disable_mob_generation: true,
         noise_caves_enabled: false,
         aquifers_enabled: false,
-        grimstone_enabled: false,
+        deepslate_enabled: false,
         noise: {
           min_y: 0,
           height: 128,
@@ -735,7 +770,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         disable_mob_generation: true,
         noise_caves_enabled: false,
         aquifers_enabled: false,
-        grimstone_enabled: false,
+        deepslate_enabled: false,
         noise: {
           min_y: 0,
           height: 128,

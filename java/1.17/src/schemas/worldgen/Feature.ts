@@ -14,7 +14,7 @@ import {
   CollectionRegistry,
   Opt,
 } from '@mcschema/core'
-import { UniformFloat, UniformInt } from '../Common'
+import { FloatProvider, UniformFloat, UniformInt } from '../Common'
 import './Decorator'
 import './ProcessorList'
 
@@ -56,9 +56,14 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   }
 
   const OreConfig: NodeChildren = {
-    state: Reference('block_state'),
     size: NumberNode({ integer: true, min: 0, max: 64 }),
-    target: Reference('rule_test')
+    discard_chance_on_air_exposure: NumberNode({ min: 0, max: 1 }),
+    targets: ListNode(
+      ObjectNode({
+        target: Reference('rule_test'),
+        state: Reference('block_state')
+      })
+    )
   }
 
   const CountConfig: NodeChildren = {
@@ -113,8 +118,8 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           max_stalagmite_stalactite_height_diff: NumberNode({ integer: true, min: 0, max: 64 }),
           height_deviation: NumberNode({ integer: true, min: 1, max: 64 }),
           dripstone_block_layer_thickness: UniformInt({ min: 0, max: 64, maxSpread: 64 }),
-          density: UniformFloat({ min: 0, max: 1, maxSpread: 1 }),
-          wetness: UniformFloat({ min: 0, max: 1, maxSpread: 1 }),
+          density: FloatProvider({ min: 0, max: 2 }),
+          wetness: FloatProvider({ min: 0, max: 2 }),
           wetness_mean: NumberNode({ min: 0, max: 1 }),
           wetness_deviation: NumberNode({ min: 0, max: 1 }),
           chance_of_dripstone_column_at_max_distance_from_center: NumberNode({ min: 0, max: 1 }),
@@ -184,6 +189,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           max_point_offset: Opt(NumberNode({ min: 1, max: 10, integer: true })),
           min_gen_offset: Opt(NumberNode({ integer: true })),
           max_gen_offset: Opt(NumberNode({ integer: true })),
+          invalid_blocks_threshold: NumberNode({ integer: true })
         },
         'minecraft:glow_lichen': {
           search_range: Opt(NumberNode({ min: 1, max: 64, integer: true })),
@@ -214,11 +220,11 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         'minecraft:large_dripstone': {
           floor_to_ceiling_search_range: Opt(NumberNode({ integer: true, min: 1, max: 512 })),
           column_radius: UniformInt({ min: 1, max: 30, maxSpread: 30 }),
-          height_scale: UniformFloat({ min: 0, max: 10, maxSpread: 10 }),
+          height_scale: FloatProvider({ min: 0, max: 20 }),
           max_column_radius_to_cave_height_ratio: NumberNode({ min: 0, max: 1 }),
-          stalactite_bluntness: UniformFloat({ min: 0.1, max: 5, maxSpread: 5 }),
-          stalagmite_bluntness: UniformFloat({ min: 0.1, max: 5, maxSpread: 5 }),
-          wind_speed: UniformFloat({ min: 0, max: 1, maxSpread: 1 }),
+          stalactite_bluntness: FloatProvider({ min: 0.1, max: 10 }),
+          stalagmite_bluntness: FloatProvider({ min: 0.1, max: 10 }),
+          wind_speed: FloatProvider({ min: 0, max: 2 }),
           min_radius_for_wind: NumberNode({ integer: true, min: 0, max: 100 }),
           min_bluntness_for_wind: NumberNode({ min: 0, max: 5 })
         },
@@ -230,7 +236,6 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           target: Reference('block_state'),
           radius: UniformInt()
         },
-        'minecraft:no_surface_ore': OreConfig,
         'minecraft:ore': OreConfig,
         'minecraft:random_patch': RandomPatchConfig,
         'minecraft:random_boolean_selector': {
@@ -246,6 +251,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           ),
           default: Feature
         },
+        'minecraft:scattered_ore': OreConfig,
         'minecraft:sea_pickle': CountConfig,
         'minecraft:seagrass': {
           probability: NumberNode({ min: 0, max: 1 })

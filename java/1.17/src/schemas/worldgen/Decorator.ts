@@ -16,7 +16,7 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  const VerticalAnchor = ChoiceNode(
+  schemas.register('vertical_anchor', ChoiceNode(
     ['absolute', 'above_bottom', 'below_top'].map(t => ({
       type: t,
       match: v => v?.[t] !== undefined,
@@ -26,11 +26,16 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
       })
     })),
     { context: 'vertical_anchor' }
-  )
+  ))
 
   const RangeConfig: NodeChildren = {
-    bottom_inclusive: VerticalAnchor,
-    top_inclusive: VerticalAnchor
+    bottom_inclusive: Reference('vertical_anchor'),
+    top_inclusive: Reference('vertical_anchor')
+  }
+
+  const BiasedRangeConfig: NodeChildren = {
+    ...RangeConfig,
+    cutoff: NumberNode({ integer: true })
   }
 
   const CountConfig: NodeChildren = {
@@ -70,13 +75,13 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
           inner: Reference('configured_decorator')
         },
         'minecraft:depth_average': {
-          baseline: VerticalAnchor,
+          baseline: Reference('vertical_anchor'),
           spread: NumberNode({ integer: true })
         },
         'minecraft:glowstone': CountConfig,
         'minecraft:range': RangeConfig,
-        'minecraft:range_biased_to_bottom': RangeConfig,
-        'minecraft:range_very_biased_to_bottom': RangeConfig
+        'minecraft:range_biased_to_bottom': BiasedRangeConfig,
+        'minecraft:range_very_biased_to_bottom': BiasedRangeConfig
       }
     }, { context: 'decorator', category: 'predicate' })
   }, { context: 'decorator', category: 'predicate' }))

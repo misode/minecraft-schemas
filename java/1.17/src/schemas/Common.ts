@@ -314,15 +314,19 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         })
       },
       'minecraft:clamped_normal': {
-        min: NumberNode(),
-        max: NumberNode(),
-        mean: NumberNode(),
-        deviation: NumberNode()
+        value: ObjectNode({
+          min: NumberNode(),
+          max: NumberNode(),
+          mean: NumberNode(),
+          deviation: NumberNode()
+        })
       },
       'minecraft:trapezoid': {
-        min: NumberNode(),
-        max: NumberNode(),
-        plateau: NumberNode()
+        value: ObjectNode({
+          min: NumberNode(),
+          max: NumberNode(),
+          plateau: NumberNode()
+        })
       }
     }
   )

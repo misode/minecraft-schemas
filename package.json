@@ -1,6 +1,13 @@
 {
+  "name": "@mcschema/root",
+  "private": true,
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b -w"
-  }
+  },
+  "workspaces": [
+    "core",
+    "java/**",
+    "locales"
+  ]
 }

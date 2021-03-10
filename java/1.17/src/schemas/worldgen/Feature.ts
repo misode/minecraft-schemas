@@ -17,6 +17,7 @@ import {
 import { FloatProvider, UniformFloat, UniformInt } from '../Common'
 import './Decorator'
 import './ProcessorList'
+import { Processors } from './ProcessorList'
 
 export function initFeatureSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
@@ -80,6 +81,19 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
       node: Reference('configured_feature')
     }
   ], { choiceContext: 'feature' })
+
+  const VegetationPatchConfig: NodeChildren = {
+    surface: StringNode({ enum: ['floor', 'ceiling']}),
+    depth: UniformInt({ min: 1, max: 64, maxSpread: 64 }),
+    vertical_range: NumberNode({ integer: true, min: 1, max: 256 }),
+    extra_bottom_block_chance: NumberNode({ min: 0, max: 1}),
+    extra_edge_column_chance: NumberNode({ min: 0, max: 1}),
+    vegetation_chance: NumberNode({ min: 0, max: 1}),
+    xz_radius: UniformInt(),
+    replaceable: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
+    ground_state: Reference('block_state_provider'),
+    vegetation_feature: Feature
+  }
 
   schemas.register('configured_feature', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/feature' } }),
@@ -155,6 +169,17 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         'minecraft:forest_rock': {
           state: Reference('block_state')
         },
+        'minecraft:fossil': {
+          max_empty_corners_allowed: NumberNode({ integer: true, min: 0, max: 7 }),
+          fossil_structures: ListNode(
+            StringNode({ validator: 'resource', params: { pool: '$structure' } })
+          ),
+          overlay_structures: ListNode(
+            StringNode({ validator: 'resource', params: { pool: '$structure' } })
+          ),
+          fossil_processors: Processors,
+          overlay_processors: Processors,
+        },
         'minecraft:geode': {
           blocks: ObjectNode({
             filling_provider: Reference('block_state_provider'),
@@ -200,6 +225,18 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           can_be_placed_on: ListNode(
             Reference('block_state')
           )
+        },
+        'minecraft:growing_plant': {
+          direction: StringNode({ enum: ['up', 'down', 'north', 'east', 'south', 'west'] }),
+          allow_water: BooleanNode(),
+          height_distribution: ListNode(
+            ObjectNode({
+              weight: NumberNode({ integer: true }),
+              data: UniformInt()
+            })
+          ),
+          body_provider: Reference('block_state_provider'),
+          head_provider: Reference('block_state_provider')
         },
         'minecraft:huge_brown_mushroom': HugeMushroomConfig,
         'minecraft:huge_fungus': {
@@ -251,6 +288,19 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           ),
           default: Feature
         },
+        'minecraft:root_system': {
+          required_vertical_space_for_tree: NumberNode({ integer: true, min: 1, max: 64 }),
+          root_radius: NumberNode({ integer: true, min: 1, max: 64 }),
+          root_placement_attempts: NumberNode({ integer: true, min: 1, max: 256 }),
+          root_column_max_height: NumberNode({ integer: true, min: 1, max: 4096 }),
+          hanging_root_radius: NumberNode({ integer: true, min: 1, max: 64 }),
+          hanging_roots_vertical_span: NumberNode({ integer: true, min: 0, max: 16 }),
+          hanging_root_placement_attempts: NumberNode({ integer: true, min: 0, max: 256 }),
+          root_replaceable: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
+          root_state_provider: Reference('block_state_provider'),
+          hanging_root_state_provider: Reference('block_state_provider'),
+          feature: Feature
+        },
         'minecraft:scattered_ore': OreConfig,
         'minecraft:sea_pickle': CountConfig,
         'minecraft:seagrass': {
@@ -283,17 +333,24 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           )
         },
         'minecraft:tree': {
-          max_water_depth: NumberNode({ integer: true }),
-          ignore_vines: BooleanNode(),
-          heightmap: StringNode({ enum: 'heightmap_type' }),
+          ignore_vines: Opt(BooleanNode()),
+          force_dirt: Opt(BooleanNode()),
           minimum_size: Reference('feature_size'),
+          dirt_provider: Reference('block_state_provider'),
           trunk_provider: Reference('block_state_provider'),
-          leaves_provider: Reference('block_state_provider'),
+          foliage_provider: Reference('block_state_provider'),
           trunk_placer: ObjectNode({
             type: StringNode({ validator: 'resource', params: { pool: 'worldgen/trunk_placer_type' } }),
             base_height: NumberNode({ integer: true, min: 0, max: 32 }),
             height_rand_a: NumberNode({ integer: true, min: 0, max: 24 }),
-            height_rand_b: NumberNode({ integer: true, min: 0, max: 24 })
+            height_rand_b: NumberNode({ integer: true, min: 0, max: 24 }),
+            [Switch]: [{ push: 'type' }],
+            [Case]: {
+              'minecraft:bending_trunk_placer': {
+                bend_length: UniformInt({ min: 1, max: 32, maxSpread: 32 }),
+                min_height_for_leaves: Opt(NumberNode({ integer: true, min: 1 }))
+              }
+            }
           }, { context: 'trunk_placer' }),
           foliage_placer: ObjectNode({
             type: StringNode({ validator: 'resource', params: { pool: 'worldgen/foliage_placer_type' } }),
@@ -319,6 +376,10 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
               'minecraft:pine_foliage_placer': {
                 height: UniformInt({ min: 0, max: 16, maxSpread: 8 })
               },
+              'minecraft:random_spread_foliage_placer': {
+                foliage_height: UniformInt({ min: 1, max: 256, maxSpread: 256 }),
+                leaf_placement_attempts: NumberNode({ integer: true, min: 0, max: 256 })
+              },
               'minecraft:spruce_foliage_placer': {
                 trunk_height: UniformInt({ min: 0, max: 16, maxSpread: 8 })
               }
@@ -341,7 +402,9 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
               }
             }, { context: 'tree_decorator' })
           )
-        }
+        },
+        'minecraft:vegetation_patch': VegetationPatchConfig,
+        'minecraft:waterlogged_vegetation_patch': VegetationPatchConfig
       }
     }, { context: 'feature' })
   }, { context: 'feature' }), {
@@ -404,6 +467,11 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/block_state_provider_type' } }),
     [Switch]: [{ push: 'type' }],
     [Case]: {
+      'minecraft:randomized_int_state_provider': {
+        property: StringNode(),
+        values: UniformInt(),
+        source: Reference('block_state_provider')
+      },
       'minecraft:rotated_block_provider': {
         state: Reference('block_state')
       },

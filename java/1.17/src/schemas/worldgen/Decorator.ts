@@ -50,6 +50,10 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
         'minecraft:carving_mask': {
           step: StringNode({ enum: 'generation_step' })
         },
+        'minecraft:cave_surface': {
+          surface: StringNode({ enum: ['floor', 'ceiling']}),
+          floor_to_ceiling_search_range: NumberNode({ integer: true })
+        },
         'minecraft:chance': {
           chance: NumberNode({ integer: true, min: 0 })
         },
@@ -79,6 +83,12 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
           spread: NumberNode({ integer: true })
         },
         'minecraft:glowstone': CountConfig,
+        'minecraft:heightmap': {
+          heightmap: StringNode({ enum: 'heightmap_type' })
+        },
+        'minecraft:heightmap_with_water_threshold': {
+          max_water_depth: NumberNode({ integer: true })
+        },
         'minecraft:range': RangeConfig,
         'minecraft:range_biased_to_bottom': BiasedRangeConfig,
         'minecraft:range_very_biased_to_bottom': BiasedRangeConfig

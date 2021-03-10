@@ -10,12 +10,13 @@ import { initSurfaceBuilderSchemas } from './SurfaceBuilder'
 import { initTemplatePoolSchemas } from './TemplatePool'
 
 export function initWorldgenSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
+    // `ProcessorList.ts` has exports. It should be initialized first. 
+    initProcessorListSchemas(schemas, collections)
     initBiomeSchemas(schemas, collections)
     initCarverSchemas(schemas, collections)
     initDecoratorSchemas(schemas, collections)
     initFeatureSchemas(schemas, collections)
     initNoiseSettingsSchemas(schemas, collections)
-    initProcessorListSchemas(schemas, collections)
     initStructureFeatureSchemas(schemas, collections)
     initSurfaceBuilderSchemas(schemas, collections)
     initTemplatePoolSchemas(schemas, collections)

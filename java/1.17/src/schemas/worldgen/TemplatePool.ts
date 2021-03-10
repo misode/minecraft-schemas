@@ -12,27 +12,11 @@ import {
   CollectionRegistry,
 } from '@mcschema/core'
 import './ProcessorList'
+import { Processors } from './ProcessorList'
 
 export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
-
-  const Processors = ChoiceNode([
-    {
-      type: 'string',
-      node: StringNode({ validator: 'resource', params: { pool: '$worldgen/processor_list' }}),
-      change: v => undefined
-    },
-    {
-      type: 'object',
-      node: Reference('processor_list'),
-      change: v => ({
-        processors: [{
-          "processor_type": "minecraft:nop"
-        }]
-      })
-    }
-  ])
 
   schemas.register('template_pool', Mod(ObjectNode({
     name: StringNode(),

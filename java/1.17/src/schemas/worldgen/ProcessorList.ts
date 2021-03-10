@@ -10,11 +10,32 @@ import {
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  ChoiceNode,
+  INode,
 } from '@mcschema/core'
+
+export let Processors: INode
 
 export function initProcessorListSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
+
+  Processors = ChoiceNode([
+    {
+      type: 'string',
+      node: StringNode({ validator: 'resource', params: { pool: '$worldgen/processor_list' }}),
+      change: v => undefined
+    },
+    {
+      type: 'object',
+      node: Reference('processor_list'),
+      change: v => ({
+        processors: [{
+          "processor_type": "minecraft:nop"
+        }]
+      })
+    }
+  ])
 
   schemas.register('processor_list', Mod(ObjectNode({
     processors: ListNode(

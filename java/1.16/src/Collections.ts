@@ -169,6 +169,27 @@ export function initCollections(collections: CollectionRegistry) {
     'banner_black'
   ])
 
+  collections.register('map_feature', [
+    'bastion_remnant',
+    'buried_treasure',
+    'desert_pyramid',
+    'endcity',
+    'fortress',
+    'igloo',
+    'jungle_pyramid',
+    'mansion',
+    'mineshaft',
+    'monument',
+    'nether_fossil',
+    'ocean_ruin',
+    'pillager_outpost',
+    'ruined_portal',
+    'shipwreck',
+    'stronghold',
+    'swamp_hut',
+    'village'
+  ])
+
   collections.register('recipe_group', [
     'bed',
     'light_gray_dye',

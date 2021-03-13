@@ -180,7 +180,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           probability: NumberNode({ min: 0, max: 1 })
         },
         'minecraft:simple_block': {
-          to_place: Reference('block_state'),
+          to_place: Reference('block_state_provider'),
           place_on: ListNode(Reference('block_state')),
           place_in: ListNode(Reference('block_state')),
           place_under: ListNode(Reference('block_state'))

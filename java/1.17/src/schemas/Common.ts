@@ -342,13 +342,17 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         value: Reference('vertical_anchor')
       },
       'minecraft:uniform': {
-        min_inclusive: Reference('vertical_anchor'),
-        max_inclusive: Reference('vertical_anchor'),
+        value: ObjectNode({
+          min_inclusive: Reference('vertical_anchor'),
+          max_inclusive: Reference('vertical_anchor')
+        })
       },
       'minecraft:biased_to_bottom': {
-        min_inclusive: Reference('vertical_anchor'),
-        max_inclusive: Reference('vertical_anchor'),
-        inner: Opt(NumberNode({ integer: true, min: 1 }))
+        value: ObjectNode({
+          min_inclusive: Reference('vertical_anchor'),
+          max_inclusive: Reference('vertical_anchor'),
+          inner: Opt(NumberNode({ integer: true, min: 1 }))
+        })
       }
     }
   ))

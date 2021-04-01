@@ -18,12 +18,6 @@ export function initCarverSchemas(schemas: SchemaRegistry, collections: Collecti
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  const CaveConfig: NodeChildren = {
-    horizontal_radius_multiplier: Reference('height_provider'),
-    vertical_radius_multiplier: Reference('height_provider'),
-    floor_level: FloatProvider({ min: -1, max: 1 }),
-  }
-
   const CanyonConfig: NodeChildren = {
     vertical_rotation: FloatProvider(),
     shape: ObjectNode({
@@ -34,6 +28,12 @@ export function initCarverSchemas(schemas: SchemaRegistry, collections: Collecti
       vertical_radius_default_factor: NumberNode(),
       vertical_radius_center_factor: NumberNode()
     })
+  }
+
+  const CaveConfig: NodeChildren = {
+    horizontal_radius_multiplier: Reference('height_provider'),
+    vertical_radius_multiplier: Reference('height_provider'),
+    floor_level: FloatProvider({ min: -1, max: 1 }),
   }
 
   schemas.register('configured_carver', Mod(ObjectNode({

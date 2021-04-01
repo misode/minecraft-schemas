@@ -62,12 +62,13 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
     ),
     spawners: MapNode(
       StringNode({ enum: [
-        'water_ambient',
-        'ambient',
-        'misc',
-        'water_creature',
+        'monster',
         'creature',
-        'monster'
+        'ambient',
+        'underground_water_creature',
+        'water_creature',
+        'water_ambient',
+        'misc'
       ] }),
       Mod(ListNode(
         ObjectNode({

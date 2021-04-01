@@ -88,19 +88,12 @@ export const DefaultNoiseSettings = {
 }
 export let NoiseSettingsPresets: (node: INode) => INode
 
-type UniformConfig = {
-  min?: number
-  max?: number
-  maxSpread?: number
-}
-export let UniformInt: (config?: UniformConfig) => INode
-export let UniformFloat: (config?: UniformConfig) => INode
-
-type FloatProviderConfig = {
+type MinMaxConfig = {
   min: number
   max: number
 }
-export let FloatProvider: (config?: FloatProviderConfig) => INode
+export let FloatProvider: (config?: MinMaxConfig) => INode
+export let IntProvider: (config?: MinMaxConfig) => INode
 
 export function initCommonSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
@@ -276,30 +269,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     }
   ))
 
-  const Uniform = (integer?: boolean) => (config?: UniformConfig) => ChoiceNode([
-    {
-      type: 'number',
-      node: NumberNode({ integer, min: config?.min, max: config?.max }),
-      change: v => v.base
-    },
-    {
-      type: 'object',
-      node: ObjectNode({
-        base: NumberNode({ integer, min: config?.min, max: config?.max }),
-        spread: NumberNode({ integer, min: 0, max: config?.maxSpread })
-      }),
-      change: v => ({
-        base: v,
-        spread: 0
-      })
-    }
-  ], { context: 'uniform_int' })
-
-  UniformInt = Uniform(true)
-  UniformFloat = Uniform()
-
-  FloatProvider = (config?: FloatProviderConfig) => ObjectWithType(
-    'worldgen/float_provider_type',
+  FloatProvider = (config?: MinMaxConfig) => ObjectWithType(
+    'float_provider_type',
     'number', 'value', 'minecraft:constant',
     null,
     'float_provider',
@@ -309,8 +280,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       },
       'minecraft:uniform': {
         value: ObjectNode({
-          base: NumberNode(config),
-          spread: NumberNode({ min: 0 })
+          min_inclusive: NumberNode(config),
+          max_exclusive: NumberNode(config)
         })
       },
       'minecraft:clamped_normal': {
@@ -330,6 +301,57 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       }
     }
   )
+
+  IntProvider = (config?: MinMaxConfig) => ObjectWithType(
+    'int_provider_type',
+    'number', 'value', 'minecraft:constant',
+    null,
+    'int_provider',
+    {
+      'minecraft:constant': {
+        value: NumberNode({ integer: true, ...config })
+      },
+      'minecraft:uniform': {
+        value: ObjectNode({
+          min_inclusive: NumberNode({ integer: true, ...config }),
+          max_inclusive: NumberNode({ integer: true, ...config })
+        })
+      }
+    }
+  )
+
+  schemas.register('vertical_anchor', ChoiceNode(
+    ['absolute', 'above_bottom', 'below_top'].map(t => ({
+      type: t,
+      match: v => v?.[t] !== undefined,
+      change: v => ({ [t]: v.absolute ?? v.above_bottom ?? v.below_top ?? 0 }),
+      node: ObjectNode({
+        [t]: NumberNode({ integer: true, min: -2048, max: 2047 })
+      })
+    })),
+    { context: 'vertical_anchor' }
+  ))
+
+  schemas.register('height_provider', ObjectWithType(
+    'height_provider_type',
+    'number', 'value', 'minecraft:constant',
+    null,
+    'height_provider',
+    {
+      'minecraft:constant': {
+        value: Reference('vertical_anchor')
+      },
+      'minecraft:uniform': {
+        min_inclusive: Reference('vertical_anchor'),
+        max_inclusive: Reference('vertical_anchor'),
+      },
+      'minecraft:biased_to_bottom': {
+        min_inclusive: Reference('vertical_anchor'),
+        max_inclusive: Reference('vertical_anchor'),
+        inner: Opt(NumberNode({ integer: true, min: 1 }))
+      }
+    }
+  ))
 
   ConditionCases = (entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({
     'minecraft:alternative': {

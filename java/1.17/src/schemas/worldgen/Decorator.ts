@@ -8,25 +8,12 @@ import {
   NodeChildren,
   SchemaRegistry,
   CollectionRegistry,
-  ChoiceNode,
 } from '@mcschema/core'
-import { UniformInt } from '../Common'
+import { IntProvider } from '../Common'
 
 export function initDecoratorSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
-
-  schemas.register('vertical_anchor', ChoiceNode(
-    ['absolute', 'above_bottom', 'below_top'].map(t => ({
-      type: t,
-      match: v => v?.[t] !== undefined,
-      change: v => ({ [t]: v.absolute ?? v.above_bottom ?? v.below_top ?? 0 }),
-      node: ObjectNode({
-        [t]: NumberNode({ integer: true, min: -2048, max: 2047 })
-      })
-    })),
-    { context: 'vertical_anchor' }
-  ))
 
   const RangeConfig: NodeChildren = {
     bottom_inclusive: Reference('vertical_anchor'),
@@ -39,7 +26,7 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
   }
 
   const CountConfig: NodeChildren = {
-    count: UniformInt({ min: -10, max: 128, maxSpread: 128 })
+    count: IntProvider({ min: -10, max: 256 })
   }
 
   schemas.register('configured_decorator', ObjectNode({

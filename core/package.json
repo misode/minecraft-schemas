@@ -1,6 +1,6 @@
 {
   "name": "@mcschema/core",
-  "version": "0.12.3",
+  "version": "0.12.4",
   "description": "Schemas to parse and render JSON structures",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

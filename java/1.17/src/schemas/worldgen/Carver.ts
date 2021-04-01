@@ -31,8 +31,8 @@ export function initCarverSchemas(schemas: SchemaRegistry, collections: Collecti
   }
 
   const CaveConfig: NodeChildren = {
-    horizontal_radius_multiplier: Reference('height_provider'),
-    vertical_radius_multiplier: Reference('height_provider'),
+    horizontal_radius_multiplier: FloatProvider(),
+    vertical_radius_multiplier: FloatProvider(),
     floor_level: FloatProvider({ min: -1, max: 1 }),
   }
 

@@ -172,6 +172,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
       change: v => ({selector: ''}),
       node: ObjectNode({
         selector: StringNode({ validator: 'entity', params: { amount: 'multiple', type: 'entities' } }),
+        separator: Opt(Reference('text_component')),
         ...CommonFields
       })
     },
@@ -194,6 +195,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
         entity: Opt(StringNode({ validator: 'entity', params: { amount: 'single', type: 'entities' } })),
         storage: Opt(StringNode({ validator: 'resource', params: { pool: '$storage' } })),
         interpret: Opt(BooleanNode()),
+        separator: Opt(Reference('text_component')),
         ...CommonFields
       })
     }

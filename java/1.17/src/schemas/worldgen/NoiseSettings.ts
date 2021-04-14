@@ -52,12 +52,12 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       }),
       bottom_slide: ObjectNode({
         target: NumberNode({ integer: true }),
-        size: NumberNode({ integer: true }),
+        size: NumberNode({ integer: true, min: 0 }),
         offset: NumberNode({ integer: true })
       }),
       top_slide: ObjectNode({
         target: NumberNode({ integer: true }),
-        size: NumberNode({ integer: true }),
+        size: NumberNode({ integer: true, min: 0 }),
         offset: NumberNode({ integer: true })
       })
     }),

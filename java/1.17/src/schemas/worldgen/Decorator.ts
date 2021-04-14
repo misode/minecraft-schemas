@@ -15,18 +15,8 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  const RangeConfig: NodeChildren = {
-    bottom_inclusive: Reference('vertical_anchor'),
-    top_inclusive: Reference('vertical_anchor')
-  }
-
-  const BiasedRangeConfig: NodeChildren = {
-    ...RangeConfig,
-    cutoff: NumberNode({ integer: true })
-  }
-
   const CountConfig: NodeChildren = {
-    count: IntProvider({ min: -10, max: 256 })
+    count: IntProvider({ min: 0, max: 256 })
   }
 
   schemas.register('configured_decorator', ObjectNode({
@@ -65,20 +55,15 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
           outer: Reference('configured_decorator'),
           inner: Reference('configured_decorator')
         },
-        'minecraft:depth_average': {
-          baseline: Reference('vertical_anchor'),
-          spread: NumberNode({ integer: true })
-        },
-        'minecraft:glowstone': CountConfig,
         'minecraft:heightmap': {
           heightmap: StringNode({ enum: 'heightmap_type' })
         },
         'minecraft:heightmap_with_water_threshold': {
           max_water_depth: NumberNode({ integer: true })
         },
-        'minecraft:range': RangeConfig,
-        'minecraft:range_biased_to_bottom': BiasedRangeConfig,
-        'minecraft:range_very_biased_to_bottom': BiasedRangeConfig
+        'minecraft:range': {
+          height: Reference('height_provider')
+        }
       }
     }, { context: 'decorator', category: 'predicate' })
   }, { context: 'decorator', category: 'predicate' }))

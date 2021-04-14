@@ -24,13 +24,13 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   const StringNode = RawStringNode.bind(undefined, collections)
 
   const RandomPatchConfig: NodeChildren = {
-    can_replace: BooleanNode(),
-    project: BooleanNode(),
-    need_water: BooleanNode(),
-    xspread: NumberNode({ integer: true }),
-    yspread: NumberNode({ integer: true }),
-    zspread: NumberNode({ integer: true }),
-    tries: NumberNode({ integer: true }),
+    can_replace: Opt(BooleanNode()),
+    project: Opt(BooleanNode()),
+    need_water: Opt(BooleanNode()),
+    xspread: Opt(NumberNode({ integer: true, min: 0 })),
+    yspread: Opt(NumberNode({ integer: true, min: 0 })),
+    zspread: Opt(NumberNode({ integer: true, min: 0 })),
+    tries: Opt(NumberNode({ integer: true, min: 1 })),
     state_provider: Reference('block_state_provider'),
     block_placer: Reference('block_placer'),
     whitelist: ListNode(
@@ -202,12 +202,9 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           use_potential_placements_chance: Opt(NumberNode({ min: 0, max: 1 })),
           use_alternate_layer0_chance: Opt(NumberNode({ min: 0, max: 1 })),
           placements_require_layer0_alternate: Opt(BooleanNode()),
-          min_outer_wall_distance: Opt(NumberNode({ min: 1, max: 10, integer: true })),
-          max_outer_wall_distance: Opt(NumberNode({ min: 1, max: 20, integer: true })),
-          min_distribution_points: Opt(NumberNode({ min: 1, max: 10, integer: true })),
-          max_distribution_points: Opt(NumberNode({ min: 1, max: 20, integer: true })),
-          min_point_offset: Opt(NumberNode({ min: 1, max: 10, integer: true })),
-          max_point_offset: Opt(NumberNode({ min: 1, max: 10, integer: true })),
+          outer_wall_distance: Opt(IntProvider({ min: 1, max: 20 })),
+          distribution_points: Opt(IntProvider({ min: 1, max: 20 })),
+          point_offset: Opt(IntProvider({ min: 0, max: 10 })),
           min_gen_offset: Opt(NumberNode({ integer: true })),
           max_gen_offset: Opt(NumberNode({ integer: true })),
           invalid_blocks_threshold: NumberNode({ integer: true })
@@ -299,7 +296,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         },
         'minecraft:scattered_ore': OreConfig,
         'minecraft:sea_pickle': {
-          count: IntProvider({ min: -10, max: 256 })
+          count: IntProvider({ min: 0, max: 256 })
         },
         'minecraft:seagrass': {
           probability: NumberNode({ min: 0, max: 1 })
@@ -500,8 +497,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:column_placer': {
-        min_size: NumberNode({ integer: true }),
-        extra_size: NumberNode({ integer: true })
+        size: IntProvider({ min: 0 })
       }
     }
   }, { context: 'block_placer' }), {

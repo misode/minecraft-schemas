@@ -89,8 +89,8 @@ export const DefaultNoiseSettings = {
 export let NoiseSettingsPresets: (node: INode) => INode
 
 type MinMaxConfig = {
-  min: number
-  max: number
+  min?: number
+  max?: number
 }
 export let FloatProvider: (config?: MinMaxConfig) => INode
 export let IntProvider: (config?: MinMaxConfig) => INode
@@ -302,6 +302,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     }
   )
 
+  schemas.register('float_provider', FloatProvider())
+
   IntProvider = (config?: MinMaxConfig) => ObjectWithType(
     'int_provider_type',
     'number', 'value', 'minecraft:constant',
@@ -316,9 +318,24 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           min_inclusive: NumberNode({ integer: true, ...config }),
           max_inclusive: NumberNode({ integer: true, ...config })
         })
+      },
+      'minecraft:biased_to_bottom': {
+        value: ObjectNode({
+          min_inclusive: NumberNode({ integer: true, ...config }),
+          max_inclusive: NumberNode({ integer: true, ...config })
+        })
+      },
+      'minecraft:clamped': {
+        value: ObjectNode({
+          min_inclusive: NumberNode({ integer: true, ...config }),
+          max_inclusive: NumberNode({ integer: true, ...config }),
+          source: Reference('int_provider')
+        })
       }
     }
   )
+
+  schemas.register('int_provider', IntProvider())
 
   schemas.register('vertical_anchor', ChoiceNode(
     ['absolute', 'above_bottom', 'below_top'].map(t => ({
@@ -352,6 +369,20 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           min_inclusive: Reference('vertical_anchor'),
           max_inclusive: Reference('vertical_anchor'),
           inner: Opt(NumberNode({ integer: true, min: 1 }))
+        })
+      },
+      'minecraft:very_biased_to_bottom': {
+        value: ObjectNode({
+          min_inclusive: Reference('vertical_anchor'),
+          max_inclusive: Reference('vertical_anchor'),
+          inner: Opt(NumberNode({ integer: true, min: 1 }))
+        })
+      },
+      'minecraft:trapezoid': {
+        value: ObjectNode({
+          min_inclusive: Reference('vertical_anchor'),
+          max_inclusive: Reference('vertical_anchor'),
+          plateau: Opt(NumberNode({ integer: true }))
         })
       }
     }

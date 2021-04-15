@@ -359,31 +359,23 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         value: Reference('vertical_anchor')
       },
       'minecraft:uniform': {
-        value: ObjectNode({
-          min_inclusive: Reference('vertical_anchor'),
-          max_inclusive: Reference('vertical_anchor')
-        })
+        min_inclusive: Reference('vertical_anchor'),
+        max_inclusive: Reference('vertical_anchor')
       },
       'minecraft:biased_to_bottom': {
-        value: ObjectNode({
-          min_inclusive: Reference('vertical_anchor'),
-          max_inclusive: Reference('vertical_anchor'),
-          inner: Opt(NumberNode({ integer: true, min: 1 }))
-        })
+        min_inclusive: Reference('vertical_anchor'),
+        max_inclusive: Reference('vertical_anchor'),
+        inner: Opt(NumberNode({ integer: true, min: 1 }))
       },
       'minecraft:very_biased_to_bottom': {
-        value: ObjectNode({
-          min_inclusive: Reference('vertical_anchor'),
-          max_inclusive: Reference('vertical_anchor'),
-          inner: Opt(NumberNode({ integer: true, min: 1 }))
-        })
+        min_inclusive: Reference('vertical_anchor'),
+        max_inclusive: Reference('vertical_anchor'),
+        inner: Opt(NumberNode({ integer: true, min: 1 }))
       },
       'minecraft:trapezoid': {
-        value: ObjectNode({
-          min_inclusive: Reference('vertical_anchor'),
-          max_inclusive: Reference('vertical_anchor'),
-          plateau: Opt(NumberNode({ integer: true }))
-        })
+        min_inclusive: Reference('vertical_anchor'),
+        max_inclusive: Reference('vertical_anchor'),
+        plateau: Opt(NumberNode({ integer: true }))
       }
     }
   ))

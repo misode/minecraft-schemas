@@ -398,6 +398,11 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
             }, { context: 'tree_decorator' })
           )
         },
+        'minecraft:underwater_magma': {
+          floor_search_range: NumberNode({ integer: true, min: 0, max: 512 }),
+          placement_radius_around_floor: NumberNode({ integer: true, min: 0, max: 64 }),
+          placement_probability_per_valid_position: NumberNode({ min: 0, max: 1 })
+        },
         'minecraft:vegetation_patch': VegetationPatchConfig,
         'minecraft:waterlogged_vegetation_patch': VegetationPatchConfig
       }

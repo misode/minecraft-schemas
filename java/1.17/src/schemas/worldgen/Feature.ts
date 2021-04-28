@@ -56,14 +56,16 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     foliage_radius: NumberNode({ integer: true })
   }
 
+  const TargetBlockState = ObjectNode({
+    target: Reference('rule_test'),
+    state: Reference('block_state')
+  })
+
   const OreConfig: NodeChildren = {
     size: NumberNode({ integer: true, min: 0, max: 64 }),
     discard_chance_on_air_exposure: NumberNode({ min: 0, max: 1 }),
     targets: ListNode(
-      ObjectNode({
-        target: Reference('rule_test'),
-        state: Reference('block_state')
-      })
+      TargetBlockState
     )
   }
 
@@ -135,10 +137,6 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           chance_of_dripstone_column_at_max_distance_from_center: NumberNode({ min: 0, max: 1 }),
           max_distance_from_edge_affecting_chance_of_dripstone_column: NumberNode({ integer: true, min: 1, max: 64 }),
           max_distance_from_center_affecting_height_bias: NumberNode({ integer: true, min: 1, max: 64 })
-        },
-        'minecraft:emerald_ore': {
-          state: Reference('block_state'),
-          target: Reference('block_state')
         },
         'minecraft:end_gateway': {
           exact: BooleanNode(),
@@ -280,6 +278,11 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
             })
           ),
           default: Feature
+        },
+        'minecraft:replace_single_block': {
+          targets: ListNode(
+            TargetBlockState
+          )
         },
         'minecraft:root_system': {
           required_vertical_space_for_tree: NumberNode({ integer: true, min: 1, max: 64 }),

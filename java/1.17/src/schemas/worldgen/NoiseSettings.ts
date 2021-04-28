@@ -29,8 +29,10 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
     sea_level: NumberNode({ integer: true }),
     disable_mob_generation: BooleanNode(),
     noise_caves_enabled: BooleanNode(),
+    noodle_caves_enabled: BooleanNode(),
     aquifers_enabled: BooleanNode(),
     deepslate_enabled: BooleanNode(),
+    ore_veins_enabled: BooleanNode(),
     default_block: Reference('block_state'),
     default_fluid: Reference('block_state'),
     noise: ObjectNode({

@@ -27,6 +27,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
     bedrock_roof_position: NumberNode({ integer: true }),
     bedrock_floor_position: NumberNode({ integer: true }),
     sea_level: NumberNode({ integer: true }),
+    min_surface_level: NumberNode({ integer: true }),
     disable_mob_generation: BooleanNode(),
     noise_caves_enabled: BooleanNode(),
     noodle_caves_enabled: BooleanNode(),

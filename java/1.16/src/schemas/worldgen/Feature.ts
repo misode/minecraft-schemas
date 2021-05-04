@@ -159,6 +159,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           target: Reference('block_state'),
           radius: UniformInt()
         },
+        'minecraft:no_bonemeal_flower': RandomPatchConfig,
         'minecraft:no_surface_ore': OreConfig,
         'minecraft:ore': OreConfig,
         'minecraft:random_patch': RandomPatchConfig,

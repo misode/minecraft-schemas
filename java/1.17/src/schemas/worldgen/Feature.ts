@@ -264,6 +264,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           target: Reference('block_state'),
           radius: IntProvider()
         },
+        'minecraft:no_bonemeal_flower': RandomPatchConfig,
         'minecraft:ore': OreConfig,
         'minecraft:random_patch': RandomPatchConfig,
         'minecraft:random_boolean_selector': {

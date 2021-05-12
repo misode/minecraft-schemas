@@ -27,19 +27,20 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
     type: DimensionTypePresets(Reference('dimension_type')),
     generator: ObjectNode({
       type: StringNode({ validator: 'resource', params: { pool: 'worldgen/chunk_generator' } }),
-      seed: NumberNode({ integer: true }),
       [Switch]: [{ push: 'type' }],
       [Case]: {
         'minecraft:noise': {
+          seed: NumberNode({ integer: true }),
+          settings: NoiseSettingsPresets(Reference('noise_settings')),
           biome_source: ObjectNode({
             type: StringNode({ validator: 'resource', params: { pool: 'worldgen/biome_source' } }),
-            seed: NumberNode({ integer: true }),
             [Switch]: [{ push: 'type' }],
             [Case]: {
               'minecraft:fixed': {
                 biome: StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })
               },
               'minecraft:multi_noise': {
+                seed: NumberNode({ integer: true }),
                 preset: Opt(StringNode({ enum: ['nether'] })),
                 altitude_noise: NoPreset(Reference('generator_biome_noise')),
                 temperature_noise: NoPreset(Reference('generator_biome_noise')),
@@ -59,13 +60,16 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
                   StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })
                 )
               },
+              'minecraft:the_end': {
+                seed: NumberNode({ integer: true })
+              },
               'minecraft:vanilla_layered': {
+                seed: NumberNode({ integer: true }),
                 large_biomes: Opt(BooleanNode()),
                 legacy_biome_init_layer: Opt(BooleanNode())
               }
             }
-          }, { category: 'predicate', disableSwitchContext: true }),
-          settings: NoiseSettingsPresets(Reference('noise_settings'))
+          }, { category: 'predicate', disableSwitchContext: true })
         },
         'minecraft:flat': {
           settings: ObjectNode({
@@ -101,11 +105,11 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
   schemas.register('generator_biome', Mod(ObjectNode({
     biome: StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } }),
     parameters: ObjectNode({
-      altitude: NumberNode({ min: -1, max: 1 }),
-      temperature: NumberNode({ min: -1, max: 1 }),
-      humidity: NumberNode({ min: -1, max: 1 }),
-      weirdness: NumberNode({ min: -1, max: 1 }),
-      offset: NumberNode({ min: -1, max: 1 })
+      altitude: NumberNode(),
+      temperature: NumberNode(),
+      humidity: NumberNode(),
+      weirdness: NumberNode(),
+      offset: NumberNode()
     })
   }, { context: 'generator_biome' }), {
     default: () => ({

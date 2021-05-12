@@ -8,6 +8,7 @@ import {
   NodeChildren,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
 } from '@mcschema/core'
 import { UniformInt } from '../Common'
 
@@ -54,7 +55,7 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
         'minecraft:count_noise_biased': {
           noise_to_count_ratio: NumberNode({ integer: true }),
           noise_factor: NumberNode(),
-          noise_offset: NumberNode()
+          noise_offset: Opt(NumberNode())
         },
         'minecraft:decorated': {
           outer: Reference('configured_decorator'),

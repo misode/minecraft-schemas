@@ -114,10 +114,10 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
   }))
 
   const posTestFields = {
-    min_dist: NumberNode({ min: 0, max: 255, integer: true }),
-    max_dist: NumberNode({ min: 0, max: 255, integer: true }),
-    min_chance: NumberNode({ min: 0, max: 1 }),
-    max_chance: NumberNode({ min: 0, max: 1 })
+    min_dist: Opt(NumberNode({ min: 0, max: 255, integer: true })),
+    max_dist: Opt(NumberNode({ min: 0, max: 255, integer: true })),
+    min_chance: Opt(NumberNode({ min: 0, max: 1 })),
+    max_chance: Opt(NumberNode({ min: 0, max: 1 }))
   }
 
   schemas.register('pos_rule_test', ObjectNode({

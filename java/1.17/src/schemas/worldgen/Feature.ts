@@ -53,7 +53,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   const HugeMushroomConfig: NodeChildren = {
     cap_provider: Reference('block_state_provider'),
     stem_provider: Reference('block_state_provider'),
-    foliage_radius: NumberNode({ integer: true })
+    foliage_radius: Opt(NumberNode({ integer: true }))
   }
 
   const TargetBlockState = ObjectNode({
@@ -132,26 +132,24 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           dripstone_block_layer_thickness: IntProvider({ min: 0, max: 128 }),
           density: FloatProvider({ min: 0, max: 2 }),
           wetness: FloatProvider({ min: 0, max: 2 }),
-          wetness_mean: NumberNode({ min: 0, max: 1 }),
-          wetness_deviation: NumberNode({ min: 0, max: 1 }),
           chance_of_dripstone_column_at_max_distance_from_center: NumberNode({ min: 0, max: 1 }),
           max_distance_from_edge_affecting_chance_of_dripstone_column: NumberNode({ integer: true, min: 1, max: 64 }),
           max_distance_from_center_affecting_height_bias: NumberNode({ integer: true, min: 1, max: 64 })
         },
         'minecraft:end_gateway': {
           exact: BooleanNode(),
-          exit: Reference('block_pos')
+          exit: Opt(Reference('block_pos'))
         },
         'minecraft:end_spike': {
-          crystal_invulnerable: BooleanNode(),
-          crystal_beam_target: Reference('block_pos'),
+          crystal_invulnerable: Opt(BooleanNode()),
+          crystal_beam_target: Opt(Reference('block_pos')),
           spikes: ListNode(
             ObjectNode({
-              centerX: NumberNode({ integer: true }),
-              centerZ: NumberNode({ integer: true }),
-              radius: NumberNode({ integer: true }),
-              height: NumberNode({ integer: true }),
-              guarded: BooleanNode()
+              centerX: Opt(NumberNode({ integer: true })),
+              centerZ: Opt(NumberNode({ integer: true })),
+              radius: Opt(NumberNode({ integer: true })),
+              height: Opt(NumberNode({ integer: true })),
+              guarded: Opt(BooleanNode())
             })
           )
         },
@@ -235,7 +233,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           decor_state: Reference('block_state'),
           stem_state: Reference('block_state'),
           valid_base_block: Reference('block_state'),
-          planted: BooleanNode()
+          planted: Opt(BooleanNode())
         },
         'minecraft:huge_red_mushroom': HugeMushroomConfig,
         'minecraft:ice_patch': DiskConfig,
@@ -293,6 +291,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           hanging_root_radius: NumberNode({ integer: true, min: 1, max: 64 }),
           hanging_roots_vertical_span: NumberNode({ integer: true, min: 0, max: 16 }),
           hanging_root_placement_attempts: NumberNode({ integer: true, min: 0, max: 256 }),
+          allowed_vertical_water_for_tree: NumberNode({ integer: true, min: 1, max: 64 }),
           root_replaceable: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
           root_state_provider: Reference('block_state_provider'),
           hanging_root_state_provider: Reference('block_state_provider'),
@@ -317,10 +316,10 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           )
         },
         'minecraft:small_dripstone': {
-          max_placements: NumberNode({ integer: true, min: 0, max: 100 }),
-          empty_space_search_radius: NumberNode({ integer: true, min: 0, max: 20 }),
-          max_offset_from_origin: NumberNode({ integer: true, min: 0, max: 20 }),
-          chance_of_taller_dripstone: Opt(NumberNode({ integer: true, min: 0, max: 1 }))
+          max_placements: Opt(NumberNode({ integer: true, min: 0, max: 100 })),
+          empty_space_search_radius: Opt(NumberNode({ integer: true, min: 0, max: 20 })),
+          max_offset_from_origin: Opt(NumberNode({ integer: true, min: 0, max: 20 })),
+          chance_of_taller_dripstone: Opt(NumberNode({ min: 0, max: 1 }))
         },
         'minecraft:spring_feature': {
           state: Reference('fluid_state'),

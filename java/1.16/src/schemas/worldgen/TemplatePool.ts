@@ -76,8 +76,7 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
     [Switch]: [{ push: 'element_type' }],
     [Case]: {
       'minecraft:feature_pool_element': {
-        feature: StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_feature' } }),
-        processors: Processors
+        feature: StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_feature' } })
       },
       'minecraft:legacy_single_pool_element': {
         location: StringNode({ validator: 'resource', params: { pool: '$structure' }}),

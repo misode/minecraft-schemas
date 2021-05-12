@@ -9,6 +9,7 @@ import {
   Switch,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
 } from '@mcschema/core'
 
 export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -42,7 +43,7 @@ export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections
           portal_type: StringNode({ enum: ['standard', 'desert', 'jungle', 'mountain', 'nether', 'ocean', 'swamp'] })
         },
         'minecraft:shipwreck': {
-          is_beached: BooleanNode()
+          is_beached: Opt(BooleanNode())
         },
         'minecraft:village': templatePoolConfig
       }

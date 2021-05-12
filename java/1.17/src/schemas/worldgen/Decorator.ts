@@ -8,6 +8,7 @@ import {
   NodeChildren,
   SchemaRegistry,
   CollectionRegistry,
+  Opt,
 } from '@mcschema/core'
 import { IntProvider } from '../Common'
 
@@ -49,7 +50,7 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
         'minecraft:count_noise_biased': {
           noise_to_count_ratio: NumberNode({ integer: true }),
           noise_factor: NumberNode(),
-          noise_offset: NumberNode()
+          noise_offset: Opt(NumberNode())
         },
         'minecraft:decorated': {
           outer: Reference('configured_decorator'),
@@ -58,11 +59,17 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
         'minecraft:heightmap': {
           heightmap: StringNode({ enum: 'heightmap_type' })
         },
-        'minecraft:heightmap_with_water_threshold': {
-          max_water_depth: NumberNode({ integer: true })
+        'minecraft:heightmap_spread_double': {
+          heightmap: StringNode({ enum: 'heightmap_type' })
+        },
+        'minecraft:lava_lake': {
+          chance: NumberNode({ integer: true, min: 0 })
         },
         'minecraft:range': {
           height: Reference('height_provider')
+        },
+        'minecraft:water_depth_threshold': {
+          max_water_depth: NumberNode({ integer: true })
         }
       }
     }, { context: 'decorator', category: 'predicate' })

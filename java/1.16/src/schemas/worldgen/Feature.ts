@@ -52,7 +52,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   const HugeMushroomConfig: NodeChildren = {
     cap_provider: Reference('block_state_provider'),
     stem_provider: Reference('block_state_provider'),
-    foliage_radius: NumberNode({ integer: true })
+    foliage_radius: Opt(NumberNode({ integer: true }))
   }
 
   const OreConfig: NodeChildren = {
@@ -95,10 +95,6 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           decorator: Reference('configured_decorator'),
           feature: Feature
         },
-        'minecraft:decorated_flower': {
-          decorator: Reference('configured_decorator'),
-          feature: Feature
-        },
         'minecraft:delta_feature': {
           contents: Reference('block_state'),
           rim: Reference('block_state'),
@@ -112,18 +108,18 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         },
         'minecraft:end_gateway': {
           exact: BooleanNode(),
-          exit: Reference('block_pos')
+          exit: Opt(Reference('block_pos'))
         },
         'minecraft:end_spike': {
-          crystal_invulnerable: BooleanNode(),
-          crystal_beam_target: Reference('block_pos'),
+          crystal_invulnerable: Opt(BooleanNode()),
+          crystal_beam_target: Opt(Reference('block_pos')),
           spikes: ListNode(
             ObjectNode({
-              centerX: NumberNode({ integer: true }),
-              centerZ: NumberNode({ integer: true }),
-              radius: NumberNode({ integer: true }),
-              height: NumberNode({ integer: true }),
-              guarded: BooleanNode()
+              centerX: Opt(NumberNode({ integer: true })),
+              centerZ: Opt(NumberNode({ integer: true })),
+              radius: Opt(NumberNode({ integer: true })),
+              height: Opt(NumberNode({ integer: true })),
+              guarded: Opt(BooleanNode())
             })
           )
         },
@@ -141,7 +137,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           decor_state: Reference('block_state'),
           stem_state: Reference('block_state'),
           valid_base_block: Reference('block_state'),
-          planted: BooleanNode()
+          planted: Opt(BooleanNode())
         },
         'minecraft:huge_red_mushroom': HugeMushroomConfig,
         'minecraft:ice_patch': DiskConfig,

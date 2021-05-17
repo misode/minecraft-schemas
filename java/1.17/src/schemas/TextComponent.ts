@@ -192,7 +192,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
       node: ObjectNode({
         nbt: StringNode({ validator: 'nbt_path' }),
         block: Opt(StringNode({ validator: 'vector', params: { dimension: 3, isInteger: true } })),
-        entity: Opt(StringNode({ validator: 'entity', params: { amount: 'single', type: 'entities' } })),
+        entity: Opt(StringNode({ validator: 'entity', params: { amount: 'multiple', type: 'entities' } })),
         storage: Opt(StringNode({ validator: 'resource', params: { pool: '$storage' } })),
         interpret: Opt(BooleanNode()),
         separator: Opt(Reference('text_component')),

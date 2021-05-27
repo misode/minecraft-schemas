@@ -181,7 +181,8 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
             outer_layer_provider: Reference('block_state_provider'),
             inner_placements: ListNode(
               Reference('block_state')
-            )
+            ),
+            cannot_replace: StringNode({ validator: 'resource', params: { pool: '$tag/block' } })
           }),
           layers: ObjectNode({
             filling: Opt(NumberNode({ min: 0.01, max: 50 })),
@@ -260,7 +261,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         'minecraft:netherrack_replace_blobs': {
           state: Reference('block_state'),
           target: Reference('block_state'),
-          radius: IntProvider()
+          radius: IntProvider({ min: 0, max: 12 })
         },
         'minecraft:no_bonemeal_flower': RandomPatchConfig,
         'minecraft:ore': OreConfig,

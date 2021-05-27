@@ -2,6 +2,7 @@ import {
   BooleanNode,
   Case,
   StringNode as RawStringNode,
+  Reference as RawReference,
   Mod,
   NodeChildren,
   NumberNode,
@@ -14,6 +15,7 @@ import {
 
 export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
+  const Reference = RawReference.bind(undefined, schemas)
 
   const templatePoolConfig: NodeChildren = {
     start_pool: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool'}}),
@@ -32,6 +34,9 @@ export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections
         'minecraft:mineshaft': {
           type: StringNode({ enum: ['normal', 'mesa'] }),
           probability: NumberNode({ min: 0, max: 1 })
+        },
+        'minecraft:nether_fossil': {
+          height: Reference('height_provider')
         },
         'minecraft:ocean_ruin': {
           biome_temp: StringNode({ enum: ['cold', 'warm'] }),

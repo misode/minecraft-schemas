@@ -24,6 +24,7 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:item_used_on_block',
     'minecraft:killed_by_crossbow',
     'minecraft:levitation',
+    'minecraft:lightning_strike',
     'minecraft:location',
     'minecraft:nether_travel',
     'minecraft:placed_block',
@@ -35,6 +36,7 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:shot_crossbow',
     'minecraft:slept_in_bed',
     'minecraft:slide_down_block',
+    'minecraft:started_riding',
     'minecraft:summoned_entity',
     'minecraft:tame_animal',
     'minecraft:target_hit',
@@ -42,6 +44,7 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:thrown_item_picked_up_by_entity',
     'minecraft:used_ender_eye',
     'minecraft:used_totem',
+    'minecraft:using_item',
     'minecraft:villager_trade',
     'minecraft:voluntary_exile'
   ])

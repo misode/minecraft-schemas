@@ -45,7 +45,9 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   ])
 
   schemas.register('item_predicate', ObjectNode({
-    item: Opt(StringNode({ validator: 'resource', params: { pool: 'item' } })),
+    items: Opt(ListNode(
+      StringNode({ validator: 'resource', params: { pool: 'item' } })
+    )),
     tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/item' } })),
     count: Reference('int_bounds'),
     durability: Reference('int_bounds'),
@@ -62,7 +64,9 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   }, { context: 'enchantment' }))
 
   schemas.register('block_predicate', ObjectNode({
-    block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
+    blocks: Opt(ListNode(
+      StringNode({ validator: 'resource', params: { pool: 'block' } })
+    )),
     tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/block' } })),
     nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:block', id: ['pop', { push: 'block' }] } } })),
     state: Opt(MapNode(
@@ -178,6 +182,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:entity', id: ['pop', { push: 'type' }] } } })),
     team: Opt(StringNode({ validator: 'team' })),
     location: Opt(Reference('location_predicate')),
+    stepping_on: Opt(Reference('location_predicate')),
     distance: Opt(Reference('distance_predicate')),
     flags: Opt(ObjectNode({
       is_on_fire: Opt(BooleanNode()),
@@ -190,9 +195,14 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       StringNode({ enum: 'slot' }),
       Reference('item_predicate')
     )),
-    vehicle: Opt(Reference('entity_predicate')),
-    targeted_entity: Opt(Reference('entity_predicate')),
     player: Opt(Reference('player_predicate')),
+    vehicle: Opt(Reference('entity_predicate')),
+    passenger: Opt(Reference('entity_predicate')),
+    targeted_entity: Opt(Reference('entity_predicate')),
+    lightning_bolt: Opt(ObjectNode({
+      blocks_set_on_fire: Opt(Reference('int_bounds')),
+      entity_struck: Opt(Reference('entity_predicate'))
+    })),
     fishing_hook: Opt(ObjectNode({
       in_open_water: Opt(BooleanNode())
     })),

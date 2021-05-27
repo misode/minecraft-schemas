@@ -134,7 +134,8 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
               amplifier: Reference('int_bounds'),
               duration: Reference('int_bounds')
             })
-          ))
+          )),
+          source: Opt(EntityPredicate)
         },
         'minecraft:enter_block': {
           block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
@@ -193,6 +194,10 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         'minecraft:levitation': {
           distance: Reference('distance_predicate'),
           duration: Reference('int_bounds')
+        },
+        'minecraft:lightning_strike': {
+          lightning: EntityPredicate,
+          bystander: EntityPredicate,
         },
         'minecraft:location': {
           location: Opt(Reference('location_predicate'))
@@ -258,6 +263,9 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           distance: Reference('float_bounds')
         },
         'minecraft:used_totem': {
+          item: Opt(Reference('item_predicate'))
+        },
+        'minecraft:using_item': {
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:villager_trade': {

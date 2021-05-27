@@ -182,7 +182,8 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
             inner_placements: ListNode(
               Reference('block_state')
             ),
-            cannot_replace: StringNode({ validator: 'resource', params: { pool: '$tag/block' } })
+            cannot_replace: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
+            invalid_blocks: StringNode({ validator: 'resource', params: { pool: '$tag/block' } })
           }),
           layers: ObjectNode({
             filling: Opt(NumberNode({ min: 0.01, max: 50 })),
@@ -336,6 +337,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           force_dirt: Opt(BooleanNode()),
           minimum_size: Reference('feature_size'),
           dirt_provider: Reference('block_state_provider'),
+          sapling_provider: Reference('block_state_provider'),
           trunk_provider: Reference('block_state_provider'),
           foliage_provider: Reference('block_state_provider'),
           trunk_placer: ObjectNode({

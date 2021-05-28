@@ -84,6 +84,7 @@
   "attribute_modifier.operation.multiply_base": "Basiswert multiplizieren",
   "attribute_modifier.operation.multiply_total": "Gesamtwert multiplizieren",
   "attribute_modifier.slot": "Slots",
+  "attribute_modifier.slot.list": "Mehrere",
   "badge.experimental": "Experimentell",
   "badge.unstable": "Unsicher",
   "biome.carvers": "Borer",

@@ -471,6 +471,7 @@
   "error.expected_range": "Ожидался диапазон",
   "error.expected_string": "Ожидалась строка",
   "error.expected_uniform_int": "Ожидалось целое число (Uniform integer)",
+  "error.height_multiple": "Высота должна быть кратна %0%",
   "error.invalid_binomial": "Диапазон не может быть биноминального типа",
   "error.invalid_empty_list": "Массив не может быть пустым",
   "error.invalid_empty_string": "Строка не может быть пустой",

@@ -76,6 +76,9 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         heightmap: StringNode({ enum: 'heightmap_type' }),
         offset: NumberNode({ integer: true })
       },
+      'minecraft:protected_blocks': {
+        value: StringNode({ validator: 'resource', params: { pool: '$tag/block' } })
+      },
       'minecraft:rule': {
         rules: ListNode(
           Reference('processor_rule')

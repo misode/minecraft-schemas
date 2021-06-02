@@ -159,7 +159,8 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     )),
     stats: Opt(ListNode(
       Reference('statistic_predicate')
-    ))
+    )),
+    looking_at: Opt(Reference('entity_predicate'))
   }, { context: 'player' }))
 
   schemas.register('status_effect_predicate', ObjectNode({

@@ -477,7 +477,7 @@
   "error.invalid_empty_string": "Строка не может быть пустой",
   "error.invalid_enum_option": "Неверное значение \"%0%\"",
   "error.invalid_exact": "Диапазон не может быть константой",
-  "error.invalid_number_range.between": "Ожидалось число в промежутке от %0% до %1%",
+  "error.invalid_number_range.between": "Ожидалось число в промежутке от %1% до %2%",
   "error.invalid_pattern": "Неверная строка: %0%",
   "error.recipe.invalid_key": "только один символ разрешён как ключ",
   "false": "Нет",

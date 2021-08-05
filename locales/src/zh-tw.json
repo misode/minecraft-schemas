@@ -1298,7 +1298,7 @@
   "worldgen/tree_decorator_type.cocoa": "可可果",
   "worldgen/tree_decorator_type.leave_vine": "樹葉藤蔓",
   "worldgen/tree_decorator_type.trunk_vine": "樹幹藤蔓",
-  "worldgen/trunk_placer_type.dark_oak_trunk_placer": "黑橡樹生長方式",
+  "worldgen/trunk_placer_type.dark_oak_trunk_placer": "黑橡木生長方式",
   "worldgen/trunk_placer_type.fancy_trunk_placer": "多分叉型",
   "worldgen/trunk_placer_type.forking_trunk_placer": "單分叉型",
   "worldgen/trunk_placer_type.giant_trunk_placer": "2×2 豎直型",

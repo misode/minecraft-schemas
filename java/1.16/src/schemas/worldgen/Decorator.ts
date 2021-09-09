@@ -42,8 +42,8 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
         'minecraft:chance': ChanceConfig,
         'minecraft:count': CountConfig,
         'minecraft:count_extra': {
-          count: NumberNode({ integer: true, min: 0 }),
-          extra_count: NumberNode({ integer: true, min: 0 }),
+          count: NumberNode({ integer: true }),
+          extra_count: NumberNode({ integer: true }),
           extra_chance: NumberNode({ min: 0, max: 1 })
         },
         'minecraft:count_multilayer': CountConfig,

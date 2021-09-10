@@ -533,7 +533,7 @@
   "feature.random_selector.features.entry.chance": "確率",
   "feature.random_selector.features.entry.feature": "生成物",
   "feature.sea_pickle.count": "数量",
-  "feature.seegrass.probability": "確率",
+  "feature.seagrass.probability": "確率",
   "feature.simple_block.place_in": "上書きされるブロック",
   "feature.simple_block.place_in.entry": "状態",
   "feature.simple_block.place_on": "下のブロック",

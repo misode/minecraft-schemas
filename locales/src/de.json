@@ -529,7 +529,7 @@
   "feature.random_selector.features.entry.chance": "Wahrscheinlichkeit",
   "feature.random_selector.features.entry.feature": "Merkmal",
   "feature.sea_pickle.count": "Anzahl",
-  "feature.seegrass.probability": "Wahrscheinlichkeit",
+  "feature.seagrass.probability": "Wahrscheinlichkeit",
   "feature.simple_block.place_in": "Innerhalb platzieren",
   "feature.simple_block.place_in.entry": "Zustand",
   "feature.simple_block.place_on": "Platzieren auf",

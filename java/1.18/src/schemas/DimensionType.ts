@@ -14,9 +14,6 @@ export function initDimensionTypeSchemas(schemas: SchemaRegistry, collections: C
   const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('dimension_type', Mod(ObjectNode({
-    name: Mod(StringNode({ validator: 'resource', params: { pool: '$dimension_type', isDefinition: true }}), {
-      enabled: (path) => path.getArray().length > 0
-    }),
     ultrawarm: BooleanNode(),
     natural: BooleanNode(),
     piglin_safe: BooleanNode(),

@@ -16,8 +16,6 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
 
   schemas.register('biome', Mod(ObjectNode({
     surface_builder: StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_surface_builder' } }),
-    depth: NumberNode(),
-    scale: NumberNode(),
     temperature: NumberNode(),
     downfall: NumberNode(),
     precipitation: StringNode({ enum: ['none', 'rain', 'snow'] }),
@@ -57,14 +55,12 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
         probability: NumberNode({ min: 0, max: 1 })
       }))
     }),
-    starts: ListNode(
-      StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_structure_feature' } })
-    ),
     spawners: MapNode(
       StringNode({ enum: [
         'monster',
         'creature',
         'ambient',
+        'axolotls',
         'underground_water_creature',
         'water_creature',
         'water_ambient',
@@ -114,8 +110,6 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
   }, { context: 'biome' }), {
     default: () => ({
       surface_builder: 'minecraft:grass',
-      depth: 0.125,
-      scale: 0.05,
       temperature: 0.8,
       downfall: 0.4,
       precipitation: 'rain',

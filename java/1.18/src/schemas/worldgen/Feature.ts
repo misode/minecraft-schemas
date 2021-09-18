@@ -14,7 +14,7 @@ import {
   CollectionRegistry,
   Opt,
 } from '@mcschema/core'
-import { FloatProvider, IntProvider } from '../Common'
+import { FloatProvider, InclusiveRange, IntProvider } from '../Common'
 import './Decorator'
 import './ProcessorList'
 import { Processors } from './ProcessorList'
@@ -469,10 +469,43 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     })
   }))
 
+  const NoiseProvider: NodeChildren = {
+    seed: NumberNode({ integer: true }),
+    noise: Reference('noise_parameters'),
+    scale: NumberNode({ min: Number.MIN_VALUE })
+  }
+
   schemas.register('block_state_provider', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/block_state_provider_type' } }),
     [Switch]: [{ push: 'type' }],
     [Case]: {
+      'minecraft:dual_noise_2d_provider': {
+        ...NoiseProvider,
+        variety: InclusiveRange({ integer: true, min: 1, max: 64 }),
+        slow_noise: Reference('noise_parameters'),
+        slow_scale: NumberNode({ min: Number.MIN_VALUE }),
+        states: ListNode(
+          Reference('block_state')
+        )
+      },
+      'minecraft:noise_2d_cutoff_provider': {
+        ...NoiseProvider,
+        threshold: NumberNode({ min: -1, max: 1 }),
+        high_chance: NumberNode({ min: 0, max: 1 }),
+        default_state: Reference('block_state'),
+        low_states: ListNode(
+          Reference('block_state')
+        ),
+        high_states: ListNode(
+          Reference('block_state')
+        )
+      },
+      'minecraft:noise_2d_provider': {
+        ...NoiseProvider,
+        states: ListNode(
+          Reference('block_state')
+        )
+      },
       'minecraft:randomized_int_state_provider': {
         property: StringNode(),
         values: IntProvider(),

@@ -21,13 +21,9 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
   const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('noise_settings', Mod(ObjectNode({
-    name: Mod(StringNode({ validator: 'resource', params: { pool: '$worldgen/noise_settings', isDefinition: true } }), {
-      enabled: (path) => path.getArray().length > 0
-    }),
     bedrock_roof_position: NumberNode({ integer: true }),
     bedrock_floor_position: NumberNode({ integer: true }),
     sea_level: NumberNode({ integer: true }),
-    min_surface_level: NumberNode({ integer: true }),
     disable_mob_generation: BooleanNode(),
     noise_caves_enabled: BooleanNode(),
     noodle_caves_enabled: BooleanNode(),
@@ -47,6 +43,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       random_density_offset: Opt(BooleanNode()),
       island_noise_override: Opt(BooleanNode()),
       amplified: Opt(BooleanNode()),
+      use_legacy_random: Opt(BooleanNode()),
       sampling: ObjectNode({
         xz_scale: NumberNode(),
         y_scale: NumberNode(),
@@ -63,6 +60,14 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
         size: NumberNode({ integer: true, min: 0 }),
         offset: NumberNode({ integer: true })
       })
+    }),
+    octaves: ObjectNode({
+      temperature: Reference('noise_parameters'),
+      humidity: Reference('noise_parameters'),
+      continentalness: Reference('noise_parameters'),
+      erosion: Reference('noise_parameters'),
+      weirdness: Reference('noise_parameters'),
+      shift: Reference('noise_parameters'),
     }),
     structures: Reference('generator_structures')
   }, { context: 'noise_settings' }), node => ({

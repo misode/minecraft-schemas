@@ -506,7 +506,8 @@ export function initCollections(collections: CollectionRegistry) {
     'savanna',
     'swamp',
     'taiga',
-    'the_end'
+    'the_end',
+    'underground'
   ])
 
   collections.register('heightmap_type', [

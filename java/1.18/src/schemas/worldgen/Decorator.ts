@@ -68,6 +68,11 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
         'minecraft:range': {
           height: Reference('height_provider')
         },
+        'minecraft:surface_relative_threshold': {
+          heightmap: StringNode({ enum: 'heightmap_type' }),
+          min_inclusive: Opt(NumberNode({ integer: true })),
+          max_inclusive: Opt(NumberNode({ integer: true }))
+        },
         'minecraft:water_depth_threshold': {
           max_water_depth: NumberNode({ integer: true })
         }

@@ -19,7 +19,6 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
   const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('template_pool', Mod(ObjectNode({
-    name: StringNode(),
     fallback: StringNode(),
     elements: ListNode(
       Reference('template_weighted_element')

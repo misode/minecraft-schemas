@@ -41,49 +41,177 @@ export const DefaultDimensionType = {
 }
 export let DimensionTypePresets: (node: INode<any>) => INode<any>
 
+const DefaultStructureSettings = {
+  'minecraft:igloo': {
+    spacing: 32,
+    separation: 8,
+    salt: 14357618
+  },
+  'minecraft:mansion': {
+    spacing: 80,
+    separation: 20,
+    salt: 10387319
+  },
+  'minecraft:jungle_pyramid': {
+    spacing: 32,
+    separation: 8,
+    salt: 14357619
+  },
+  'minecraft:nether_fossil': {
+    spacing: 2,
+    separation: 1,
+    salt: 14357921
+  },
+  'minecraft:stronghold': {
+    spacing: 1,
+    separation: 0,
+    salt: 0
+  },
+  'minecraft:shipwreck': {
+    spacing: 24,
+    separation: 4,
+    salt: 165745295
+  },
+  'minecraft:mineshaft': {
+    spacing: 1,
+    separation: 0,
+    salt: 0
+  },
+  'minecraft:desert_pyramid': {
+    spacing: 32,
+    separation: 8,
+    salt: 14357617
+  },
+  'minecraft:ruined_portal': {
+    spacing: 40,
+    separation: 15,
+    salt: 34222645
+  },
+  'minecraft:fortress': {
+    spacing: 27,
+    separation: 4,
+    salt: 30084232
+  },
+  'minecraft:pillager_outpost': {
+    spacing: 32,
+    separation: 8,
+    salt: 165745296
+  },
+  'minecraft:village': {
+    spacing: 32,
+    separation: 8,
+    salt: 10387312
+  },
+  'minecraft:endcity': {
+    spacing: 20,
+    separation: 11,
+    salt: 10387313
+  },
+  'minecraft:buried_treasure': {
+    spacing: 1,
+    separation: 0,
+    salt: 0
+  },
+  'minecraft:ocean_ruin': {
+    spacing: 20,
+    separation: 8,
+    salt: 14357621
+  },
+  'minecraft:bastion_remnant': {
+    spacing: 27,
+    separation: 4,
+    salt: 30084232
+  },
+  'minecraft:swamp_hut': {
+    spacing: 32,
+    separation: 8,
+    salt: 14357620
+  },
+  'minecraft:monument': {
+    spacing: 32,
+    separation: 5,
+    salt: 10387313
+  }
+}
+
 export const DefaultNoiseSettings = {
-  name: 'minecraft:overworld',
-  bedrock_roof_position: -10,
-  bedrock_floor_position: 0,
-  sea_level: 63,
-  disable_mob_generation: false,
+	bedrock_roof_position: -2147483648,
+	bedrock_floor_position: 0,
+	sea_level: 63,
   noise_caves_enabled: true,
-  aquifers_enabled: true,
-  deepslate_enabled: true,
-  noise: {
-    min_y: 0,
-    height: 256,
-    density_factor: 1,
-    density_offset: -0.46875,
-    simplex_surface_noise: true,
-    random_density_offset: true,
-    size_horizontal: 1,
-    size_vertical: 2,
-    sampling: {
-      xz_scale: 1,
-      y_scale: 1,
-      xz_factor: 80,
-      y_factor: 160
-    },
-    top_slide: {
-      target: -10,
-      size: 3,
-      offset: 0
-    },
-    bottom_slide: {
-      target: -30,
-      size: 0,
-      offset: 0
-    }
-  },
-  default_block: {
-    Name: "minecraft:stone"
-  },
-  default_fluid: {
-    Name: "minecraft:water",
+	deepslate_enabled: true,
+	ore_veins_enabled: true,
+	noodle_caves_enabled: true,
+	disable_mob_generation: false,
+	aquifers_enabled: true,
+	default_block: {
+    Name: 'minecraft:stone'
+	},
+	default_fluid: {
     Properties: {
-      level: "0"
-    }
+      level: '0'
+		},
+		Name: 'minecraft:water'
+	},
+	noise: {
+		min_y: -64,
+		height: 384,
+		size_horizontal: 1,
+		size_vertical: 2,
+		density_factor: 1,
+		density_offset: -0.51875,
+		random_density_offset: true,
+		simplex_surface_noise: true,
+		top_slide: {
+			target: -0.078125,
+			size: 2,
+			offset: 8
+		},
+		bottom_slide: {
+			target: 0.1171875,
+			size: 3,
+			offset: 0
+		},
+		sampling: {
+			xz_scale: 0.9999999814507745,
+			y_scale: 0.9999999814507745,
+			xz_factor: 80,
+			y_factor: 160
+		}
+	},
+	octaves: {
+		erosion: {
+			firstOctave: -9,
+			amplitudes: [1, 1, 0, 1, 1]
+		},
+		weirdness: {
+			firstOctave: -7,
+			amplitudes: [1, 2, 1, 0, 0, 0]
+		},
+		shift: {
+			firstOctave: -3,
+			amplitudes: [1, 1, 1, 0]
+		},
+		temperature: {
+			firstOctave: -9,
+			amplitudes: [1.5, 0, 1, 0, 0, 0]
+		},
+		humidity: {
+			firstOctave: -7,
+			amplitudes: [1, 1, 0, 0, 0, 0]
+		},
+		continentalness: {
+			firstOctave: -9,
+			amplitudes: [1, 1, 2, 2, 2, 1, 1, 1, 1]
+		}
+	},
+  structures: {
+    stronghold: {
+      distance: 32,
+      spread: 3,
+      count: 128
+    },
+    structures: DefaultStructureSettings,
   }
 }
 export let NoiseSettingsPresets: (node: INode) => INode
@@ -94,6 +222,13 @@ type MinMaxConfig = {
 }
 export let FloatProvider: (config?: MinMaxConfig) => INode
 export let IntProvider: (config?: MinMaxConfig) => INode
+
+type InclusiveRangeConfig = {
+  integer?: boolean
+  min?: number
+  max?: number
+}
+export let InclusiveRange: (config?: InclusiveRangeConfig) => INode
 
 export function initCommonSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
@@ -380,6 +515,23 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     }
   ))
 
+  InclusiveRange = (config?: MinMaxConfig) => ObjectNode({
+    min_inclusive: NumberNode(config),
+    max_inclusive: NumberNode(config)
+  }, { context: 'range' })
+
+  schemas.register('noise_parameters',Mod(ObjectNode({
+    firstOctave: NumberNode({ integer: true }),
+    amplitudes: ListNode(
+      NumberNode()
+    )
+  }, { context: 'noise_parameters' }), {
+    default: () => ({
+      firstOctave: -7,
+      amplitudes: [1, 1]
+    })
+  }))
+
   ConditionCases = (entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({
     'minecraft:alternative': {
       terms: ListNode(
@@ -637,228 +789,393 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     {
       'minecraft:overworld': DefaultNoiseSettings,
       'minecraft:nether': {
-        name: 'minecraft:nether',
         bedrock_roof_position: 0,
         bedrock_floor_position: 0,
         sea_level: 32,
-        disable_mob_generation: true,
         noise_caves_enabled: false,
-        aquifers_enabled: false,
         deepslate_enabled: false,
+        ore_veins_enabled: false,
+        noodle_caves_enabled: false,
+        disable_mob_generation: false,
+        aquifers_enabled: false,
+        default_block: {
+          Name: 'minecraft:netherrack'
+        },
+        default_fluid: {
+          Properties: {
+            level: '0'
+          },
+          Name: 'minecraft:lava'
+        },
         noise: {
           min_y: 0,
           height: 128,
-          density_factor: 0,
-          density_offset: 0.019921875,
-          simplex_surface_noise: false,
-          random_density_offset: false,
           size_horizontal: 1,
           size_vertical: 2,
-          sampling: {
-            xz_scale: 1,
-            y_scale: 3,
-            xz_factor: 80,
-            y_factor: 60
-          },
+          density_factor: 0,
+          density_offset: -0.030078125,
+          simplex_surface_noise: false,
+          use_legacy_random: true,
           top_slide: {
-            target: 120,
+            target: 0.9375,
             size: 3,
             offset: 0
           },
           bottom_slide: {
-            target: 320,
+            target: 2.5,
             size: 4,
             offset: -1
+          },
+          sampling: {
+            xz_scale: 1.0,
+            y_scale: 3.0,
+            xz_factor: 80.0,
+            y_factor: 60.0
           }
         },
-        default_block: {
-          Name: "minecraft:netherrack"
-        },
-        default_fluid: {
-          Name: "minecraft:lava",
-          Properties: {
-            level: "0"
+        octaves: {
+          erosion: {
+            firstOctave: -7,
+            amplitudes: [1, 1]
+          },
+          weirdness: {
+            firstOctave: -7,
+            amplitudes: [1, 1]
+          },
+          shift: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          temperature: {
+            firstOctave: -7,
+            amplitudes: [1, 1]
+          },
+          humidity: {
+            firstOctave: -7,
+            amplitudes: [1, 1]
+          },
+          continentalness: {
+            firstOctave: -7,
+            amplitudes: [1, 1]
           }
+        },
+        structures: {
+          structures: DefaultStructureSettings,
         }
       },
       'minecraft:end': {
-        name: 'minecraft:end',
-        bedrock_roof_position: -10,
-        bedrock_floor_position: -10,
+        bedrock_roof_position: -2147483648,
+        bedrock_floor_position: -2147483648,
         sea_level: 0,
-        disable_mob_generation: true,
         noise_caves_enabled: false,
-        aquifers_enabled: false,
         deepslate_enabled: false,
+        ore_veins_enabled: false,
+        noodle_caves_enabled: false,
+        disable_mob_generation: false,
+        aquifers_enabled: false,
+        default_block: {
+          Name: 'minecraft:end_stone'
+        },
+        default_fluid: {
+          Name: 'minecraft:air'
+        },
         noise: {
           min_y: 0,
           height: 128,
-          density_factor: 0,
-          density_offset: 0,
-          simplex_surface_noise: true,
-          random_density_offset: false,
-          island_noise_override: true,
           size_horizontal: 2,
           size_vertical: 1,
-          sampling: {
-            xz_scale: 2,
-            y_scale: 1,
-            xz_factor: 80,
-            y_factor: 160
-          },
+          density_factor: 0,
+          density_offset: 0,
+          island_noise_override: true,
+          simplex_surface_noise: true,
+          use_legacy_random: true,
           top_slide: {
-            target: -3000,
+            target: -23.4375,
             size: 64,
             offset: -46
           },
           bottom_slide: {
-            target: -30,
+            target: -0.234375,
             size: 7,
             offset: 1
+          },
+          sampling: {
+            xz_scale: 2.0,
+            y_scale: 1.0,
+            xz_factor: 80.0,
+            y_factor: 160.0
           }
         },
-        default_block: {
-          Name: "minecraft:end_stone"
+        octaves: {
+          erosion: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          weirdness: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          shift: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          temperature: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          humidity: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          continentalness: {
+            firstOctave: 0,
+            amplitudes: [0]
+          }
         },
-        default_fluid: {
-          Name: "minecraft:air"
+        structures: {
+          structures: DefaultStructureSettings
         }
       },
       'minecraft:amplified': {
-        name: 'minecraft:amplified',
-        bedrock_roof_position: -10,
+        bedrock_roof_position: -2147483648,
         bedrock_floor_position: 0,
         sea_level: 63,
-        disable_mob_generation: false,
         noise_caves_enabled: true,
-        aquifers_enabled: true,
         deepslate_enabled: true,
+        ore_veins_enabled: true,
+        noodle_caves_enabled: true,
+        disable_mob_generation: false,
+        aquifers_enabled: true,
+        default_block: {
+          Name: 'minecraft:stone'
+        },
+        default_fluid: {
+          Properties: {
+            level: '0'
+          },
+          Name: 'minecraft:water'
+        },
         noise: {
-          min_y: 0,
-          height: 256,
-          density_factor: 1,
-          density_offset: -0.46875,
-          simplex_surface_noise: true,
-          random_density_offset: true,
-          amplified: true,
+          min_y: -64,
+          height: 384,
           size_horizontal: 1,
           size_vertical: 2,
-          sampling: {
-            xz_scale: 1,
-            y_scale: 1,
-            xz_factor: 80,
-            y_factor: 160
-          },
+          density_factor: 1,
+          density_offset: -0.51875,
+          random_density_offset: true,
+          simplex_surface_noise: true,
+          amplified: true,
           top_slide: {
-            target: -10,
+            target: -0.078125,
+            size: 2,
+            offset: 8
+          },
+          bottom_slide: {
+            target: 0.1171875,
             size: 3,
             offset: 0
           },
-          bottom_slide: {
-            target: -30,
-            size: 0,
-            offset: 0
+          sampling: {
+            xz_scale: 0.9999999814507745,
+            y_scale: 0.9999999814507745,
+            xz_factor: 80,
+            y_factor: 160
           }
         },
-        default_block: {
-          Name: "minecraft:stone"
-        },
-        default_fluid: {
-          Name: "minecraft:water",
-          Properties: {
-            level: "0"
+        octaves: {
+          erosion: {
+            firstOctave: -9,
+            amplitudes: [1, 1, 0, 1, 1]
+          },
+          weirdness: {
+            firstOctave: -7,
+            amplitudes: [1, 2, 1, 0, 0, 0]
+          },
+          shift: {
+            firstOctave: -3,
+            amplitudes: [1, 1, 1, 0]
+          },
+          temperature: {
+            firstOctave: -9,
+            amplitudes: [1.5, 0, 1, 0, 0, 0]
+          },
+          humidity: {
+            firstOctave: -7,
+            amplitudes: [1, 1, 0, 0, 0, 0]
+          },
+          continentalness: {
+            firstOctave: -9,
+            amplitudes: [1, 1, 2, 2, 2, 1, 1, 1, 1]
           }
-        }
+        },
+        structures: {
+          stronghold: {
+            distance: 32,
+            spread: 3,
+            count: 128
+          },
+          structures: DefaultStructureSettings,
+        },
       },
       'minecraft:caves': {
-        name: 'minecraft:caves',
         bedrock_roof_position: 0,
         bedrock_floor_position: 0,
         sea_level: 32,
-        disable_mob_generation: true,
         noise_caves_enabled: false,
-        aquifers_enabled: false,
         deepslate_enabled: false,
+        ore_veins_enabled: false,
+        noodle_caves_enabled: false,
+        disable_mob_generation: false,
+        aquifers_enabled: false,
+        default_block: {
+          Name: 'minecraft:stone'
+        },
+        default_fluid: {
+          Properties: {
+            level: '0'
+          },
+          Name: 'minecraft:water'
+        },
         noise: {
           min_y: 0,
           height: 128,
-          density_factor: 0,
-          density_offset: 0.019921875,
-          simplex_surface_noise: false,
-          random_density_offset: false,
           size_horizontal: 1,
           size_vertical: 2,
-          sampling: {
-            xz_scale: 1,
-            y_scale: 3,
-            xz_factor: 80,
-            y_factor: 60
-          },
+          density_factor: 0,
+          density_offset: -0.030078125,
+          simplex_surface_noise: false,
+          use_legacy_random: true,
           top_slide: {
-            target: 120,
+            target: 0.9375,
             size: 3,
             offset: 0
           },
           bottom_slide: {
-            target: 320,
+            target: 2.5,
             size: 4,
             offset: -1
+          },
+          sampling: {
+            xz_scale: 1.0,
+            y_scale: 3.0,
+            xz_factor: 80.0,
+            y_factor: 60.0
           }
         },
-        default_block: {
-          Name: "minecraft:stone"
-        },
-        default_fluid: {
-          Name: "minecraft:water",
-          Properties: {
-            level: "0"
+        octaves: {
+          erosion: {
+            firstOctave: -7,
+            amplitudes: [1, 1]
+          },
+          weirdness: {
+            firstOctave: -7,
+            amplitudes: [1, 1]
+          },
+          shift: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          temperature: {
+            firstOctave: -7,
+            amplitudes: [1, 1]
+          },
+          humidity: {
+            firstOctave: -7,
+            amplitudes: [1, 1]
+          },
+          continentalness: {
+            firstOctave: -7,
+            amplitudes: [1, 1]
           }
+        },
+        structures: {
+          stronghold: {
+            distance: 32,
+            spread: 3,
+            count: 128
+          },
+          structures: DefaultStructureSettings,
         }
       },
       'minecraft:floating_islands': {
-        name: 'minecraft:floating_islands',
-        bedrock_roof_position: -10,
-        bedrock_floor_position: -10,
+        bedrock_roof_position: -2147483648,
+        bedrock_floor_position: -2147483648,
         sea_level: 0,
-        disable_mob_generation: true,
         noise_caves_enabled: false,
-        aquifers_enabled: false,
         deepslate_enabled: false,
+        ore_veins_enabled: false,
+        noodle_caves_enabled: false,
+        disable_mob_generation: false,
+        aquifers_enabled: false,
+        default_block: {
+          Name: 'minecraft:stone'
+        },
+        default_fluid: {
+          Properties: {
+            level: '0'
+          },
+          Name: 'minecraft:water'
+        },
         noise: {
           min_y: 0,
           height: 128,
-          density_factor: 0,
-          density_offset: 0,
-          simplex_surface_noise: true,
-          random_density_offset: false,
-          island_noise_override: true,
           size_horizontal: 2,
           size_vertical: 1,
-          sampling: {
-            xz_scale: 2,
-            y_scale: 1,
-            xz_factor: 80,
-            y_factor: 160
-          },
+          density_factor: 0,
+          density_offset: 0,
+          island_noise_override: true,
+          simplex_surface_noise: true,
+          use_legacy_random: true,
           top_slide: {
-            target: -3000,
+            target: -23.4375,
             size: 64,
             offset: -46
           },
           bottom_slide: {
-            target: -30,
+            target: -0.234375,
             size: 7,
             offset: 1
+          },
+          sampling: {
+            xz_scale: 2.0,
+            y_scale: 1.0,
+            xz_factor: 80.0,
+            y_factor: 160.0
           }
         },
-        default_block: {
-          Name: "minecraft:stone"
-        },
-        default_fluid: {
-          Name: "minecraft:water",
-          Properties: {
-            level: "0"
+        octaves: {
+          erosion: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          weirdness: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          shift: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          temperature: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          humidity: {
+            firstOctave: 0,
+            amplitudes: [0]
+          },
+          continentalness: {
+            firstOctave: 0,
+            amplitudes: [0]
           }
+        },
+        structures: {
+          stronghold: {
+            distance: 32,
+            spread: 3,
+            count: 128
+          },
+          structures: DefaultStructureSettings,
         }
       }
     }

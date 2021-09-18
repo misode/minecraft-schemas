@@ -12,16 +12,13 @@ import {
   CollectionRegistry,
   Opt,
   INode,
+  ChoiceNode,
 } from '@mcschema/core'
 import { DimensionTypePresets, NoiseSettingsPresets } from './Common'
 
 export function initDimensionSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
-
-  const NoPreset = (node: INode) => Mod(node, {
-    enabled: path => path.push('preset').get() === undefined
-  })
 
   schemas.register('dimension', Mod(ObjectNode({
     type: DimensionTypePresets(Reference('dimension_type')),
@@ -40,19 +37,15 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
                 biome: StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })
               },
               'minecraft:multi_noise': {
-                seed: NumberNode({ integer: true }),
-                preset: Opt(StringNode({ enum: ['nether'] })),
-                altitude_noise: NoPreset(Reference('generator_biome_noise')),
-                temperature_noise: NoPreset(Reference('generator_biome_noise')),
-                humidity_noise: NoPreset(Reference('generator_biome_noise')),
-                weirdness_noise: NoPreset(Reference('generator_biome_noise')),
-                biomes: NoPreset(Mod(ListNode(
+                preset: Opt(StringNode({ validator: 'resource', params: { pool: ['minecraft:overworld', 'minecraft:nether'] } })),
+                biomes: Mod(ListNode(
                   Reference('generator_biome')
                 ), {
+                  enabled: path => path.push('preset').get() === undefined,
                   default: () => [{
                     biome: 'minecraft:plains'
                   }]
-                }))
+                })
               },
               'minecraft:checkerboard': {
                 scale: Opt(NumberNode({ integer: true, min: 0, max: 62 })),
@@ -62,11 +55,6 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
               },
               'minecraft:the_end': {
                 seed: NumberNode({ integer: true })
-              },
-              'minecraft:vanilla_layered': {
-                seed: NumberNode({ integer: true }),
-                large_biomes: Opt(BooleanNode()),
-                legacy_biome_init_layer: Opt(BooleanNode())
               }
             }
           }, { category: 'predicate', disableSwitchContext: true })
@@ -102,14 +90,32 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
     }}
   }))
 
+  const ClimateParameter = ChoiceNode([
+    {
+      type: 'number',
+      node: NumberNode({ min: -2, max: 2 }),
+      change: (v: any) => v[0] ?? 0
+    },
+    {
+      type: 'list',
+      node: ListNode(
+        NumberNode({ min: -2, max: 2 }),
+        { minLength: 2, maxLength: 2 },
+      ),
+      change: (v: any) => [v ?? 0, v ?? 0]
+    }
+  ])
+
   schemas.register('generator_biome', Mod(ObjectNode({
     biome: StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } }),
     parameters: ObjectNode({
-      altitude: NumberNode(),
-      temperature: NumberNode(),
-      humidity: NumberNode(),
-      weirdness: NumberNode(),
-      offset: NumberNode()
+      temperature: ClimateParameter,
+      humidity: ClimateParameter,
+      continentalness: ClimateParameter,
+      erosion: ClimateParameter,
+      weirdness: ClimateParameter,
+      depth: ClimateParameter,
+      offset: NumberNode({ min: 0, max: 1 })
     })
   }, { context: 'generator_biome' }), {
     default: () => ({
@@ -121,18 +127,6 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
         weirdness: 0,
         offset: 0
       }
-    })
-  }))
-
-  schemas.register('generator_biome_noise',Mod(ObjectNode({
-    firstOctave: NumberNode({ integer: true }),
-    amplitudes: ListNode(
-      NumberNode()
-    )
-  }, { context: 'generator_biome_noise' }), {
-    default: () => ({
-      firstOctave: -7,
-      amplitudes: [1, 1]
     })
   }))
 }

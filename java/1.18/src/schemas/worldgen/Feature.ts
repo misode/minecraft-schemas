@@ -472,7 +472,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   const NoiseProvider: NodeChildren = {
     seed: NumberNode({ integer: true }),
     noise: Reference('noise_parameters'),
-    scale: NumberNode({ min: Number.MIN_VALUE })
+    scale: Mod(NumberNode({ min: Number.MIN_VALUE }), { default: () => 1 })
   }
 
   schemas.register('block_state_provider', Mod(ObjectNode({
@@ -483,7 +483,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         ...NoiseProvider,
         variety: InclusiveRange({ integer: true, min: 1, max: 64 }),
         slow_noise: Reference('noise_parameters'),
-        slow_scale: NumberNode({ min: Number.MIN_VALUE }),
+        slow_scale: Mod(NumberNode({ min: Number.MIN_VALUE }), { default: () => 1 }),
         states: ListNode(
           Reference('block_state')
         )

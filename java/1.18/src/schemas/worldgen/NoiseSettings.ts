@@ -50,16 +50,8 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
         xz_factor: NumberNode(),
         y_factor: NumberNode()
       }),
-      bottom_slide: ObjectNode({
-        target: NumberNode({ integer: true }),
-        size: NumberNode({ integer: true, min: 0 }),
-        offset: NumberNode({ integer: true })
-      }),
-      top_slide: ObjectNode({
-        target: NumberNode({ integer: true }),
-        size: NumberNode({ integer: true, min: 0 }),
-        offset: NumberNode({ integer: true })
-      })
+      bottom_slide: Reference('noise_slider'),
+      top_slide: Reference('noise_slider')
     }),
     octaves: ObjectNode({
       temperature: Reference('noise_parameters'),
@@ -86,6 +78,12 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       return value
     }
   })))
+
+  schemas.register('noise_slider', ObjectNode({
+    target: NumberNode(),
+    size: NumberNode({ integer: true, min: 0 }),
+    offset: NumberNode({ integer: true })
+  }))
 
   schemas.register('generator_structures', ObjectNode({
     stronghold: Opt(ObjectNode({

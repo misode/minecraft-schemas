@@ -92,7 +92,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         .map(quoteString)
     },
     validate(path, value, errors, options) {
-      if (options.loose && (typeof value !== 'object' || value === null)) {
+      if (options.loose && typeof value !== 'object') {
         value = this.default()
       }
       if (typeof value !== 'object' || value === null) {

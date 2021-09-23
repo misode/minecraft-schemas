@@ -130,6 +130,8 @@ export class DataModel {
       node = node[e]
     })
 
+    if (node === null) return
+
     if (value === undefined || (typeof value === 'number' && isNaN(value))) {
       if (typeof path.last() === 'number') {
         node.splice(path.last(), 1)

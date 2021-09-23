@@ -9,6 +9,7 @@ export type ModelListener = {
 
 type DataModelOptions = {
   historyMax?: number
+  verbose?: boolean
 }
 
 /**
@@ -23,6 +24,7 @@ export class DataModel {
   history: string[]
   historyIndex: number
   historyMax: number
+  verbose: boolean
 
   /**
    * @param schema node to use as schema for this model
@@ -35,6 +37,7 @@ export class DataModel {
     this.history = [JSON.stringify(this.data)]
     this.historyIndex = 0
     this.historyMax = options?.historyMax ?? 50
+    this.verbose = options?.verbose ?? false
   }
 
   /**
@@ -139,7 +142,9 @@ export class DataModel {
 
     if (silent) return
 
-    console.log('Set', path.toString(), JSON.stringify(value))
+    if (this.verbose) {
+      console.log('Set', path.toString(), JSON.stringify(value))
+    }
     this.validate(true)
     this.invalidate()
   }

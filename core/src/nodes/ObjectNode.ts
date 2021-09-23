@@ -92,7 +92,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
         .map(quoteString)
     },
     validate(path, value, errors, options) {
-      if (options.loose && typeof value !== 'object') {
+      if (options.loose && (typeof value !== 'object' || value === null)) {
         value = this.default()
       }
       if (typeof value !== 'object') {
@@ -121,7 +121,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
              && (newValue === undefined
               || (Array.isArray(newValue) && newValue.length === 0)
               || (newValue.constructor === Object && Object.keys(newValue).length === 0))) {
-            res[k] = undefined
+            delete res[k]
           } else {
             res[k] = newValue
             path.getModel()!.set(path.push(k), newValue, true)

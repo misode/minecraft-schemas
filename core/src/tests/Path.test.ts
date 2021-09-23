@@ -5,8 +5,8 @@ import { DataModel } from '../model/DataModel'
 import { StringNode } from '../nodes/StringNode'
 import { ObjectNode } from '../nodes/ObjectNode'
 
-describe('Path Tests', () => {
-  describe('last() Tests', () => {
+describe('Path', () => {
+  describe('last', () => {
     it('should return the last element', () => {
       const path = new Path().push('foo');
       assert(path.last() === 'foo')
@@ -18,7 +18,7 @@ describe('Path Tests', () => {
       assert(path.last() === undefined)
     })
   })
-  describe('Model Tests', () => {
+  describe('Model', () => {
     it('should attach the model', () => {
       const path = new Path()
       const schema = StringNode()

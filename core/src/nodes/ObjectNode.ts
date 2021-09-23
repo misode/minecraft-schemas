@@ -95,7 +95,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       if (options.loose && (typeof value !== 'object' || value === null)) {
         value = this.default()
       }
-      if (typeof value !== 'object') {
+      if (typeof value !== 'object' || value === null) {
         errors.add(path, 'error.expected_object')
         return value
       }

@@ -9,6 +9,7 @@ import {
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  ListNode,
 } from '@mcschema/core'
 import { IntProvider } from '../Common'
 
@@ -25,6 +26,18 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
     config: ObjectNode({
       [Switch]: ['pop', { push: 'type' }],
       [Case]: {
+        'minecraft:block_filter': {
+          offset: Reference('block_pos'),
+          allowed: Opt(ListNode(
+            StringNode({ validator: 'resource', params: { pool: 'block' } })
+          )),
+          disallowed: Opt(ListNode(
+            StringNode({ validator: 'resource', params: { pool: 'block' } })
+          ))
+        },
+        'minecraft:block_survives_filter': {
+          state: Reference('block_state')
+        },
         'minecraft:carving_mask': {
           step: StringNode({ enum: 'generation_step' })
         },

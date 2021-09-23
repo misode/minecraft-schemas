@@ -43,7 +43,6 @@ export function initCarverSchemas(schemas: SchemaRegistry, collections: Collecti
       y: Reference('height_provider'),
       yScale: FloatProvider(),
       lava_level: Reference('vertical_anchor'),
-      aquifers_enabled: BooleanNode(),
       debug_settings: Opt(ObjectNode({
         debug_mode: Opt(BooleanNode()),
         air_state: Opt(Reference('block_state')),

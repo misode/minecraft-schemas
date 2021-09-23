@@ -337,7 +337,6 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           force_dirt: Opt(BooleanNode()),
           minimum_size: Reference('feature_size'),
           dirt_provider: Reference('block_state_provider'),
-          sapling_provider: Reference('block_state_provider'),
           trunk_provider: Reference('block_state_provider'),
           foliage_provider: Reference('block_state_provider'),
           trunk_placer: ObjectNode({
@@ -479,7 +478,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/block_state_provider_type' } }),
     [Switch]: [{ push: 'type' }],
     [Case]: {
-      'minecraft:dual_noise_2d_provider': {
+      'minecraft:dual_noise_provider': {
         ...NoiseProvider,
         variety: InclusiveRange({ integer: true, min: 1, max: 64 }),
         slow_noise: Reference('noise_parameters'),
@@ -488,7 +487,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           Reference('block_state')
         )
       },
-      'minecraft:noise_2d_cutoff_provider': {
+      'minecraft:noise_threshold_provider': {
         ...NoiseProvider,
         threshold: NumberNode({ min: -1, max: 1 }),
         high_chance: NumberNode({ min: 0, max: 1 }),
@@ -500,7 +499,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           Reference('block_state')
         )
       },
-      'minecraft:noise_2d_provider': {
+      'minecraft:noise_provider': {
         ...NoiseProvider,
         states: ListNode(
           Reference('block_state')

@@ -6,6 +6,7 @@ import { JsonUpdate } from '../JsonUpdate'
 
 export type NodeOptions = {
   loose?: boolean
+  wrapLists?: boolean
 }
 
 export interface INode<T = any> {

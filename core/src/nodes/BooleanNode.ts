@@ -1,3 +1,4 @@
+import { DataModel } from '../model/DataModel'
 import { INode, Base } from './Node'
 
 export type BooleanHookParams = {}
@@ -13,7 +14,7 @@ export const BooleanNode = (): INode<boolean> => {
     suggest: () => ['false', 'true'],
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'boolean') {
-        value = this.default()
+        value = options.wrapLists ? DataModel.wrapLists(this.default()) : this.default()
       }
       if (typeof value !== 'boolean' || value === undefined) {
         errors.add(path, 'error.expected_boolean')

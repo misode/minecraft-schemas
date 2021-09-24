@@ -2,6 +2,7 @@ import { INode, Base } from './Node'
 import { Registry } from '../Registries'
 import { ValidationOption } from '../ValidationOption'
 import { quoteString } from '../utils'
+import { DataModel } from '../model/DataModel'
 
 export type EnumOption = {
   enum: string | string[]
@@ -44,7 +45,7 @@ export const StringNode = (collections?: Registry<string[]>, config?: Validation
     default: () => '',
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'string') {
-        value = this.default() || undefined
+        value = (options.wrapLists ? DataModel.wrapLists(this.default()) : this.default()) || undefined
       }
       if (typeof value !== 'string') {
         errors.add(path, 'error.expected_string')

@@ -2,6 +2,7 @@ import { INode, Base } from './Node'
 import { Path, ModelPath, RelativePath, relativePath } from '../model/Path'
 import { Errors } from '../model/Errors'
 import { quoteString } from '../utils'
+import { DataModel } from '../model/DataModel'
 
 export const Switch = Symbol('switch')
 export const Case = Symbol('case')
@@ -93,7 +94,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
     },
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'object') {
-        value = this.default()
+        value = options.wrapLists ? DataModel.wrapLists(this.default()) : this.default()
       }
       if (typeof value !== 'object' || value === null) {
         errors.add(path, 'error.expected_object')

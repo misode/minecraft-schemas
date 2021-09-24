@@ -1,3 +1,4 @@
+import { DataModel } from '../model/DataModel'
 import { INode, Base } from './Node'
 
 type ListNodeConfig = {
@@ -31,7 +32,7 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
     },
     validate(path, value, errors, options) {
       if (options.loose && !Array.isArray(value)) {
-        value = this.default()
+        value = options.wrapLists ? DataModel.wrapLists(this.default()) : this.default()
       }
       if (!Array.isArray(value)) {
         errors.add(path, 'error.expected_list')
@@ -47,9 +48,10 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
       } else if (value.length > max) {
         errors.add(path, 'error.invalid_list_range.larger', value.length, max)
       }
-      return value.map((obj, index) =>
-        children.validate(path.push(index), obj, errors, options)
-      )
+      return value.map((obj, index) => {
+        const newObj = children.validate(path.push(index), options.wrapLists ? obj.node : obj, errors, options)
+        return options.wrapLists ? { node: newObj, id: obj.id } : newObj
+      })
     },
     hook(hook, path, ...args) {
       return ((hook.list ?? hook.base) as any).call(hook, { node: this, children, config: config ?? {} }, path, ...args)

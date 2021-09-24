@@ -1,6 +1,7 @@
 import { Path } from './Path'
 import { INode } from '../nodes/Node'
 import { Errors } from './Errors'
+import { hexId } from '../utils'
 
 export type ModelListener = {
   invalidated?(model: DataModel): void
@@ -10,6 +11,8 @@ export type ModelListener = {
 type DataModelOptions = {
   historyMax?: number
   verbose?: boolean
+  wrapLists?: boolean
+  initialData?: any
 }
 
 /**
@@ -25,19 +28,23 @@ export class DataModel {
   historyIndex: number
   historyMax: number
   verbose: boolean
+  wrapLists: boolean
 
   /**
    * @param schema node to use as schema for this model
    */
   constructor(schema: INode, options?: DataModelOptions) {
+    this.historyMax = options?.historyMax ?? 50
+    this.verbose = options?.verbose ?? false
+    this.wrapLists = options?.wrapLists ?? false
+
     this.schema = schema
-    this.data = schema.default()
+    const data = options?.initialData ?? schema.default()
+    this.data = this.wrapLists ? DataModel.wrapLists(data) : data
     this.listeners = []
     this.errors = new Errors()
     this.history = [JSON.stringify(this.data)]
     this.historyIndex = 0
-    this.historyMax = options?.historyMax ?? 50
-    this.verbose = options?.verbose ?? false
   }
 
   /**
@@ -106,7 +113,11 @@ export class DataModel {
     let node = this.data;
     path.forEach(e => {
       if (node === undefined) return node
-      node = node[e]
+      if (this.wrapLists && typeof e === 'number') {
+        node = node[e].node
+      } else {
+        node = node[e]
+      }
     })
     return node
   }
@@ -125,9 +136,17 @@ export class DataModel {
     let node = this.data;
     path.pop().forEach(e => {
       if (node[e] === undefined || typeof node[e] === 'string' || typeof node[e] === 'number') {
-        node[e] = {}
+        if (this.wrapLists && typeof e === 'number') {
+          node[e] = { node: {}, id: hexId() }
+        } else {
+          node[e] = {}
+        }
       }
-      node = node[e]
+      if (this.wrapLists && typeof e === 'number') {
+        node = node[e].node
+      } else {
+        node = node[e]
+      }
     })
 
     if (node === null) return
@@ -138,6 +157,8 @@ export class DataModel {
       } else {
         delete node[path.last()]
       }
+    } else if (this.wrapLists && typeof path.last() === 'number') {
+      node[path.last()] = { node: value, id: hexId() }
     } else {
       node[path.last()] = value
     }
@@ -181,7 +202,7 @@ export class DataModel {
   validate(loose?: boolean) {
     const path = new Path().withModel(this)
     this.errors.clear()
-    this.data = this.schema.validate(path, this.data, this.errors, { loose }) ?? {}
+    this.data = this.schema.validate(path, this.data, this.errors, { loose, wrapLists: this.wrapLists }) ?? {}
   }
 
   error(path: Path, error: string, ...params: any) {
@@ -190,5 +211,22 @@ export class DataModel {
     this.listeners.forEach(l => {
       if (l.errors) l.errors(tempErrors)
     })
+  }
+
+  static wrapLists(value: any): any {
+    if (Array.isArray(value)) {
+      return value.map(v => ({
+        node: this.wrapLists(v),
+        id: hexId(),
+      }))
+    } else if (typeof value === 'object' && value !== null) {
+      const res: Record<string, any> = {}
+      Object.entries(value).map(([k, v]) => {
+          res[k] = this.wrapLists(v)
+        })
+      return res
+    } else {
+      return value
+    }
   }
 }

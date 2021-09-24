@@ -1,3 +1,4 @@
+import { DataModel } from '../model/DataModel'
 import { INode, Base } from './Node'
 
 type NumberNodeConfig = {
@@ -31,7 +32,7 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
     default: () => min > 0 ? min : 0,
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'number') {
-        value = this.default()
+        value = options.wrapLists ? DataModel.wrapLists(this.default()) : this.default()
       }
       if (typeof value !== 'number') {
         errors.add(path, 'error.expected_number')

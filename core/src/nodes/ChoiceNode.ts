@@ -1,13 +1,15 @@
 import { INode } from './Node'
 import { ListNode } from './ListNode'
 import { SwitchNode } from './SwitchNode'
+import { NodeOptions } from './Node'
+import { DataModel } from '../model/DataModel'
 
 type Choice = {
   type: string
   priority?: number,
   node: INode<any>
   match?: (value: any) => boolean
-  change?: (old: any) => any
+  change?: (old: any, options?: NodeOptions) => any
 }
 
 type ChoiceNodeConfig = {
@@ -62,7 +64,7 @@ const XOrList = (x: string): ((node: INode<any>, config?: ChoiceNodeConfig) => I
     {
       type: x,
       node,
-      change: v => v[0] ?? node.default()
+      change: (v, options) => v[0] ?? (options?.wrapLists ? DataModel.wrapLists(node.default()) : node.default())
     },
     {
       type: 'list',

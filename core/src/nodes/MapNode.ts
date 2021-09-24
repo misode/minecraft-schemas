@@ -1,6 +1,7 @@
 import { INode, Base } from './Node'
 import { ValidationOption } from '../ValidationOption'
 import { quoteString } from '../utils'
+import { DataModel } from '../model/DataModel'
 
 export type IMap = {
   [name: string]: any
@@ -38,7 +39,7 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
     suggest: (path) => keys.suggest(path, ''),
     validate(path, value, errors, options) {
       if (options.loose && typeof value !== 'object') {
-        value = this.default()
+        value = options.wrapLists ? DataModel.wrapLists(this.default()) : this.default()
       }
       if (value === null || typeof value !== 'object') {
         errors.add(path, 'error.expected_object')

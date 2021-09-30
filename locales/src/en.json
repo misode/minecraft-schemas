@@ -1546,6 +1546,7 @@
   "worldgen/feature.bamboo": "Bamboo",
   "worldgen/feature.basalt_columns": "Basalt columns",
   "worldgen/feature.basalt_pillar": "Basalt pillar",
+  "worldgen/feature.block_column": "Block column",
   "worldgen/feature.block_pile": "Block pile",
   "worldgen/feature.blue_ice": "Blue ice",
   "worldgen/feature.bonus_chest": "Bonus chest",

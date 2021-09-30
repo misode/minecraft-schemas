@@ -528,7 +528,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   }))
 
   schemas.register('block_predicate_worldgen', Mod(ObjectNode({
-    type: StringNode(),
+    type: StringNode({ validator: 'resource', params: { pool: 'block_predicate_type' } }),
     [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:all_of': {

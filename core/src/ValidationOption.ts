@@ -239,6 +239,7 @@ export type ResourceType =
   | '$worldgen/template_pool'
   | 'attribute'
   | 'block'
+  | 'block_predicate_type'
   | 'custom_stat'
   | 'enchantment'
   | 'entity_type'

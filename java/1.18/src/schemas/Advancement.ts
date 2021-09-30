@@ -196,7 +196,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           ))
         },
         'minecraft:levitation': {
-          distance: Reference('distance_predicate'),
+          distance: Opt(Reference('distance_predicate')),
           duration: Reference('int_bounds')
         },
         'minecraft:lightning_strike': {
@@ -208,7 +208,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         },
         'minecraft:nether_travel': {
           start_position: Opt(Reference('location_predicate')),
-          distance: Reference('distance_predicate'),
+          distance: Opt(Reference('distance_predicate')),
         },
         'minecraft:placed_block': {
           block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
@@ -267,7 +267,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:used_ender_eye': {
-          distance: Reference('float_bounds')
+          distance: Opt(Reference('float_bounds'))
         },
         'minecraft:used_totem': {
           item: Opt(Reference('item_predicate'))
@@ -280,7 +280,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:voluntary_exile': {
-          location: Reference('location_predicate')
+          location: Opt(Reference('location_predicate'))
         }
       }
     }, { context: 'criterion' }))

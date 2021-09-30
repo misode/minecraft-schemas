@@ -466,6 +466,14 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           max_inclusive: NumberNode({ integer: true, ...config }),
           source: Reference('int_provider')
         })
+      },
+      'minecraft:weighted_list': {
+        distribution: ListNode(
+          ObjectNode({
+            weight: NumberNode({ integer: true }),
+            data: Reference('int_provider'),
+          })
+        )
       }
     }
   )
@@ -720,6 +728,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       },
       'minecraft:set_nbt': {
         tag: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item' } } })
+      },
+      'minecraft:set_potion': {
+        id: StringNode({ validator: 'resource', params: { pool: 'potion' } })
       },
       'minecraft:set_stew_effect': {
         effects: Opt(ListNode(

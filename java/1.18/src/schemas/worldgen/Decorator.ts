@@ -27,13 +27,7 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
       [Switch]: ['pop', { push: 'type' }],
       [Case]: {
         'minecraft:block_filter': {
-          offset: Reference('block_pos'),
-          allowed: Opt(ListNode(
-            StringNode({ validator: 'resource', params: { pool: 'block' } })
-          )),
-          disallowed: Opt(ListNode(
-            StringNode({ validator: 'resource', params: { pool: 'block' } })
-          ))
+          predicate: Reference('block_predicate_worldgen')
         },
         'minecraft:block_survives_filter': {
           state: Reference('block_state')
@@ -69,10 +63,12 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
           outer: Reference('configured_decorator'),
           inner: Reference('configured_decorator')
         },
-        'minecraft:heightmap': {
-          heightmap: StringNode({ enum: 'heightmap_type' })
+        'minecraft:environment_scan': {
+          direction_of_search: StringNode({ enum: ['up', 'down'] }),
+          max_steps: NumberNode({ integer: true, min: 1, max: 32 }),
+          target_condition: Reference('block_predicate_worldgen')
         },
-        'minecraft:heightmap_spread_double': {
+        'minecraft:heightmap': {
           heightmap: StringNode({ enum: 'heightmap_type' })
         },
         'minecraft:lava_lake': {

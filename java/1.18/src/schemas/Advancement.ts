@@ -156,6 +156,10 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           entity: EntityPredicate,
           killing_blow: Opt(Reference('damage_source_predicate'))
         },
+        'minecraft:fall_from_height': {
+          start_position: Opt(Reference('location_predicate')),
+          distance: Opt(Reference('distance_predicate'))
+        },
         'minecraft:filled_bucket': {
           item: Opt(Reference('item_predicate'))
         },
@@ -203,9 +207,8 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           location: Opt(Reference('location_predicate'))
         },
         'minecraft:nether_travel': {
+          start_position: Opt(Reference('location_predicate')),
           distance: Reference('distance_predicate'),
-          entered: Opt(Reference('location_predicate')),
-          exited: Opt(Reference('location_predicate'))
         },
         'minecraft:placed_block': {
           block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
@@ -234,6 +237,10 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         },
         'minecraft:recipe_unlocked': {
           recipe: StringNode({ validator: 'resource', params: { pool: '$recipe' } })
+        },
+        'minecraft:ride_entity_in_lava': {
+          start_position: Opt(Reference('location_predicate')),
+          distance: Opt(Reference('distance_predicate'))
         },
         'minecraft:slept_in_bed': {
           location: Opt(Reference('location_predicate'))

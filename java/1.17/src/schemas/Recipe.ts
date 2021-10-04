@@ -77,7 +77,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
         result: Reference('recipe_result')
       }
     }
-  }, { context: 'recipe' }), {
+  }, { context: 'recipe', disableSwitchContext: true }), {
     default: () => ({
       type: 'minecraft:crafting_shaped'
     })

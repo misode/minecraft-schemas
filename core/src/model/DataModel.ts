@@ -229,4 +229,18 @@ export class DataModel {
       return value
     }
   }
+
+  static unwrapLists(value: any): any {
+    if (Array.isArray(value)) {
+      return value.map(v => this.unwrapLists(v.node))
+    } else if (typeof value === 'object' && value !== null) {
+      const res: Record<string, any> = {}
+      Object.entries(value).map(([k, v]) => {
+        res[k] = this.unwrapLists(v)
+      })
+      return res
+    } else {
+      return value
+    }
+  }
 }

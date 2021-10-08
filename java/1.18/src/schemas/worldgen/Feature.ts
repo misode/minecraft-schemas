@@ -100,7 +100,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           prioritize_tip: BooleanNode(),
           layers: ListNode(
             ObjectNode({
-              height: NumberNode({ integer: true, min: 0 }),
+              height: IntProvider({ min: 0 }),
               state: Reference('block_state_provider')
             })
           )

@@ -38,13 +38,6 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     tries: Opt(NumberNode({ integer: true, min: 1 })),
     xz_spread: Opt(NumberNode({ integer: true, min: 0 })),
     y_spread: Opt(NumberNode({ integer: true, min: 0 })),
-    only_in_air: BooleanNode(),
-    allowed_on: ListNode(
-      Reference('block_state')
-    ),
-    disallowed_on: ListNode(
-      Reference('block_state')
-    ),
     feature: Feature,
   }
 
@@ -103,7 +96,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         },
         'minecraft:block_column': {
           direction: StringNode({ enum: ['up', 'down', 'north', 'east', 'south', 'west'] }),
-          allow_water: BooleanNode(),
+          allowed_placement: Reference('block_predicate_worldgen'),
           prioritize_tip: BooleanNode(),
           layers: ListNode(
             ObjectNode({
@@ -542,24 +535,28 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         )
       },
       'minecraft:matching_blocks': {
-        offset: Reference('block_pos'),
+        offset: Opt(Reference('block_pos')),
         blocks: ListNode(
           StringNode({ validator: 'resource', params: { pool: 'block' } })
         )
       },
       'minecraft:matching_fluids': {
-        offset: Reference('block_pos'),
+        offset: Opt(Reference('block_pos')),
         fluids: ListNode(
           StringNode({ validator: 'resource', params: { pool: 'fluid' } })
         )
       },
       'minecraft:not': {
         predicate: Reference('block_predicate_worldgen')
+      },
+      'minecraft:would_survive': {
+        offset: Opt(Reference('block_pos')),
+        state: Reference('block_state')
       }
     }
   }, { context: 'block_predicate' }), {
     default: () => ({
-      type: 'minecraft:matching_blocks'
+      type: 'minecraft:true'
     })
   }))
 }

@@ -29,9 +29,6 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
         'minecraft:block_filter': {
           predicate: Reference('block_predicate_worldgen')
         },
-        'minecraft:block_survives_filter': {
-          state: Reference('block_state')
-        },
         'minecraft:carving_mask': {
           step: StringNode({ enum: 'generation_step' })
         },

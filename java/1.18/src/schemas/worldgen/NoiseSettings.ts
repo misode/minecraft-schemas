@@ -30,6 +30,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
     aquifers_enabled: BooleanNode(),
     deepslate_enabled: BooleanNode(),
     ore_veins_enabled: BooleanNode(),
+    legacy_random_source: BooleanNode(),
     default_block: Reference('block_state'),
     default_fluid: Reference('block_state'),
     noise: ObjectNode({

@@ -101,7 +101,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           layers: ListNode(
             ObjectNode({
               height: IntProvider({ min: 0 }),
-              state: Reference('block_state_provider')
+              provider: Reference('block_state_provider')
             })
           )
         },

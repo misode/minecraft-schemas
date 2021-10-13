@@ -15,7 +15,6 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
   const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('biome', Mod(ObjectNode({
-    surface_builder: StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_surface_builder' } }),
     temperature: NumberNode(),
     downfall: NumberNode(),
     precipitation: StringNode({ enum: ['none', 'rain', 'snow'] }),
@@ -105,11 +104,10 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       Mod(ListNode(
         StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_feature' } })
       ), { category: () => 'predicate' }),
-      { maxLength: 10 }
+      { maxLength: 11 }
     )
   }, { context: 'biome' }), {
     default: () => ({
-      surface_builder: 'minecraft:grass',
       temperature: 0.8,
       downfall: 0.4,
       precipitation: 'rain',

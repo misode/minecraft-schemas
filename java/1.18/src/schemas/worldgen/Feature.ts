@@ -70,7 +70,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   }
 
   const VegetationPatchConfig: NodeChildren = {
-    surface: StringNode({ enum: ['floor', 'ceiling']}),
+    surface: StringNode({ enum: 'cave_surface' }),
     depth: IntProvider({ min: 1, max: 128 }),
     vertical_range: NumberNode({ integer: true, min: 1, max: 256 }),
     extra_bottom_block_chance: NumberNode({ min: 0, max: 1}),
@@ -410,15 +410,18 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         feature: {
           type: 'minecraft:tree',
           config: {
-            max_water_depth: 0,
             ignore_vines: true,
-            minimum_size: {},
+            minimum_size: {
+              type: 'minecraft:two_layers_feature_size'
+            },
             trunk_placer: {
+              type: 'minecraft:straight_trunk_placer',
               base_height: 5,
               height_rand_a: 2,
               height_rand_b: 0
             },
             foliage_placer: {
+              type: 'minecraft:blob_foliage_placer',
               radius: 2,
               offset: 0,
               height: 3

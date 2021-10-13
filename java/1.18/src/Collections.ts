@@ -329,4 +329,9 @@ export function initCollections(collections: CollectionRegistry) {
     'red',
     'black'
   ])
+
+  collections.register('cave_surface', [
+    'floor',
+    'ceiling'
+  ])
 }

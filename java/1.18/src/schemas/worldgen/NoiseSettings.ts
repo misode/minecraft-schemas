@@ -40,8 +40,6 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       density_offset: NumberNode(),
       size_horizontal: NumberNode({ integer: true }),
       size_vertical: NumberNode({ integer: true }),
-      simplex_surface_noise: BooleanNode(),
-      random_density_offset: Opt(BooleanNode()),
       island_noise_override: Opt(BooleanNode()),
       amplified: Opt(BooleanNode()),
       use_legacy_random: Opt(BooleanNode()),
@@ -62,6 +60,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       weirdness: Reference('noise_parameters'),
       shift: Reference('noise_parameters'),
     }),
+    surface_rule: Reference('material_rule'),
     structures: Reference('generator_structures')
   }, { context: 'noise_settings' }), node => ({
     default: () => DefaultNoiseSettings,

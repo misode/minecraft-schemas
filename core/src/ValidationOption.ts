@@ -270,6 +270,8 @@ export type ResourceType =
   | 'worldgen/feature'
   | 'worldgen/feature_size_type'
   | 'worldgen/foliage_placer_type'
+  | 'worldgen/material_rule'
+  | 'worldgen/material_condition'
   | 'worldgen/structure_feature'
   | 'worldgen/structure_pool_element'
   | 'worldgen/structure_processor'

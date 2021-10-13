@@ -160,8 +160,6 @@ export const DefaultNoiseSettings = {
 		size_vertical: 2,
 		density_factor: 1,
 		density_offset: -0.51875,
-		random_density_offset: true,
-		simplex_surface_noise: true,
 		top_slide: {
 			target: -0.078125,
 			size: 2,
@@ -205,6 +203,10 @@ export const DefaultNoiseSettings = {
 			amplitudes: [1, 1, 2, 2, 2, 1, 1, 1, 1]
 		}
 	},
+  surface_rule: {
+    type: 'minecraft:sequence',
+    sequence: []
+  },
   structures: {
     stronghold: {
       distance: 32,
@@ -825,8 +827,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           size_vertical: 2,
           density_factor: 0,
           density_offset: -0.030078125,
-          simplex_surface_noise: false,
-          use_legacy_random: true,
           top_slide: {
             target: 0.9375,
             size: 3,
@@ -870,6 +870,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             amplitudes: [1, 1]
           }
         },
+        surface_rule: {
+          type: 'minecraft:sequence',
+          sequence: []
+        },
         structures: {
           structures: DefaultStructureSettings,
         }
@@ -898,8 +902,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           density_factor: 0,
           density_offset: 0,
           island_noise_override: true,
-          simplex_surface_noise: true,
-          use_legacy_random: true,
           top_slide: {
             target: -23.4375,
             size: 64,
@@ -943,6 +945,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             amplitudes: [0]
           }
         },
+        surface_rule: {
+          type: 'minecraft:sequence',
+          sequence: []
+        },
         structures: {
           structures: DefaultStructureSettings
         }
@@ -973,8 +979,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           size_vertical: 2,
           density_factor: 1,
           density_offset: -0.51875,
-          random_density_offset: true,
-          simplex_surface_noise: true,
           amplified: true,
           top_slide: {
             target: -0.078125,
@@ -1019,6 +1023,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             amplitudes: [1, 1, 2, 2, 2, 1, 1, 1, 1]
           }
         },
+        surface_rule: {
+          type: 'minecraft:sequence',
+          sequence: []
+        },
         structures: {
           stronghold: {
             distance: 32,
@@ -1054,8 +1062,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           size_vertical: 2,
           density_factor: 0,
           density_offset: -0.030078125,
-          simplex_surface_noise: false,
-          use_legacy_random: true,
           top_slide: {
             target: 0.9375,
             size: 3,
@@ -1099,6 +1105,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             amplitudes: [1, 1]
           }
         },
+        surface_rule: {
+          type: 'minecraft:sequence',
+          sequence: []
+        },
         structures: {
           stronghold: {
             distance: 32,
@@ -1135,8 +1145,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           density_factor: 0,
           density_offset: 0,
           island_noise_override: true,
-          simplex_surface_noise: true,
-          use_legacy_random: true,
           top_slide: {
             target: -23.4375,
             size: 64,
@@ -1179,6 +1187,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             firstOctave: 0,
             amplitudes: [0]
           }
+        },
+        surface_rule: {
+          type: 'minecraft:sequence',
+          sequence: []
         },
         structures: {
           stronghold: {

@@ -42,7 +42,6 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       size_vertical: NumberNode({ integer: true }),
       island_noise_override: Opt(BooleanNode()),
       amplified: Opt(BooleanNode()),
-      use_legacy_random: Opt(BooleanNode()),
       sampling: ObjectNode({
         xz_scale: NumberNode(),
         y_scale: NumberNode(),
@@ -51,14 +50,6 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       }),
       bottom_slide: Reference('noise_slider'),
       top_slide: Reference('noise_slider')
-    }),
-    octaves: ObjectNode({
-      temperature: Reference('noise_parameters'),
-      humidity: Reference('noise_parameters'),
-      continentalness: Reference('noise_parameters'),
-      erosion: Reference('noise_parameters'),
-      weirdness: Reference('noise_parameters'),
-      shift: Reference('noise_parameters'),
     }),
     surface_rule: Reference('material_rule'),
     structures: Reference('generator_structures')

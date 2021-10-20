@@ -234,6 +234,7 @@ export type ResourceType =
   | '$worldgen/configured_feature'
   | '$worldgen/configured_structure_feature'
   | '$worldgen/configured_surface_builder'
+  | '$worldgen/noise'
   | '$worldgen/noise_settings'
   | '$worldgen/processor_list'
   | '$worldgen/template_pool'

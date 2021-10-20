@@ -52,8 +52,7 @@ export function initSurfaceRuleSchemas(schemas: SchemaRegistry, collections: Col
         )
       },
       'minecraft:noise_threshold': {
-        name: StringNode(),
-        noise: Reference('noise_parameters'),
+        noise: StringNode({ validator: 'resource', params: { pool: '$worldgen/noise' } }),
         min_threshold: NumberNode(),
         max_threshold: NumberNode()
       },

@@ -10,6 +10,7 @@ import {
   CollectionRegistry,
   Opt,
   ListNode,
+  BooleanNode,
 } from '@mcschema/core'
 import { IntProvider } from '../Common'
 
@@ -34,7 +35,8 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
         },
         'minecraft:cave_surface': {
           surface: StringNode({ enum: ['floor', 'ceiling']}),
-          floor_to_ceiling_search_range: NumberNode({ integer: true })
+          floor_to_ceiling_search_range: NumberNode({ integer: true }),
+          allow_water: BooleanNode(),
         },
         'minecraft:chance': {
           chance: NumberNode({ integer: true, min: 0 })
@@ -73,6 +75,10 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
         },
         'minecraft:range': {
           height: Reference('height_provider')
+        },
+        'minecraft:scatter': {
+          xz_spread: IntProvider({ min: -16, max: 16 }),
+          y_spread: IntProvider({ min: -16, max: 16 }),
         },
         'minecraft:surface_relative_threshold': {
           heightmap: StringNode({ enum: 'heightmap_type' }),

@@ -254,6 +254,12 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         },
         'minecraft:no_bonemeal_flower': RandomPatchConfig,
         'minecraft:ore': OreConfig,
+        'minecraft:pointed_dripstone': {
+          chance_of_taller_dripstone: Opt(NumberNode({ min: 0, max: 1 })),
+          chance_of_directional_spread: Opt(NumberNode({ min: 0, max: 1 })),
+          chance_of_spread_radius2: Opt(NumberNode({ min: 0, max: 1 })),
+          chance_of_spread_radius3: Opt(NumberNode({ min: 0, max: 1 })),
+        },
         'minecraft:random_patch': RandomPatchConfig,
         'minecraft:random_boolean_selector': {
           feature_false: Feature,
@@ -301,12 +307,6 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           features: ListNode(
             Feature
           )
-        },
-        'minecraft:small_dripstone': {
-          max_placements: Opt(NumberNode({ integer: true, min: 0, max: 100 })),
-          empty_space_search_radius: Opt(NumberNode({ integer: true, min: 0, max: 20 })),
-          max_offset_from_origin: Opt(NumberNode({ integer: true, min: 0, max: 20 })),
-          chance_of_taller_dripstone: Opt(NumberNode({ min: 0, max: 1 }))
         },
         'minecraft:spring_feature': {
           state: Reference('fluid_state'),

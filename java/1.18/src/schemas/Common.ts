@@ -177,32 +177,6 @@ export const DefaultNoiseSettings = {
 			y_factor: 160
 		}
 	},
-	octaves: {
-		erosion: {
-			firstOctave: -9,
-			amplitudes: [1, 1, 0, 1, 1]
-		},
-		weirdness: {
-			firstOctave: -7,
-			amplitudes: [1, 2, 1, 0, 0, 0]
-		},
-		shift: {
-			firstOctave: -3,
-			amplitudes: [1, 1, 1, 0]
-		},
-		temperature: {
-			firstOctave: -9,
-			amplitudes: [1.5, 0, 1, 0, 0, 0]
-		},
-		humidity: {
-			firstOctave: -7,
-			amplitudes: [1, 1, 0, 0, 0, 0]
-		},
-		continentalness: {
-			firstOctave: -9,
-			amplitudes: [1, 1, 2, 2, 2, 1, 1, 1, 1]
-		}
-	},
   surface_rule: {
     type: 'minecraft:sequence',
     sequence: []
@@ -467,6 +441,14 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           min_inclusive: NumberNode({ integer: true, ...config }),
           max_inclusive: NumberNode({ integer: true, ...config }),
           source: Reference('int_provider')
+        })
+      },
+      'minecraft:clamped_normal': {
+        value: ObjectNode({
+          min_inclusive: NumberNode({ integer: true, ...config }),
+          max_inclusive: NumberNode({ integer: true, ...config }),
+          mean: NumberNode(),
+          deviation: NumberNode()
         })
       },
       'minecraft:weighted_list': {
@@ -844,32 +826,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             y_factor: 60.0
           }
         },
-        octaves: {
-          erosion: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          weirdness: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          shift: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          temperature: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          humidity: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          continentalness: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          }
-        },
         surface_rule: {
           type: 'minecraft:sequence',
           sequence: []
@@ -917,32 +873,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             y_scale: 1.0,
             xz_factor: 80.0,
             y_factor: 160.0
-          }
-        },
-        octaves: {
-          erosion: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          weirdness: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          shift: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          temperature: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          humidity: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          continentalness: {
-            firstOctave: 0,
-            amplitudes: [0]
           }
         },
         surface_rule: {
@@ -995,32 +925,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             y_scale: 0.9999999814507745,
             xz_factor: 80,
             y_factor: 160
-          }
-        },
-        octaves: {
-          erosion: {
-            firstOctave: -9,
-            amplitudes: [1, 1, 0, 1, 1]
-          },
-          weirdness: {
-            firstOctave: -7,
-            amplitudes: [1, 2, 1, 0, 0, 0]
-          },
-          shift: {
-            firstOctave: -3,
-            amplitudes: [1, 1, 1, 0]
-          },
-          temperature: {
-            firstOctave: -9,
-            amplitudes: [1.5, 0, 1, 0, 0, 0]
-          },
-          humidity: {
-            firstOctave: -7,
-            amplitudes: [1, 1, 0, 0, 0, 0]
-          },
-          continentalness: {
-            firstOctave: -9,
-            amplitudes: [1, 1, 2, 2, 2, 1, 1, 1, 1]
           }
         },
         surface_rule: {
@@ -1079,32 +983,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             y_factor: 60.0
           }
         },
-        octaves: {
-          erosion: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          weirdness: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          shift: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          temperature: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          humidity: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          },
-          continentalness: {
-            firstOctave: -7,
-            amplitudes: [1, 1]
-          }
-        },
         surface_rule: {
           type: 'minecraft:sequence',
           sequence: []
@@ -1160,32 +1038,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             y_scale: 1.0,
             xz_factor: 80.0,
             y_factor: 160.0
-          }
-        },
-        octaves: {
-          erosion: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          weirdness: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          shift: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          temperature: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          humidity: {
-            firstOctave: 0,
-            amplitudes: [0]
-          },
-          continentalness: {
-            firstOctave: 0,
-            amplitudes: [0]
           }
         },
         surface_rule: {

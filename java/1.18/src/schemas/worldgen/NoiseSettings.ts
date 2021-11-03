@@ -23,14 +23,11 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
   const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('noise_settings', Mod(ObjectNode({
-    bedrock_roof_position: NumberNode({ integer: true }),
-    bedrock_floor_position: NumberNode({ integer: true }),
     sea_level: NumberNode({ integer: true }),
     disable_mob_generation: BooleanNode(),
     noise_caves_enabled: BooleanNode(),
     noodle_caves_enabled: BooleanNode(),
     aquifers_enabled: BooleanNode(),
-    deepslate_enabled: BooleanNode(),
     ore_veins_enabled: BooleanNode(),
     legacy_random_source: BooleanNode(),
     default_block: Reference('block_state'),
@@ -38,12 +35,11 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
     noise: ObjectNode({
       min_y: NumberNode({ integer: true, min: -2048, max: 2047 }),
       height: NumberNode({ integer: true, min: 0, max: 4096 }),
-      density_factor: NumberNode(),
-      density_offset: NumberNode(),
       size_horizontal: NumberNode({ integer: true }),
       size_vertical: NumberNode({ integer: true }),
       island_noise_override: Opt(BooleanNode()),
       amplified: Opt(BooleanNode()),
+      large_biomes: Opt(BooleanNode()),
       sampling: ObjectNode({
         xz_scale: NumberNode(),
         y_scale: NumberNode(),

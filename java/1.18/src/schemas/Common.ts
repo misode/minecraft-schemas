@@ -175,7 +175,12 @@ export const DefaultNoiseSettings = {
 			y_scale: 0.9999999814507745,
 			xz_factor: 80,
 			y_factor: 160
-		}
+		},
+    terrain_shaper: {
+      offset: 0,
+      factor: 0,
+      jaggedness: 0
+    }
 	},
   surface_rule: {
     type: 'minecraft:sequence',
@@ -824,6 +829,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             y_scale: 3.0,
             xz_factor: 80.0,
             y_factor: 60.0
+          },
+          terrain_shaper: {
+            offset: 0,
+            factor: 0,
+            jaggedness: 0
           }
         },
         surface_rule: {
@@ -873,6 +883,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             y_scale: 1.0,
             xz_factor: 80.0,
             y_factor: 160.0
+          },
+          terrain_shaper: {
+            offset: 0,
+            factor: 1,
+            jaggedness: 0
           }
         },
         surface_rule: {
@@ -925,6 +940,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             y_scale: 0.9999999814507745,
             xz_factor: 80,
             y_factor: 160
+          },
+          terrain_shaper: {
+            offset: 0,
+            factor: 0,
+            jaggedness: 0
           }
         },
         surface_rule: {
@@ -981,6 +1001,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             y_scale: 3.0,
             xz_factor: 80.0,
             y_factor: 60.0
+          },
+          terrain_shaper: {
+            offset: 0,
+            factor: 0,
+            jaggedness: 0
           }
         },
         surface_rule: {
@@ -1038,6 +1063,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             y_scale: 1.0,
             xz_factor: 80.0,
             y_factor: 160.0
+          },
+          terrain_shaper: {
+            offset: 0,
+            factor: 1,
+            jaggedness: 0
           }
         },
         surface_rule: {

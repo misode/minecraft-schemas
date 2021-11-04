@@ -334,4 +334,53 @@ export function initCollections(collections: CollectionRegistry) {
     'floor',
     'ceiling'
   ])
+
+  collections.register('direction', [
+    'down',
+    'up',
+    'north',
+    'east',
+    'south',
+    'west'
+  ])
+
+  collections.register('axis', [
+    'x',
+    'y',
+    'z'
+  ])
+
+  collections.register('display_position', [
+    'firstperson_righthand',
+    'firstperson_lefthand',
+    'thirdperson_righthand',
+    'thirdperson_lefthand',
+    'gui',
+    'head',
+    'ground',
+    'fixed'
+  ])
+
+  collections.register('gui_light', [
+    'front',
+    'side'
+  ])
+
+  collections.register('item_model_predicates', [
+    'angle',
+    'blocking',
+    'broken',
+    'cast',
+    'charged',
+    'cooldown',
+    'custom_model_data',
+    'damage',
+    'damaged',
+    'firework',
+    'lefthanded',
+    'pull',
+    'pulling',
+    'throwing',
+    'time'
+  ])
 }

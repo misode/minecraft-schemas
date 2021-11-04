@@ -1,3 +1,4 @@
+import { Mod } from '..'
 import { DataModel } from '../model/DataModel'
 import { INode, Base } from './Node'
 
@@ -52,3 +53,18 @@ export const NumberNode = (config?: NumberNodeConfig): INode<number> => {
     }
   }
 }
+
+type NumberEnumConfig = {
+  values: number[],
+  integer?: boolean,
+}
+export const NumberEnum = ({ integer, values }: NumberEnumConfig): INode<number> =>
+  Mod(NumberNode({ integer }), node => ({
+    validate: (path, value, errors, options) => {
+      value = node.validate(path, value, errors, options)
+      if (!values.includes(value)) {
+        errors.add(path, 'error.invalid_number_enum', values.join(', '))
+      }
+      return value
+    }
+  }))

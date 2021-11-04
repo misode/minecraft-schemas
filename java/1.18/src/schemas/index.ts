@@ -1,5 +1,6 @@
 import { CollectionRegistry, SchemaRegistry } from '@mcschema/core'
 import { initAdvancementSchemas } from './Advancement'
+import { initAssetsSchemas } from './assets'
 import { initCommonSchemas } from './Common'
 import { initConditionSchemas } from './Condition'
 import { initDimensionSchemas } from './Dimension'
@@ -18,6 +19,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     // `Common.ts` is the only file that has exports. It should be initialized first. 
     initCommonSchemas(schemas, collections)
     initAdvancementSchemas(schemas, collections)
+    initAssetsSchemas(schemas, collections)
     initConditionSchemas(schemas, collections)
     initDimensionTypeSchemas(schemas, collections)
     initDimensionSchemas(schemas, collections)

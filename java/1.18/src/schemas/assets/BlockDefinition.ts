@@ -85,6 +85,7 @@ export function initBlockDefinitionSchemas(schemas: SchemaRegistry, collections:
     {
       type: 'object',
       priority: -1,
+      match: () => true,
       node: MapNode(
         StringNode(),
         StringNode()
@@ -99,7 +100,7 @@ export function initBlockDefinitionSchemas(schemas: SchemaRegistry, collections:
           Reference('multipart_condition')
         )
       }),
-      change: (v: any) => ({ OR: [v] })
+      change: (v: any) => ({ OR: [v ?? {}] })
     }
   ], { context: 'multipart_condition' }))
 }

@@ -114,7 +114,7 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
       const activeKeys = Object.keys(activeFields)
       const forcedKeys = activeKeys.filter(k => !activeFields[k].optional())
       const keys = new Set([...forcedKeys, ...Object.keys(value)])
-      let res: any = {}
+      const res: any = {}
       keys.forEach(k => {
         if (activeKeys.includes(k)) {
           if (!activeFields[k].enabled(path)) return
@@ -132,6 +132,9 @@ export const ObjectNode = (fields: FilteredChildren, config?: ObjectNodeConfig):
           res[k] = value[k]
         }
       })
+      for (const a of Object.getOwnPropertySymbols(value)) {
+        res[a] = value[a]
+      }
       return res
     },
     hook(hook, path, ...args) {

@@ -48,10 +48,14 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
       } else if (value.length > max) {
         errors.add(path, 'error.invalid_list_range.larger', value.length, max)
       }
-      return value.map((obj, index) => {
+      const res = value.map((obj, index) => {
         const newObj = children.validate(path.push(index), options.wrapLists ? obj.node : obj, errors, options)
         return options.wrapLists ? { node: newObj, id: obj.id } : newObj
       })
+      for (const a of Object.getOwnPropertySymbols(value)) {
+        res[a as any] = value[a as any]
+      }
+      return res
     },
     hook(hook, path, ...args) {
       return ((hook.list ?? hook.base) as any).call(hook, { node: this, children, config: config ?? {} }, path, ...args)

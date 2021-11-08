@@ -215,15 +215,22 @@ export class DataModel {
 
   static wrapLists(value: any): any {
     if (Array.isArray(value)) {
-      return value.map(v => ({
+      const res = value.map(v => ({
         node: this.wrapLists(v),
         id: hexId(),
       }))
+      for (const a of Object.getOwnPropertySymbols(value)) {
+        res[a as any] = value[a as any]
+      }
+      return res
     } else if (typeof value === 'object' && value !== null) {
       const res: Record<string, any> = {}
       Object.entries(value).map(([k, v]) => {
           res[k] = this.wrapLists(v)
         })
+      for (const a of Object.getOwnPropertySymbols(value)) {
+        res[a as any] = value[a]
+      }
       return res
     } else {
       return value
@@ -232,12 +239,19 @@ export class DataModel {
 
   static unwrapLists(value: any): any {
     if (Array.isArray(value)) {
-      return value.map(v => this.unwrapLists(v.node))
+      const res = value.map(v => this.unwrapLists(v.node))
+      for (const a of Object.getOwnPropertySymbols(value)) {
+        res[a as any] = value[a as any]
+      }
+      return res
     } else if (typeof value === 'object' && value !== null) {
       const res: Record<string, any> = {}
       Object.entries(value).map(([k, v]) => {
         res[k] = this.unwrapLists(v)
       })
+      for (const a of Object.getOwnPropertySymbols(value)) {
+        res[a as any] = value[a]
+      }
       return res
     } else {
       return value

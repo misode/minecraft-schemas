@@ -45,11 +45,14 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
         errors.add(path, 'error.expected_object')
         return value
       }
-      let res: any = {}
+      const res: any = {}
       Object.keys(value).forEach(k => {
         keys.validate(path, k, errors, options)
         res[k] = children.validate(path.push(k), value[k], errors, options)
       })
+      for (const a of Object.getOwnPropertySymbols(value)) {
+        res[a] = value[a]
+      }
       return res
     },
     validationOption(path) {

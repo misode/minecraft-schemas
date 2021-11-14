@@ -60,8 +60,10 @@ export function initSurfaceRuleSchemas(schemas: SchemaRegistry, collections: Col
         invert: Reference('material_condition')
       },
       'minecraft:stone_depth': {
+        offset: NumberNode({ integer: true }),
         surface_type: StringNode({ enum: 'cave_surface' }),
-        add_run_depth: BooleanNode()
+        add_surface_depth: BooleanNode(),
+        add_surface_secondary_depth: BooleanNode(),
       },
       'minecraft:vertical_gradient': {
         random_name: StringNode(),
@@ -70,12 +72,12 @@ export function initSurfaceRuleSchemas(schemas: SchemaRegistry, collections: Col
       },
       'minecraft:water': {
         offset: NumberNode({ integer: true }),
-        run_depth_multiplier: NumberNode({ integer: true, min: -20, max: 20 }),
+        surface_depth_multiplier: NumberNode({ integer: true, min: -20, max: 20 }),
         add_stone_depth: BooleanNode()
       },
       'minecraft:y_above': {
         anchor: Reference('vertical_anchor'),
-        run_depth_multiplier: NumberNode({ integer: true, min: -20, max: 20 }),
+        surface_depth_multiplier: NumberNode({ integer: true, min: -20, max: 20 }),
         add_stone_depth: BooleanNode()
       }
     }

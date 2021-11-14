@@ -23,7 +23,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  const Feature = ChoiceNode([
+  const ConfiguredFeature = ChoiceNode([
     {
       type: 'string',
       node: StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_feature' } })
@@ -34,11 +34,22 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     }
   ], { choiceContext: 'feature' })
 
+  const PlacedFeature = ChoiceNode([
+    {
+      type: 'string',
+      node: StringNode({ validator: 'resource', params: { pool: '$worldgen/placed_feature' } })
+    },
+    {
+      type: 'object',
+      node: Reference('placed_feature')
+    }
+  ], { choiceContext: 'feature' })
+
   const RandomPatchConfig: NodeChildren = {
     tries: Opt(NumberNode({ integer: true, min: 1 })),
     xz_spread: Opt(NumberNode({ integer: true, min: 0 })),
     y_spread: Opt(NumberNode({ integer: true, min: 0 })),
-    feature: Feature,
+    feature: PlacedFeature,
   }
 
   const DiskConfig: NodeChildren = {
@@ -79,7 +90,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     xz_radius: IntProvider(),
     replaceable: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
     ground_state: Reference('block_state_provider'),
-    vegetation_feature: Feature
+    vegetation_feature: ConfiguredFeature
   }
 
   schemas.register('configured_feature', Mod(ObjectNode({
@@ -107,14 +118,6 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         },
         'minecraft:block_pile': {
           state_provider: Reference('block_state_provider')
-        },
-        'minecraft:decorated': {
-          decorator: Reference('configured_decorator'),
-          feature: Feature
-        },
-        'minecraft:decorated_flower': {
-          decorator: Reference('configured_decorator'),
-          feature: Feature
         },
         'minecraft:delta_feature': {
           contents: Reference('block_state'),
@@ -231,7 +234,8 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           state: Reference('block_state')
         },
         'minecraft:lake': {
-          state: Reference('block_state')
+          fluid: Reference('block_state_provider'),
+          barrier: Reference('block_state_provider')
         },
         'minecraft:large_dripstone': {
           floor_to_ceiling_search_range: Opt(NumberNode({ integer: true, min: 1, max: 512 })),
@@ -245,7 +249,9 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           min_bluntness_for_wind: NumberNode({ min: 0, max: 5 })
         },
         'minecraft:nether_forest_vegetation': {
-          state_provider: Reference('block_state_provider')
+          state_provider: Reference('block_state_provider'),
+          spread_width: NumberNode({ integer: true, min: 1 }),
+          spread_height: NumberNode({ integer: true, min: 1 })
         },
         'minecraft:netherrack_replace_blobs': {
           state: Reference('block_state'),
@@ -262,17 +268,17 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         },
         'minecraft:random_patch': RandomPatchConfig,
         'minecraft:random_boolean_selector': {
-          feature_false: Feature,
-          feature_true: Feature
+          feature_false: ConfiguredFeature,
+          feature_true: ConfiguredFeature
         },
         'minecraft:random_selector': {
           features: ListNode(
             ObjectNode({
               chance: NumberNode({ min: 0, max: 1 }),
-              feature: Feature
+              feature: PlacedFeature
             })
           ),
-          default: Feature
+          default: PlacedFeature
         },
         'minecraft:replace_single_block': {
           targets: ListNode(
@@ -291,7 +297,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           root_replaceable: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
           root_state_provider: Reference('block_state_provider'),
           hanging_root_state_provider: Reference('block_state_provider'),
-          feature: Feature
+          feature: PlacedFeature
         },
         'minecraft:scattered_ore': OreConfig,
         'minecraft:sea_pickle': {
@@ -305,7 +311,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         },
         'minecraft:simple_random_selector': {
           features: ListNode(
-            Feature
+            PlacedFeature
           )
         },
         'minecraft:spring_feature': {
@@ -388,6 +394,11 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
             }, { context: 'tree_decorator' })
           )
         },
+        'minecraft:twisting_vines': {
+          spread_width: NumberNode({ integer: true, min: 1 }),
+          spread_height: NumberNode({ integer: true, min: 1 }),
+          max_height: NumberNode({ integer: true, min: 1 }),
+        },
         'minecraft:underwater_magma': {
           floor_search_range: NumberNode({ integer: true, min: 0, max: 512 }),
           placement_radius_around_floor: NumberNode({ integer: true, min: 0, max: 64 }),
@@ -399,36 +410,48 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     }, { context: 'feature' })
   }, { context: 'feature' }), {
     default: () => ({
-      type: 'minecraft:decorated',
+      type: 'minecraft:tree',
       config: {
-        decorator: {
-          type: 'minecraft:count',
-          config: {
-            count: 4
-          }
+        minimum_size: {
+          type: 'minecraft:two_layers_feature_size'
         },
-        feature: {
-          type: 'minecraft:tree',
-          config: {
-            ignore_vines: true,
-            minimum_size: {
-              type: 'minecraft:two_layers_feature_size'
-            },
-            trunk_placer: {
-              type: 'minecraft:straight_trunk_placer',
-              base_height: 5,
-              height_rand_a: 2,
-              height_rand_b: 0
-            },
-            foliage_placer: {
-              type: 'minecraft:blob_foliage_placer',
-              radius: 2,
-              offset: 0,
-              height: 3
-            }
-          }
+        trunk_placer: {
+          type: 'minecraft:straight_trunk_placer',
+          base_height: 5,
+          height_rand_a: 2,
+          height_rand_b: 0
+        },
+        foliage_placer: {
+          type: 'minecraft:blob_foliage_placer',
+          radius: 2,
+          offset: 0,
+          height: 3
         }
       }
+    })
+  }))
+
+  schemas.register('placed_feature', Mod(ObjectNode({
+    feature: ConfiguredFeature,
+    placement: ListNode(
+      Reference('decorator')
+    )
+  }, { context: 'placed_feature' }), {
+    default: () => ({
+      feature: 'minecraft:oak',
+      placement: [
+        {
+          type: 'minecraft:count',
+          count: 4
+        },
+        {
+          type: 'minecraft:in_square'
+        },
+        {
+          type: 'minecraft:heightmap',
+          heightmap: 'OCEAN_FLOOR'
+        }
+      ]
     })
   }))
 
@@ -537,6 +560,12 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           Reference('block_predicate_worldgen')
         )
       },
+      'minecraft:inside_world_bounds': {
+        offset: Opt(ListNode(
+          NumberNode({ integer: true, min: -16, max: 16 }),
+          { minLength: 3, maxLength: 3 }
+        )),
+      },
       'minecraft:matching_blocks': {
         offset: Opt(Reference('block_pos')),
         blocks: ListNode(
@@ -544,7 +573,10 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         )
       },
       'minecraft:matching_fluids': {
-        offset: Opt(Reference('block_pos')),
+        offset: Opt(ListNode(
+          NumberNode({ integer: true, min: -16, max: 16 }),
+          { minLength: 3, maxLength: 3 }
+        )),
         fluids: ListNode(
           StringNode({ validator: 'resource', params: { pool: 'fluid' } })
         )
@@ -553,7 +585,10 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         predicate: Reference('block_predicate_worldgen')
       },
       'minecraft:would_survive': {
-        offset: Opt(Reference('block_pos')),
+        offset: Opt(ListNode(
+          NumberNode({ integer: true, min: -16, max: 16 }),
+          { minLength: 3, maxLength: 3 }
+        )),
         state: Reference('block_state')
       }
     }

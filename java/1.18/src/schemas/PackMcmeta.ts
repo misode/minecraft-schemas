@@ -7,7 +7,7 @@ import {
   CollectionRegistry,
 } from '@mcschema/core'
 
-const CURRENT_PACK_FORMAT = 7
+const CURRENT_PACK_FORMAT = 8
 
 export function initPackMcmetaSchemas(schemas: SchemaRegistry, _: CollectionRegistry) {
   const getSimpleString = (jsonText: any): string => jsonText instanceof Array ? getSimpleString(jsonText[0]) : jsonText?.text ?? jsonText?.toString() ?? ''

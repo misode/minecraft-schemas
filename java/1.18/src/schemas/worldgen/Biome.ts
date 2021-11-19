@@ -20,7 +20,6 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
     precipitation: StringNode({ enum: ['none', 'rain', 'snow'] }),
     temperature_modifier: Opt(StringNode({ enum: ['none', 'frozen'] })),
     category: StringNode({ enum: 'biome_category' }),
-    player_spawn_friendly: Opt(BooleanNode()),
     creature_spawn_probability: Opt(NumberNode({ min: 0, max: 1 })),
     effects: ObjectNode({
       sky_color: NumberNode({ color: true }),

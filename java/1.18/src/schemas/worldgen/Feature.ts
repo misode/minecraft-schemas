@@ -217,7 +217,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           can_place_on_ceiling: Opt(BooleanNode()),
           can_place_on_wall: Opt(BooleanNode()),
           can_be_placed_on: ListNode(
-            Reference('block_state')
+            StringNode({ validator: 'resource', params: { pool: 'block' } })
           )
         },
         'minecraft:huge_brown_mushroom': HugeMushroomConfig,

@@ -90,7 +90,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     xz_radius: IntProvider(),
     replaceable: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
     ground_state: Reference('block_state_provider'),
-    vegetation_feature: ConfiguredFeature
+    vegetation_feature: PlacedFeature
   }
 
   schemas.register('configured_feature', Mod(ObjectNode({
@@ -268,8 +268,8 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         },
         'minecraft:random_patch': RandomPatchConfig,
         'minecraft:random_boolean_selector': {
-          feature_false: ConfiguredFeature,
-          feature_true: ConfiguredFeature
+          feature_false: PlacedFeature,
+          feature_true: PlacedFeature
         },
         'minecraft:random_selector': {
           features: ListNode(
@@ -297,6 +297,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           root_replaceable: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
           root_state_provider: Reference('block_state_provider'),
           hanging_root_state_provider: Reference('block_state_provider'),
+          allowed_tree_position: Reference('block_predicate_worldgen'),
           feature: PlacedFeature
         },
         'minecraft:scattered_ore': OreConfig,
@@ -546,6 +547,13 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     })
   }))
 
+  const Offset: NodeChildren = {
+    offset: Opt(ListNode(
+      NumberNode({ integer: true, min: -16, max: 16 }),
+      { minLength: 3, maxLength: 3 }
+    ))
+  }
+
   schemas.register('block_predicate_worldgen', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'block_predicate_type' } }),
     [Switch]: [{ push: 'type' }],
@@ -560,23 +568,25 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           Reference('block_predicate_worldgen')
         )
       },
+      'minecraft:has_sturdy_face': {
+        ...Offset,
+        direction: StringNode({ enum: 'direction' })
+      },
       'minecraft:inside_world_bounds': {
-        offset: Opt(ListNode(
-          NumberNode({ integer: true, min: -16, max: 16 }),
-          { minLength: 3, maxLength: 3 }
-        )),
+        ...Offset,
+      },
+      'minecraft:matching_block_tag': {
+        ...Offset,
+        tag: StringNode({ validator: 'resource', params: { pool: '$tag/block' } })
       },
       'minecraft:matching_blocks': {
-        offset: Opt(Reference('block_pos')),
+        ...Offset,
         blocks: ListNode(
           StringNode({ validator: 'resource', params: { pool: 'block' } })
         )
       },
       'minecraft:matching_fluids': {
-        offset: Opt(ListNode(
-          NumberNode({ integer: true, min: -16, max: 16 }),
-          { minLength: 3, maxLength: 3 }
-        )),
+        ...Offset,
         fluids: ListNode(
           StringNode({ validator: 'resource', params: { pool: 'fluid' } })
         )
@@ -585,10 +595,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
         predicate: Reference('block_predicate_worldgen')
       },
       'minecraft:would_survive': {
-        offset: Opt(ListNode(
-          NumberNode({ integer: true, min: -16, max: 16 }),
-          { minLength: 3, maxLength: 3 }
-        )),
+        ...Offset,
         state: Reference('block_state')
       }
     }

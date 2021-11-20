@@ -681,6 +681,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         append: Opt(BooleanNode())
       },
       'minecraft:set_contents': {
+        type: StringNode({ validator: 'resource', params: { pool: 'block_entity_type' } }),
         entries: ListNode(
           Reference('loot_entry')
         )
@@ -701,6 +702,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         add: Opt(BooleanNode())
       },
       'minecraft:set_loot_table': {
+        type: StringNode({ validator: 'resource', params: { pool: 'block_entity_type' } }),
         name: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
         seed: Opt(NumberNode({ integer: true }))
       },

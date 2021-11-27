@@ -43,7 +43,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
       type: 'object',
       node: Reference('placed_feature')
     }
-  ], { choiceContext: 'feature' })
+  ], { choiceContext: 'placed_feature' })
 
   const RandomPatchConfig: NodeChildren = {
     tries: Opt(NumberNode({ integer: true, min: 1 })),

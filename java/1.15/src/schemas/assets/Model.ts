@@ -43,7 +43,7 @@ export function initModelSchemas(schemas: SchemaRegistry, collections: Collectio
 	], { choiceContext: 'texture' })
 
 	schemas.register('model', Mod(ObjectNode({
-		parent: StringNode({ validator: 'resource', params: { pool: '$model' } }),
+		parent: Opt(StringNode({ validator: 'resource', params: { pool: '$model' } })),
 		ambientocclusion: Opt(BooleanNode()),
 		gui_light: Opt(StringNode({ enum: 'gui_light' })),
 		textures: Opt(MapNode(

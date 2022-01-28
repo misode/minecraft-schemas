@@ -1,5 +1,6 @@
 import { CollectionRegistry, SchemaRegistry } from '@mcschema/core'
 import { initAdvancementSchemas } from './Advancement'
+import { initAssetsSchemas } from './assets'
 import { initCommonSchemas } from './Common'
 import { initConditionSchemas } from './Condition'
 import { initLootTableSchemas } from './LootTable'
@@ -14,6 +15,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initCommonSchemas(schemas, collections)
     initPredicatesSchemas(schemas, collections)
     initAdvancementSchemas(schemas, collections)
+    initAssetsSchemas(schemas, collections)
     initConditionSchemas(schemas, collections)
     initLootTableSchemas(schemas, collections)
     initPackMcmetaSchemas(schemas, collections)

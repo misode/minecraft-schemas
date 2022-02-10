@@ -162,6 +162,10 @@ type ResourceValidationOption = {
      */
     allowTag?: boolean,
     /**
+     * Whether only tag resource locations (starting with a hash symbol (`#`)) are allowed.
+     */
+    requireTag?: boolean,
+    /**
      * Whether resource locations not contained in `pool` are allowed.
      */
     allowUnknown?: boolean,
@@ -279,6 +283,7 @@ export type ResourceType =
   | 'worldgen/material_condition'
   | 'worldgen/placement_modifier_type'
   | 'worldgen/structure_feature'
+  | 'worldgen/structure_placement'
   | 'worldgen/structure_pool_element'
   | 'worldgen/structure_processor'
   | 'worldgen/surface_builder'

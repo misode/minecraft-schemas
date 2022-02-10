@@ -14,7 +14,7 @@ import {
   INode,
   ChoiceNode,
 } from '@mcschema/core'
-import { DimensionTypePresets, NoiseSettingsPresets } from './Common'
+import { DimensionTypePresets, NoiseSettingsPresets, Tag } from './Common'
 
 export function initDimensionSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
@@ -49,9 +49,7 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
               },
               'minecraft:checkerboard': {
                 scale: Opt(NumberNode({ integer: true, min: 0, max: 62 })),
-                biomes: ListNode(
-                  StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })
-                )
+                biomes: Tag({ resource: '$worldgen/biome' })
               },
               'minecraft:the_end': {
                 seed: NumberNode({ integer: true })

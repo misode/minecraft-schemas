@@ -10,6 +10,7 @@ import {
   CollectionRegistry,
   Opt,
 } from '@mcschema/core'
+import { Tag } from '../Common'
 
 export function initBiomeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
@@ -93,16 +94,12 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
     ),
     carvers: MapNode(
       StringNode({ enum: ['air', 'liquid'] }),
-      Mod(ListNode(
-        StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_carver' } })
-      ), {
+      Mod(Tag({ resource: '$worldgen/configured_carver', inlineSchema: 'configured_carver' }), {
         default: () => ['minecraft:cave']
       })
     ),
     features: ListNode(
-      Mod(ListNode(
-        StringNode({ validator: 'resource', params: { pool: '$worldgen/placed_feature' } })
-      ), { category: () => 'predicate' }),
+      Mod(Tag({ resource: '$worldgen/placed_feature', inlineSchema: 'placed_feature' }), { category: () => 'predicate' }),
       { maxLength: 11 }
     )
   }, { context: 'biome' }), {

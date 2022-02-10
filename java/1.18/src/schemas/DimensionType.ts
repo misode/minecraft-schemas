@@ -27,7 +27,7 @@ export function initDimensionTypeSchemas(schemas: SchemaRegistry, collections: C
     fixed_time: Opt(NumberNode({ integer: true })),
     logical_height: NumberNode({ integer: true, min: 0, max: 4096 }),
     effects: Opt(StringNode({ enum: ['minecraft:overworld', 'minecraft:the_nether', 'minecraft:the_end'] })),
-    infiniburn: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
+    infiniburn: StringNode({ validator: 'resource', params: { pool: 'block', requireTag: true } }),
     min_y: NumberNode({ integer: true, min: -2048, max: 2047 }),
     height: NumberNode({ integer: true, min: 0, max: 4096 })
   }, { context: 'dimension_type' }), node => ({

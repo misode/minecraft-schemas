@@ -14,7 +14,7 @@ import {
   CollectionRegistry,
   Opt,
 } from '@mcschema/core'
-import { FloatProvider, InclusiveRange, IntProvider } from '../Common'
+import { FloatProvider, InclusiveRange, IntProvider, Tag } from '../Common'
 import './Decorator'
 import './ProcessorList'
 import { Processors } from './ProcessorList'
@@ -88,7 +88,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     extra_edge_column_chance: NumberNode({ min: 0, max: 1}),
     vegetation_chance: NumberNode({ min: 0, max: 1}),
     xz_radius: IntProvider(),
-    replaceable: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
+    replaceable: StringNode({ validator: 'resource', params: { pool: 'block', requireTag: true } }),
     ground_state: Reference('block_state_provider'),
     vegetation_feature: PlacedFeature
   }
@@ -185,8 +185,8 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
             inner_placements: ListNode(
               Reference('block_state')
             ),
-            cannot_replace: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
-            invalid_blocks: StringNode({ validator: 'resource', params: { pool: '$tag/block' } })
+            cannot_replace: StringNode({ validator: 'resource', params: { pool: 'block', requireTag: true } }),
+            invalid_blocks: StringNode({ validator: 'resource', params: { pool: 'block', requireTag: true } })
           }),
           layers: ObjectNode({
             filling: Opt(NumberNode({ min: 0.01, max: 50 })),
@@ -216,9 +216,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           can_place_on_floor: Opt(BooleanNode()),
           can_place_on_ceiling: Opt(BooleanNode()),
           can_place_on_wall: Opt(BooleanNode()),
-          can_be_placed_on: ListNode(
-            StringNode({ validator: 'resource', params: { pool: 'block' } })
-          )
+          can_be_placed_on: Tag({ resource: 'block' })
         },
         'minecraft:huge_brown_mushroom': HugeMushroomConfig,
         'minecraft:huge_fungus': {
@@ -294,7 +292,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           hanging_roots_vertical_span: NumberNode({ integer: true, min: 0, max: 16 }),
           hanging_root_placement_attempts: NumberNode({ integer: true, min: 0, max: 256 }),
           allowed_vertical_water_for_tree: NumberNode({ integer: true, min: 1, max: 64 }),
-          root_replaceable: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
+          root_replaceable: StringNode({ validator: 'resource', params: { pool: 'block', requireTag: true } }),
           root_state_provider: Reference('block_state_provider'),
           hanging_root_state_provider: Reference('block_state_provider'),
           allowed_tree_position: Reference('block_predicate_worldgen'),
@@ -311,18 +309,14 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           to_place: Reference('block_state_provider')
         },
         'minecraft:simple_random_selector': {
-          features: ListNode(
-            PlacedFeature
-          )
+          features: Tag({ resource: '$worldgen/placed_feature', inlineSchema: 'placed_feature' }),
         },
         'minecraft:spring_feature': {
           state: Reference('fluid_state'),
           rock_count: NumberNode({ integer: true }),
           hole_count: NumberNode({ integer: true }),
           requires_block_below: BooleanNode(),
-          valid_blocks: ListNode(
-            StringNode({ validator: 'resource', params: { pool: 'block' } })
-          )
+          valid_blocks: Tag({ resource: 'block' })
         },
         'minecraft:tree': {
           ignore_vines: Opt(BooleanNode()),
@@ -581,15 +575,11 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
       },
       'minecraft:matching_blocks': {
         ...Offset,
-        blocks: ListNode(
-          StringNode({ validator: 'resource', params: { pool: 'block' } })
-        )
+        blocks: Tag({ resource: 'block' })
       },
       'minecraft:matching_fluids': {
         ...Offset,
-        fluids: ListNode(
-          StringNode({ validator: 'resource', params: { pool: 'fluid' } })
-        )
+        fluids: Tag({ resource: 'fluid' })
       },
       'minecraft:not': {
         predicate: Reference('block_predicate_worldgen')

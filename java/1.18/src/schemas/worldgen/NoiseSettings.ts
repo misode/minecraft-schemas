@@ -15,6 +15,8 @@ import {
   NodeOptions,
   ChoiceNode,
   ListNode,
+  Switch,
+  Case,
 } from '@mcschema/core'
 import { DefaultNoiseSettings } from '../Common'
 
@@ -75,34 +77,44 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
     offset: NumberNode({ integer: true })
   }))
 
-  schemas.register('generator_structures', ObjectNode({
-    stronghold: Opt(ObjectNode({
-      distance: NumberNode({ integer: true, min: 0, max: 1023 }),
-      spread: NumberNode({ integer: true, min: 0, max: 1023 }),
-      count: NumberNode({ integer: true, min: 1, max: 4095 })
-    })),
-    structures: MapNode(
-      StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature' } }),
-      Mod(ObjectNode({
-        spacing: NumberNode({ integer: true, min: 0, max: 4096 }),
-        separation: Mod(NumberNode({ integer: true, min: 0, max: 4096 }), (node: INode) => ({
-          validate: (path: ModelPath, value: any, errors: Errors, options: NodeOptions) => {
-            if (path.pop().push('spacing').get() <= value) {
-              errors.add(path, 'error.separation_smaller_spacing')
+  schemas.register('generator_structures', MapNode(
+    StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature' } }),
+    Mod(ObjectNode({
+      type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_placement' } }),
+      [Switch]: [{ push: 'type' }],
+      [Case]: {
+        'minecraft:concentric_rings': {
+          distance: NumberNode({ integer: true, min: 0, max: 1023 }),
+          spread: NumberNode({ integer: true, min: 0, max: 1023 }),
+          count: NumberNode({ integer: true, min: 1, max: 4095 })
+        },
+        'minecraft:random_spread': {
+          spread_type: Opt(StringNode({ enum: ['linear', 'triangular'] })),
+          spacing: NumberNode({ integer: true, min: 0, max: 4096 }),
+          separation: Mod(NumberNode({ integer: true, min: 0, max: 4096 }), (node: INode) => ({
+            validate: (path: ModelPath, value: any, errors: Errors, options: NodeOptions) => {
+              if (path.pop().push('spacing').get() <= value) {
+                errors.add(path, 'error.separation_smaller_spacing')
+              }
+              return node.validate(path, value, errors, options)
             }
-            return node.validate(path, value, errors, options)
-          }
-        })),
-        salt: NumberNode({ integer: true, min: 0 })
-      }, { context: 'generator_structure' }), {
-        default: () => ({
-          spacing: 10,
-          separation: 5,
-          salt: 0
-        })
+          })),
+          salt: NumberNode({ integer: true, min: 0 }),
+          locate_offset: Opt(ListNode(
+            NumberNode({ integer: true, min: -16, max: 16 }),
+            { minLength: 3, maxLength: 3 }
+          ))
+        }
+      }
+    }, { context: 'generator_structure' }), {
+      default: () => ({
+        type: 'minecraft:random_spread',
+        spacing: 10,
+        separation: 5,
+        salt: 0
       })
-    )
-  }))
+    })
+  ))
 
   schemas.register('generator_layer', Mod(ObjectNode({
     block: StringNode({ validator: 'resource', params: { pool: 'block' } }),

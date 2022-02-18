@@ -14,7 +14,7 @@ import {
   MapNode,
 } from '@mcschema/core'
 import { Tag } from '../Common'
-import { SpawnSettings } from './Biome'
+import { MobCategorySpawnSettings } from './Biome'
 
 export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
@@ -33,7 +33,7 @@ export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections
       StringNode({ enum: 'mob_category' }),
       ObjectNode({
         bounding_box: StringNode({ enum: ['piece', 'full'] }),
-        spawns: SpawnSettings,
+        spawns: MobCategorySpawnSettings,
       })
     ),
     config: ObjectNode({

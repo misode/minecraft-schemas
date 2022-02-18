@@ -13,28 +13,25 @@ import {
 } from '@mcschema/core'
 import { Tag } from '../Common'
 
-export let SpawnSettings: INode
+export let MobCategorySpawnSettings: INode
 
 export function initBiomeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  SpawnSettings = MapNode(
-    StringNode({ enum: 'mob_category' }),
-    Mod(ListNode(
-      ObjectNode({
-        type: StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
-        weight: NumberNode({ integer: true }),
-        minCount: NumberNode({ integer: true }),
-        maxCount: NumberNode({ integer: true })
-      })
-    ), {
-      category: () => 'pool',
-      default: () => [{
-        type: 'minecraft:bat',
-        weight: 1
-      }]
+  MobCategorySpawnSettings = Mod(ListNode(
+    ObjectNode({
+      type: StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
+      weight: NumberNode({ integer: true }),
+      minCount: NumberNode({ integer: true }),
+      maxCount: NumberNode({ integer: true })
     })
-  )
+  ), {
+    category: () => 'pool',
+    default: () => [{
+      type: 'minecraft:bat',
+      weight: 1
+    }]
+  })
 
   schemas.register('biome', Mod(ObjectNode({
     temperature: NumberNode(),
@@ -75,7 +72,10 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
         probability: NumberNode({ min: 0, max: 1 })
       }))
     }),
-    spawners: SpawnSettings,
+    spawners: MapNode(
+      StringNode({ enum: 'mob_category' }),
+      MobCategorySpawnSettings
+    ),
     spawn_costs: MapNode(
       StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
       Mod(ObjectNode({

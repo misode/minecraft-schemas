@@ -383,4 +383,15 @@ export function initCollections(collections: CollectionRegistry) {
     'throwing',
     'time'
   ])
+
+  collections.register('mob_category', [
+    'monster',
+    'creature',
+    'ambient',
+    'axolotls',
+    'underground_water_creature',
+    'water_creature',
+    'water_ambient',
+    'misc',
+  ])
 }

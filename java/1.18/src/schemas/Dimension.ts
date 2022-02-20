@@ -20,6 +20,20 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
+  const StructureSet = ChoiceNode([
+		{
+      type: 'string',
+			priority: 1,
+      node: StringNode({ validator: 'resource', params: { pool: '$worldgen/structure_set' }}),
+      change: () => undefined
+    },
+    {
+      type: 'object',
+      node: Reference('structure_set'),
+      change: () => ({})
+    }
+	], { choiceContext: 'structure_set' })
+
   schemas.register('dimension', Mod(ObjectNode({
     type: DimensionTypePresets(Reference('dimension_type')),
     generator: ObjectNode({
@@ -65,7 +79,9 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
             layers: ListNode(
               Reference('generator_layer')
             ),
-            structures: Reference('generator_structures')
+            structure_overrides: ListNode(
+              StructureSet
+            )
           })
         }
       }

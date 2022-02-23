@@ -65,6 +65,9 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 				argument1: DensityFunction,
 				argument2: DensityFunction,
 			},
+			'minecraft:blend_density': {
+				argument: DensityFunction,
+			},
 			'minecraft:cache_2d': {
 				argument: DensityFunction,
 			},

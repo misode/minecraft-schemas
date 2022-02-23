@@ -39,8 +39,6 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       size_horizontal: NumberNode({ integer: true }),
       size_vertical: NumberNode({ integer: true }),
       island_noise_override: Opt(BooleanNode()),
-      amplified: Opt(BooleanNode()),
-      large_biomes: Opt(BooleanNode()),
       sampling: ObjectNode({
         xz_scale: NumberNode(),
         y_scale: NumberNode(),

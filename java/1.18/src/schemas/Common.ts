@@ -809,7 +809,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           size_vertical: 1,
           density_factor: 0,
           density_offset: 0,
-          island_noise_override: true,
           top_slide: {
             target: -23.4375,
             size: 64,
@@ -973,7 +972,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           size_vertical: 1,
           density_factor: 0,
           density_offset: 0,
-          island_noise_override: true,
           top_slide: {
             target: -23.4375,
             size: 64,

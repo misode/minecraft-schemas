@@ -38,7 +38,6 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       height: NumberNode({ integer: true, min: 0, max: 4096 }),
       size_horizontal: NumberNode({ integer: true }),
       size_vertical: NumberNode({ integer: true }),
-      island_noise_override: Opt(BooleanNode()),
       sampling: ObjectNode({
         xz_scale: NumberNode(),
         y_scale: NumberNode(),

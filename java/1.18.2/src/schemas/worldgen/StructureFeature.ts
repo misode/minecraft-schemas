@@ -11,7 +11,10 @@ import {
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  MapNode,
 } from '@mcschema/core'
+import { Tag } from '../Common'
+import { MobCategorySpawnSettings } from './Biome'
 
 export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
@@ -24,6 +27,15 @@ export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections
 
   schemas.register('configured_structure_feature', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature'}}),
+    biomes: Tag({ resource: '$worldgen/biome' }),
+    adapt_noise: Opt(BooleanNode()),
+    spawn_overrides: MapNode(
+      StringNode({ enum: 'mob_category' }),
+      ObjectNode({
+        bounding_box: StringNode({ enum: ['piece', 'full'] }),
+        spawns: MobCategorySpawnSettings,
+      })
+    ),
     config: ObjectNode({
       [Switch]: ['pop', { push: 'type' }],
       [Case]: {

@@ -63,7 +63,7 @@ export function initSurfaceRuleSchemas(schemas: SchemaRegistry, collections: Col
         offset: NumberNode({ integer: true }),
         surface_type: StringNode({ enum: 'cave_surface' }),
         add_surface_depth: BooleanNode(),
-        add_surface_secondary_depth: BooleanNode(),
+        secondary_depth_range: NumberNode({ integer: true }),
       },
       'minecraft:vertical_gradient': {
         random_name: StringNode(),

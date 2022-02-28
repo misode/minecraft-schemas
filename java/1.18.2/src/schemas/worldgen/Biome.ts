@@ -9,10 +9,29 @@ import {
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  INode,
 } from '@mcschema/core'
+import { Tag } from '../Common'
+
+export let MobCategorySpawnSettings: INode
 
 export function initBiomeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
+
+  MobCategorySpawnSettings = Mod(ListNode(
+    ObjectNode({
+      type: StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
+      weight: NumberNode({ integer: true }),
+      minCount: NumberNode({ integer: true }),
+      maxCount: NumberNode({ integer: true })
+    })
+  ), {
+    category: () => 'pool',
+    default: () => [{
+      type: 'minecraft:bat',
+      weight: 1
+    }]
+  })
 
   schemas.register('biome', Mod(ObjectNode({
     temperature: NumberNode(),
@@ -54,30 +73,8 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       }))
     }),
     spawners: MapNode(
-      StringNode({ enum: [
-        'monster',
-        'creature',
-        'ambient',
-        'axolotls',
-        'underground_water_creature',
-        'water_creature',
-        'water_ambient',
-        'misc'
-      ] }),
-      Mod(ListNode(
-        ObjectNode({
-          type: StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
-          weight: NumberNode({ integer: true }),
-          minCount: NumberNode({ integer: true }),
-          maxCount: NumberNode({ integer: true })
-        })
-      ), {
-        category: () => 'pool',
-        default: () => [{
-          type: 'minecraft:bat',
-          weight: 1
-        }]
-      })
+      StringNode({ enum: 'mob_category' }),
+      MobCategorySpawnSettings
     ),
     spawn_costs: MapNode(
       StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
@@ -93,16 +90,12 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
     ),
     carvers: MapNode(
       StringNode({ enum: ['air', 'liquid'] }),
-      Mod(ListNode(
-        StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_carver' } })
-      ), {
+      Mod(Tag({ resource: '$worldgen/configured_carver', inlineSchema: 'configured_carver' }), {
         default: () => ['minecraft:cave']
       })
     ),
     features: ListNode(
-      Mod(ListNode(
-        StringNode({ validator: 'resource', params: { pool: '$worldgen/placed_feature' } })
-      ), { category: () => 'predicate' }),
+      Mod(Tag({ resource: '$worldgen/placed_feature', inlineSchema: 'placed_feature' }), { category: () => 'predicate' }),
       { maxLength: 11 }
     )
   }, { context: 'biome' }), {

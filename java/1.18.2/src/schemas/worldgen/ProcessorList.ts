@@ -77,7 +77,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         offset: NumberNode({ integer: true })
       },
       'minecraft:protected_blocks': {
-        value: StringNode({ validator: 'resource', params: { pool: '$tag/block' } })
+        value: StringNode({ validator: 'resource', params: { pool: 'block', requireTag: true } })
       },
       'minecraft:rule': {
         rules: ListNode(

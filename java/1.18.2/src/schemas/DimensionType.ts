@@ -25,17 +25,17 @@ export function initDimensionTypeSchemas(schemas: SchemaRegistry, collections: C
     coordinate_scale: NumberNode({ min: 0.00001, max: 30000000 }),
     ambient_light: NumberNode(),
     fixed_time: Opt(NumberNode({ integer: true })),
-    logical_height: NumberNode({ integer: true, min: 0, max: 4096 }),
+    logical_height: NumberNode({ integer: true, min: 0, max: 4064 }),
     effects: Opt(StringNode({ enum: ['minecraft:overworld', 'minecraft:the_nether', 'minecraft:the_end'] })),
-    infiniburn: StringNode({ validator: 'resource', params: { pool: '$tag/block' } }),
-    min_y: NumberNode({ integer: true, min: -2048, max: 2047 }),
-    height: NumberNode({ integer: true, min: 0, max: 4096 })
+    infiniburn: StringNode({ validator: 'resource', params: { pool: 'block', requireTag: true } }),
+    min_y: NumberNode({ integer: true, min: -2032, max: 2031 }),
+    height: NumberNode({ integer: true, min: 16, max: 4064 })
   }, { context: 'dimension_type' }), node => ({
     default: () => DefaultDimensionType,
     validate: (path, value, errors, options) => {
       value = node.validate(path, value, errors, options)
-      if (value?.min_y + value?.height > 2047) {
-        errors.add(path.push('height'), 'error.min_y_plus_height', 2047)
+      if (value?.min_y + value?.height > 2032) {
+        errors.add(path.push('height'), 'error.min_y_plus_height', 2032)
       }
       if (value?.logical_height > value?.height) {
         errors.add(path.push('logical_height'), 'error.logical_height')

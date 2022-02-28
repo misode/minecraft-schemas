@@ -15,8 +15,11 @@ import {
   NodeOptions,
   ChoiceNode,
   ListNode,
+  Switch,
+  Case,
 } from '@mcschema/core'
 import { DefaultNoiseSettings } from '../Common'
+import { DensityFunction } from './DensityFunction'
 
 export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
@@ -25,8 +28,6 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
   schemas.register('noise_settings', Mod(ObjectNode({
     sea_level: NumberNode({ integer: true }),
     disable_mob_generation: BooleanNode(),
-    noise_caves_enabled: BooleanNode(),
-    noodle_caves_enabled: BooleanNode(),
     aquifers_enabled: BooleanNode(),
     ore_veins_enabled: BooleanNode(),
     legacy_random_source: BooleanNode(),
@@ -37,9 +38,6 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       height: NumberNode({ integer: true, min: 0, max: 4096 }),
       size_horizontal: NumberNode({ integer: true }),
       size_vertical: NumberNode({ integer: true }),
-      island_noise_override: Opt(BooleanNode()),
-      amplified: Opt(BooleanNode()),
-      large_biomes: Opt(BooleanNode()),
       sampling: ObjectNode({
         xz_scale: NumberNode(),
         y_scale: NumberNode(),
@@ -50,8 +48,23 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       top_slide: Reference('noise_slider'),
       terrain_shaper: Reference('terrain_shaper')
     }),
+    noise_router: ObjectNode({
+      barrier: DensityFunction,
+      fluid_level_floodedness: DensityFunction,
+      fluid_level_spread: DensityFunction,
+      lava: DensityFunction,
+      temperature: DensityFunction,
+      vegetation: DensityFunction,
+      continents: DensityFunction,
+      erosion: DensityFunction,
+      depth: DensityFunction,
+      initial_density_without_jaggedness: DensityFunction,
+      final_density: DensityFunction,
+      vein_toggle: DensityFunction,
+      vein_ridged: DensityFunction,
+      vein_gap: DensityFunction,
+    }),
     surface_rule: Reference('material_rule'),
-    structures: Reference('generator_structures')
   }, { context: 'noise_settings' }), node => ({
     default: () => DefaultNoiseSettings,
     validate: (path, value, errors, options) => {
@@ -73,35 +86,6 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
     target: NumberNode(),
     size: NumberNode({ integer: true, min: 0 }),
     offset: NumberNode({ integer: true })
-  }))
-
-  schemas.register('generator_structures', ObjectNode({
-    stronghold: Opt(ObjectNode({
-      distance: NumberNode({ integer: true, min: 0, max: 1023 }),
-      spread: NumberNode({ integer: true, min: 0, max: 1023 }),
-      count: NumberNode({ integer: true, min: 1, max: 4095 })
-    })),
-    structures: MapNode(
-      StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature' } }),
-      Mod(ObjectNode({
-        spacing: NumberNode({ integer: true, min: 0, max: 4096 }),
-        separation: Mod(NumberNode({ integer: true, min: 0, max: 4096 }), (node: INode) => ({
-          validate: (path: ModelPath, value: any, errors: Errors, options: NodeOptions) => {
-            if (path.pop().push('spacing').get() <= value) {
-              errors.add(path, 'error.separation_smaller_spacing')
-            }
-            return node.validate(path, value, errors, options)
-          }
-        })),
-        salt: NumberNode({ integer: true, min: 0 })
-      }, { context: 'generator_structure' }), {
-        default: () => ({
-          spacing: 10,
-          separation: 5,
-          salt: 0
-        })
-      })
-    )
   }))
 
   schemas.register('generator_layer', Mod(ObjectNode({

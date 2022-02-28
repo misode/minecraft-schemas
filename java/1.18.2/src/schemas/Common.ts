@@ -35,104 +35,11 @@ export const DefaultDimensionType = {
   coordinate_scale: 1,
   ambient_light: 0,
   logical_height: 256,
-  infiniburn: 'minecraft:infiniburn_overworld',
+  infiniburn: '#minecraft:infiniburn_overworld',
   min_y: 0,
   height: 256,
 }
 export let DimensionTypePresets: (node: INode<any>) => INode<any>
-
-const DefaultStructureSettings = {
-  'minecraft:igloo': {
-    spacing: 32,
-    separation: 8,
-    salt: 14357618
-  },
-  'minecraft:mansion': {
-    spacing: 80,
-    separation: 20,
-    salt: 10387319
-  },
-  'minecraft:jungle_pyramid': {
-    spacing: 32,
-    separation: 8,
-    salt: 14357619
-  },
-  'minecraft:nether_fossil': {
-    spacing: 2,
-    separation: 1,
-    salt: 14357921
-  },
-  'minecraft:stronghold': {
-    spacing: 1,
-    separation: 0,
-    salt: 0
-  },
-  'minecraft:shipwreck': {
-    spacing: 24,
-    separation: 4,
-    salt: 165745295
-  },
-  'minecraft:mineshaft': {
-    spacing: 1,
-    separation: 0,
-    salt: 0
-  },
-  'minecraft:desert_pyramid': {
-    spacing: 32,
-    separation: 8,
-    salt: 14357617
-  },
-  'minecraft:ruined_portal': {
-    spacing: 40,
-    separation: 15,
-    salt: 34222645
-  },
-  'minecraft:fortress': {
-    spacing: 27,
-    separation: 4,
-    salt: 30084232
-  },
-  'minecraft:pillager_outpost': {
-    spacing: 32,
-    separation: 8,
-    salt: 165745296
-  },
-  'minecraft:village': {
-    spacing: 32,
-    separation: 8,
-    salt: 10387312
-  },
-  'minecraft:endcity': {
-    spacing: 20,
-    separation: 11,
-    salt: 10387313
-  },
-  'minecraft:buried_treasure': {
-    spacing: 1,
-    separation: 0,
-    salt: 0
-  },
-  'minecraft:ocean_ruin': {
-    spacing: 20,
-    separation: 8,
-    salt: 14357621
-  },
-  'minecraft:bastion_remnant': {
-    spacing: 27,
-    separation: 4,
-    salt: 30084232
-  },
-  'minecraft:swamp_hut': {
-    spacing: 32,
-    separation: 8,
-    salt: 14357620
-  },
-  'minecraft:monument': {
-    spacing: 32,
-    separation: 5,
-    salt: 10387313
-  }
-}
 
 export const DefaultNoiseSettings = {
 	bedrock_roof_position: -2147483648,
@@ -186,14 +93,7 @@ export const DefaultNoiseSettings = {
     type: 'minecraft:sequence',
     sequence: []
   },
-  structures: {
-    stronghold: {
-      distance: 32,
-      spread: 3,
-      count: 128
-    },
-    structures: DefaultStructureSettings,
-  }
+  structures: {}
 }
 export let NoiseSettingsPresets: (node: INode) => INode
 
@@ -210,6 +110,12 @@ type InclusiveRangeConfig = {
   max?: number
 }
 export let InclusiveRange: (config?: InclusiveRangeConfig) => INode
+
+type TagConfig = {
+  resource: ResourceType,
+  inlineSchema?: string,
+}
+export let Tag: (config: TagConfig) => INode
 
 export function initCommonSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
@@ -529,6 +435,42 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     })
   }))
 
+  Tag = (config: TagConfig) => ChoiceNode([
+    {
+      type: 'string',
+      node: StringNode({ validator: 'resource', params: { pool: config.resource, allowTag: true } }),
+      change: (v: unknown) => {
+        if (Array.isArray(v) && typeof v[0] === 'string' && !v[0].startsWith('#')) {
+          return v[0]
+        }
+        return undefined
+      }
+    },
+    {
+      type: 'list',
+      node: ListNode(
+        config.inlineSchema
+          ? ChoiceNode([
+            {
+              type: 'string',
+              node: StringNode({ validator: 'resource', params: { pool: config.resource } })
+            },
+            {
+              type: 'object',
+              node: Reference(config.inlineSchema)
+            }
+          ], { choiceContext: 'tag.list' })
+          : StringNode({ validator: 'resource', params: { pool: config.resource } })
+      ),
+      change: (v: unknown) => {
+        if (typeof v === 'string' && !v.startsWith('#')) {
+          return [v]
+        }
+        return []
+      }
+    },
+  ], { choiceContext: 'tag' })
+
   ConditionCases = (entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({
     'minecraft:alternative': {
       terms: ListNode(
@@ -759,7 +701,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         fixed_time: 18000,
         logical_height: 128,
         effects: 'minecraft:the_nether',
-        infiniburn: 'minecraft:infiniburn_nether',
+        infiniburn: '#minecraft:infiniburn_nether',
         min_y: 0,
         height: 256,
       },
@@ -778,7 +720,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         fixed_time: 6000,
         logical_height: 256,
         effects: 'minecraft:the_end',
-        infiniburn: 'minecraft:infiniburn_end',
+        infiniburn: '#minecraft:infiniburn_end',
         min_y: 0,
         height: 256,
       }
@@ -842,9 +784,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           type: 'minecraft:sequence',
           sequence: []
         },
-        structures: {
-          structures: DefaultStructureSettings,
-        }
+        structures: {}
       },
       'minecraft:end': {
         bedrock_roof_position: -2147483648,
@@ -869,7 +809,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           size_vertical: 1,
           density_factor: 0,
           density_offset: 0,
-          island_noise_override: true,
           top_slide: {
             target: -23.4375,
             size: 64,
@@ -896,9 +835,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           type: 'minecraft:sequence',
           sequence: []
         },
-        structures: {
-          structures: DefaultStructureSettings
-        }
+        structures: {}
       },
       'minecraft:amplified': {
         bedrock_roof_position: -2147483648,
@@ -953,14 +890,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           type: 'minecraft:sequence',
           sequence: []
         },
-        structures: {
-          stronghold: {
-            distance: 32,
-            spread: 3,
-            count: 128
-          },
-          structures: DefaultStructureSettings,
-        },
+        structures: {},
       },
       'minecraft:caves': {
         bedrock_roof_position: 0,
@@ -1014,14 +944,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           type: 'minecraft:sequence',
           sequence: []
         },
-        structures: {
-          stronghold: {
-            distance: 32,
-            spread: 3,
-            count: 128
-          },
-          structures: DefaultStructureSettings,
-        }
+        structures: {}
       },
       'minecraft:floating_islands': {
         bedrock_roof_position: -2147483648,
@@ -1049,7 +972,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           size_vertical: 1,
           density_factor: 0,
           density_offset: 0,
-          island_noise_override: true,
           top_slide: {
             target: -23.4375,
             size: 64,
@@ -1076,14 +998,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           type: 'minecraft:sequence',
           sequence: []
         },
-        structures: {
-          stronghold: {
-            distance: 32,
-            spread: 3,
-            count: 128
-          },
-          structures: DefaultStructureSettings,
-        }
+        structures: {}
       }
     }
   )

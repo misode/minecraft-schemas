@@ -14,11 +14,25 @@ import {
   INode,
   ChoiceNode,
 } from '@mcschema/core'
-import { DimensionTypePresets, NoiseSettingsPresets } from './Common'
+import { DimensionTypePresets, NoiseSettingsPresets, Tag } from './Common'
 
 export function initDimensionSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
+
+  const StructureSet = ChoiceNode([
+		{
+      type: 'string',
+			priority: 1,
+      node: StringNode({ validator: 'resource', params: { pool: '$worldgen/structure_set' }}),
+      change: () => undefined
+    },
+    {
+      type: 'object',
+      node: Reference('structure_set'),
+      change: () => ({})
+    }
+	], { choiceContext: 'structure_set' })
 
   schemas.register('dimension', Mod(ObjectNode({
     type: DimensionTypePresets(Reference('dimension_type')),
@@ -49,9 +63,7 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
               },
               'minecraft:checkerboard': {
                 scale: Opt(NumberNode({ integer: true, min: 0, max: 62 })),
-                biomes: ListNode(
-                  StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })
-                )
+                biomes: Tag({ resource: '$worldgen/biome' })
               },
               'minecraft:the_end': {
                 seed: NumberNode({ integer: true })
@@ -67,7 +79,9 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
             layers: ListNode(
               Reference('generator_layer')
             ),
-            structures: Reference('generator_structures')
+            structure_overrides: ListNode(
+              StructureSet
+            )
           })
         }
       }

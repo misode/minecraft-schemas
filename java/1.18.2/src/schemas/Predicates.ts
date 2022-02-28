@@ -92,7 +92,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       z: Reference('float_bounds')
     })),
     biome: Opt(StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })),
-    feature: Opt(StringNode({ enum: collections.get('worldgen/structure_feature').map(v => v.slice(10)) })),
+    feature: Opt(StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_structure_feature' } })),
     dimension: Opt(StringNode({ validator: 'resource', params: { pool: '$dimension' } })),
     light: Opt(ObjectNode({
       light: Reference('int_bounds')

@@ -82,6 +82,9 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 				min: NoiseRange,
 				max: NoiseRange,
 			},
+			'minecraft:constant': {
+				argument: NumberNode(),
+			},
 			'minecraft:cube': {
 				argument: DensityFunction,
 			},
@@ -167,19 +170,12 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 				to_value: NoiseRange,
 			},
 		}
-	}, { context: 'density_function', disableSwitchContext: true }), node => ({
+	}, { context: 'density_function', disableSwitchContext: true }), {
 		default: () => ({
 			type: 'minecraft:noise',
 			noise: 'minecraft:cave_entrance',
 			xz_scale: 0.75,
 			y_scale: 0.5
-		}),
-		validate: (path, value, errors, options) => {
-			value = node.validate(path, value, errors, options)
-			if (typeof value === 'object' && value !== null && value.type === 'minecraft:constant') {
-				return 0
-			}
-			return value
-		}
-	})))
+		})
+	}))
 }

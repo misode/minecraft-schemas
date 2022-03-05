@@ -414,6 +414,14 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         min_inclusive: Reference('vertical_anchor'),
         max_inclusive: Reference('vertical_anchor'),
         plateau: Opt(NumberNode({ integer: true }))
+      },
+      'minecraft:weighted_list': {
+        distribution: ListNode(
+          ObjectNode({
+            weight: NumberNode({ integer: true }),
+            data: Reference('int_provider'),
+          })
+        )
       }
     }
   ))

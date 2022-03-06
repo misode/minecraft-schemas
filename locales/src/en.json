@@ -1445,6 +1445,7 @@
   "noise_settings.noise_router.continents": "Continents",
   "noise_settings.noise_router.erosion": "Erosion",
   "noise_settings.noise_router.depth": "Depth",
+  "noise_settings.noise_router.ridges": "Ridges",
   "noise_settings.noise_router.initial_density_without_jaggedness": "Initial density without jaggedness",
   "noise_settings.noise_router.final_density": "Final density",
   "noise_settings.noise_router.vein_toggle": "Vein toggle",

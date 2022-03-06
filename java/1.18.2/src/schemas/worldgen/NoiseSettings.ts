@@ -58,6 +58,7 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       continents: DensityFunction,
       erosion: DensityFunction,
       depth: DensityFunction,
+      ridges: DensityFunction,
       initial_density_without_jaggedness: DensityFunction,
       final_density: DensityFunction,
       vein_toggle: DensityFunction,

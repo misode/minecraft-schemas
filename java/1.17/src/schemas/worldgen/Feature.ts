@@ -194,7 +194,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           crack: ObjectNode({
             generate_crack_chance: Opt(NumberNode({ min: 0, max: 1 })),
             base_crack_size: Opt(NumberNode({ min: 0, max: 5 })),
-            crack_point_offset: Opt(NumberNode({ min: 0, max: 10, integer: true })),
+            crack_point_offset: Opt(NumberNode({ min: 0, max: 10 })),
           }),
           noise_multiplier: Opt(NumberNode({ min: 0, max: 1 })),
           use_potential_placements_chance: Opt(NumberNode({ min: 0, max: 1 })),

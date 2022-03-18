@@ -36,7 +36,7 @@ export function initStructureSetSchemas(schemas: SchemaRegistry, collections: Co
 	schemas.register('structure_set', ObjectNode({
 		structures: ListNode(
 			ObjectNode({
-				structure: Tag({ resource: '$worldgen/configured_structure_feature' }),
+				structure: Tag({ resource: '$worldgen/structure' }),
 				weight: NumberNode({ integer: true, min: 1 })
 			})
 		),

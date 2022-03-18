@@ -58,15 +58,16 @@ export function initTagsSchemas(schemas: SchemaRegistry, collections: Collection
 
   schemas.register('biome_tag', TagBase('$worldgen/biome'))
   schemas.register('configured_carver_tag', TagBase('$worldgen/configured_carver'))
-  schemas.register('configured_decorator_tag', TagBase('$worldgen/configured_decorator'))
   schemas.register('configured_feature_tag', TagBase('$worldgen/configured_feature'))
-  schemas.register('configured_structure_feature_tag', TagBase('$worldgen/configured_structure_feature'))
+  schemas.register('structure_tag', TagBase('$worldgen/structure'))
   schemas.register('configured_surface_builder_tag', TagBase('$worldgen/configured_surface_builder'))
   schemas.register('density_function_tag', TagBase('$worldgen/density_function'))
+  schemas.register('flat_level_generator_preset_tag', TagBase('$worldgen/flat_level_generator_preset'))
   schemas.register('noise_tag', TagBase('$worldgen/noise'))
   schemas.register('noise_settings_tag', TagBase('$worldgen/noise_settings'))
   schemas.register('placed_feature_tag', TagBase('$worldgen/placed_feature'))
   schemas.register('processor_list_tag', TagBase('$worldgen/processor_list'))
   schemas.register('structure_set_tag', TagBase('$worldgen/structure_set'))
   schemas.register('template_pool_tag', TagBase('$worldgen/template_pool'))
+  schemas.register('world_preset_tag', TagBase('$worldgen/world_preset'))
 }

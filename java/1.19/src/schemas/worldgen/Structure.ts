@@ -22,7 +22,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
   const Reference = RawReference.bind(undefined, schemas)
 
   schemas.register('structure', Mod(ObjectNode({
-    type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature'}}),
+    type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_type' } }),
     biomes: Tag({ resource: '$worldgen/biome' }),
     step: StringNode({ enum: 'decoration_step' }),
     spawn_overrides: MapNode(
@@ -39,7 +39,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         start_pool: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool'}}),
         size: NumberNode({ integer: true }),
         start_height: Reference('height_provider'),
-        project_start_to_heightmap: Opt(StringNode({ enum: 'heightmap' })),
+        project_start_to_heightmap: Opt(StringNode({ enum: 'heightmap_type' })),
         use_expansion_hack: BooleanNode(),
       },
       'minecraft:mineshaft': {
@@ -73,11 +73,9 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
     }
   }, { context: 'structure_feature' }), {
     default: () => ({
-      type: 'minecraft:bastion_remnant',
-      config: {
-        start_pool: 'minecraft:bastion/starts',
-        size: 6
-      }
+      type: 'minecraft:jigsaw',
+      step: 'surface_structures',
+      size: 6,
     })
   }))
 }

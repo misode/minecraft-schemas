@@ -311,6 +311,7 @@ export type ResourceType =
   | 'worldgen/structure_placement'
   | 'worldgen/structure_pool_element'
   | 'worldgen/structure_processor'
+  | 'worldgen/structure_type'
   | 'worldgen/surface_builder'
   | 'worldgen/tree_decorator_type'
   | 'worldgen/trunk_placer_type'

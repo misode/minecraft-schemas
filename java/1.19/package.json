@@ -1,13 +1,12 @@
 {
-  "name": "@mcschema/core",
-  "version": "0.12.31",
-  "description": "Schemas to parse and render JSON structures",
+  "name": "@mcschema/java-1.19",
+  "version": "0.1.4",
+  "description": "Schemas for Java Edition 1.19",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "ts-mocha src/**/*.test.ts",
     "prepublishOnly": "npm run build"
   },
   "keywords": [],
@@ -17,14 +16,8 @@
     "type": "git",
     "url": "https://github.com/misode/minecraft-schemas.git"
   },
-  "devDependencies": {
-    "@types/mocha": "^7.0.2",
-    "@types/node": "^14.0.6",
-    "@types/power-assert": "^1.5.3",
-    "mocha": "^7.2.0",
-    "power-assert": "^1.6.1",
-    "ts-mocha": "^7.0.0",
-    "typescript": "^3.9.3"
+  "dependencies": {
+    "@mcschema/core": "^0.12.31"
   },
   "publishConfig": {
     "access": "public"

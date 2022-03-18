@@ -12,6 +12,7 @@ export type ValidationOption =
   | TeamValidationOption
   | UuidValidationOption
   | VectorValidationOption
+  | RegexPatternValidationOption
 
 type BlockStateKeyValidationOption = {
   validator: 'block_state_key',
@@ -216,6 +217,11 @@ type VectorValidationOption = {
   }
 }
 
+type RegexPatternValidationOption = {
+  validator: 'regex_pattern',
+  params?: {}
+}
+
 export type ResourceType =
   | '$advancement'
   | '$bossbar'
@@ -241,12 +247,15 @@ export type ResourceType =
   | '$tag/worldgen/configured_structure_feature'
   | '$tag/worldgen/configured_surface_builder'
   | '$tag/worldgen/density_function'
+  | '$tag/worldgen/flat_level_generator_preset'
   | '$tag/worldgen/noise'
   | '$tag/worldgen/noise_settings'
   | '$tag/worldgen/placed_feature'
   | '$tag/worldgen/processor_list'
+  | '$tag/worldgen/structure'
   | '$tag/worldgen/structure_set'
   | '$tag/worldgen/template_pool'
+  | '$tag/worldgen/world_preset'
   | '$texture'
   | '$worldgen/biome'
   | '$worldgen/configured_carver'
@@ -255,12 +264,15 @@ export type ResourceType =
   | '$worldgen/configured_structure_feature'
   | '$worldgen/configured_surface_builder'
   | '$worldgen/density_function'
+  | '$worldgen/flat_level_generator_preset'
   | '$worldgen/noise'
   | '$worldgen/noise_settings'
   | '$worldgen/placed_feature'
   | '$worldgen/processor_list'
+  | '$worldgen/structure'
   | '$worldgen/structure_set'
   | '$worldgen/template_pool'
+  | '$worldgen/world_preset'
   | 'attribute'
   | 'block'
   | 'block_entity_type'
@@ -303,6 +315,7 @@ export type ResourceType =
   | 'worldgen/structure_placement'
   | 'worldgen/structure_pool_element'
   | 'worldgen/structure_processor'
+  | 'worldgen/structure_type'
   | 'worldgen/surface_builder'
   | 'worldgen/tree_decorator_type'
   | 'worldgen/trunk_placer_type'

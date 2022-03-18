@@ -72,17 +72,7 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
           }, { category: 'predicate', disableSwitchContext: true })
         },
         'minecraft:flat': {
-          settings: ObjectNode({
-            biome: Opt(StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })),
-            lakes: Opt(BooleanNode()),
-            features: Opt(BooleanNode()),
-            layers: ListNode(
-              Reference('generator_layer')
-            ),
-            structure_overrides: ListNode(
-              StructureSet
-            )
-          })
+          settings: Reference('flat_generator_settings')
         }
       }
     }, { disableSwitchContext: true })
@@ -104,6 +94,18 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
     }}
   }))
 
+  schemas.register('flat_generator_settings', ObjectNode({
+    biome: Opt(StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })),
+    lakes: Opt(BooleanNode()),
+    features: Opt(BooleanNode()),
+    layers: ListNode(
+      Reference('generator_layer')
+    ),
+    structure_overrides: ListNode(
+      StructureSet
+    )
+  }))
+
   const ClimateParameter = ChoiceNode([
     {
       type: 'number',
@@ -120,25 +122,29 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
     }
   ])
 
+  schemas.register('parameter_point', ObjectNode({
+    temperature: ClimateParameter,
+    humidity: ClimateParameter,
+    continentalness: ClimateParameter,
+    erosion: ClimateParameter,
+    weirdness: ClimateParameter,
+    depth: ClimateParameter,
+    offset: NumberNode({ min: 0, max: 1 })
+  }))
+
   schemas.register('generator_biome', Mod(ObjectNode({
     biome: StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } }),
-    parameters: ObjectNode({
-      temperature: ClimateParameter,
-      humidity: ClimateParameter,
-      continentalness: ClimateParameter,
-      erosion: ClimateParameter,
-      weirdness: ClimateParameter,
-      depth: ClimateParameter,
-      offset: NumberNode({ min: 0, max: 1 })
-    })
+    parameters: Reference('parameter_point'),
   }, { context: 'generator_biome' }), {
     default: () => ({
       biome: 'minecraft:plains',
       parameters: {
-        altitude: 0,
         temperature: 0,
         humidity: 0,
+        continentalness: 0,
+        erosion: 0,
         weirdness: 0,
+        depth: 0,
         offset: 0
       }
     })

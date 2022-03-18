@@ -299,6 +299,14 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           feature: PlacedFeature
         },
         'minecraft:scattered_ore': OreConfig,
+        'minecraft:sculk_patch': {
+          charge_count: NumberNode({ integer: true, min: 1, max: 32 }),
+          amount_per_charge: NumberNode({ integer: true, min: 1, max: 500 }),
+          spread_attempts: NumberNode({ integer: true, min: 1, max: 64 }),
+          growth_rounds: NumberNode({ integer: true, min: 0, max: 8 }),
+          spread_rounds: NumberNode({ integer: true, min: 0, max: 8 }),
+          catalyst_chance: NumberNode({ min: 0, max: 1 }),
+        },
         'minecraft:sea_pickle': {
           count: IntProvider({ min: 0, max: 256 })
         },

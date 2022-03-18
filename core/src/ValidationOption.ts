@@ -12,6 +12,7 @@ export type ValidationOption =
   | TeamValidationOption
   | UuidValidationOption
   | VectorValidationOption
+  | RegexPatternValidationOption
 
 type BlockStateKeyValidationOption = {
   validator: 'block_state_key',
@@ -216,6 +217,11 @@ type VectorValidationOption = {
   }
 }
 
+type RegexPatternValidationOption = {
+  validator: 'regex_pattern',
+  params?: {}
+}
+
 export type ResourceType =
   | '$advancement'
   | '$bossbar'
@@ -245,6 +251,7 @@ export type ResourceType =
   | '$tag/worldgen/noise_settings'
   | '$tag/worldgen/placed_feature'
   | '$tag/worldgen/processor_list'
+  | '$tag/worldgen/structure'
   | '$tag/worldgen/structure_set'
   | '$tag/worldgen/template_pool'
   | '$texture'
@@ -259,6 +266,7 @@ export type ResourceType =
   | '$worldgen/noise_settings'
   | '$worldgen/placed_feature'
   | '$worldgen/processor_list'
+  | '$worldgen/structure'
   | '$worldgen/structure_set'
   | '$worldgen/template_pool'
   | 'attribute'

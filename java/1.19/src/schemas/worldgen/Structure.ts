@@ -12,23 +12,19 @@ import {
   CollectionRegistry,
   Opt,
   MapNode,
+  ListNode,
 } from '@mcschema/core'
 import { Tag } from '../Common'
 import { MobCategorySpawnSettings } from './Biome'
 
-export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
+export function initStructureSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
   const Reference = RawReference.bind(undefined, schemas)
 
-  const templatePoolConfig: NodeChildren = {
-    start_pool: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool'}}),
-    size: NumberNode({ integer: true })
-  }
-
-  schemas.register('configured_structure_feature', Mod(ObjectNode({
+  schemas.register('structure', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/structure_feature'}}),
     biomes: Tag({ resource: '$worldgen/biome' }),
-    adapt_noise: Opt(BooleanNode()),
+    step: StringNode({ enum: 'decoration_step' }),
     spawn_overrides: MapNode(
       StringNode({ enum: 'mob_category' }),
       ObjectNode({
@@ -36,35 +32,45 @@ export function initStructureFeatureSchemas(schemas: SchemaRegistry, collections
         spawns: MobCategorySpawnSettings,
       })
     ),
-    config: ObjectNode({
-      [Switch]: ['pop', { push: 'type' }],
-      [Case]: {
-        'minecraft:bastion_remnant': templatePoolConfig,
-        'minecraft:buried_treasure': {
-          probability: NumberNode({ min: 0, max: 1 })
-        },
-        'minecraft:mineshaft': {
-          type: StringNode({ enum: ['normal', 'mesa'] }),
-          probability: NumberNode({ min: 0, max: 1 })
-        },
-        'minecraft:nether_fossil': {
-          height: Reference('height_provider')
-        },
-        'minecraft:ocean_ruin': {
-          biome_temp: StringNode({ enum: ['cold', 'warm'] }),
-          large_probability: NumberNode({ min: 0, max: 1 }),
-          cluster_probability: NumberNode({ min: 0, max: 1 })
-        },
-        'minecraft:pillager_outpost': templatePoolConfig,
-        'minecraft:ruined_portal': {
-          portal_type: StringNode({ enum: ['standard', 'desert', 'jungle', 'mountain', 'nether', 'ocean', 'swamp'] })
-        },
-        'minecraft:shipwreck': {
-          is_beached: Opt(BooleanNode())
-        },
-        'minecraft:village': templatePoolConfig
+    adapt_noise: Opt(BooleanNode()),
+    [Switch]: [{ push: 'type' }],
+    [Case]: {
+      'minecraft:jigsaw': {
+        start_pool: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool'}}),
+        size: NumberNode({ integer: true }),
+        start_height: Reference('height_provider'),
+        project_start_to_heightmap: Opt(StringNode({ enum: 'heightmap' })),
+        use_expansion_hack: BooleanNode(),
+      },
+      'minecraft:mineshaft': {
+        type: StringNode({ enum: ['normal', 'mesa'] }),
+      },
+      'minecraft:nether_fossil': {
+        height: Reference('height_provider')
+      },
+      'minecraft:ocean_ruin': {
+        biome_temp: StringNode({ enum: ['cold', 'warm'] }),
+        large_probability: NumberNode({ min: 0, max: 1 }),
+        cluster_probability: NumberNode({ min: 0, max: 1 })
+      },
+      'minecraft:ruined_portal': {
+        setups: ListNode(
+          ObjectNode({
+            placement: StringNode({ enum: ['on_land_surface', 'partly_buried', 'on_ocean_floor', 'in_mountain', 'underground', 'in_nether'] }),
+            air_pocket_probability: NumberNode({ min: 0, max: 1 }),
+            mossiness: NumberNode({ min: 0, max: 1 }),
+            overgrown: BooleanNode(),
+            vines: BooleanNode(),
+            can_be_cold: BooleanNode(),
+            replace_with_blackstone: BooleanNode(),
+            weight: NumberNode({ min: 0 })
+          })
+        )
+      },
+      'minecraft:shipwreck': {
+        is_beached: Opt(BooleanNode())
       }
-    }, { context: 'structure_feature', disableSwitchContext: true })
+    }
   }, { context: 'structure_feature' }), {
     default: () => ({
       type: 'minecraft:bastion_remnant',

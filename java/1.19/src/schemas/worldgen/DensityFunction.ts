@@ -10,6 +10,7 @@ import {
   NumberNode,
 	INode,
 	ChoiceNode,
+	ListNode,
 } from '@mcschema/core'
 
 export let DensityFunction: INode
@@ -144,19 +145,14 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 			'minecraft:slide': {
 				argument: DensityFunction,
 			},
+			'minecraft:spline': {
+				spline: Reference('terrain_spline')
+			},
 			'minecraft:square': {
 				argument: DensityFunction,
 			},
 			'minecraft:squeeze': {
 				argument: DensityFunction,
-			},
-			'minecraft:terrain_shaper_spline': {
-				spline: StringNode({ enum: ['offset', 'factor', 'jaggedness'] }),
-				min_value: NoiseRange,
-				max_value: NoiseRange,
-				continentalness: DensityFunction,
-				erosion: DensityFunction,
-				weirdness: DensityFunction,
 			},
 			'minecraft:weird_scaled_sampler': {
 				rarity_value_mapper: StringNode({ enum: ['type_1', 'type_2'] }),
@@ -178,4 +174,26 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 			y_scale: 0.5
 		})
 	}))
+
+  schemas.register('terrain_spline', Mod(ChoiceNode([
+    {
+      type: 'number',
+      node: NumberNode()
+    },
+    {
+      type: 'object',
+      node: ObjectNode({
+        coordinate: DensityFunction,
+        points: ListNode(
+          ObjectNode({
+            location: NumberNode(),
+            derivative: NumberNode(),
+            value: Reference('terrain_spline')
+          })
+        )
+      }, { category: 'function' })
+    }
+  ], { context: 'terrain_spline', choiceContext: 'terrain_spline' }), {
+    default: () => 0
+  }))
 }

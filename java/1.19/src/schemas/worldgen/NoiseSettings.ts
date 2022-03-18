@@ -46,7 +46,6 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       }),
       bottom_slide: Reference('noise_slider'),
       top_slide: Reference('noise_slider'),
-      terrain_shaper: Reference('terrain_shaper')
     }),
     noise_router: ObjectNode({
       barrier: DensityFunction,
@@ -65,6 +64,9 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       vein_ridged: DensityFunction,
       vein_gap: DensityFunction,
     }),
+    spawn_target: ListNode(
+      Reference('parameter_point')
+    ),
     surface_rule: Reference('material_rule'),
   }, { context: 'noise_settings' }), node => ({
     default: () => DefaultNoiseSettings,
@@ -97,39 +99,5 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       block: 'minecraft:stone',
       height: 1
     })
-  }))
-
-  schemas.register('terrain_shaper', Mod(ObjectNode({
-    offset: Reference('terrain_spline'),
-    factor: Reference('terrain_spline'),
-    jaggedness: Reference('terrain_spline'),
-  }, { context: 'terrain_shaper' }), {
-    default: () => ({
-      offset: 0,
-      factor: 0,
-      jaggedness: 0,
-    })
-  }))
-
-  schemas.register('terrain_spline', Mod(ChoiceNode([
-    {
-      type: 'number',
-      node: NumberNode()
-    },
-    {
-      type: 'object',
-      node: ObjectNode({
-        coordinate: Mod(StringNode({ enum: ['continents', 'erosion', 'weirdness', 'ridges'] }), { default: () => 'continents' }),
-        points: ListNode(
-          ObjectNode({
-            location: NumberNode(),
-            derivative: NumberNode(),
-            value: Reference('terrain_spline')
-          })
-        )
-      }, { category: 'function' })
-    }
-  ], { context: 'terrain_spline', choiceContext: 'terrain_spline' }), {
-    default: () => 0
   }))
 }

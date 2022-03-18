@@ -6,7 +6,7 @@ import { initDensityFunctionSchemas } from './DensityFunction'
 import { initFeatureSchemas } from './Feature'
 import { initNoiseSettingsSchemas } from './NoiseSettings'
 import { initProcessorListSchemas } from './ProcessorList'
-import { initStructureFeatureSchemas } from './StructureFeature'
+import { initStructureSchemas } from './Structure'
 import { initStructureSetSchemas } from './StructureSet'
 import { initSurfaceRuleSchemas } from './SurfaceRule'
 import { initTemplatePoolSchemas } from './TemplatePool'
@@ -20,7 +20,7 @@ export function initWorldgenSchemas(schemas: SchemaRegistry, collections: Collec
     initDecoratorSchemas(schemas, collections)
     initFeatureSchemas(schemas, collections)
     initNoiseSettingsSchemas(schemas, collections)
-    initStructureFeatureSchemas(schemas, collections)
+    initStructureSchemas(schemas, collections)
     initStructureSetSchemas(schemas, collections)
     initSurfaceRuleSchemas(schemas, collections)
     initTemplatePoolSchemas(schemas, collections)

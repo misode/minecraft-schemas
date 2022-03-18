@@ -252,6 +252,20 @@ export function initCollections(collections: CollectionRegistry) {
     'liquid'
   ])
 
+  collections.register('decoration_step', [
+    'raw_generation',
+    'lakes',
+    'local_modifications',
+    'underground_structures',
+    'surface_structures',
+    'strongholds',
+    'underground_ores',
+    'underground_decoration',
+    'fluid_springs',
+    'vegetal_decoration',
+    'top_layer_modification'
+  ])
+
   collections.register('loot_context_type', [
     'minecraft:empty',
     'minecraft:chest',

@@ -10,6 +10,7 @@ import {
   NumberNode,
 	INode,
 	ChoiceNode,
+	ListNode,
 } from '@mcschema/core'
 
 export let DensityFunction: INode
@@ -144,6 +145,11 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 			'minecraft:slide': {
 				argument: DensityFunction,
 			},
+			'minecraft:spline': {
+				spline: Reference('cubic_spline'),
+				min_value: NoiseRange,
+				max_value: NoiseRange,
+			},
 			'minecraft:square': {
 				argument: DensityFunction,
 			},
@@ -178,4 +184,26 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 			y_scale: 0.5
 		})
 	}))
+
+  schemas.register('cubic_spline', Mod(ChoiceNode([
+    {
+      type: 'number',
+      node: NumberNode()
+    },
+    {
+      type: 'object',
+      node: ObjectNode({
+        coordinate: DensityFunction,
+        points: ListNode(
+          ObjectNode({
+            location: NumberNode(),
+            derivative: NumberNode(),
+            value: Reference('cubic_spline')
+          })
+        )
+      }, { category: 'function' })
+    }
+  ], { context: 'terrain_spline', choiceContext: 'terrain_spline' }), {
+    default: () => 0
+  }))
 }

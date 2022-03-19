@@ -43,7 +43,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         use_expansion_hack: BooleanNode(),
       },
       'minecraft:mineshaft': {
-        type: StringNode({ enum: ['normal', 'mesa'] }),
+        mineshaft_type: StringNode({ enum: ['normal', 'mesa'] }),
       },
       'minecraft:nether_fossil': {
         height: Reference('height_provider')

@@ -146,7 +146,7 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 				argument: DensityFunction,
 			},
 			'minecraft:spline': {
-				spline: Reference('terrain_spline')
+				spline: Reference('cubic_spline'),
 			},
 			'minecraft:square': {
 				argument: DensityFunction,
@@ -175,7 +175,7 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 		})
 	}))
 
-  schemas.register('terrain_spline', Mod(ChoiceNode([
+  schemas.register('cubic_spline', Mod(ChoiceNode([
     {
       type: 'number',
       node: NumberNode()
@@ -188,7 +188,7 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
           ObjectNode({
             location: NumberNode(),
             derivative: NumberNode(),
-            value: Reference('terrain_spline')
+            value: Reference('cubic_spline')
           })
         )
       }, { category: 'function' })

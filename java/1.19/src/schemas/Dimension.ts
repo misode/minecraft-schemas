@@ -27,7 +27,6 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
       [Switch]: [{ push: 'type' }],
       [Case]: {
         'minecraft:noise': {
-          seed: NumberNode({ integer: true }),
           settings: NoiseSettingsPresets(Reference('noise_settings')),
           biome_source: ObjectNode({
             type: StringNode({ validator: 'resource', params: { pool: 'worldgen/biome_source' } }),
@@ -51,9 +50,6 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
                 scale: Opt(NumberNode({ integer: true, min: 0, max: 62 })),
                 biomes: Tag({ resource: '$worldgen/biome' })
               },
-              'minecraft:the_end': {
-                seed: NumberNode({ integer: true })
-              }
             }
           }, { category: 'predicate', disableSwitchContext: true })
         },
@@ -64,15 +60,12 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
     }, { disableSwitchContext: true })
   }, { category: 'pool', context: 'dimension' }), {
     default: () => {
-      const seed = Math.floor(Math.random() * (4294967296)) - 2147483648
       return {
       type: 'minecraft:overworld',
       generator: {
         type: 'minecraft:noise',
-        seed,
         biome_source: {
           type: 'minecraft:fixed',
-          seed,
           biome: 'minecraft:plains'
         },
         settings: 'minecraft:overworld'

@@ -40,6 +40,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         size: NumberNode({ integer: true }),
         start_height: Reference('height_provider'),
         project_start_to_heightmap: Opt(StringNode({ enum: 'heightmap_type' })),
+        max_distance_from_center: NumberNode({ integer: true, min: 1, max: 128 }),
         use_expansion_hack: BooleanNode(),
       },
       'minecraft:mineshaft': {

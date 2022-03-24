@@ -115,6 +115,13 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 				xz_scale: NumberNode(),
 				y_scale: NumberNode(),
 			},
+			'minecraft:old_blended_noise': {
+        xz_scale: NumberNode(),
+        y_scale: NumberNode(),
+        xz_factor: NumberNode(),
+        y_factor: NumberNode(),
+				smear_scale_multiplier: NumberNode({ min: 1, max: 8 }),
+			},
 			'minecraft:quarter_negative': {
 				argument: DensityFunction,
 			},

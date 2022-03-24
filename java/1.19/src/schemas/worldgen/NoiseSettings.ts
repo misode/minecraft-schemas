@@ -38,14 +38,6 @@ export function initNoiseSettingsSchemas(schemas: SchemaRegistry, collections: C
       height: NumberNode({ integer: true, min: 0, max: 4096 }),
       size_horizontal: NumberNode({ integer: true }),
       size_vertical: NumberNode({ integer: true }),
-      sampling: ObjectNode({
-        xz_scale: NumberNode(),
-        y_scale: NumberNode(),
-        xz_factor: NumberNode(),
-        y_factor: NumberNode()
-      }),
-      bottom_slide: Reference('noise_slider'),
-      top_slide: Reference('noise_slider'),
     }),
     noise_router: ObjectNode({
       barrier: DensityFunction,

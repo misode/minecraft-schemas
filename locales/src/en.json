@@ -1665,6 +1665,7 @@
   "structure_feature.jigsaw.use_expansion_hack": "Use expansion hack",
   "structure_feature.step": "Generation step",
   "structure_placement.type": "Type",
+  "structure_placement.salt": "Salt",
   "structure_placement.locate_offset": "Locate offset",
   "structure_placement.exclusion_zone": "Exclusion zone",
   "structure_placement.exclusion_zone.other_set": "Other set",

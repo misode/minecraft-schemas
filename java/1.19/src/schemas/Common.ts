@@ -613,7 +613,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         treasure: Opt(BooleanNode())
       },
       'minecraft:exploration_map': {
-        destination: Opt(Tag({ resource: '$tag/worldgen/structure' })),
+        destination: Opt(Tag({ resource: '$worldgen/structure' })),
         decoration: Opt(StringNode({ enum: 'map_decoration' })),
         zoom: Opt(NumberNode({ integer: true })),
         search_radius: Opt(NumberNode({ integer: true })),

@@ -313,6 +313,7 @@ export type ResourceType =
   | 'worldgen/material_rule'
   | 'worldgen/material_condition'
   | 'worldgen/placement_modifier_type'
+  | 'worldgen/root_placer_type'
   | 'worldgen/structure_feature'
   | 'worldgen/structure_placement'
   | 'worldgen/structure_pool_element'

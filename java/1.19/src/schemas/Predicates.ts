@@ -157,7 +157,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     type: Opt(StringNode({ validator: 'resource', params: { pool: 'entity_type', allowTag: true } })),
     type_specific: Opt(ObjectNode({
       type: StringNode({ enum: ['any', 'cat', 'fishing_hook', 'frog', 'lightning', 'player', 'slime'] }),
-      [Switch]: [],
+      [Switch]: [{ push: 'type' }],
       [Case]: {
         'cat': {
           variant: StringNode({ validator: 'resource', params: { pool: 'cat_variant' } })

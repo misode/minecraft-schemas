@@ -336,6 +336,21 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           dirt_provider: Reference('block_state_provider'),
           trunk_provider: Reference('block_state_provider'),
           foliage_provider: Reference('block_state_provider'),
+          root_placer: Opt(ObjectNode({
+            type: StringNode({ validator: 'resource', params: { pool: 'worldgen/root_placer_type' } }),
+            [Switch]: [{ push: 'type' }],
+            [Case]: {
+              'minecraft:mangrove_root_placer': {
+                can_grow_through: Tag({ resource: 'block' }),
+                muddy_roots_in: Tag({ resource: 'block' }),
+                muddy_roots_provider: Reference('block_state_provider'),
+                max_root_width: NumberNode({ integer: true, min: 1, max: 12 }),
+                max_root_length: NumberNode({ integer: true, min: 1, max: 64 }),
+                y_offset: IntProvider(),
+                random_skew_chance: NumberNode({ min: 0, max: 1 })
+              }
+            }
+          })),
           trunk_placer: ObjectNode({
             type: StringNode({ validator: 'resource', params: { pool: 'worldgen/trunk_placer_type' } }),
             base_height: NumberNode({ integer: true, min: 0, max: 32 }),

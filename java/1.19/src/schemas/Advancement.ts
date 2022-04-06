@@ -189,6 +189,10 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           item: Opt(Reference('item_predicate')),
           location: Opt(Reference('location_predicate'))
         },
+        'minecraft:kill_mob_near_sculk_catalyst': {
+          entity: EntityPredicate,
+          killing_blow: Opt(Reference('damage_source_predicate'))
+        },
         'minecraft:killed_by_crossbow': {
           unique_entity_types: Reference('int_bounds'),
           victims: Opt(ListNode(

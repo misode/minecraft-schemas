@@ -23,6 +23,7 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:inventory_changed',
     'minecraft:item_durability_changed',
     'minecraft:item_used_on_block',
+    'minecraft:kill_mob_near_sculk_catalyst',
     'minecraft:killed_by_crossbow',
     'minecraft:levitation',
     'minecraft:lightning_strike',

@@ -76,5 +76,16 @@
   "attribute.generic_luck": "Suerte",
   "attribute.generic_max_health": "Vida máxima",
   "attribute.generic_movement_speed": "Velocidad de movimiento",
+  "attribute.horse.jump_strength": "Fuerza del salto",
+  "attribute_modifier.amount": "Cantidad",
+  "attribute_modifier.attribute": "Atributo",
+  "attribute_modifier.name": "Nombre",
+  "attribute_modifier.operation": "Operación",
+  "attribute_modifier.slot": "Espacios",
+  "axis.x": "X",
+  "axis.y": "Y",
+  "axis.z": "Z",
+  "badge.experimental": "Experimental",
+  "badge.unstable": "Inestable",
   "dimension": "Dimensión"
 }

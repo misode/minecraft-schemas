@@ -95,6 +95,10 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
       }),
       [Switch]: ['pop', { push: 'trigger' }],
       [Case]: {
+        'minecraft:allay_drop_item_on_block': {
+          item: Opt(Reference('item_predicate')),
+          location: Opt(Reference('location_predicate'))
+        },
         'minecraft:bee_nest_destroyed': {
           block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
           num_bees_inside: Opt(NumberNode({ integer: true })),
@@ -167,9 +171,6 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           entity: EntityPredicate,
           item: Opt(Reference('item_predicate'))
         },
-        'minecraft:hero_of_the_village': {
-          location: Opt(Reference('location_predicate'))
-        },
         'minecraft:inventory_changed': {
           slots: Opt(ObjectNode({
             empty: Reference('int_bounds'),
@@ -207,9 +208,6 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           lightning: EntityPredicate,
           bystander: EntityPredicate,
         },
-        'minecraft:location': {
-          location: Opt(Reference('location_predicate'))
-        },
         'minecraft:nether_travel': {
           start_position: Opt(Reference('location_predicate')),
           distance: Opt(Reference('distance_predicate')),
@@ -246,9 +244,6 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           start_position: Opt(Reference('location_predicate')),
           distance: Opt(Reference('distance_predicate'))
         },
-        'minecraft:slept_in_bed': {
-          location: Opt(Reference('location_predicate'))
-        },
         'minecraft:slide_down_block': {
           block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } }))
         },
@@ -283,9 +278,6 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           villager: Opt(Reference('entity_predicate')),
           item: Opt(Reference('item_predicate'))
         },
-        'minecraft:voluntary_exile': {
-          location: Opt(Reference('location_predicate'))
-        }
       }
     }, { context: 'criterion' }))
   }, { category: 'predicate', context: 'criterion' }))

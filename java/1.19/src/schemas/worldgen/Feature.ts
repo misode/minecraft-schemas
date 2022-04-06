@@ -56,6 +56,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     state: Reference('block_state'),
     radius: IntProvider({ min: 0, max: 8 }),
     half_height: NumberNode({ integer: true, min: 0, max: 4 }),
+    can_origin_replace: Tag({ resource: 'block' }),
     targets: ListNode(
       Reference('block_state')
     )
@@ -210,7 +211,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           max_gen_offset: Opt(NumberNode({ integer: true })),
           invalid_blocks_threshold: NumberNode({ integer: true })
         },
-        'minecraft:glow_lichen': {
+        'minecraft:multiface_growth': {
           search_range: Opt(NumberNode({ min: 1, max: 64, integer: true })),
           chance_of_spreading: Opt(NumberNode({ min: 0, max: 1 })),
           can_place_on_floor: Opt(BooleanNode()),
@@ -327,6 +328,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           requires_block_below: BooleanNode(),
           valid_blocks: Tag({ resource: 'block' })
         },
+        'minecraft:surface_disk': DiskConfig,
         'minecraft:tree': {
           ignore_vines: Opt(BooleanNode()),
           force_dirt: Opt(BooleanNode()),
@@ -344,6 +346,12 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
               'minecraft:bending_trunk_placer': {
                 bend_length: IntProvider({ min: 1, max: 64 }),
                 min_height_for_leaves: Opt(NumberNode({ integer: true, min: 1 }))
+              },
+              'minecraft:upwards_branching_trunk_placer': {
+                extra_branch_steps: IntProvider({ min: 1 }),
+                extra_branch_length: IntProvider({ min: 0 }),
+                place_branch_per_log_probability: NumberNode({ min: 0, max: 1 }),
+                can_grow_through: Tag({ resource: 'block' })
               }
             }
           }, { context: 'trunk_placer' }),
@@ -388,10 +396,23 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
                 'minecraft:alter_ground': {
                   provider: Reference('block_state_provider')
                 },
+                'minecraft:attached_to_leaves': {
+                  probability: NumberNode({ min: 0, max: 1 }),
+                  exclusion_radius_xz: NumberNode({ integer: true, min: 0, max: 16 }),
+                  exclusion_radius_y: NumberNode({ integer: true, min: 0, max: 16 }),
+                  required_empty_blocks: NumberNode({ integer: true, min: 1, max: 16 }),
+                  block_provider: Reference('block_state_provider'),
+                  directions: ListNode(
+                    StringNode({ enum: 'direction' })
+                  )
+                },
                 'minecraft:beehive': {
                   probability: NumberNode({ min: 0, max: 1 })
                 },
                 'minecraft:cocoa': {
+                  probability: NumberNode({ min: 0, max: 1 })
+                },
+                'minecraft:leave_vine': {
                   probability: NumberNode({ min: 0, max: 1 })
                 }
               }

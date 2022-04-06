@@ -138,31 +138,6 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     }
   }))
 
-  schemas.register('player_predicate', ObjectNode({
-    gamemode: Opt(StringNode({ enum: 'gamemode' })),
-    level: Reference('int_bounds'),
-    advancements: Opt(MapNode(
-      StringNode({ validator: 'resource', params: { pool: '$advancement' } }),
-      ChoiceNode([
-        { type: 'boolean', node: BooleanNode(), change: _ => true },
-        { 
-          type: 'object', node: MapNode(
-            StringNode(),
-            BooleanNode()
-          ) 
-        }
-      ])
-    )),
-    recipes: Opt(MapNode(
-      StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
-      BooleanNode()
-    )),
-    stats: Opt(ListNode(
-      Reference('statistic_predicate')
-    )),
-    looking_at: Opt(Reference('entity_predicate'))
-  }, { context: 'player' }))
-
   schemas.register('status_effect_predicate', ObjectNode({
     amplifier: Reference('int_bounds'),
     duration: Reference('int_bounds'),
@@ -180,6 +155,57 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
 
   schemas.register('entity_predicate', ObjectNode({
     type: Opt(StringNode({ validator: 'resource', params: { pool: 'entity_type', allowTag: true } })),
+    type_specific: Opt(ObjectNode({
+      type: StringNode({ enum: ['any', 'cat', 'fishing_hook', 'frog', 'lightning', 'player', 'slime'] }),
+      [Switch]: [],
+      [Case]: {
+        'cat': {
+          variant: StringNode({ validator: 'resource', params: { pool: 'cat_variant' } })
+        },
+        'fishing_hook': {
+          in_open_water: Opt(BooleanNode())
+        },
+        'frog': {
+          variant: StringNode({ validator: 'resource', params: { pool: 'frog_variant' } })
+        },
+        'lightning': {
+          blocks_set_on_fire: Opt(Reference('int_bounds')),
+          entity_struck: Opt(Reference('entity_predicate'))
+        },
+        'player': {
+          gamemode: Opt(StringNode({ enum: 'gamemode' })),
+          level: Reference('int_bounds'),
+          advancements: Opt(MapNode(
+            StringNode({ validator: 'resource', params: { pool: '$advancement' } }),
+            ChoiceNode([
+              {
+                type: 'boolean',
+                node: BooleanNode(),
+                change: () => true
+              },
+              {
+                type: 'object',
+                node: MapNode(
+                  StringNode(),
+                  BooleanNode()
+                )
+              }
+            ])
+          )),
+          recipes: Opt(MapNode(
+            StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
+            BooleanNode()
+          )),
+          stats: Opt(ListNode(
+            Reference('statistic_predicate')
+          )),
+          looking_at: Opt(Reference('entity_predicate'))
+        },
+        'slime': {
+          size: Reference('int_bounds')
+        },
+      }
+    })),
     nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:entity', id: ['pop', { push: 'type' }] } } })),
     team: Opt(StringNode({ validator: 'team' })),
     location: Opt(Reference('location_predicate')),
@@ -196,17 +222,9 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       StringNode({ enum: 'slot' }),
       Reference('item_predicate')
     )),
-    player: Opt(Reference('player_predicate')),
     vehicle: Opt(Reference('entity_predicate')),
     passenger: Opt(Reference('entity_predicate')),
     targeted_entity: Opt(Reference('entity_predicate')),
-    lightning_bolt: Opt(ObjectNode({
-      blocks_set_on_fire: Opt(Reference('int_bounds')),
-      entity_struck: Opt(Reference('entity_predicate'))
-    })),
-    fishing_hook: Opt(ObjectNode({
-      in_open_water: Opt(BooleanNode())
-    })),
     effects: Opt(MapNode(
       StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
       Reference('status_effect_predicate')

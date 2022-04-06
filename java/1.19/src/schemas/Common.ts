@@ -124,8 +124,10 @@ type InclusiveRangeConfig = {
 }
 export let InclusiveRange: (config?: InclusiveRangeConfig) => INode
 
+type NonTagResources = Exclude<ResourceType, `$tag/${string}`>
+
 type TagConfig = {
-  resource: ResourceType,
+  resource: NonTagResources,
   inlineSchema?: string,
 }
 export let Tag: (config: TagConfig) => INode

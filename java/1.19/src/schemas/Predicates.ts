@@ -160,13 +160,13 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       [Switch]: [{ push: 'type' }],
       [Case]: {
         'cat': {
-          variant: StringNode({ validator: 'resource', params: { pool: 'cat_variant' } })
+          variant: Opt(StringNode({ validator: 'resource', params: { pool: 'cat_variant' } }))
         },
         'fishing_hook': {
           in_open_water: Opt(BooleanNode())
         },
         'frog': {
-          variant: StringNode({ validator: 'resource', params: { pool: 'frog_variant' } })
+          variant: Opt(StringNode({ validator: 'resource', params: { pool: 'frog_variant' } }))
         },
         'lightning': {
           blocks_set_on_fire: Opt(Reference('int_bounds')),

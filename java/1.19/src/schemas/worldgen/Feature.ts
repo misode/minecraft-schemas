@@ -350,7 +350,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
                 random_skew_chance: NumberNode({ min: 0, max: 1 })
               }
             }
-          })),
+          }, { context: 'root_placer' })),
           trunk_placer: ObjectNode({
             type: StringNode({ validator: 'resource', params: { pool: 'worldgen/trunk_placer_type' } }),
             base_height: NumberNode({ integer: true, min: 0, max: 32 }),

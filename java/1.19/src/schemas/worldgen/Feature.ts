@@ -305,6 +305,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           spread_attempts: NumberNode({ integer: true, min: 1, max: 64 }),
           growth_rounds: NumberNode({ integer: true, min: 0, max: 8 }),
           spread_rounds: NumberNode({ integer: true, min: 0, max: 8 }),
+          extra_rare_growths: IntProvider(),
           catalyst_chance: NumberNode({ min: 0, max: 1 }),
         },
         'minecraft:sea_pickle': {

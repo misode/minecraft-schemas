@@ -72,7 +72,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
       },
       'minecraft:block_rot': {
         integrity: NumberNode({ min: 0, max: 1 }),
-        rottable_blocks: Tag({ resource: 'block' })
+        rottable_blocks: Opt(Tag({ resource: 'block' }))
       },
       'minecraft:gravity': {
         heightmap: StringNode({ enum: 'heightmap_type' }),

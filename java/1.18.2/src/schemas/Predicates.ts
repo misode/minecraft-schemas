@@ -207,6 +207,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     fishing_hook: Opt(ObjectNode({
       in_open_water: Opt(BooleanNode())
     })),
+    catType: Opt(StringNode({ enum: 'cat_texture' })),
     effects: Opt(MapNode(
       StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
       Reference('status_effect_predicate')

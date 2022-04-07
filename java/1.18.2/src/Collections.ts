@@ -394,4 +394,18 @@ export function initCollections(collections: CollectionRegistry) {
     'water_ambient',
     'misc',
   ])
+
+  collections.register('cat_texture', [
+    'textures/entity/cat/tabby.png',
+    'textures/entity/cat/black.png',
+    'textures/entity/cat/red.png',
+    'textures/entity/cat/siamese.png',
+    'textures/entity/cat/british_shorthair.png',
+    'textures/entity/cat/calico.png',
+    'textures/entity/cat/persian.png',
+    'textures/entity/cat/ragdoll.png',
+    'textures/entity/cat/white.png',
+    'textures/entity/cat/jellie.png',
+    'textures/entity/cat/all_black.png'
+  ])
 }

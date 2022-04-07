@@ -196,6 +196,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       Reference('item_predicate')
     )),
     player: Opt(Reference('player_predicate')),
+    catType: Opt(StringNode({ enum: 'cat_texture' })),
     effects: Opt(MapNode(
       StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
       Reference('status_effect_predicate')

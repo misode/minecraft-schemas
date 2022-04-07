@@ -196,10 +196,10 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       StringNode({ enum: 'slot' }),
       Reference('item_predicate')
     )),
-    player: Opt(Reference('player_predicate')),
     vehicle: Opt(Reference('entity_predicate')),
     passenger: Opt(Reference('entity_predicate')),
     targeted_entity: Opt(Reference('entity_predicate')),
+    player: Opt(Reference('player_predicate')),
     lightning_bolt: Opt(ObjectNode({
       blocks_set_on_fire: Opt(Reference('int_bounds')),
       entity_struck: Opt(Reference('entity_predicate'))
@@ -207,6 +207,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     fishing_hook: Opt(ObjectNode({
       in_open_water: Opt(BooleanNode())
     })),
+    catType: Opt(StringNode({ enum: 'cat_texture' })),
     effects: Opt(MapNode(
       StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
       Reference('status_effect_predicate')

@@ -338,6 +338,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           foliage_provider: Reference('block_state_provider'),
           root_placer: Opt(ObjectNode({
             type: StringNode({ validator: 'resource', params: { pool: 'worldgen/root_placer_type' } }),
+            root_provider: Reference('block_state_provider'),
             [Switch]: [{ push: 'type' }],
             [Case]: {
               'minecraft:mangrove_root_placer': {

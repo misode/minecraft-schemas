@@ -1641,6 +1641,7 @@
   "recipe.addition.item": "Item",
   "recipe.addition.tag": "Item tag",
   "advancement.requirements": "Requirements",
+  "root_placer.root_provider": "Root provider",
   "root_placer.mangrove_root_placer.can_grow_through": "Can grow through",
   "root_placer.mangrove_root_placer.muddy_roots_in": "Muddy roots in",
   "root_placer.mangrove_root_placer.muddy_roots_provider": "Muddy roots provider",

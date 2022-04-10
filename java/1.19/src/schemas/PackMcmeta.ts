@@ -7,6 +7,7 @@ import {
   CollectionRegistry,
   ListNode,
   StringNode as RawStringNode,
+  Opt,
 } from '@mcschema/core'
 
 const CURRENT_PACK_FORMAT = 10
@@ -29,14 +30,14 @@ export function initPackMcmetaSchemas(schemas: SchemaRegistry, collections: Coll
         description: ''
       })
     }),
-    filter: ObjectNode({
+    filter: Opt(ObjectNode({
       block: ListNode(
         ObjectNode({
-          namespace: StringNode({ validator: 'regex_pattern' }),
-          path: StringNode({ validator: 'regex_pattern' }),
+          namespace: Opt(StringNode({ validator: 'regex_pattern' })),
+          path: Opt(StringNode({ validator: 'regex_pattern' })),
         })
       )
-    })
+    }))
   }), {
     default: () => ({
       pack: {

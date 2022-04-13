@@ -12,7 +12,7 @@ import {
   BooleanNode,
   Reference as RawReference,
 } from '@mcschema/core'
-import { FloatProvider } from '../Common'
+import { FloatProvider, Tag } from '../Common'
 
 export function initCarverSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
@@ -43,6 +43,7 @@ export function initCarverSchemas(schemas: SchemaRegistry, collections: Collecti
       y: Reference('height_provider'),
       yScale: FloatProvider(),
       lava_level: Reference('vertical_anchor'),
+      replaceable: Tag({ resource: 'block' }),
       debug_settings: Opt(ObjectNode({
         debug_mode: Opt(BooleanNode()),
         air_state: Opt(Reference('block_state')),

@@ -52,16 +52,6 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
     feature: PlacedFeature,
   }
 
-  const DiskConfig: NodeChildren = {
-    state: Reference('block_state'),
-    radius: IntProvider({ min: 0, max: 8 }),
-    half_height: NumberNode({ integer: true, min: 0, max: 4 }),
-    can_origin_replace: Tag({ resource: 'block' }),
-    targets: ListNode(
-      Reference('block_state')
-    )
-  }
-
   const HugeMushroomConfig: NodeChildren = {
     cap_provider: Reference('block_state_provider'),
     stem_provider: Reference('block_state_provider'),
@@ -126,7 +116,12 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           size: IntProvider({ min: 0, max: 16 }),
           rim_size: IntProvider({ min: 0, max: 16 })
         },
-        'minecraft:disk': DiskConfig,
+        'minecraft:disk': {
+          state_provider: Reference('rule_based_block_state_provider'),
+          target: Reference('block_predicate_worldgen'),
+          radius: IntProvider({ min: 0, max: 8 }),
+          half_height: NumberNode({ integer: true, min: 0, max: 4 }),
+        },
         'minecraft:dripstone_cluster': {
           floor_to_ceiling_search_range: NumberNode({ integer: true, min: 1, max: 512 }),
           height: IntProvider({ min: 0, max: 128 }),
@@ -228,7 +223,6 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           planted: Opt(BooleanNode())
         },
         'minecraft:huge_red_mushroom': HugeMushroomConfig,
-        'minecraft:ice_patch': DiskConfig,
         'minecraft:iceberg': {
           state: Reference('block_state')
         },
@@ -328,7 +322,6 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           requires_block_below: BooleanNode(),
           valid_blocks: Tag({ resource: 'block' })
         },
-        'minecraft:surface_disk': DiskConfig,
         'minecraft:tree': {
           ignore_vines: Opt(BooleanNode()),
           force_dirt: Opt(BooleanNode()),
@@ -339,16 +332,22 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           root_placer: Opt(ObjectNode({
             type: StringNode({ validator: 'resource', params: { pool: 'worldgen/root_placer_type' } }),
             root_provider: Reference('block_state_provider'),
+            trunk_offset_y: IntProvider(),
+            above_root_placement: Opt(ObjectNode({
+              above_root_provider: Reference('block_state_provider'),
+              above_root_placement_chance: NumberNode({ min: 0, max: 1 })
+            })),
             [Switch]: [{ push: 'type' }],
             [Case]: {
               'minecraft:mangrove_root_placer': {
-                can_grow_through: Tag({ resource: 'block' }),
-                muddy_roots_in: Tag({ resource: 'block' }),
-                muddy_roots_provider: Reference('block_state_provider'),
-                max_root_width: NumberNode({ integer: true, min: 1, max: 12 }),
-                max_root_length: NumberNode({ integer: true, min: 1, max: 64 }),
-                y_offset: IntProvider(),
-                random_skew_chance: NumberNode({ min: 0, max: 1 })
+                mangrove_root_placement: ObjectNode({
+                  max_root_width: NumberNode({ integer: true, min: 1, max: 12 }),
+                  max_root_length: NumberNode({ integer: true, min: 1, max: 64 }),
+                  random_skew_chance: NumberNode({ min: 0, max: 1 }),
+                  can_grow_through: Tag({ resource: 'block' }),
+                  muddy_roots_in: Tag({ resource: 'block' }),
+                  muddy_roots_provider: Reference('block_state_provider'),
+                })
               }
             }
           }, { context: 'root_placer' })),
@@ -584,6 +583,22 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
   }, { context: 'block_state_provider' }), {
     default: () => ({
       type: 'minecraft:simple_state_provider'
+    })
+  }))
+
+  schemas.register('rule_based_block_state_provider', Mod(ObjectNode({
+    fallback: Reference('block_state_provider'),
+    rules: ListNode(
+      ObjectNode({
+        if_true: Reference('block_predicate_worldgen'),
+        then: Reference('block_state_provider')
+      })
+    )
+  }, { context: 'block_state_provider' }), {
+    default: () => ({
+      fallback: {
+        type: 'minecraft:simple_state_provider'
+      }
     })
   }))
 

@@ -249,7 +249,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           signal_strength: Opt(Range({ integer: true }))
         },
         'minecraft:thrown_item_picked_up_by_entity': {
-          entity: Opt(Reference('entity_predicate')),
+          entity: EntityPredicate,
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:used_ender_eye': {
@@ -259,7 +259,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:villager_trade': {
-          villager: Opt(Reference('entity_predicate')),
+          villager: EntityPredicate,
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:voluntary_exile': {

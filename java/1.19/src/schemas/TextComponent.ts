@@ -61,7 +61,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     })
   }))
 
-  const CommonFields: NodeChildren = {
+  const StyleFields: NodeChildren = {
     color: Opt(StringNode()) /* TODO */,
     font: Opt(StringNode()), // TODO: add validation
     bold: Opt(BooleanNode()),
@@ -70,6 +70,14 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     strikethrough: Opt(BooleanNode()),
     obfuscated: Opt(BooleanNode()),
     insertion: Opt(StringNode()),
+  }
+
+  schemas.register('text_style', ObjectNode({
+    ...StyleFields
+  }, { context: 'text_component_object' }))
+
+  const CommonFields: NodeChildren = {
+    ...StyleFields,
     clickEvent: Opt(ObjectNode({
       action: StringNode({ enum: ['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard'] }),
       [Switch]: [{ push: 'action' }],

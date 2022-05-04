@@ -666,6 +666,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         ),
         add: Opt(BooleanNode())
       },
+      'minecraft:set_instrument': {
+        options: StringNode({ validator: 'resource', params: { pool: 'instrument', requireTag: true } })
+      },
       'minecraft:set_loot_table': {
         type: StringNode({ validator: 'resource', params: { pool: 'block_entity_type' } }),
         name: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),

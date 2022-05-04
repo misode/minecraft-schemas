@@ -39,6 +39,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         start_pool: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool'}}),
         size: NumberNode({ integer: true }),
         start_height: Reference('height_provider'),
+        start_jigsaw_name: Opt(StringNode()),
         project_start_to_heightmap: Opt(StringNode({ enum: 'heightmap_type' })),
         max_distance_from_center: NumberNode({ integer: true, min: 1, max: 128 }),
         use_expansion_hack: BooleanNode(),

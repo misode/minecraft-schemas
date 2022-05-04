@@ -1,6 +1,7 @@
 import { CollectionRegistry, SchemaRegistry } from '@mcschema/core'
 import { initAdvancementSchemas } from './Advancement'
 import { initAssetsSchemas } from './assets'
+import { initChatTypeSchemas } from './ChatType'
 import { initCommonSchemas } from './Common'
 import { initConditionSchemas } from './Condition'
 import { initDimensionSchemas } from './Dimension'
@@ -18,6 +19,7 @@ import { initWorldSettingsSchemas } from './WorldSettings'
 export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
     // `Common.ts` is the only file that has exports. It should be initialized first. 
     initCommonSchemas(schemas, collections)
+    initChatTypeSchemas(schemas, collections)
     initAdvancementSchemas(schemas, collections)
     initAssetsSchemas(schemas, collections)
     initConditionSchemas(schemas, collections)

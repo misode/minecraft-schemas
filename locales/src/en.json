@@ -85,6 +85,7 @@
   "attribute_modifier.operation.addition": "Addition",
   "attribute_modifier.operation.multiply_base": "Multiply base",
   "attribute_modifier.operation.multiply_total": "Multiply total",
+  "attribute_modifier.id": "UUID",
   "attribute_modifier.slot": "Slots",
   "attribute_modifier.slot.list": "Multiple",
   "attribute_modifier.slot.string": "Single",

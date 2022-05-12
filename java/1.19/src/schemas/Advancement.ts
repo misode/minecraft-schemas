@@ -134,10 +134,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         'minecraft:effects_changed': {
           effects: Opt(MapNode(
             StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
-            ObjectNode({
-              amplifier: Reference('int_bounds'),
-              duration: Reference('int_bounds')
-            })
+            Reference('status_effect_predicate')
           )),
           source: Opt(EntityPredicate)
         },

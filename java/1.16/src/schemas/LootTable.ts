@@ -312,6 +312,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     name: StringNode(),
     amount: Range({ bounds: true }),
     operation: StringNode({ enum: ['addition', 'multiply_base', 'multiply_total'] }),
+    id: Opt(StringNode({ validator: 'uuid' })),
     slot: StringOrList(
       StringNode({ enum: 'slot' })
     )

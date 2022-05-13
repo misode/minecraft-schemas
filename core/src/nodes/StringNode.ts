@@ -90,6 +90,7 @@ export const StringNode = (collections?: Registry<string[]>, config?: Validation
         if (config.validator === 'resource' && (
           (typeof config.params.pool === 'string' && config.params.pool.startsWith('$')) ||
           ((config.params.allowTag || config.params.requireTag) && value.startsWith('#')) ||
+          (typeof value === 'string' && value.includes(':') && !value.startsWith('minecraft:')) ||
           config.params.isDefinition || 
           config.params.allowUnknown
         )) {

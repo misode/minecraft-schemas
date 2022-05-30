@@ -8,7 +8,7 @@ import {
   CollectionRegistry,
   Opt,
 } from '@mcschema/core'
-import { DefaultDimensionType } from './Common'
+import { DefaultDimensionType, IntProvider } from './Common'
 
 export function initDimensionTypeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
@@ -29,7 +29,9 @@ export function initDimensionTypeSchemas(schemas: SchemaRegistry, collections: C
     effects: Opt(StringNode({ enum: ['minecraft:overworld', 'minecraft:the_nether', 'minecraft:the_end'] })),
     infiniburn: StringNode({ validator: 'resource', params: { pool: 'block', requireTag: true } }),
     min_y: NumberNode({ integer: true, min: -2032, max: 2031 }),
-    height: NumberNode({ integer: true, min: 16, max: 4064 })
+    height: NumberNode({ integer: true, min: 16, max: 4064 }),
+    monster_spawn_light_level: IntProvider({ min: 0, max: 15 }),
+    monster_spawn_block_light_limit: NumberNode({ integer: true, min: 0, max: 15 }),
   }, { context: 'dimension_type' }), node => ({
     default: () => DefaultDimensionType,
     validate: (path, value, errors, options) => {

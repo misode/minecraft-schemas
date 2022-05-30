@@ -62,6 +62,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
   }))
 
   const CommonFields: NodeChildren = {
+    color: Opt(StringNode()),
     bold: Opt(BooleanNode()),
     italic: Opt(BooleanNode()),
     underlined: Opt(BooleanNode()),

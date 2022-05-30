@@ -164,12 +164,12 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           ))
         },
         'minecraft:levitation': {
-          distance: Opt(Range()),
+          distance: Opt(Reference('distance_predicate')),
           duration: Opt(Range())
         },
         'minecraft:location': LocationFields,
         'minecraft:nether_travel': {
-          distance: Opt(Range()),
+          distance: Opt(Reference('distance_predicate')),
           entered: Opt(Reference('location_predicate')),
           exited: Opt(Reference('location_predicate'))
         },

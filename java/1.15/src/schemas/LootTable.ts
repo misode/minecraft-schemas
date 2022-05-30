@@ -169,10 +169,10 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
           enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
           formula: StringNode({ validator: 'resource', params: { pool: collections.get('loot_table_apply_bonus_formula') } }),
           parameters: Mod(ObjectNode({
-            bonusMultiplier: Mod(NumberNode(), {
+            bonusMultiplier: Mod(NumberNode({ integer: true }), {
               enabled: path => path.pop().push('formula').get() === 'minecraft:uniform_bonus_count'
             }),
-            extra: Mod(NumberNode(), {
+            extra: Mod(NumberNode({ integer: true }), {
               enabled: path => path.pop().push('formula').get() === 'minecraft:binomial_with_bonus_count'
             }),
             probability: Mod(NumberNode(), {

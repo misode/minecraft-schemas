@@ -574,6 +574,8 @@
   "dimension_type.logical_height.help": "Portals can't spawn and chorus fruit can't teleport players above this height.",
   "dimension_type.min_y": "Min Y",
   "dimension_type.min_y.help": "The minimum height in which blocks can exist.",
+  "dimension_type.monster_spawn_light_level": "Monster spawn light level",
+  "dimension_type.monster_spawn_block_light_limit": "Monster spawn block light limit",
   "dimension_type.name": "Name",
   "dimension_type.natural": "Natural",
   "dimension_type.natural.help": "If true, portals will spawn zombified piglins. If false, compasses and clocks spin randomly.",

@@ -1911,7 +1911,7 @@
   "tree_decorator.attached_to_leaves.probability": "Probability",
   "tree_decorator.attached_to_leaves.exclusion_radius_xz": "Exclusion radius XZ",
   "tree_decorator.attached_to_leaves.exclusion_radius_y": "Exclusion radius Y",
-  "tree_decorator.attached_to_leaves.required_empty_blocks": "Probability",
+  "tree_decorator.attached_to_leaves.required_empty_blocks": "Required empty blocks",
   "tree_decorator.attached_to_leaves.block_provider": "Block provider",
   "tree_decorator.attached_to_leaves.directions": "Directions",
   "tree_decorator.attached_to_leaves.directions.entry": "Direction",

@@ -23,24 +23,6 @@ import {
 export let ConditionCases: (entitySourceNode?: INode<any>) => NestedNodeChildren
 export let FunctionCases: (conditions: NodeChildren, copySourceNode?: INode<any>, entitySourceNode?: INode<any>) => NestedNodeChildren
 
-export const DefaultDimensionType = {
-  ultrawarm: false,
-  natural: true,
-  piglin_safe: false,
-  respawn_anchor_works: false,
-  bed_works: true,
-  has_raids: true,
-  has_skylight: true,
-  has_ceiling: false,
-  coordinate_scale: 1,
-  ambient_light: 0,
-  logical_height: 256,
-  infiniburn: '#minecraft:infiniburn_overworld',
-  min_y: 0,
-  height: 256,
-}
-export let DimensionTypePresets: (node: INode<any>) => INode<any>
-
 export const DefaultNoiseSettings = {
 	sea_level: 63,
 	ore_veins_enabled: true,
@@ -706,52 +688,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     })
     return res
   }
-
-  DimensionTypePresets = (node: INode<any>) => ObjectOrPreset(
-    StringNode({ validator: 'resource', params: { pool: '$dimension_type' } }),
-    node,
-    {
-      'minecraft:overworld': DefaultDimensionType,
-      'minecraft:the_nether': {
-        name: 'minecraft:the_nether',
-        ultrawarm: true,
-        natural: false,
-        shrunk: true,
-        piglin_safe: true,
-        respawn_anchor_works: true,
-        bed_works: false,
-        has_raids: false,
-        has_skylight: false,
-        has_ceiling: true,
-        ambient_light: 0.1,
-        fixed_time: 18000,
-        logical_height: 128,
-        effects: 'minecraft:the_nether',
-        infiniburn: '#minecraft:infiniburn_nether',
-        min_y: 0,
-        height: 256,
-      },
-      'minecraft:the_end': {
-        name: 'minecraft:the_end',
-        ultrawarm: false,
-        natural: false,
-        shrunk: false,
-        piglin_safe: false,
-        respawn_anchor_works: false,
-        bed_works: false,
-        has_raids: true,
-        has_skylight: false,
-        has_ceiling: false,
-        ambient_light: 0,
-        fixed_time: 6000,
-        logical_height: 256,
-        effects: 'minecraft:the_end',
-        infiniburn: '#minecraft:infiniburn_end',
-        min_y: 0,
-        height: 256,
-      }
-    }
-  )
 
   NoiseSettingsPresets = (node: INode<any>) => ObjectOrPreset(
     StringNode({ validator: 'resource', params: { pool: '$worldgen/noise_settings' } }),

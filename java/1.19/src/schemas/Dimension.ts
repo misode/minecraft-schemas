@@ -14,14 +14,14 @@ import {
   INode,
   ChoiceNode,
 } from '@mcschema/core'
-import { DimensionTypePresets, NoiseSettingsPresets, Tag } from './Common'
+import { NoiseSettingsPresets, Tag } from './Common'
 
 export function initDimensionSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('dimension', Mod(ObjectNode({
-    type: DimensionTypePresets(Reference('dimension_type')),
+    type: StringNode({ validator: 'resource', params: { pool: '$dimension_type' } }),
     generator: ObjectNode({
       type: StringNode({ validator: 'resource', params: { pool: 'worldgen/chunk_generator' } }),
       [Switch]: [{ push: 'type' }],

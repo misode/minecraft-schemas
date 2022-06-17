@@ -207,6 +207,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           invalid_blocks_threshold: NumberNode({ integer: true })
         },
         'minecraft:multiface_growth': {
+          block: Opt(StringNode({ validator: 'resource', params: { pool: ['minecraft:glow_lichen', 'minecraft:sculk_vein'] } })),
           search_range: Opt(NumberNode({ min: 1, max: 64, integer: true })),
           chance_of_spreading: Opt(NumberNode({ min: 0, max: 1 })),
           can_place_on_floor: Opt(BooleanNode()),

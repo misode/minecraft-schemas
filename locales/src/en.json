@@ -872,6 +872,7 @@
   "feature.large_dripstone.stalactite_bluntness": "Stalactite bluntness",
   "feature.large_dripstone.stalagmite_bluntness": "Stalagmite bluntness",
   "feature.large_dripstone.wind_speed": "Wind speed",
+  "feature.multiface_growth.block": "Block",
   "feature.multiface_growth.can_be_placed_on": "Can be placed on",
   "feature.multiface_growth.can_be_placed_on.entry": "Block state",
   "feature.multiface_growth.can_place_on_ceiling": "Can place on ceiling",

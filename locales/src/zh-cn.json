@@ -81,6 +81,7 @@
   "attribute.zombie.spawn_reinforcements": "连带生成新僵尸的可能性",
   "attribute_modifier.amount": "数额",
   "attribute_modifier.attribute": "属性",
+  "attribute_modifier.id": "UUID",
   "attribute_modifier.name": "名称",
   "attribute_modifier.operation": "运算模式",
   "attribute_modifier.operation.addition": "加减数额",

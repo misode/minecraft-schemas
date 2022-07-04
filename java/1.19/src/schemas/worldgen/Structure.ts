@@ -41,7 +41,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         start_height: Reference('height_provider'),
         start_jigsaw_name: Opt(StringNode()),
         project_start_to_heightmap: Opt(StringNode({ enum: 'heightmap_type' })),
-        max_distance_from_center: NumberNode({ integer: true, min: 1, max: 128 }),
+        max_distance_from_center: Mod(NumberNode({ integer: true, min: 1, max: 128 }), { default: () => 80 }),
         use_expansion_hack: BooleanNode(),
       },
       'minecraft:mineshaft': {
@@ -78,6 +78,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
       type: 'minecraft:jigsaw',
       step: 'surface_structures',
       size: 6,
+      max_distance_from_center: 80,
     })
   }))
 }

@@ -700,6 +700,7 @@
   "error.expected_range": "Expected a range",
   "error.expected_string": "Expected a string",
   "error.expected_uniform_int": "Expected a uniform int",
+  "error.expected_suffix": "Expected string to end with \"%0%\"",
   "error.expected_tag": "Expected a tag starting with \"#\"",
   "error.height_multiple": "Height has to be multiple of %0%",
   "error.invalid_empty_list": "Array cannot be empty",

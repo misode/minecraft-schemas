@@ -28,7 +28,7 @@ export function initFontSchemas(schemas: SchemaRegistry, collections: Collection
 		[Switch]: [{ push: 'type' }],
 		[Case]: {
 			'bitmap': {
-				file: StringNode({ validator: 'resource', params: { pool: '$texture' } }),
+				file: StringNode({ validator: 'resource', params: { pool: '$texture', suffix: '.png' } }),
 				height: Opt(NumberNode({ integer: true })),
 				ascent: NumberNode({ integer: true }),
 				chars: ListNode(
@@ -37,7 +37,7 @@ export function initFontSchemas(schemas: SchemaRegistry, collections: Collection
 				)
 			},
 			'ttf': {
-				file: StringNode({ validator: 'resource', params: { pool: '$texture' } }),
+				file: StringNode({ validator: 'resource', params: { pool: '$texture', suffix: '.png' } }),
 				size: Opt(NumberNode()),
 				oversample: Opt(NumberNode()),
 				shift: Opt(ListNode(

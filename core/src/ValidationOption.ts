@@ -173,7 +173,11 @@ type ResourceValidationOption = {
     /**
      * Whether the field is a definition for the `pool`. Any resource will be allowed.
      */
-    isDefinition?: boolean
+    isDefinition?: boolean,
+    /**
+     * Require a suffix on each resource location.
+     */
+    suffix?: string,
   }
 }
 

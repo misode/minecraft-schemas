@@ -39,9 +39,10 @@ export const StringNode = (collections?: Registry<string[]>, config?: Validation
           return collections?.get(`tag/${config.params.pool}`).map(e => `#${e}`) ?? []
         }
         const registry = config.params.pool.replace(/^\$/, '')
+        const values = collections?.get(registry) ?? []
         return [
           ...config.params.allowTag ? collections?.get(`tag/${registry}`).map(e => `#${e}`) ?? [] : [],
-          ...collections?.get(registry) ?? [],
+          ...config.params.suffix ? values.map(v => v + config.params.suffix) : values,
         ]
       }
       return config.params.pool
@@ -84,6 +85,10 @@ export const StringNode = (collections?: Registry<string[]>, config?: Validation
           }
           if (!id.match(/^(?:[_\-a-z0-9.]*:)?[_\-a-z0-9/.]*$/g)) {
             errors.add(path, 'error.invalid_resource_location')
+            return value
+          }
+          if (config.params.suffix && !id.endsWith(config.params.suffix)) {
+            errors.add(path, 'error.expected_suffix', config.params.suffix)
             return value
           }
         }

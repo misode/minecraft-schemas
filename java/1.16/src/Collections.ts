@@ -584,6 +584,12 @@ export function initCollections(collections: CollectionRegistry) {
     'time'
   ])
 
+  collections.register('glyph_provider_type', [
+    'bitmap',
+    'ttf',
+    'legacy_unicode',
+  ])
+
   collections.register('cat_texture', [
     'textures/entity/cat/tabby.png',
     'textures/entity/cat/black.png',

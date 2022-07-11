@@ -402,6 +402,13 @@ export function initCollections(collections: CollectionRegistry) {
     'time'
   ])
 
+  collections.register('glyph_provider_type', [
+    'bitmap',
+    'ttf',
+    'space',
+    'legacy_unicode',
+  ])
+
   collections.register('mob_category', [
     'monster',
     'creature',

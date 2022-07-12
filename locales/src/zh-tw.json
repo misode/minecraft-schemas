@@ -1745,7 +1745,7 @@
   "worldgen/material_condition.not": "非",
   "worldgen/material_condition.vertical_gradient": "垂直漸層",
   "worldgen/material_condition.y_above": "高於Y座標",
-  "worldgen/material_rule.bandlands": "惡地",
+  "worldgen/material_rule.bandlands": "絛帶地",
   "worldgen/material_rule.block": "方塊",
   "worldgen/material_rule.condition": "條件",
   "worldgen/material_rule.sequence": "序列",

@@ -11,6 +11,7 @@ import {
   ListNode,
 	MapNode,
 	StringOrList,
+	Mod,
 } from '@mcschema/core'
 
 export function initFontSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -23,7 +24,7 @@ export function initFontSchemas(schemas: SchemaRegistry, collections: Collection
 		)
 	}, { context: 'font' }))
 
-  schemas.register('glyph_provider', ObjectNode({
+  schemas.register('glyph_provider', Mod(ObjectNode({
     type: StringNode({ enum: 'glyph_provider_type' }),
 		[Switch]: [{ push: 'type' }],
 		[Case]: {
@@ -59,5 +60,9 @@ export function initFontSchemas(schemas: SchemaRegistry, collections: Collection
 				template: StringNode()
 			}
 		}
-	}, { context: 'glyph_provider' }))
+	}, { context: 'glyph_provider' }), {
+		default: () => ({
+			type: 'bitmap',
+		}),
+	}))
 }

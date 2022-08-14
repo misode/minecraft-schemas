@@ -921,7 +921,7 @@
   "feature.sculk_patch.amount_per_charge": "Amount per charge",
   "feature.sculk_patch.spread_attempts": "Spread attempts",
   "feature.sculk_patch.growth_rounds": "Growth rounds",
-  "feature.sculk_patch.spread_rounds ": "Spread rounds",
+  "feature.sculk_patch.spread_rounds": "Spread rounds",
   "feature.sculk_patch.extra_rare_growths": "Extra rare growths",
   "feature.sculk_patch.catalyst_chance": "Catalyst chance",
   "feature.surface_disk.can_origin_replace": "Can origin replace",

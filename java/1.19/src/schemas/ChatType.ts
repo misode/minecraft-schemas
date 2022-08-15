@@ -14,13 +14,17 @@ export function initChatTypeSchemas(schemas: SchemaRegistry, collections: Collec
   const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('chat_type', Mod(ObjectNode({
-    chat: Opt(Reference('text_decoration')),
-    narration: Opt(Reference('text_decoration')),
+    chat: Reference('text_decoration'),
+    narration: Reference('text_decoration'),
   }, { context: 'chat_type' }), {
     default: () => ({
       chat: {
-        parameters: ['sender', 'content'],
         translation_key: 'chat.type.text',
+        parameters: ['sender', 'content'],
+      },
+      narration: {
+        translation_key: 'chat.type.text.narrate',
+        parameters: ['sender', 'content'],
       }
     })
   }))

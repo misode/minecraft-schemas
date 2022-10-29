@@ -416,7 +416,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         distribution: ListNode(
           ObjectNode({
             weight: NumberNode({ integer: true }),
-            data: Reference('int_provider'),
+            data: Reference('height_provider'),
           })
         )
       }

@@ -16,7 +16,6 @@ import {
 	Errors,
 	NodeOptions,
 } from '@mcschema/core'
-import { Tag } from '../Common'
 
 export function initStructureSetSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
@@ -25,7 +24,7 @@ export function initStructureSetSchemas(schemas: SchemaRegistry, collections: Co
 	schemas.register('structure_set', ObjectNode({
 		structures: ListNode(
 			ObjectNode({
-				structure: Tag({ resource: '$worldgen/configured_structure_feature' }),
+				structure: StringNode({ validator: 'resource', params: { pool: '$worldgen/configured_structure_feature' } }),
 				weight: NumberNode({ integer: true, min: 1 })
 			})
 		),

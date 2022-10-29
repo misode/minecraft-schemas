@@ -1821,7 +1821,7 @@
   "structure_set.object": "Inline",
   "structure_set.structures": "Structures",
   "structure_set.structures.entry": "Structure",
-  "structure_set.structures.entry.structure": "Structure feature",
+  "structure_set.structures.entry.structure": "Structure",
   "structure_set.structures.entry.weight": "Weight",
   "structure_set.placement": "Placement",
   "surface_builder.config": "Config",

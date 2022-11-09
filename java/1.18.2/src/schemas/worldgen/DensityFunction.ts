@@ -40,18 +40,6 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 		default: () => 0
 	})
 
-	const NoiseParameters = ChoiceNode([
-		{
-      type: 'string',
-      node: StringNode({ validator: 'resource', params: { pool: '$worldgen/noise' }}),
-      change: () => undefined
-    },
-    {
-      type: 'object',
-      node: Reference('noise_parameters')
-    }
-	], { choiceContext: 'noise_parameters' })
-
 	const NoiseRange = NumberNode({ min: -1000000, max: 1000000 })
 	const YRange = NumberNode({ integer: true, min: -2032 * 2, max: 2031 * 2 })
 
@@ -111,7 +99,7 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 				argument2: DensityFunction,
 			},
 			'minecraft:noise': {
-				noise: NoiseParameters,
+				noise: StringNode({ validator: 'resource', params: { pool: '$worldgen/noise' }}),
 				xz_scale: NumberNode(),
 				y_scale: NumberNode(),
 			},
@@ -135,7 +123,7 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 				argument: DensityFunction,
 			},
 			'minecraft:shifted_noise': {
-				noise: NoiseParameters,
+				noise: StringNode({ validator: 'resource', params: { pool: '$worldgen/noise' }}),
 				xz_scale: NumberNode(),
 				y_scale: NumberNode(),
 				shift_x: DensityFunction,
@@ -166,7 +154,7 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 			},
 			'minecraft:weird_scaled_sampler': {
 				rarity_value_mapper: StringNode({ enum: ['type_1', 'type_2'] }),
-				noise: NoiseParameters,
+				noise: StringNode({ validator: 'resource', params: { pool: '$worldgen/noise' }}),
 				input: DensityFunction,
 			},
 			'minecraft:y_clamped_gradient': {

@@ -121,13 +121,13 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 				when_out_of_range: DensityFunction,
 			},
 			'minecraft:shift': {
-				argument: DensityFunction,
+				argument: StringNode({ validator: 'resource', params: { pool: '$worldgen/noise' }}),
 			},
 			'minecraft:shift_a': {
-				argument: DensityFunction,
+				argument: StringNode({ validator: 'resource', params: { pool: '$worldgen/noise' }}),
 			},
 			'minecraft:shift_b': {
-				argument: DensityFunction,
+				argument: StringNode({ validator: 'resource', params: { pool: '$worldgen/noise' }}),
 			},
 			'minecraft:shifted_noise': {
 				noise: StringNode({ validator: 'resource', params: { pool: '$worldgen/noise' }}),

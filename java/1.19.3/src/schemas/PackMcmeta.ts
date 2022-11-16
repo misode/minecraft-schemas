@@ -18,10 +18,8 @@ export function initPackMcmetaSchemas(schemas: SchemaRegistry, collections: Coll
 
   schemas.register('pack_mcmeta', Mod(ObjectNode({
     pack: Mod(ObjectNode({
-      pack_format: Mod(NumberNode({ integer: true, min: CURRENT_PACK_FORMAT, max: CURRENT_PACK_FORMAT }), { 
+      pack_format: Mod(NumberNode({ integer: true }), { 
         default: () => CURRENT_PACK_FORMAT,
-        canUpdate: (_p, v) => v !== CURRENT_PACK_FORMAT,
-        update: () => [{ name: 'pack_format', params: [CURRENT_PACK_FORMAT],  newValue: CURRENT_PACK_FORMAT }]
       }),
       description: Reference('text_component')
     }), {
@@ -30,15 +28,17 @@ export function initPackMcmetaSchemas(schemas: SchemaRegistry, collections: Coll
         description: ''
       })
     }),
+    features: Opt(ObjectNode({
+      enabled: ListNode(
+        StringNode({ enum: 'feature_flags' })
+      )
+    })),
     filter: Opt(ObjectNode({
       block: ListNode(
-        ObjectNode({
-          namespace: Opt(StringNode({ validator: 'regex_pattern' })),
-          path: Opt(StringNode({ validator: 'regex_pattern' })),
-        })
+        Reference('resource_location_pattern')
       )
     }))
-  }), {
+  }, { category: 'pack' }), {
     default: () => ({
       pack: {
         pack_format: CURRENT_PACK_FORMAT,

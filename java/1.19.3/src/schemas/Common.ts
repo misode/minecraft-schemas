@@ -190,6 +190,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     }
   ], { context: 'range' }))
 
+  schemas.register('resource_location_pattern', ObjectNode({
+    namespace: Opt(StringNode({ validator: 'regex_pattern' })),
+    path: Opt(StringNode({ validator: 'regex_pattern' })),
+  }, { context: 'resource_location_pattern' }))
+
   const ObjectWithType = (pool: ResourceType, directType: string, directPath: string, directDefault: string, objectDefault: string | null, context: string, cases: NestedNodeChildren) => {
     let defaultCase: NodeChildren = {}
     if (objectDefault) {

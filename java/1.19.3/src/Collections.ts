@@ -419,4 +419,17 @@ export function initCollections(collections: CollectionRegistry) {
     'water_ambient',
     'misc',
   ])
+
+  collections.register('feature_flags', [
+    'vanilla',
+    'bundle',
+    'update_1_20',
+  ])
+
+  collections.register('sprite_source_type', [
+    'single',
+    'directory',
+    'filter',
+    'unstitch',
+  ])
 }

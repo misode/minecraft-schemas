@@ -10,7 +10,7 @@ import {
   Opt,
 } from '@mcschema/core'
 
-const CURRENT_PACK_FORMAT = 10
+const CURRENT_PACK_FORMAT = 11
 
 export function initPackMcmetaSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)

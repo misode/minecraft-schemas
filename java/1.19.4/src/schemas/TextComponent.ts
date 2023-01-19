@@ -157,6 +157,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
       change: v => ({translate: ''}),
       node: ObjectNode({
         translate: StringNode(),
+        fallback: Opt(StringNode()),
         with: Opt(Reference('text_component_list')),
         ...CommonFields
       })

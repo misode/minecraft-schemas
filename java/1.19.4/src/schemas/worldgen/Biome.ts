@@ -36,7 +36,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
   schemas.register('biome', Mod(ObjectNode({
     temperature: NumberNode(),
     downfall: NumberNode(),
-    precipitation: StringNode({ enum: ['none', 'rain', 'snow'] }),
+    has_precipitation: BooleanNode(),
     temperature_modifier: Opt(StringNode({ enum: ['none', 'frozen'] })),
     creature_spawn_probability: Opt(NumberNode({ min: 0, max: 1 })),
     effects: ObjectNode({

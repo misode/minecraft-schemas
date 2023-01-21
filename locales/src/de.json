@@ -1199,5 +1199,6 @@
     "block_state_provider.dual_noise_provider.states": "Zustände",
     "carver.config.replaceable": "Ersetzbar",
     "chat_type.chat": "Chat",
-    "condition.value_check.range": "Bereich"
+    "condition.value_check.range": "Bereich",
+    "block_definition.multipart": "Mehrteilig"
 }

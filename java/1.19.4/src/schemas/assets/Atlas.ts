@@ -52,6 +52,16 @@ export function initAtlasSchemas(schemas: SchemaRegistry, collections: Collectio
 						height: NumberNode(),
 					})
 				)
+			},
+			'paletted_permutations': {
+				textures: ListNode(
+					StringNode({ validator: 'resource', params: { pool: '$texture' } }),
+				),
+				palette_key: StringNode({ validator: 'resource', params: { pool: '$texture' } }),
+				permutations: MapNode(
+					StringNode(),
+					StringNode({ validator: 'resource', params: { pool: '$texture' } }),
+				),
 			}
 		}
 	}, { context: 'sprite_source' }), {

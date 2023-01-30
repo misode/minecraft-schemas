@@ -75,6 +75,17 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
         base: Reference('recipe_ingredient_object'),
         addition: Reference('recipe_ingredient_object'),
         result: Reference('recipe_result')
+      },
+      'minecraft:smithing_transform': {
+        template: Reference('recipe_ingredient_object'),
+        base: Reference('recipe_ingredient_object'),
+        addition: Reference('recipe_ingredient_object'),
+        result: Reference('recipe_result')
+      },
+      'minecraft:smithing_trim': {
+        template: Reference('recipe_ingredient_object'),
+        base: Reference('recipe_ingredient_object'),
+        addition: Reference('recipe_ingredient_object')
       }
     }
   }, { context: 'recipe', disableSwitchContext: true }), {
@@ -103,7 +114,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
   schemas.register('recipe_ingredient_object', Mod(ObjectNode({
     item: Opt(StringNode({ validator: 'resource', params: { pool: 'item' } })),
     tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/item' } }))
-  }), {
+  }, { context: 'recipe_ingredient' }), {
     default: () => ({
       item: 'minecraft:stone'
     })

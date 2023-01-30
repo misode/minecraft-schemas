@@ -431,6 +431,7 @@ export function initCollections(collections: CollectionRegistry) {
     'directory',
     'filter',
     'unstitch',
+    'paletted_permutations',
   ])
 
   collections.register('armor_material', [

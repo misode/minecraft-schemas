@@ -13,6 +13,7 @@ import { initPredicatesSchemas } from './Predicates'
 import { initRecipeSchemas } from './Recipe'
 import { initTagsSchemas } from './Tags'
 import { initTextComponentSchemas } from './TextComponent'
+import { initTrimsSchemas } from './Trims'
 import { initWorldgenSchemas } from './worldgen'
 import { initWorldSettingsSchemas } from './WorldSettings'
 
@@ -32,6 +33,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initRecipeSchemas(schemas, collections)
     initTagsSchemas(schemas, collections)
     initTextComponentSchemas(schemas, collections)
+    initTrimsSchemas(schemas, collections)
     initWorldgenSchemas(schemas, collections)
     initWorldSettingsSchemas(schemas, collections)
 }

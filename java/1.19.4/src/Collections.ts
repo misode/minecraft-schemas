@@ -432,4 +432,14 @@ export function initCollections(collections: CollectionRegistry) {
     'filter',
     'unstitch',
   ])
+
+  collections.register('armor_material', [
+    'leather',
+    'chainmail',
+    'iron',
+    'gold',
+    'diamond',
+    'turtle',
+    'netherite',
+  ])
 }

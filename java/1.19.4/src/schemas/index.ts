@@ -4,6 +4,7 @@ import { initAssetsSchemas } from './assets'
 import { initChatTypeSchemas } from './ChatType'
 import { initCommonSchemas } from './Common'
 import { initConditionSchemas } from './Condition'
+import { initDamageTypeSchemas } from './DamageType'
 import { initDimensionSchemas } from './Dimension'
 import { initDimensionTypeSchemas } from './DimensionType'
 import { initItemModifierSchemas } from './ItemModifier'
@@ -24,6 +25,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initAdvancementSchemas(schemas, collections)
     initAssetsSchemas(schemas, collections)
     initConditionSchemas(schemas, collections)
+    initDamageTypeSchemas(schemas, collections)
     initDimensionTypeSchemas(schemas, collections)
     initDimensionSchemas(schemas, collections)
     initItemModifierSchemas(schemas, collections)

@@ -7,6 +7,7 @@ import {
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+	MapNode,
 } from '@mcschema/core'
 
 export function initTrimsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -18,7 +19,10 @@ export function initTrimsSchemas(schemas: SchemaRegistry, collections: Collectio
 		description: Reference('text_component'),
 		ingredient: StringNode({ validator: 'resource', params: { pool: 'item' } }),
 		item_model_index: NumberNode(),
-		incompatible_armor_material: Opt(StringNode({ enum: 'armor_material' })),
+		override_armor_materials: Opt(MapNode(
+			StringNode({ enum: 'armor_material' }),
+			StringNode(),
+		)),
 	}, { context: 'trim_material' }), {
 		default: () => ({
 			asset_name: 'copper',

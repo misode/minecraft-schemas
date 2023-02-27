@@ -41,7 +41,7 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
   }))
 
   schemas.register('template_weighted_element', Mod(ObjectNode({
-    weight: NumberNode({ integer: true, min: 1 }),
+    weight: NumberNode({ integer: true, min: 1, max: 150 }),
     element: Reference('template_element')
   }, { category: 'pool' }), {
     default: () => ({

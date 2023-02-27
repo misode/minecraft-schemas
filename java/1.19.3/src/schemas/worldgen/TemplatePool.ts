@@ -19,7 +19,6 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
   const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('template_pool', Mod(ObjectNode({
-    name: StringNode(),
     fallback: StringNode(),
     elements: ListNode(
       Reference('template_weighted_element')
@@ -41,7 +40,7 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
   }))
 
   schemas.register('template_weighted_element', Mod(ObjectNode({
-    weight: NumberNode({ integer: true, min: 1 }),
+    weight: NumberNode({ integer: true, min: 1, max: 150 }),
     element: Reference('template_element')
   }, { category: 'pool' }), {
     default: () => ({

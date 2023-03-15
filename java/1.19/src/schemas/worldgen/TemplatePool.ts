@@ -60,18 +60,22 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
     [Switch]: [{ push: 'element_type' }],
     [Case]: {
       'minecraft:feature_pool_element': {
+        projection: StringNode({ enum: ['rigid', 'terrain_matching'] }),
         feature: StringNode({ validator: 'resource', params: { pool: '$worldgen/placed_feature' } })
       },
       'minecraft:legacy_single_pool_element': {
+        projection: StringNode({ enum: ['rigid', 'terrain_matching'] }),
         location: StringNode({ validator: 'resource', params: { pool: '$structure' }}),
         processors: Processors
       },
       'minecraft:list_pool_element': {
+        projection: StringNode({ enum: ['rigid', 'terrain_matching'] }),
         elements: ListNode(
           Reference('template_element')
         )
       },
       'minecraft:single_pool_element': {
+        projection: StringNode({ enum: ['rigid', 'terrain_matching'] }),
         location: StringNode({ validator: 'resource', params: { pool: '$structure' }}),
         processors: Processors
       }

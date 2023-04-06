@@ -618,6 +618,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         count: Reference('number_provider'),
         limit: Opt(NumberNode({ integer: true }))
       },
+      'minecraft:reference': {
+        name: StringNode({ validator: 'resource', params: { pool: '$item_modifier' } })
+      },
       'minecraft:set_attributes': {
         modifiers: ListNode(
           Reference('attribute_modifier')

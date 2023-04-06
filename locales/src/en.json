@@ -1739,7 +1739,7 @@
   "rule_block_entity_modifier.append_static.data": "Data",
   "rule_block_entity_modifier.append_loot": "Append loot",
   "rule_block_entity_modifier.append_loot.loot_table": "Loot table",
-  "rule_block_entity_modifier.clean": "Clear",
+  "rule_block_entity_modifier.clear": "Clear",
   "rule_block_entity_modifier.passthrough": "Passthrough",
   "rule_test.always_true": "Always true",
   "rule_test.block": "Block",

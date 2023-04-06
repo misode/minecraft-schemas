@@ -232,14 +232,12 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   }, { context: 'entity' }))
 
   schemas.register('damage_source_predicate', ObjectNode({
-    is_explosion: Opt(BooleanNode()),
-    is_fire: Opt(BooleanNode()),
-    is_magic: Opt(BooleanNode()),
-    is_projectile: Opt(BooleanNode()),
-    is_lightning: Opt(BooleanNode()),
-    bypasses_armor: Opt(BooleanNode()),
-    bypasses_invulnerability: Opt(BooleanNode()),
-    bypasses_magic: Opt(BooleanNode()),
+    tags: Opt(ListNode(
+      ObjectNode({
+        id: StringNode({ validator: 'resource', params: { pool: '$tag/damage_type' } }),
+        expected: BooleanNode(),
+      }, { context: 'tag_predicate' }),
+    )),
     source_entity: Opt(Reference('entity_predicate')),
     direct_entity: Opt(Reference('entity_predicate'))
   }, { context: 'damage_source' }))

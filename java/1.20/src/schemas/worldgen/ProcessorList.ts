@@ -13,7 +13,7 @@ import {
   ChoiceNode,
   INode,
 } from '@mcschema/core'
-import { Tag } from '../Common'
+import { IntProvider, Tag } from '../Common'
 
 export let Processors: INode
 
@@ -74,6 +74,10 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
         integrity: NumberNode({ min: 0, max: 1 }),
         rottable_blocks: Opt(Tag({ resource: 'block' }))
       },
+      'minecraft:capped': {
+        limit: IntProvider({ min: 1 }),
+        delegate: Reference('processor')
+      },
       'minecraft:gravity': {
         heightmap: StringNode({ enum: 'heightmap_type' }),
         offset: NumberNode({ integer: true })
@@ -106,7 +110,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
     location_predicate: Reference('rule_test'),
     input_predicate: Reference('rule_test'),
     output_state: Reference('block_state'),
-    output_nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:block' } } }))
+    block_entity_modifier: Opt(Reference('rule_block_entity_modifier'))
   }, { category: 'predicate', context: 'processor_rule' }), {
     default: () => ({
       location_predicate: {
@@ -115,6 +119,23 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
       input_predicate: {
         predicate_type: 'minecraft:always_true'
       }
+    })
+  }))
+
+  schemas.register('rule_block_entity_modifier', Mod(ObjectNode({
+    type: StringNode({ validator: 'resource', params: { pool: 'rule_block_entity_modifier' } }),
+    [Switch]: [{ push: 'predicate_type' }],
+    [Case]: {
+      'minecraft:append_loot': {
+        loot_table: StringNode({ validator: 'resource', params: { pool: '$loot_table' } })
+      },
+      'minecraft:append_static': {
+        data: ObjectNode({}) // TODO: any nbt compound
+      }
+    }
+  }, { context: 'rule_block_entity_modifier' }), {
+    default: () => ({
+      type: 'minecraft:passthrough',
     })
   }))
 

@@ -423,7 +423,6 @@ export function initCollections(collections: CollectionRegistry) {
   collections.register('feature_flags', [
     'vanilla',
     'bundle',
-    'update_1_20',
   ])
 
   collections.register('sprite_source_type', [

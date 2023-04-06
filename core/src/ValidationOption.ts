@@ -309,6 +309,7 @@ export type ResourceType =
   | 'pos_rule_test'
   | 'potion'
   | 'recipe_serializer'
+  | 'rule_block_entity_modifier'
   | 'rule_test'
   | 'stat_type'
   | 'worldgen/block_state_provider_type'

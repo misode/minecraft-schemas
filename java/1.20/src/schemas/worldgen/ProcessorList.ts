@@ -124,7 +124,7 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
 
   schemas.register('rule_block_entity_modifier', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'rule_block_entity_modifier' } }),
-    [Switch]: [{ push: 'predicate_type' }],
+    [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:append_loot': {
         loot_table: StringNode({ validator: 'resource', params: { pool: '$loot_table' } })

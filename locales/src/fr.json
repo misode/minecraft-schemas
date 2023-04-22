@@ -2188,5 +2188,6 @@
     "decorator.surface_relative_threshold_filter.min_inclusive": "Inclut le minimum",
     "density_function.continentalness": "Continentalité",
     "density_function.spline": "Nervure",
-    "feature.fossil.overlay_processors": "Processeurs du revêtement"
+    "feature.fossil.overlay_processors": "Processeurs du revêtement",
+    "decorator.noise_threshold_count.below_noise": ""
 }

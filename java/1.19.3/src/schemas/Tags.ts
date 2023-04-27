@@ -47,6 +47,7 @@ export function initTagsSchemas(schemas: SchemaRegistry, collections: Collection
   schemas.register('item_tag', TagBase('item'))
 
   schemas.register('advancement_tag', TagBase('$advancement'))
+  schemas.register('chat_type_tag', TagBase('$chat_type'))
   schemas.register('dimension_tag', TagBase('$dimension'))
   schemas.register('dimension_type_tag', TagBase('$dimension_type'))
   schemas.register('function_tag', TagBase('$function'))
@@ -70,4 +71,10 @@ export function initTagsSchemas(schemas: SchemaRegistry, collections: Collection
   schemas.register('structure_set_tag', TagBase('$worldgen/structure_set'))
   schemas.register('template_pool_tag', TagBase('$worldgen/template_pool'))
   schemas.register('world_preset_tag', TagBase('$worldgen/world_preset'))
+
+  schemas.register('banner_pattern_tag', TagBase('banner_pattern'))
+  schemas.register('cat_variant_tag', TagBase('cat_variant'))
+  schemas.register('instrument_tag', TagBase('instrument'))
+  schemas.register('painting_variant_tag', TagBase('painting_variant'))
+  schemas.register('point_of_interest_type_tag', TagBase('point_of_interest_type'))
 }

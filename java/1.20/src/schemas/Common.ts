@@ -482,7 +482,12 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   ], { choiceContext: 'tag' })
 
   ConditionCases = (entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({
-    'minecraft:alternative': {
+    'minecraft:all_of': {
+      terms: ListNode(
+        Reference('condition')
+      )
+    },
+    'minecraft:any_of': {
       terms: ListNode(
         Reference('condition')
       )

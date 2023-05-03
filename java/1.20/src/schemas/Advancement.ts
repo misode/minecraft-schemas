@@ -77,6 +77,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
       )),
       experience: Opt(NumberNode({ integer: true }))
     })),
+    sends_telemetry_event: Opt(BooleanNode()),
   }, { context: 'advancement' }), {
     default: () => ({
       criteria: {
@@ -96,8 +97,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
       [Switch]: ['pop', { push: 'trigger' }],
       [Case]: {
         'minecraft:allay_drop_item_on_block': {
-          item: Opt(Reference('item_predicate')),
-          location: Opt(Reference('location_predicate'))
+          location: EntityPredicate
         },
         'minecraft:bee_nest_destroyed': {
           block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
@@ -184,8 +184,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:item_used_on_block': {
-          item: Opt(Reference('item_predicate')),
-          location: Opt(Reference('location_predicate'))
+          location: EntityPredicate
         },
         'minecraft:kill_mob_near_sculk_catalyst': {
           entity: EntityPredicate,
@@ -210,14 +209,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           distance: Opt(Reference('distance_predicate')),
         },
         'minecraft:placed_block': {
-          block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
-          state: Opt(MapNode(
-            StringNode(),
-            StringNode(),
-            { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'block' }] } } }
-          )),
-          item: Opt(Reference('item_predicate')),
-          location: Opt(Reference('location_predicate'))
+          location: EntityPredicate
         },
         'minecraft:player_generates_container_loot': {
           loot_table: StringNode({ validator: 'resource', params: { pool: '$loot_table' } })

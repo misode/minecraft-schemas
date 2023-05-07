@@ -1131,5 +1131,9 @@
     "noise_settings.noise_router.fluid_level_spread": "液体の広がり",
     "noise_settings.noise.top_slide.target.help": "ターゲットの生成密度。正の値で地形が増え、負の値で地形が減る。",
     "noise_settings.noise.top_slide.offset.help": "ワールドの上部にブロックの範囲(補正値x垂直方向の大きさx4)を指定し、その密度をターゲットに設定します。",
-    "noise_settings.noise.top_slide.help": "ワールドの上部に地形を追加または削除します。sizeが0のときは何もしません。"
+    "noise_settings.noise.top_slide.help": "ワールドの上部に地形を追加または削除します。sizeが0のときは何もしません。",
+    "text_component": "テキストコンポーネント",
+    "biome.has_precipitation": "降水あり",
+    "atlas.sources": "ソース",
+    "atlas.sources.entry": "ソース"
 }

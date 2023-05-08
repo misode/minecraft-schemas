@@ -2189,5 +2189,18 @@
     "density_function.continentalness": "Continentalité",
     "density_function.spline": "Nervure",
     "feature.fossil.overlay_processors": "Processeurs du revêtement",
-    "decorator.noise_threshold_count.below_noise": ""
+    "decorator.noise_threshold_count.below_noise": "Bruit inférieur",
+    "block.blocks": "Blocs",
+    "condition.all_of.terms": "Conditions",
+    "condition.any_of.terms": "conditions",
+    "feature.no_bonemeal_flower.tries": "Essais",
+    "damage_source.type.entry": "Etiquette de dégât",
+    "feature.growing_plant.body_provider": "Fournisseur de corps",
+    "feature.growing_plant.head_provider": "Fournisseur de tête",
+    "feature.sculk_patch.extra_rare_growths": "Croissances très rares",
+    "advancement.sends_telemetry_event": "Envoi les évenement de télémétrie",
+    "block.blocks.entry": "Bloc",
+    "criterion.allay_drop_item_on_block.location": "Emplacement",
+    "damage_source.type": "Type",
+    "decorator.noise_based_count.noise_to_count_ratio": "Rapport bruit/comptage"
 }

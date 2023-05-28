@@ -1404,5 +1404,8 @@
     "sprite_source.unstitch.regions.entry.y": "Y",
     "sprite_source.paletted_permutations.textures.entry": "Текстура",
     "sprite_source.paletted_permutations.palette_key": "Палитра-ключ",
-    "sprite_source.paletted_permutations.permutations": "Перестановки"
+    "sprite_source.paletted_permutations.permutations": "Перестановки",
+    "block.blocks": "Блоки",
+    "block.blocks.entry": "Блок",
+    "cat_texture.textures/entity/cat/tabby.png": "Полосатая кошка"
 }

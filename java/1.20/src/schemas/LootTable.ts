@@ -91,7 +91,8 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     )),
     functions: Opt(ListNode(
       Reference('loot_function')
-    ))
+    )),
+    random_sequence: Opt(StringNode({ validator: 'resource', params: { pool: [], allowUnknown: true } })),
   }, { context: 'loot_table' }), {
     default: () => ({
       pools: [{

@@ -226,6 +226,12 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           entity: EntityPredicate,
           killing_blow: Opt(Reference('damage_source_predicate'))
         },
+        'minecraft:recipe_crafted': {
+          recipe_id: StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
+          ingredients: Opt(ListNode(
+            Reference('item_predicate')
+          ))
+        },
         'minecraft:recipe_unlocked': {
           recipe: StringNode({ validator: 'resource', params: { pool: '$recipe' } })
         },

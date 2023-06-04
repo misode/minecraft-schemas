@@ -233,6 +233,7 @@ export type ResourceType =
   | '$damage_type'
   | '$dimension'
   | '$dimension_type'
+  | '$font'
   | '$function'
   | '$item_modifier'
   | '$loot_table'

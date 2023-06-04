@@ -37,6 +37,9 @@ export function initFontSchemas(schemas: SchemaRegistry, collections: Collection
 					{ minLength: 1 }
 				)
 			},
+			'reference': {
+				id: StringNode({ validator: 'resource', params: { pool: '$font' } }),
+			},
 			'ttf': {
 				file: StringNode({ validator: 'resource', params: { pool: '$texture', suffix: '.png' } }),
 				size: Opt(NumberNode()),
@@ -55,10 +58,17 @@ export function initFontSchemas(schemas: SchemaRegistry, collections: Collection
 					NumberNode()
 				)
 			},
-			'legacy_unicode': {
-				sizes: StringNode(),
-				template: StringNode()
-			}
+			'unihex': {
+				hex_file: StringNode(),
+				size_overrides: ListNode(
+					ObjectNode({
+						from: StringNode(),
+						to: StringNode(),
+						left: NumberNode({ integer: true }),
+						right: NumberNode({ integer: true }),
+					})
+				)
+			},
 		}
 	}, { context: 'glyph_provider' }), {
 		default: () => ({

@@ -156,21 +156,42 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   schemas.register('entity_predicate', ObjectNode({
     type: Opt(StringNode({ validator: 'resource', params: { pool: 'entity_type', allowTag: true } })),
     type_specific: Opt(ObjectNode({
-      type: StringNode({ enum: ['any', 'cat', 'fishing_hook', 'frog', 'lightning', 'player', 'slime'] }),
+      type: StringNode({ enum: 'type_specific_type' }),
       [Switch]: [{ push: 'type' }],
       [Case]: {
+        'axolotl': {
+          variant: Opt(StringNode({ enum: 'axolotl_variant' }))
+        },
+        'boat': {
+          variant: Opt(StringNode({ enum: 'boat_variant' }))
+        },
         'cat': {
           variant: Opt(StringNode({ validator: 'resource', params: { pool: 'cat_variant' } }))
         },
         'fishing_hook': {
           in_open_water: Opt(BooleanNode())
         },
+        'fox': {
+          variant: Opt(StringNode({ enum: 'fox_variant' }))
+        },
         'frog': {
           variant: Opt(StringNode({ validator: 'resource', params: { pool: 'frog_variant' } }))
+        },
+        'horse': {
+          variant: Opt(StringNode({ enum: 'horse_variant' }))
         },
         'lightning': {
           blocks_set_on_fire: Opt(Reference('int_bounds')),
           entity_struck: Opt(Reference('entity_predicate'))
+        },
+        'mooshroom': {
+          variant: Opt(StringNode({ enum: 'mooshroom_variant' }))
+        },
+        'painting': {
+          variant: Opt(StringNode({ validator: 'resource', params: { pool: 'painting_variant' } }))
+        },
+        'parrot': {
+          variant: Opt(StringNode({ enum: 'parrot_variant' }))
         },
         'player': {
           gamemode: Opt(StringNode({ enum: 'gamemode' })),
@@ -201,8 +222,17 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
           )),
           looking_at: Opt(Reference('entity_predicate'))
         },
+        'rabbit': {
+          variant: Opt(StringNode({ enum: 'rabbit_variant' }))
+        },
         'slime': {
           size: Reference('int_bounds')
+        },
+        'tropical_fish': {
+          variant: Opt(StringNode({ enum: 'tropical_fish_variant' }))
+        },
+        'villager': {
+          variant: Opt(StringNode({ validator: 'resource', params: { pool: 'villager_type' } }))
         },
       }
     })),

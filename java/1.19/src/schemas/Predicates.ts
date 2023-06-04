@@ -156,7 +156,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   schemas.register('entity_predicate', ObjectNode({
     type: Opt(StringNode({ validator: 'resource', params: { pool: 'entity_type', allowTag: true } })),
     type_specific: Opt(ObjectNode({
-      type: StringNode({ enum: ['any', 'cat', 'fishing_hook', 'frog', 'lightning', 'player', 'slime'] }),
+      type: StringNode({ enum: 'type_specific_type' }),
       [Switch]: [{ push: 'type' }],
       [Case]: {
         'cat': {

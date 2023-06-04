@@ -419,4 +419,14 @@ export function initCollections(collections: CollectionRegistry) {
     'water_ambient',
     'misc',
   ])
+
+  collections.register('type_specific_type', [
+    'any',
+    'cat',
+    'fishing_hook',
+    'frog',
+    'lightning',
+    'player',
+    'slime',
+  ])
 }

@@ -432,4 +432,97 @@ export function initCollections(collections: CollectionRegistry) {
     'filter',
     'unstitch',
   ])
+
+  collections.register('type_specific_type', [
+    'any',
+    'axolotl',
+    'boat',
+    'cat',
+    'fishing_hook',
+    'fox',
+    'frog',
+    'horse',
+    'lightning',
+    'llama',
+    'mooshroom',
+    'painting',
+    'parrot',
+    'player',
+    'rabbit',
+    'slime',
+    'tropical_fish',
+    'villager',
+  ])
+
+  collections.register('axolotl_variant', [
+    'lucy',
+    'wild',
+    'gold',
+    'cyan',
+    'blue',
+  ])
+
+  collections.register('boat_variant', [
+    'oak',
+    'spruce',
+    'birch',
+    'jungle',
+    'acacia',
+    'dark_oak',
+    'mangrove',
+    'bamboo',
+  ])
+
+  collections.register('fox_variant', [
+    'red',
+    'snow',
+  ])
+
+  collections.register('horse_variant', [
+    'white',
+    'creamy',
+    'chestnut',
+    'brown',
+    'black',
+    'gray',
+    'dark_brown',
+  ])
+
+  collections.register('mooshroom_variant', [
+    'red',
+    'brown',
+  ])
+
+  collections.register('parrot_variant', [
+    'red_blue',
+    'blue',
+    'green',
+    'yellow_blue',
+    'gray',
+  ])
+
+  collections.register('rabbit_variant', [
+    'brown',
+    'white',
+    'black',
+    'white_splotched',
+    'gold',
+    'salt',
+    'evil',
+  ])
+
+  collections.register('tropical_fish_variant', [
+    'kob',
+    'sunstreak',
+    'snooper',
+    'dasher',
+    'brinely',
+    'spotty',
+    'flopper',
+    'stripey',
+    'glitter',
+    'blockfish',
+    'betty',
+    'clayfish',
+  ])
 }

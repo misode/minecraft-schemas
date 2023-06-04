@@ -277,6 +277,7 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:selector',
     'minecraft:fishing',
     'minecraft:entity',
+    'minecraft:archaeology',
     'minecraft:gift',
     'minecraft:barter',
     'minecraft:advancement_reward',

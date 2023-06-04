@@ -16,6 +16,7 @@ export type LootContextRegistration = { requires: LootContext[], allows: LootCon
 export const LootTableTypes = new Map<string, LootContextRegistration>([
     ['minecraft:advancement_entity', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
     ['minecraft:advancement_reward', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
+    ['minecraft:archaeology', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:barter', { requires: [LootContext.ThisEntity], allows: [] }],
     ['minecraft:block', { requires: [LootContext.BlockState, LootContext.Origin, LootContext.Tool], allows: [LootContext.BlockEntity, LootContext.ExplosionRadius, LootContext.ThisEntity] }],
     ['minecraft:chest', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],

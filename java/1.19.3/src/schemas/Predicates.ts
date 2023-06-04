@@ -184,6 +184,9 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
           blocks_set_on_fire: Opt(Reference('int_bounds')),
           entity_struck: Opt(Reference('entity_predicate'))
         },
+        'llama': {
+          variant: Opt(StringNode({ enum: 'llama_variant' }))
+        },
         'mooshroom': {
           variant: Opt(StringNode({ enum: 'mooshroom_variant' }))
         },

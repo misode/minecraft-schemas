@@ -488,6 +488,13 @@ export function initCollections(collections: CollectionRegistry) {
     'dark_brown',
   ])
 
+  collections.register('llama_variant', [
+    'creamy',
+    'white',
+    'brown',
+    'gray',
+  ])
+
   collections.register('mooshroom_variant', [
     'red',
     'brown',

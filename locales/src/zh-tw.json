@@ -1787,5 +1787,8 @@
     "worldgen/trunk_placer_type.giant_trunk_placer": "2×2 豎直型",
     "worldgen/trunk_placer_type.mega_jungle_trunk_placer": "大叢林木型",
     "worldgen/trunk_placer_type.straight_trunk_placer": "豎直型",
-    "attribute_modifier.id": "通用唯一識別碼"
+    "attribute_modifier.id": "通用唯一識別碼",
+    "atlas.sources.entry": "來源",
+    "advancement.sends_telemetry_event": "傳送遙測事件",
+    "atlas.sources": "來源"
 }

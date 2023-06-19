@@ -221,6 +221,7 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           decor_state: Reference('block_state'),
           stem_state: Reference('block_state'),
           valid_base_block: Reference('block_state'),
+          replaceable_blocks: Reference('block_predicate_worldgen'),
           planted: Opt(BooleanNode())
         },
         'minecraft:huge_red_mushroom': HugeMushroomConfig,
@@ -363,6 +364,12 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
                 bend_length: IntProvider({ min: 1, max: 64 }),
                 min_height_for_leaves: Opt(NumberNode({ integer: true, min: 1 }))
               },
+              'minecraft:cherry_trunk_placer': {
+                branch_count: IntProvider({ min: 1, max: 3 }),
+                branch_horizontal_length: IntProvider({ min: 2, max: 16 }),
+                branch_start_offset_from_top: IntProvider({ min: -16, max: 0 }),
+                branch_end_offset_from_top: IntProvider({ min: -16, max: 16 })
+              },
               'minecraft:upwards_branching_trunk_placer': {
                 extra_branch_steps: IntProvider({ min: 1 }),
                 extra_branch_length: IntProvider({ min: 0 }),
@@ -382,6 +389,13 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
               },
               'minecraft:bush_foliage_placer': {
                 height: NumberNode({ integer: true, min: 0, max: 16 })
+              },
+              'minecraft:cherry_foliage_placer': {
+                height: IntProvider({ min: 4, max: 16 }),
+                wide_bottom_layer_hole_chance: NumberNode({ min: 0, max: 1 }),
+                corner_hole_chance: NumberNode({ min: 0, max: 1 }),
+                hanging_leaves_chance: NumberNode({ min: 0, max: 1 }),
+                hanging_leaves_extension_chance: NumberNode({ min: 0, max: 1 })
               },
               'minecraft:fancy_foliage_placer': {
                 height: NumberNode({ integer: true, min: 0, max: 16 })

@@ -80,7 +80,7 @@ export function initDimensionSchemas(schemas: SchemaRegistry, collections: Colle
     layers: ListNode(
       Reference('generator_layer')
     ),
-    structure_overrides: Tag({ resource: '$worldgen/structure_set', inlineSchema: 'structure_set' })
+    structure_overrides: Tag({ resource: '$worldgen/structure_set' })
   }))
 
   const ClimateParameter = ChoiceNode([

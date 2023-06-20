@@ -113,7 +113,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
 
   schemas.register('loot_entry', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'loot_pool_entry_type' } }),
-    weight: Opt(Mod(NumberNode({ integer: true, min: 1 }), weightMod)),
+    weight: Opt(Mod(NumberNode({ integer: true }), weightMod)),
     quality: Opt(Mod(NumberNode({ integer: true }), weightMod)),
     [Switch]: [{ push: 'type' }],
     [Case]: {

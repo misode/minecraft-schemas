@@ -367,7 +367,10 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
               'minecraft:cherry_trunk_placer': {
                 branch_count: IntProvider({ min: 1, max: 3 }),
                 branch_horizontal_length: IntProvider({ min: 2, max: 16 }),
-                branch_start_offset_from_top: IntProvider({ min: -16, max: 0 }),
+                branch_start_offset_from_top: ObjectNode({
+                  min_inclusive: NumberNode({ integer: true, min: -16, max: 0 }),
+                  max_inclusive: NumberNode({ integer: true, min: -16, max: 0 })
+                }, { context: 'int_provider.value' }),
                 branch_end_offset_from_top: IntProvider({ min: -16, max: 16 })
               },
               'minecraft:upwards_branching_trunk_placer': {

@@ -63,7 +63,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
 
   const StyleFields: NodeChildren = {
     color: Opt(StringNode()) /* TODO */,
-    font: Opt(StringNode()), // TODO: add validation
+    font: Opt(StringNode({ validator: 'resource', params: { pool: 'font' } })),
     bold: Opt(BooleanNode()),
     italic: Opt(BooleanNode()),
     underlined: Opt(BooleanNode()),

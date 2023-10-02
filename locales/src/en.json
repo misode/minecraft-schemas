@@ -1694,6 +1694,8 @@
   "pack.overlays": "Overlays",
   "pack.overlays.entries": "Entries",
   "pack.overlays.entry.entry": "Entry",
+  "pack_overlay.formats": "Formats",
+  "pack_overlay.directory": "Directory",
   "placed_feature.string": "Reference",
   "placed_feature.object": "Inline",
   "placed_feature.feature": "Configured feature",

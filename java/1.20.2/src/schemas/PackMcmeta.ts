@@ -46,7 +46,7 @@ export function initPackMcmetaSchemas(schemas: SchemaRegistry, collections: Coll
         Reference('resource_location_pattern')
       )
     }))
-  }, { category: 'pack' }), {
+  }, { context: 'pack', category: 'pack' }), {
     default: () => ({
       pack: {
         pack_format: CURRENT_PACK_FORMAT,

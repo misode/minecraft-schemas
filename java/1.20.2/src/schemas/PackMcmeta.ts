@@ -10,6 +10,7 @@ import {
   StringNode as RawStringNode,
   Opt,
 } from '@mcschema/core'
+import { InclusiveRange } from './Common'
 
 const CURRENT_PACK_FORMAT = 18
 
@@ -58,7 +59,7 @@ export function initPackMcmetaSchemas(schemas: SchemaRegistry, collections: Coll
     {
       type: 'number',
       node: NumberNode({ integer: true }),
-      change: (v: any) => v[0] ?? 0
+      change: (v: any) => Array.isArray(v) ? (v[0] ?? 0) : (v?.min_inclusive ?? 0)
     },
     {
       type: 'list',
@@ -66,7 +67,12 @@ export function initPackMcmetaSchemas(schemas: SchemaRegistry, collections: Coll
         NumberNode({ integer: true }),
         { minLength: 2, maxLength: 2 },
       ),
-      change: (v: any) => [v ?? 0, v ?? 0]
+      change: (v: any) => typeof v === 'number' ? [v, v] : [v?.min_inclusive ?? 0, v?.max_inclusive ?? 0]
+    },
+    {
+      type: 'object',
+      node: InclusiveRange({ integer: true }),
+      change: (v: any) => Array.isArray(v) ? {min_inclusive: v[0] ?? 0, max_inclusive: v[1] ?? 0} : {min_inclusive: v ?? 0, max_inclusive: v ?? 0}
     }
   ]))
   

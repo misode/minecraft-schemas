@@ -131,6 +131,13 @@ export function initCollections(collections: CollectionRegistry) {
   collections.register('map_decoration', [
     'mansion',
     'monument',
+    'village_desert', 
+    'village_plains', 
+    'village_savanna', 
+    'village_snowy', 
+    'village_taiga',
+    'jungle_temple', 
+    'swamp_hut',
     'player',
     'frame',
     'red_marker',
@@ -427,6 +434,7 @@ export function initCollections(collections: CollectionRegistry) {
   collections.register('feature_flags', [
     'vanilla',
     'bundle',
+    'trade_rebalance',
   ])
 
   collections.register('sprite_source_type', [

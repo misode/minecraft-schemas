@@ -8,6 +8,7 @@ import {
   CollectionRegistry,
   Opt,
 	MapNode,
+	BooleanNode,
 } from '@mcschema/core'
 
 export function initTrimsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -39,6 +40,7 @@ export function initTrimsSchemas(schemas: SchemaRegistry, collections: Collectio
 		asset_id: StringNode({ validator: 'resource', params: { pool: [], allowUnknown: true } }),
 		description: Reference('text_component'),
 		template_item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
+        decal: Opt(BooleanNode()),
 	}, { context: 'trim_pattern' }), {
 		default: () => ({
 			asset_id: 'minecraft:coast',

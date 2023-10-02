@@ -17,7 +17,7 @@
     "url": "https://github.com/misode/minecraft-schemas.git"
   },
   "dependencies": {
-    "@mcschema/core": "^0.12.39"
+    "@mcschema/core": "^0.12.40"
   },
   "publishConfig": {
     "access": "public"

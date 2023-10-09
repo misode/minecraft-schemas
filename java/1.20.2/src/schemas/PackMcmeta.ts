@@ -43,7 +43,7 @@ export function initPackMcmetaSchemas(schemas: SchemaRegistry, collections: Coll
     })),
     overlays: Opt(ObjectNode({
       entries: ListNode(
-        Reference('resource_location_pattern')
+        Reference('pack_overlay')
       )
     }))
   }, { context: 'pack', category: 'pack' }), {

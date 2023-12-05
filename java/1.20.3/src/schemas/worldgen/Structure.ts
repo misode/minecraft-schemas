@@ -91,7 +91,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         alias: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool' } }),
         target: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool' } })
       },
-      'minecraft:group': {
+      'minecraft:random': {
         alias: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool' } }),
         targets: ListNode(
           Mod(ObjectNode({

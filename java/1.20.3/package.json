@@ -1,0 +1,29 @@
+{
+  "name": "@mcschema/java-1.20.2",
+  "version": "0.0.3",
+  "description": "Schemas for Java Edition 1.20.2",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [],
+  "author": "Misode",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/misode/minecraft-schemas.git"
+  },
+  "dependencies": {
+    "@mcschema/core": "^0.12.40"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "lib/**/*",
+    "!lib/**/*.tsbuildinfo"
+  ]
+}

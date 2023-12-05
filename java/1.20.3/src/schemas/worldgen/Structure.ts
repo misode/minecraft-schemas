@@ -37,12 +37,13 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
     [Case]: {
       'minecraft:jigsaw': {
         start_pool: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool'}}),
-        size: NumberNode({ integer: true }),
+        size: NumberNode({ integer: true, min: 0, max: 20}),
         start_height: Reference('height_provider'),
         start_jigsaw_name: Opt(StringNode()),
         project_start_to_heightmap: Opt(StringNode({ enum: 'heightmap_type' })),
         max_distance_from_center: Mod(NumberNode({ integer: true, min: 1, max: 128 }), { default: () => 80 }),
         use_expansion_hack: BooleanNode(),
+        pool_aliases: Opt(ListNode(Reference('pool_alias_binding')))
       },
       'minecraft:mineshaft': {
         mineshaft_type: StringNode({ enum: ['normal', 'mesa'] }),
@@ -79,6 +80,39 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
       step: 'surface_structures',
       size: 6,
       max_distance_from_center: 80,
+    })
+  }))
+
+  schemas.register('pool_alias_binding', Mod(ObjectNode({
+    type: StringNode({ validator: 'resource', params: { pool: 'worldgen/pool_alias_binding' } }),
+    [Switch]: [{ push: 'type' }],
+    [Case]: {
+      'minecraft:direct': {
+        alias: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool' } }),
+        target: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool' } })
+      },
+      'minecraft:group': {
+        alias: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool' } }),
+        targets: ListNode(
+          Mod(ObjectNode({
+            weight: NumberNode({ integer: true, min: 1 }),
+            data: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool' } })
+          }), {
+            default: () => ({
+              data: {}
+            })
+          })
+        )
+      },
+      'minecraft:random_group': {
+        groups: ListNode(Reference('pool_alias_binding'))
+      }
+    }
+  }, { context: 'pool_alias_binding' }), {
+    default: () => ({
+      type: 'minecraft:direct',
+      alias: 'minecraft:empty',
+      target: 'minecraft:empty'
     })
   }))
 }

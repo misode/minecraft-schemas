@@ -39,22 +39,6 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
       node: StringNode(),
       change: getSimpleString
     },
-    {
-      type: 'number',
-      node: NumberNode(),
-      change: v => {
-        const n = parseFloat(getSimpleString(v))
-        return isFinite(n) ? n : (!!v ? 1 : 0)
-      }
-    },
-    {
-      type: 'boolean',
-      node: BooleanNode(),
-      change: v => {
-        const s = getSimpleString(v)
-        return s === 'true' || s === 'false' ? s === 'true' : !!s
-      }
-    }
   ], { context: 'text_component' }), {
     default: () => ({
       text: ""
@@ -70,14 +54,6 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
     strikethrough: Opt(BooleanNode()),
     obfuscated: Opt(BooleanNode()),
     insertion: Opt(StringNode()),
-  }
-
-  schemas.register('text_style', ObjectNode({
-    ...StyleFields
-  }, { context: 'text_component_object' }))
-
-  const CommonFields: NodeChildren = {
-    ...StyleFields,
     clickEvent: Opt(ObjectNode({
       action: StringNode({ enum: ['open_url', 'open_file', 'run_command', 'suggest_command', 'change_page', 'copy_to_clipboard'] }),
       [Switch]: [{ push: 'action' }],
@@ -119,11 +95,7 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
           }))
         },
         'show_entity': {
-          value: Opt(ObjectNode({
-            name: Opt(StringNode()),
-            type: Opt(StringNode()),
-            id: Opt(StringNode())
-          })),
+          value: Opt(StringNode()),
           contents: Opt(Mod(ObjectNode({
             name: Opt(Reference('text_component')),
             type: StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
@@ -137,6 +109,14 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
         }
       }
     })),
+  }
+
+  schemas.register('text_style', ObjectNode({
+    ...StyleFields
+  }, { context: 'text_component_object' }))
+
+  const CommonFields: NodeChildren = {
+    ...StyleFields,
     extra: Opt(Reference('text_component_list'))
   }
 

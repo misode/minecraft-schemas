@@ -435,6 +435,7 @@ export function initCollections(collections: CollectionRegistry) {
     'vanilla',
     'bundle',
     'trade_rebalance',
+    'update_1_21',
   ])
 
   collections.register('sprite_source_type', [

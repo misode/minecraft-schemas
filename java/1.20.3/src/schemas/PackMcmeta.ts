@@ -12,7 +12,7 @@ import {
 } from '@mcschema/core'
 import { InclusiveRange } from './Common'
 
-const CURRENT_PACK_FORMAT = 18
+const CURRENT_PACK_FORMAT = 26
 
 export function initPackMcmetaSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)

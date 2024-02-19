@@ -20,6 +20,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
 
   schemas.register('recipe', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'recipe_serializer' } }),
+    category: Opt(StringNode({ enum: 'recipe_category' })),
     [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:crafting_shaped': {

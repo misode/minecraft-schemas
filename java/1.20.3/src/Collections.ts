@@ -576,4 +576,13 @@ export function initCollections(collections: CollectionRegistry) {
     'fall_variants',
     'intentional_game_design',
   ])
+
+  collections.register('recipe_category', [
+    'blocks',
+    'building',
+    'equipment',
+    'food',
+    'misc',
+    'redstone',
+  ])
 }

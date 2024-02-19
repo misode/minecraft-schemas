@@ -532,4 +532,13 @@ export function initCollections(collections: CollectionRegistry) {
     'betty',
     'clayfish',
   ])
+
+  collections.register('recipe_category', [
+    'blocks',
+    'building',
+    'equipment',
+    'food',
+    'misc',
+    'redstone',
+  ])
 }

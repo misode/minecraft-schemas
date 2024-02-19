@@ -67,7 +67,7 @@ export function initDensityFunctionSchemas(schemas: SchemaRegistry, collections:
 				argument: DensityFunction,
 			},
 			'minecraft:clamp': {
-				input: DensityFunction,
+				input: Reference('density_function'),
 				min: NoiseRange,
 				max: NoiseRange,
 			},

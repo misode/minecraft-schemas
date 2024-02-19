@@ -149,7 +149,7 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
       },
       'minecraft:tag': {
         name: StringNode({ validator: 'resource', params: { pool: '$tag/item' } }),
-        expand: Opt(BooleanNode()),
+        expand: BooleanNode(),
         ...functionsAndConditions
       }
     }

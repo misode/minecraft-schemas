@@ -18,32 +18,6 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  const StateChoice = ChoiceNode([
-    {
-      type: 'string',
-      node: StringNode(),
-      change: v => (typeof v === 'boolean' || typeof v === 'number') ? v.toString() : ''
-    },
-    {
-      type: 'number',
-      node: NumberNode(),
-      change: v => (typeof v === 'string') ? parseInt(v) : 0
-    },
-    {
-      type: 'object',
-      node: ObjectNode({
-        min: Opt(NumberNode({ integer: true })),
-        max: Opt(NumberNode({ integer: true }))
-      }),
-      change: v => (typeof v === 'number') ? ({ min: v, max: v }) : ({})
-    },
-    {
-      type: 'boolean',
-      node: BooleanNode(),
-      change: v => v === 'true' || v === 1
-    }
-  ])
-
   schemas.register('item_predicate', ObjectNode({
     items: Opt(ListNode(
       StringNode({ validator: 'resource', params: { pool: 'item' } })
@@ -71,7 +45,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:block', id: ['pop', { push: 'block' }] } } })),
     state: Opt(MapNode(
       StringNode(),
-      StateChoice,
+      StringNode(),
       { validation: { validator: 'block_state_map', params: { id: ['pop', { push: 'block' }] } } }
     ))
   }, { context: 'block' }))
@@ -81,7 +55,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/fluid' } })),
     state: Opt(MapNode(
       StringNode(),
-      StateChoice
+      StringNode()
     ))
   }, { context: 'fluid' }))
 

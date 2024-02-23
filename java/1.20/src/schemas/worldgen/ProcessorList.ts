@@ -28,12 +28,21 @@ export function initProcessorListSchemas(schemas: SchemaRegistry, collections: C
       change: v => undefined
     },
     {
+      type: 'list',
+      node: ListNode(
+        Reference('processor')
+      ),
+      change: v => (typeof v === 'object' && v !== null && Array.isArray(v.processors))
+        ? v.processors
+        : [{ processor_type: 'minecraft:nop' }]
+    },
+    {
       type: 'object',
       node: Reference('processor_list'),
       change: v => ({
-        processors: [{
-          "processor_type": "minecraft:nop"
-        }]
+        processors: Array.isArray(v)
+          ? v
+          : [{ processor_type: 'minecraft:nop' }]
       })
     }
   ])

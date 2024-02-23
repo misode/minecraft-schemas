@@ -297,6 +297,7 @@ export type ResourceType =
   | 'entity_type'
   | 'float_provider_type'
   | 'fluid'
+  | 'font'
   | 'frog_variant'
   | 'game_event'
   | 'height_provider_type'

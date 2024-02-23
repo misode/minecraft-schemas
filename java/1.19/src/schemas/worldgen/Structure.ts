@@ -37,7 +37,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
     [Case]: {
       'minecraft:jigsaw': {
         start_pool: StringNode({ validator: 'resource', params: { pool: '$worldgen/template_pool'}}),
-        size: NumberNode({ integer: true }),
+        size: NumberNode({ integer: true, min: 1, max: 7 }),
         start_height: Reference('height_provider'),
         start_jigsaw_name: Opt(StringNode()),
         project_start_to_heightmap: Opt(StringNode({ enum: 'heightmap_type' })),

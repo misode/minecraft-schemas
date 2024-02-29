@@ -99,6 +99,9 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         'minecraft:allay_drop_item_on_block': {
           location: EntityPredicate
         },
+        'minecraft:any_block_use': {
+          location: EntityPredicate
+        },
         'minecraft:bee_nest_destroyed': {
           block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
           num_bees_inside: Opt(NumberNode({ integer: true })),
@@ -130,6 +133,9 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         'minecraft:cured_zombie_villager': {
           villager: EntityPredicate,
           zombie: EntityPredicate
+        },
+        'minecraft:default_block_use': {
+          location: EntityPredicate
         },
         'minecraft:effects_changed': {
           effects: Opt(MapNode(

@@ -12,6 +12,7 @@ import {
 	MapNode,
 	StringOrList,
 	Mod,
+	BooleanNode,
 } from '@mcschema/core'
 
 export function initFontSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -26,6 +27,10 @@ export function initFontSchemas(schemas: SchemaRegistry, collections: Collection
 
   schemas.register('glyph_provider', Mod(ObjectNode({
     type: StringNode({ enum: 'glyph_provider_type' }),
+		filter: Opt(MapNode(
+			StringNode({ enum: 'font_option' }),
+			BooleanNode(),
+		)),
 		[Switch]: [{ push: 'type' }],
 		[Case]: {
 			'bitmap': {

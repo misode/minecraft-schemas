@@ -530,4 +530,9 @@ export function initCollections(collections: CollectionRegistry) {
     'misc',
     'redstone',
   ])
+
+  collections.register('font_option', [
+    'uniform',
+    'jp',
+  ])
 }

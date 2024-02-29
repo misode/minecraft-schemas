@@ -319,6 +319,7 @@ export type ResourceType =
   | 'rule_block_entity_modifier'
   | 'rule_test'
   | 'stat_type'
+  | 'trigger_type'
   | 'villager_profession'
   | 'villager_type'
   | 'worldgen/block_state_provider_type'

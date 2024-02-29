@@ -20,6 +20,7 @@ export const LootTableTypes = new Map<string, LootContextRegistration>([
     ['minecraft:archaeology', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:barter', { requires: [LootContext.ThisEntity], allows: [] }],
     ['minecraft:block', { requires: [LootContext.BlockState, LootContext.Origin, LootContext.Tool], allows: [LootContext.BlockEntity, LootContext.ExplosionRadius, LootContext.ThisEntity] }],
+    ['minecraft:block_use', { requires: [LootContext.ThisEntity, LootContext.Origin, LootContext.BlockState], allows: [] }],
     ['minecraft:chest', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:command', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:empty', { requires: [], allows: [] }],
@@ -27,7 +28,9 @@ export const LootTableTypes = new Map<string, LootContextRegistration>([
     ['minecraft:fishing', { requires: [LootContext.Origin, LootContext.Tool], allows: [LootContext.ThisEntity] }],
     ['minecraft:generic', { requires: [LootContext.DamageSource, LootContext.BlockEntity, LootContext.BlockState, LootContext.DirectKillerEntity, LootContext.ExplosionRadius, LootContext.KillerEntity, LootContext.LastDamagePlayer, LootContext.Origin, LootContext.ThisEntity, LootContext.Tool], allows: [] }],
     ['minecraft:gift', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
-    ['minecraft:selector', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }]
+    ['minecraft:selector', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
+    ['minecraft:shearing', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
+    ['minecraft:vault', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }]
 ])
 
 /**

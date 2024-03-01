@@ -328,8 +328,10 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     SwitchNode([
       ...Object.entries(Components).map(([key, value]) => ({
         match: (path: any) => {
-          const last = path.last()
-          return last === 'string' && (last.startsWith('minecraft:') ? last : 'minecraft:' + last) === key
+          let last = path.last()
+          if (typeof last !== 'string') return false
+          if (!last.startsWith('minecraft:')) last = 'minecraft:' + last
+          return last === key
         },
         node: value,
       })),
@@ -342,14 +344,17 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
 
   schemas.register('data_component_patch', MapNode(
     StringNode({ enum: [
-      ...collections.get('data_component'),
-      ...collections.get('data_component').map(k => '!' + k),
+      ...collections.get('data_component_type'),
+      ...collections.get('data_component_type').map(k => '!' + k),
     ] }),
     SwitchNode([
       ...Object.entries(Components).map(([key, value]) => ({
         match: (path: any) => {
-          const last = path.last()
-          return last === 'string' && (last.startsWith('minecraft:') ? last : 'minecraft:' + last).replace(/^!/, '') === key
+          let last = path.last()
+          if (typeof last !== 'string') return false
+          if (last.startsWith('!')) last = last.slice(1)
+          if (!last.startsWith('minecraft:')) last = 'minecraft:' + last
+          return last === key
         },
         node: value,
       })),

@@ -133,17 +133,17 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     )),
     has_trail: Opt(BooleanNode()),
     has_twinkle: Opt(BooleanNode()),
-  }))
+  }, { context: 'firework_explosion' }))
 
   const Components: Record<string, INode> = {
     'minecraft:damage': NumberNode({ integer: true, min: 0 }),
     'minecraft:unbreakable': ObjectNode({
       show_in_tooltip: Opt(BooleanNode())
-    }),
+    }, { context: 'data_component.unbreakable' }),
     'minecraft:custom_name': StringNode(), // text component
     'minecraft:lore': ListNode(
       StringNode(), // text component
-      { maxLength: 64 },
+      { context: 'data_component.lore', maxLength: 64 },
     ),
     'minecraft:enchantments': Reference('enchantments_component'),
     'minecraft:can_place_on': Reference('adventure_mode_predicate'),
@@ -160,7 +160,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         }, { context: 'attribute_modifier' }),
       ),
       show_in_tooltip: Opt(BooleanNode()),
-    }),
+    }, { context: 'data_component.attribute_modifiers' }),
     'minecraft:custom_model_data': NumberNode({ integer: true }),
     'minecraft:hide_additional_tooltip': ObjectNode({}),
     'minecraft:repair_cost': NumberNode({ integer: true, min: 0 }),
@@ -170,19 +170,21 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:dyed_color': ObjectNode({
       rgb: NumberNode({ color: true }),
       show_in_tooltip: Opt(BooleanNode()),
-    }),
+    }, { context: 'data_component.dyed_color' }),
     'minecraft:map_color': NumberNode({ color: true }),
     'minecraft:map_id': NumberNode({ integer: true }),
     'minecraft:map_decorations': MapNode(
       StringNode(),
       Reference('map_decoration'),
+      { context: 'data_component.map_decorations' },
     ),
     'minecraft:charged_projectiles': ListNode(
       Reference('item_stack'),
+      { context: 'data_component.charged_projectiles' },
     ),
     'minecraft:bundle_contents': ListNode(
       Reference('item_stack'),
-      { maxLength: 64 },
+      { context: 'data_component.bundle_contents', maxLength: 64 },
     ),
     'minecraft:potion_contents': ObjectNode({
       potion: Opt(StringNode({ validator: 'resource', params: { pool: 'potion' } })),
@@ -190,16 +192,17 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       custom_effects: Opt(ListNode(
         Reference('mob_effect_instance'),
       )),
-    }),
+    }, { context: 'data_component.potion_contents' }),
     'minecraft:suspicious_stew_effects': ListNode(
       Reference('suspicious_stew_effect_instance'),
+      { context: 'data_component.suspicious_stew_effects' },
     ),
     'minecraft:writable_book_content': ObjectNode({
       pages: Opt(ListNode(
         Filterable(SizeLimitedString({ maxLength: 1024 })),
         { maxLength: 100 },
       )),
-    }),
+    }, { context: 'data_component.writable_book_content' }),
     'minecraft:written_book_content': ObjectNode({
       title: SizeLimitedString({ maxLength: 32 }),
       author: StringNode(),
@@ -209,7 +212,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         { maxLength: 100 },
       )),
       resolved: Opt(BooleanNode()),
-    }),
+    }, { context: 'data_component.written_book_content' }),
     'minecraft:trim': ObjectNode({
       material: ChoiceNode([
         {
@@ -232,31 +235,33 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         },
       ]),
       show_in_tooltip: Opt(BooleanNode()),
-    }),
+    }, { context: 'data_component.trim' }),
     'minecraft:debug_stick_state': MapNode(
       StringNode({ validator: 'resource', params: { pool: 'block' } }),
       StringNode(), // TODO: block state key validation
+      { context: 'data_component.debug_stick_state' },
     ),
     'minecraft:entity_data': ObjectNode({
       id: StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
       // TODO: any unsafe data
-    }),
+    }, { context: 'data_component.entity_data' }),
     'minecraft:bucket_entity_data': ObjectNode({
       // TODO: any unsafe data
-    }),
+    }, { context: 'data_component.bucket_entity_data' }),
     'minecraft:block_entity_data': ObjectNode({
       id: StringNode({ validator: 'resource', params: { pool: 'block_entity_type' } }),
       // TODO: any unsafe data
-    }),
+    }, { context: 'data_component.block_entity_data' }),
     'minecraft:instrument': StringNode({ validator: 'resource', params: { pool: 'instrument' } }),
     'minecraft:recipes': ListNode(
       StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
+      { context: 'data_component.recipes' },
     ),
     'minecraft:lodestone_target': ObjectNode({
       dimension: StringNode({ validator: 'resource', params: { pool: '$dimension' } }),
       pos: Reference('block_pos'),
       tracked: Opt(BooleanNode()),
-    }),
+    }, { context: 'data_component.lodestone_target' }),
     'minecraft:firework_explosion': Reference('firework_explosion'),
     'minecraft:fireworks': ObjectNode({
       flight_duration: Opt(NumberNode({ integer: true, min: 0, max: 255 })),
@@ -264,7 +269,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         Reference('firework_explosion'),
         { maxLength: 16 },
       ),
-    }),
+    }, { context: 'data_component.fireworks' }),
     'minecraft:profile': ObjectNode({
       name: Mod(SizeLimitedString({ maxLength: 16 }), node => ({
         validate: (path, value, errors, options) => {
@@ -283,29 +288,31 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         StringNode(),
         StringNode(),
       ),
-    }),
+    }, { context: 'data_component.profile' }),
     'minecraft:note_block_sound': StringNode({ validator: 'resource', params: { pool: [], allowUnknown: true } }),
     'minecraft:banner_patterns': ListNode(
       ObjectNode({
         pattern: StringNode({ validator: 'resource', params: { pool: 'banner_pattern' } }),
         color: StringNode({ enum: 'dye_color' }),
       }),
+      { context: 'data_component.banner_patterns' },
     ),
     'minecraft:base_color': StringNode({ enum: 'dye_color' }),
     'minecraft:pot_decorations': ListNode(
       StringNode({ validator: 'resource', params: { pool: 'item' } }),
-      { maxLength: 4 },
+      { context: 'data_component.pot_decorations', maxLength: 4 },
     ),
     'minecraft:container': ListNode(
       ObjectNode({
         slot: NumberNode({ integer: true, min: 0, max: 255 }),
         item: Reference('item_stack'),
       }),
-      { maxLength: 256 },
+      { context: 'data_component.container', maxLength: 256 },
     ),
     'minecraft:block_state': MapNode(
       StringNode(),
       StringNode(),
+      { context: 'data_component.block_state' },
     ),
     'minecraft:bees': ListNode(
       ObjectNode({
@@ -315,12 +322,13 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         ticks_in_hive: NumberNode({ integer: true }),
         min_ticks_in_hive: NumberNode({ integer: true }),
       }),
+      { context: 'data_component.bees' },
     ),
     'minecraft:lock': StringNode(),
     'minecraft:container_loot': ObjectNode({
       loot_table: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
       seed: Opt(NumberNode({ integer: true })),
-    }),
+    }, { context: 'data_component.container_loot' }),
   }
 
   schemas.register('data_component_predicate', MapNode(
@@ -339,7 +347,8 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         match: () => true,
         node: ObjectNode({}), // default for unknown components
       },
-    ])
+    ]),
+    { context: 'data_component_predicate' }
   ))
 
   schemas.register('data_component_patch', MapNode(
@@ -362,6 +371,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         match: () => true,
         node: ObjectNode({}), // default for unknown components
       },
-    ])
+    ]),
+    { context: 'data_component_patch' }
   ))
 }

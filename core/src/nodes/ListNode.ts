@@ -1,7 +1,9 @@
 import { DataModel } from '../model/DataModel'
+import { ModelPath, Path } from '../model/Path'
 import { INode, Base } from './Node'
 
 type ListNodeConfig = {
+  context?: string
   minLength?: number
   maxLength?: number
 }
@@ -28,7 +30,9 @@ export const ListNode = (children: INode, config?: ListNodeConfig): INode<any[]>
       return children.navigate(path, nextIndex)
     },
     pathPush(path, index) {
-      return path.push(parseInt(index.toString())).contextPush('entry')
+      const pathWithContext = (config?.context) ?
+      new ModelPath(path.getModel(), new Path(path.getArray(), [config.context])) : path
+      return pathWithContext.push(parseInt(index.toString())).contextPush('entry')
     },
     validate(path, value, errors, options) {
       if (options.loose && !Array.isArray(value)) {

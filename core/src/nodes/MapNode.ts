@@ -1,13 +1,14 @@
 import { INode, Base } from './Node'
 import { ValidationOption } from '../ValidationOption'
-import { quoteString } from '../utils'
 import { DataModel } from '../model/DataModel'
+import { ModelPath, Path } from '../model/Path'
 
 export type IMap = {
   [name: string]: any
 }
 
 type MapNodeConfig = {
+  context?: string
   validation?: ValidationOption
 }
 
@@ -34,7 +35,9 @@ export const MapNode = (keys: INode<string>, children: INode, config?: MapNodeCo
       return children.navigate(path, nextIndex)
     },
     pathPush(path, key) {
-      return path.modelPush(key)
+      const pathWithContext = (config?.context) ?
+      new ModelPath(path.getModel(), new Path(path.getArray(), [config.context])) : path
+      return pathWithContext.modelPush(key)
     },
     suggest: (path) => keys.suggest(path, ''),
     validate(path, value, errors, options) {

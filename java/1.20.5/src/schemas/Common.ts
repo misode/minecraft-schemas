@@ -578,10 +578,13 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           enabled: path => path.push('formula').get() !== 'minecraft:ore_drops'
         })
       },
-      'minecraft:copy_name': {
-        source: copySourceNode
+      'minecraft:copy_components': {
+        source: StringNode({ enum: ['block_entity'] }),
+        components: ListNode(
+          StringNode({ validator: 'resource', params: { pool: 'data_component_type' } }),
+        ),
       },
-      'minecraft:copy_nbt': {
+      'minecraft:copy_custom_data': {
         source: Reference('nbt_provider'),
         ops: ListNode(
           ObjectNode({
@@ -590,6 +593,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             op: StringNode({ enum: ['replace', 'append', 'merge'] })
           }, { context: 'nbt_operation' })
         )
+      },
+      'minecraft:copy_name': {
+        source: copySourceNode
       },
       'minecraft:copy_state': {
         block: StringNode({ validator: 'resource', params: { pool: 'block' } }),
@@ -640,6 +646,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         ),
         append: Opt(BooleanNode())
       },
+      'minecraft:set_components': {
+        components: Reference('data_component_patch'),
+      },
       'minecraft:set_contents': {
         type: StringNode({ validator: 'resource', params: { pool: 'block_entity_type' } }),
         entries: ListNode(
@@ -649,6 +658,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:set_count': {
         count: Reference('number_provider'),
         add: Opt(BooleanNode())
+      },
+      'minecraft:set_custom_data': {
+        tag: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item' } } })
       },
       'minecraft:set_damage': {
         damage: Reference('number_provider'),
@@ -679,9 +691,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:set_name': {
         entity: Opt(entitySourceNode),
         name: Opt(Reference('text_component'))
-      },
-      'minecraft:set_nbt': {
-        tag: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item' } } })
       },
       'minecraft:set_potion': {
         id: StringNode({ validator: 'resource', params: { pool: 'potion' } })

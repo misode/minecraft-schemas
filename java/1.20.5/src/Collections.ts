@@ -535,4 +535,30 @@ export function initCollections(collections: CollectionRegistry) {
     'uniform',
     'jp',
   ])
+
+  collections.register('equipment_slot_group', [
+    'any',
+    'mainhand',
+    'offhand',
+    'hand',
+    'head',
+    'chest',
+    'legs',
+    'feet',
+    'armor',
+  ])
+
+  collections.register('attribute_modifier_operation', [
+    'add_value',
+    'add_multiplied_base',
+    'add_multiplied_total',
+  ])
+
+  collections.register('firework_explosion_shape', [
+    'small_ball',
+    'large_ball',
+    'star',
+    'creeper',
+    'burst',
+  ])
 }

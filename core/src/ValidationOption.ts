@@ -293,6 +293,7 @@ export type ResourceType =
   | 'block_predicate_type'
   | 'cat_variant'
   | 'custom_stat'
+  | 'data_component_type'
   | 'enchantment'
   | 'entity_type'
   | 'float_provider_type'

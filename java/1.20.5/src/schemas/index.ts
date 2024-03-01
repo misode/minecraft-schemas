@@ -17,10 +17,12 @@ import { initTextComponentSchemas } from './TextComponent'
 import { initTrimsSchemas } from './Trims'
 import { initWorldgenSchemas } from './worldgen'
 import { initWorldSettingsSchemas } from './WorldSettings'
+import { initComponentsSchemas } from './Components'
 
 export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
     // `Common.ts` is the only file that has exports. It should be initialized first. 
     initCommonSchemas(schemas, collections)
+    initComponentsSchemas(schemas, collections)
     initChatTypeSchemas(schemas, collections)
     initAdvancementSchemas(schemas, collections)
     initAssetsSchemas(schemas, collections)

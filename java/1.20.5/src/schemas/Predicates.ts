@@ -11,25 +11,23 @@ import {
   SchemaRegistry,
   ChoiceNode,
   CollectionRegistry,
-  NumberNode,
 } from '@mcschema/core'
+import { Tag } from './Common'
 
 export function initPredicatesSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('item_predicate', ObjectNode({
-    items: Opt(ListNode(
-      StringNode({ validator: 'resource', params: { pool: 'item' } })
-    )),
-    tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/item' } })),
+    items: Opt(Tag({ resource: 'item' })),
     count: Reference('int_bounds'),
     durability: Reference('int_bounds'),
-    potion: Opt(StringNode({ validator: 'resource', params: { pool: 'potion' } })),
-    nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } })),
+    potions: Opt(Tag({ resource: 'potion' })),
+    custom_data: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } })),
     enchantments: Opt(ListNode(
       Reference('enchantment_predicate')
-    ))
+    )),
+    components: Opt(Reference('data_component_predicate')),
   }, { context: 'item' }))
 
   schemas.register('enchantment_predicate', ObjectNode({
@@ -38,10 +36,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   }, { context: 'enchantment' }))
 
   schemas.register('block_predicate', ObjectNode({
-    blocks: Opt(ListNode(
-      StringNode({ validator: 'resource', params: { pool: 'block' } })
-    )),
-    tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/block' } })),
+    blocks: Opt(Tag({ resource: 'block' })),
     nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:block', id: ['pop', { push: 'block' }] } } })),
     state: Opt(MapNode(
       StringNode(),
@@ -51,8 +46,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   }, { context: 'block' }))
 
   schemas.register('fluid_predicate', ObjectNode({
-    fluid: Opt(StringNode({ validator: 'resource', params: { pool: 'fluid' } })),
-    tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/fluid' } })),
+    fluids: Opt(Tag({ resource: 'fluid' })),
     state: Opt(MapNode(
       StringNode(),
       StringNode()
@@ -65,8 +59,8 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       y: Reference('float_bounds'),
       z: Reference('float_bounds')
     })),
-    biome: Opt(StringNode({ validator: 'resource', params: { pool: '$worldgen/biome' } })),
-    structure: Opt(StringNode({ validator: 'resource', params: { pool: '$worldgen/structure' } })),
+    biomes: Opt(Tag({ resource: '$worldgen/biome' })),
+    structures: Opt(Tag({ resource: '$worldgen/structure' })),
     dimension: Opt(StringNode({ validator: 'resource', params: { pool: '$dimension' } })),
     light: Opt(ObjectNode({
       light: Reference('int_bounds')
@@ -128,7 +122,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   }, { context: 'distance' }))
 
   schemas.register('entity_predicate', ObjectNode({
-    type: Opt(StringNode({ validator: 'resource', params: { pool: 'entity_type', allowTag: true } })),
+    type: Opt(Tag({ resource: 'entity_type' })),
     type_specific: Opt(ObjectNode({
       type: StringNode({ enum: 'type_specific_type' }),
       [Switch]: [{ push: 'type' }],

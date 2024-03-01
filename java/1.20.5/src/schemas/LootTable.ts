@@ -17,6 +17,7 @@ import {
   CollectionRegistry,
   Opt,
   NodeChildren,
+  ChoiceNode,
 } from '@mcschema/core'
 import {
   LootTableTypes,
@@ -137,7 +138,18 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
         ...functionsAndConditions
       },
       'minecraft:loot_table': {
-        name: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
+        value: ChoiceNode([
+          {
+            type: 'string',
+            node: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
+            change: () => undefined
+          },
+          {
+            type: 'object',
+            node: Reference('loot_table'),
+            change: () => ({ pools: [] })
+          }
+        ]),
         ...functionsAndConditions
       },
       'minecraft:sequence': {
@@ -185,10 +197,10 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     attribute: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
     name: StringNode(),
     amount: Reference('number_provider'),
-    operation: StringNode({ enum: ['addition', 'multiply_base', 'multiply_total'] }),
+    operation: StringNode({ enum: 'attribute_modifier_operation' }),
     id: Opt(StringNode({ validator: 'uuid' })),
     slot: StringOrList(
-      StringNode({ enum: 'slot' })
+      StringNode({ enum: 'equipment_slot_group' })
     )
   }, { context: 'attribute_modifier' }), {
     default: () => ({

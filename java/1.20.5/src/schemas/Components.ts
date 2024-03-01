@@ -53,15 +53,17 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     rotation: NumberNode(),
   }, { context: 'map_decoration' }))
 
-  schemas.register('item_stack', ObjectNode({
-    id: Mod(StringNode({ validator: 'resource', params: { pool: 'item' } }), node => ({
-      validate: (path, value, errors, options) => {
-        if (typeof value === 'string' && value?.replace(/^minecraft:/, '') === 'air') {
-          errors.add(path, 'error.item_stack_not_air')
-        }
-        return node.validate(path, value, errors, options)
+  schemas.register('item_non_air', Mod(StringNode({ validator: 'resource', params: { pool: 'item' } }), node => ({
+    validate: (path, value, errors, options) => {
+      if (typeof value === 'string' && value?.replace(/^minecraft:/, '') === 'air') {
+        errors.add(path, 'error.item_stack_not_air')
       }
-    })),
+      return node.validate(path, value, errors, options)
+    }
+  })))
+
+  schemas.register('item_stack', ObjectNode({
+    id: Reference('item_non_air'),
     count: Opt(NumberNode({ integer: true, min: 1 })),
     components: Opt(Reference('data_component_patch')),
   }, { context: 'item_stack' }))

@@ -37,10 +37,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
 
   schemas.register('advancement', Mod(ObjectNode({
     display: Opt(Mod(ObjectNode({
-      icon: ObjectNode({
-        item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-        nbt: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'item' }] } } }))
-      }),
+      icon: Reference('item_stack'),
       title: Reference('text_component'),
       description: Reference('text_component'),
       background: Opt(StringNode()),
@@ -51,7 +48,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
     }), {
       default: () => ({
         icon: {
-          item: 'minecraft:stone'
+          id: 'minecraft:stone'
         },
         title: '',
         description: ''

@@ -88,11 +88,18 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
         },
         'show_item': {
           value: Opt(StringNode({ validator: 'nbt', params: { module: 'util::InventoryItem' } })),
-          contents: Opt(ObjectNode({
-            id: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-            count: Opt(NumberNode({ integer: true })),
-            tag: Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', { push: 'id' }] } } }))
-          }))
+          contents: Opt(ChoiceNode([
+            {
+              type: 'string',
+              node: Reference('item_non_air'),
+              change: v => typeof v === 'object' && typeof v?.id === 'string' ? v : undefined
+            },
+            {
+              type: 'object',
+              node: Reference('item_stack'),
+              change: v => typeof v === 'string' ? { id: v } : {}
+            }
+          ]))
         },
         'show_entity': {
           value: Opt(StringNode()),

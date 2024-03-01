@@ -68,8 +68,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:stonecutting': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-        count: NumberNode({ integer: true })
+        result: Reference('recipe_result')
       },
       'minecraft:smithing': {
         group: Opt(StringNode()),
@@ -122,11 +121,11 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
   }))
 
   schemas.register('recipe_result', Mod(ObjectNode({
-    item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
+    id: StringNode({ validator: 'resource', params: { pool: 'item' } }),
     count: Opt(Mod(NumberNode({ integer: true }), { default: () => 1 }))
   }), {
     default: () => ({
-      item: 'minecraft:stone'
+      id: 'minecraft:stone'
     })
   }))
 }

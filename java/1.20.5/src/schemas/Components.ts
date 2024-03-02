@@ -30,7 +30,9 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   schemas.register('adventure_mode_predicate', ChoiceNode([
     {
       type: 'simple',
+      match: () => true,
       node: Reference('block_predicate'),
+      change: v => typeof v === 'object' && Array.isArray(v?.predicates) && typeof v.predicates[0] === 'object' ? v.predicates[0] : {}
     },
     {
       type: 'full',
@@ -41,6 +43,9 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
           { minLength: 1 },
         ),
         show_in_tooltip: Opt(BooleanNode()),
+      }),
+      change: v => ({
+        predicates: [typeof v === 'object' && v !== null ? v : {}],
       }),
       priority: 1,
     },
@@ -128,10 +133,10 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   schemas.register('firework_explosion', ObjectNode({
     shape: StringNode({ enum: 'firework_explosion_shape' }),
     colors: Opt(ListNode(
-      NumberNode({ integer: true }),
+      NumberNode({ color: true }),
     )),
     fade_colors: Opt(ListNode(
-      NumberNode({ integer: true }),
+      NumberNode({ color: true }),
     )),
     has_trail: Opt(BooleanNode()),
     has_twinkle: Opt(BooleanNode()),

@@ -174,10 +174,21 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:enchantment_glint_override': BooleanNode(),
     'minecraft:intangible_projectile': ObjectNode({}),
     'minecraft:stored_enchantments': Reference('enchantments_component'),
-    'minecraft:dyed_color': ObjectNode({
-      rgb: NumberNode({ color: true }),
-      show_in_tooltip: Opt(BooleanNode()),
-    }, { context: 'data_component.dyed_color' }),
+    'minecraft:dyed_color': ChoiceNode([
+      {
+        type: 'number',
+        node: NumberNode({ color: true }),
+        change: v => v.rgb
+      },
+      {
+        type: 'object',
+        node: ObjectNode({
+          rgb: NumberNode({ color: true }),
+          show_in_tooltip: Opt(BooleanNode()),
+        }),
+        change: v => ({ rgb: v })
+      }
+    ], { context: 'data_component.dyed_color' }),
     'minecraft:map_color': NumberNode({ color: true }),
     'minecraft:map_id': NumberNode({ integer: true }),
     'minecraft:map_decorations': MapNode(
@@ -193,13 +204,24 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       Reference('item_stack'),
       { context: 'data_component.bundle_contents', maxLength: 64 },
     ),
-    'minecraft:potion_contents': ObjectNode({
-      potion: Opt(StringNode({ validator: 'resource', params: { pool: 'potion' } })),
-      custom_color: Opt(NumberNode({ color: true })),
-      custom_effects: Opt(ListNode(
-        Reference('mob_effect_instance'),
-      )),
-    }, { context: 'data_component.potion_contents' }),
+    'minecraft:potion_contents': ChoiceNode([
+      {
+        type: 'string',
+        node: StringNode({ validator: 'resource', params: { pool: 'potion' } }),
+        change: v => v.potion
+      },
+      {
+        type: 'object',
+        node: ObjectNode({
+          potion: Opt(StringNode({ validator: 'resource', params: { pool: 'potion' } })),
+          custom_color: Opt(NumberNode({ color: true })),
+          custom_effects: Opt(ListNode(
+            Reference('mob_effect_instance'),
+          )),
+        }),
+        change: v => ({ potion: v})
+      }
+    ], { context: 'data_component.potion_contents' }),
     'minecraft:suspicious_stew_effects': ListNode(
       Reference('suspicious_stew_effect_instance'),
       { context: 'data_component.suspicious_stew_effects' },
@@ -279,25 +301,44 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         { maxLength: 256 },
       ),
     }, { context: 'data_component.fireworks' }),
-    'minecraft:profile': ObjectNode({
-      name: Opt(Mod(SizeLimitedString({ maxLength: 16 }), node => ({
-        validate: (path, value, errors, options) => {
-          value = node.validate(path, value, errors, options)
-          if (typeof value === 'string' && !value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
-            errors.add(path, 'error.invalid_player_name')
+    'minecraft:profile': ChoiceNode([
+      {
+        type: 'string',
+        node: Mod(SizeLimitedString({ maxLength: 16 }), node => ({
+          validate: (path, value, errors, options) => {
+            value = node.validate(path, value, errors, options)
+            if (typeof value === 'string' && !value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
+              errors.add(path, 'error.invalid_player_name')
+            }
+            return value
           }
-          return value
-        }
-      }))),
-      id: ListNode(
-        NumberNode({ integer: true }),
-        { minLength: 4, maxLength: 4 },
-      ),
-      properties: MapNode( // TODO
-        StringNode(),
-        StringNode(),
-      ),
-    }, { context: 'data_component.profile' }),
+        })),
+        change: v => v.name
+      },
+      {
+        type: 'object',
+        node: ObjectNode({
+          name: Opt(Mod(SizeLimitedString({ maxLength: 16 }), node => ({
+            validate: (path, value, errors, options) => {
+              value = node.validate(path, value, errors, options)
+              if (typeof value === 'string' && !value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
+                errors.add(path, 'error.invalid_player_name')
+              }
+              return value
+            }
+          }))),
+          id: ListNode(
+            NumberNode({ integer: true }),
+            { minLength: 4, maxLength: 4 },
+          ),
+          properties: MapNode( // TODO
+            StringNode(),
+            StringNode(),
+          ),
+        }),
+        change: v => ({ name: v })
+      }
+    ], { context: 'data_component.profile' }),
     'minecraft:note_block_sound': StringNode({ validator: 'resource', params: { pool: [], allowUnknown: true } }),
     'minecraft:banner_patterns': ListNode(
       ObjectNode({

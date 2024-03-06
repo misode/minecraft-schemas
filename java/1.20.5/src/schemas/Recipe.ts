@@ -30,57 +30,51 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
           StringNode(), // TODO: add validation
           Reference('recipe_ingredient')
         ),
-        result: Reference('recipe_result')
+        result: Reference('item_stack')
       },
       'minecraft:crafting_shapeless': {
         group: Opt(StringNode()),
         ingredients: ListNode(Reference('recipe_ingredient')),
-        result: Reference('recipe_result')
+        result: Reference('item_stack')
       },
       'minecraft:smelting': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
+        result: Reference('cooking_recipe_result'),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 200 }))
       },
       'minecraft:blasting': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
+        result: Reference('cooking_recipe_result'),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:smoking': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
+        result: Reference('cooking_recipe_result'),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:campfire_cooking': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: StringNode({ validator: 'resource', params: { pool: 'item' } }),
+        result: Reference('cooking_recipe_result'),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:stonecutting': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Reference('recipe_result')
-      },
-      'minecraft:smithing': {
-        group: Opt(StringNode()),
-        base: Reference('recipe_ingredient_object'),
-        addition: Reference('recipe_ingredient_object'),
-        result: Reference('recipe_result')
+        result: Reference('item_stack')
       },
       'minecraft:smithing_transform': {
         template: Reference('recipe_ingredient_object'),
         base: Reference('recipe_ingredient_object'),
         addition: Reference('recipe_ingredient_object'),
-        result: Reference('recipe_result')
+        result: Reference('item_stack')
       },
       'minecraft:smithing_trim': {
         template: Reference('recipe_ingredient_object'),
@@ -120,9 +114,9 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
     })
   }))
 
-  schemas.register('recipe_result', Mod(ObjectNode({
+  schemas.register('cooking_recipe_result', Mod(ObjectNode({
     id: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-    count: Opt(Mod(NumberNode({ integer: true }), { default: () => 1 }))
+    components: Opt(Reference('data_component_predicate'))
   }), {
     default: () => ({
       id: 'minecraft:stone'

@@ -212,6 +212,10 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     location: Opt(Reference('location_predicate')),
     stepping_on: Opt(Reference('location_predicate')),
     distance: Opt(Reference('distance_predicate')),
+    slots: Opt(MapNode(
+      StringNode({ enum: 'slot_range', additional: true }),
+      Reference('item_predicate')
+    )),
     flags: Opt(ObjectNode({
       is_on_fire: Opt(BooleanNode()),
       is_sneaking: Opt(BooleanNode()),
@@ -220,7 +224,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       is_baby: Opt(BooleanNode())
     })),
     equipment: Opt(MapNode(
-      StringNode({ enum: 'slot' }),
+      StringNode({ enum: 'equipment_slot' }),
       Reference('item_predicate')
     )),
     vehicle: Opt(Reference('entity_predicate')),

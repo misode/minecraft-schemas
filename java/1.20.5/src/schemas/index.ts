@@ -1,6 +1,7 @@
 import { CollectionRegistry, SchemaRegistry } from '@mcschema/core'
 import { initAdvancementSchemas } from './Advancement'
 import { initAssetsSchemas } from './assets'
+import { initBannerPatternSchemas } from './BannerPattern'
 import { initChatTypeSchemas } from './ChatType'
 import { initCommonSchemas } from './Common'
 import { initConditionSchemas } from './Condition'
@@ -15,6 +16,7 @@ import { initRecipeSchemas } from './Recipe'
 import { initTagsSchemas } from './Tags'
 import { initTextComponentSchemas } from './TextComponent'
 import { initTrimsSchemas } from './Trims'
+import { initWolfVariantSchemas } from './WolfVariant'
 import { initWorldgenSchemas } from './worldgen'
 import { initWorldSettingsSchemas } from './WorldSettings'
 import { initComponentsSchemas } from './Components'
@@ -26,6 +28,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initChatTypeSchemas(schemas, collections)
     initAdvancementSchemas(schemas, collections)
     initAssetsSchemas(schemas, collections)
+    initBannerPatternSchemas(schemas, collections)
     initConditionSchemas(schemas, collections)
     initDamageTypeSchemas(schemas, collections)
     initDimensionTypeSchemas(schemas, collections)
@@ -38,6 +41,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initTagsSchemas(schemas, collections)
     initTextComponentSchemas(schemas, collections)
     initTrimsSchemas(schemas, collections)
+    initWolfVariantSchemas(schemas, collections)
     initWorldgenSchemas(schemas, collections)
     initWorldSettingsSchemas(schemas, collections)
 }

@@ -37,13 +37,39 @@ export function initCollections(collections: CollectionRegistry) {
     'key.use'
   ])
 
-  collections.register('slot', [
+  collections.register('equipment_slot', [
     'mainhand',
     'offhand',
     'head',
     'chest',
     'legs',
-    'feet'
+    'feet',
+    'body',
+  ])
+
+  collections.register('equipment_slot_group', [
+    'any',
+    'mainhand',
+    'offhand',
+    'hand',
+    'head',
+    'chest',
+    'legs',
+    'feet',
+    'armor',
+  ])
+
+  collections.register('slot_range', [
+    'container.*',
+    'hotbar.*',
+    'inventory.*',
+    'enderchest.*',
+    'villager.*',
+    'horse.*',
+    'weapon.*',
+    'armor.*',
+    'player.cursor',
+    'player.crafting.*',
   ])
 
   collections.register('gamemode', [
@@ -534,18 +560,6 @@ export function initCollections(collections: CollectionRegistry) {
   collections.register('font_option', [
     'uniform',
     'jp',
-  ])
-
-  collections.register('equipment_slot_group', [
-    'any',
-    'mainhand',
-    'offhand',
-    'hand',
-    'head',
-    'chest',
-    'legs',
-    'feet',
-    'armor',
   ])
 
   collections.register('attribute_modifier_operation', [

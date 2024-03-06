@@ -19,13 +19,30 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  schemas.register('enchantments_component', ObjectNode({
-    levels: MapNode(
-      StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
-      NumberNode({ integer: true, min: 0, max: 255 }),
-    ),
-    show_in_tooltip: Opt(BooleanNode()),
-  }, { context: 'enchantments' }))
+  schemas.register('enchantments_component', ChoiceNode([
+    {
+      type: 'simple',
+      match: () => true,
+      node: MapNode(
+        StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+        NumberNode({ integer: true, min: 0, max: 255 }),
+      ),
+      change: v => v.levels ?? {}
+    },
+    {
+      type: 'full',
+      match: v => typeof v === 'object' && typeof v?.levels === 'object',
+      node: ObjectNode({
+        levels: MapNode(
+          StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+          NumberNode({ integer: true, min: 0, max: 255 }),
+        ),
+        show_in_tooltip: Opt(BooleanNode()),
+      }),
+      change: v => ({ levels: v ?? {} }),
+      priority: 1,
+    }
+  ], { context: 'enchantments' }))
 
   schemas.register('adventure_mode_predicate', ChoiceNode([
     {
@@ -50,6 +67,15 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       priority: 1,
     },
   ], { context: 'adventure_mode_predicate' }))
+
+  schemas.register('attribute_modifiers_entry', ObjectNode({
+    type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
+    uuid: StringNode({ validator: 'uuid' }),
+    name: StringNode(),
+    amount: NumberNode(),
+    operation: StringNode({ enum: 'attribute_modifier_operation' }),
+    slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
+  }, { context: 'attribute_modifier' }))
 
   schemas.register('map_decoration', ObjectNode({
     type: StringNode({ enum: 'map_decoration' }),
@@ -142,6 +168,16 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     has_twinkle: Opt(BooleanNode()),
   }, { context: 'firework_explosion' }))
 
+  schemas.register('player_name', Mod(SizeLimitedString({ maxLength: 16 }), node => ({
+    validate: (path, value, errors, options) => {
+      value = node.validate(path, value, errors, options)
+      if (typeof value === 'string' && !value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
+        errors.add(path, 'error.invalid_player_name')
+      }
+      return value
+    }
+  })))
+
   const Components: Record<string, INode> = {
     'minecraft:damage': NumberNode({ integer: true, min: 0 }),
     'minecraft:unbreakable': ObjectNode({
@@ -150,34 +186,51 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:custom_name': StringNode(), // text component
     'minecraft:lore': ListNode(
       StringNode(), // text component
-      { context: 'data_component.lore', maxLength: 64 },
+      { context: 'data_component.lore', maxLength: 256 },
     ),
     'minecraft:enchantments': Reference('enchantments_component'),
     'minecraft:can_place_on': Reference('adventure_mode_predicate'),
     'minecraft:can_break': Reference('adventure_mode_predicate'),
-    'minecraft:attribute_modifiers': ObjectNode({
-      modifiers: ListNode(
-        ObjectNode({
-          type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
-          uuid: StringNode({ validator: 'uuid' }),
-          name: StringNode(),
-          amount: NumberNode(),
-          operation: StringNode({ enum: 'attribute_modifier_operation' }),
-          slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
-        }, { context: 'attribute_modifier' }),
-      ),
-      show_in_tooltip: Opt(BooleanNode()),
-    }, { context: 'data_component.attribute_modifiers' }),
+    'minecraft:attribute_modifiers': ChoiceNode([
+      {
+        type: 'list',
+        node: ListNode(
+          Reference('attribute_modifiers_entry'),
+        ),
+        change: v => v.modifiers
+      },
+      {
+        type: 'object',
+        node: ObjectNode({
+          modifiers: ListNode(
+            Reference('attribute_modifiers_entry'),
+          ),
+          show_in_tooltip: Opt(BooleanNode()),
+        }),
+        change: v => ({ modifiers: v })
+      }
+    ], { context: 'data_component.attribute_modifiers' }),
     'minecraft:custom_model_data': NumberNode({ integer: true }),
     'minecraft:hide_additional_tooltip': ObjectNode({}),
     'minecraft:repair_cost': NumberNode({ integer: true, min: 0 }),
     'minecraft:enchantment_glint_override': BooleanNode(),
     'minecraft:intangible_projectile': ObjectNode({}),
     'minecraft:stored_enchantments': Reference('enchantments_component'),
-    'minecraft:dyed_color': ObjectNode({
-      rgb: NumberNode({ color: true }),
-      show_in_tooltip: Opt(BooleanNode()),
-    }, { context: 'data_component.dyed_color' }),
+    'minecraft:dyed_color': ChoiceNode([
+      {
+        type: 'number',
+        node: NumberNode({ color: true }),
+        change: v => v.rgb
+      },
+      {
+        type: 'object',
+        node: ObjectNode({
+          rgb: NumberNode({ color: true }),
+          show_in_tooltip: Opt(BooleanNode()),
+        }),
+        change: v => ({ rgb: v })
+      }
+    ], { context: 'data_component.dyed_color' }),
     'minecraft:map_color': NumberNode({ color: true }),
     'minecraft:map_id': NumberNode({ integer: true }),
     'minecraft:map_decorations': MapNode(
@@ -193,13 +246,24 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       Reference('item_stack'),
       { context: 'data_component.bundle_contents', maxLength: 64 },
     ),
-    'minecraft:potion_contents': ObjectNode({
-      potion: Opt(StringNode({ validator: 'resource', params: { pool: 'potion' } })),
-      custom_color: Opt(NumberNode({ color: true })),
-      custom_effects: Opt(ListNode(
-        Reference('mob_effect_instance'),
-      )),
-    }, { context: 'data_component.potion_contents' }),
+    'minecraft:potion_contents': ChoiceNode([
+      {
+        type: 'string',
+        node: StringNode({ validator: 'resource', params: { pool: 'potion' } }),
+        change: v => v.potion
+      },
+      {
+        type: 'object',
+        node: ObjectNode({
+          potion: Opt(StringNode({ validator: 'resource', params: { pool: 'potion' } })),
+          custom_color: Opt(NumberNode({ color: true })),
+          custom_effects: Opt(ListNode(
+            Reference('mob_effect_instance'),
+          )),
+        }),
+        change: v => ({ potion: v})
+      }
+    ], { context: 'data_component.potion_contents' }),
     'minecraft:suspicious_stew_effects': ListNode(
       Reference('suspicious_stew_effect_instance'),
       { context: 'data_component.suspicious_stew_effects' },
@@ -264,38 +328,43 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
       { context: 'data_component.recipes' },
     ),
-    'minecraft:lodestone_target': ObjectNode({
-      dimension: StringNode({ validator: 'resource', params: { pool: '$dimension' } }),
-      pos: Reference('block_pos'),
+    'minecraft:lodestone_tracker': ObjectNode({
+      tracker: Opt(ObjectNode({
+        dimension: StringNode({ validator: 'resource', params: { pool: '$dimension' } }),
+        pos: Reference('block_pos'),
+      })),
       tracked: Opt(BooleanNode()),
-    }, { context: 'data_component.lodestone_target' }),
+    }, { context: 'data_component.lodestone_tracker' }),
     'minecraft:firework_explosion': Reference('firework_explosion'),
     'minecraft:fireworks': ObjectNode({
       flight_duration: Opt(NumberNode({ integer: true, min: 0, max: 255 })),
       explosions: ListNode(
         Reference('firework_explosion'),
-        { maxLength: 16 },
+        { maxLength: 256 },
       ),
     }, { context: 'data_component.fireworks' }),
-    'minecraft:profile': ObjectNode({
-      name: Mod(SizeLimitedString({ maxLength: 16 }), node => ({
-        validate: (path, value, errors, options) => {
-          value = node.validate(path, value, errors, options)
-          if (typeof value === 'string' && !value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
-            errors.add(path, 'error.invalid_player_name')
-          }
-          return value
-        }
-      })),
-      id: ListNode(
-        NumberNode({ integer: true }),
-        { minLength: 4, maxLength: 4 },
-      ),
-      properties: MapNode( // TODO
-        StringNode(),
-        StringNode(),
-      ),
-    }, { context: 'data_component.profile' }),
+    'minecraft:profile': ChoiceNode([
+      {
+        type: 'string',
+        node: Reference('player_name'),
+        change: v => v.name
+      },
+      {
+        type: 'object',
+        node: ObjectNode({
+          name: Opt(Reference('player_name')),
+          id: ListNode(
+            NumberNode({ integer: true }),
+            { minLength: 4, maxLength: 4 },
+          ),
+          properties: MapNode( // TODO
+            StringNode(),
+            StringNode(),
+          ),
+        }),
+        change: v => ({ name: v })
+      }
+    ], { context: 'data_component.profile' }),
     'minecraft:note_block_sound': StringNode({ validator: 'resource', params: { pool: [], allowUnknown: true } }),
     'minecraft:banner_patterns': ListNode(
       ObjectNode({

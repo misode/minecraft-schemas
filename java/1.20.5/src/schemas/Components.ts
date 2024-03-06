@@ -21,7 +21,17 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
 
   schemas.register('enchantments_component', ChoiceNode([
     {
-      type: 'object',
+      type: 'simple',
+      match: () => true,
+      node: MapNode(
+        StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+        NumberNode({ integer: true, min: 0, max: 255 }),
+      ),
+      change: v => v.levels ?? {}
+    },
+    {
+      type: 'full',
+      match: v => typeof v === 'object' && typeof v?.levels === 'object',
       node: ObjectNode({
         levels: MapNode(
           StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
@@ -29,15 +39,8 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         ),
         show_in_tooltip: Opt(BooleanNode()),
       }),
-      change: v => ({ levels: v })
-    },
-    {
-      type: 'map',
-      node: MapNode(
-        StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
-        NumberNode({ integer: true, min: 0, max: 255 }),
-      ),
-      change: v => v.levels
+      change: v => ({ levels: v ?? {} }),
+      priority: 1,
     }
   ], { context: 'enchantments' }))
 
@@ -64,6 +67,15 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       priority: 1,
     },
   ], { context: 'adventure_mode_predicate' }))
+
+  schemas.register('attribute_modifiers_entry', ObjectNode({
+    type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
+    uuid: StringNode({ validator: 'uuid' }),
+    name: StringNode(),
+    amount: NumberNode(),
+    operation: StringNode({ enum: 'attribute_modifier_operation' }),
+    slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
+  }, { context: 'attribute_modifier' }))
 
   schemas.register('map_decoration', ObjectNode({
     type: StringNode({ enum: 'map_decoration' }),
@@ -156,6 +168,16 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     has_twinkle: Opt(BooleanNode()),
   }, { context: 'firework_explosion' }))
 
+  schemas.register('player_name', Mod(SizeLimitedString({ maxLength: 16 }), node => ({
+    validate: (path, value, errors, options) => {
+      value = node.validate(path, value, errors, options)
+      if (typeof value === 'string' && !value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
+        errors.add(path, 'error.invalid_player_name')
+      }
+      return value
+    }
+  })))
+
   const Components: Record<string, INode> = {
     'minecraft:damage': NumberNode({ integer: true, min: 0 }),
     'minecraft:unbreakable': ObjectNode({
@@ -171,35 +193,21 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:can_break': Reference('adventure_mode_predicate'),
     'minecraft:attribute_modifiers': ChoiceNode([
       {
+        type: 'list',
+        node: ListNode(
+          Reference('attribute_modifiers_entry'),
+        ),
+        change: v => v.modifiers
+      },
+      {
         type: 'object',
         node: ObjectNode({
           modifiers: ListNode(
-            ObjectNode({
-              type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
-              uuid: StringNode({ validator: 'uuid' }),
-              name: StringNode(),
-              amount: NumberNode(),
-              operation: StringNode({ enum: 'attribute_modifier_operation' }),
-              slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
-            }, { context: 'attribute_modifier' }),
+            Reference('attribute_modifiers_entry'),
           ),
           show_in_tooltip: Opt(BooleanNode()),
         }),
         change: v => ({ modifiers: v })
-      },
-      {
-        type: 'list',
-        node: ListNode(
-          ObjectNode({
-            type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
-            uuid: StringNode({ validator: 'uuid' }),
-            name: StringNode(),
-            amount: NumberNode(),
-            operation: StringNode({ enum: 'attribute_modifier_operation' }),
-            slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
-          }, { context: 'attribute_modifier' }),
-        ),
-        change: v => v.modifiers
       }
     ], { context: 'data_component.attribute_modifiers' }),
     'minecraft:custom_model_data': NumberNode({ integer: true }),
@@ -338,29 +346,13 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:profile': ChoiceNode([
       {
         type: 'string',
-        node: Mod(SizeLimitedString({ maxLength: 16 }), node => ({
-          validate: (path, value, errors, options) => {
-            value = node.validate(path, value, errors, options)
-            if (typeof value === 'string' && !value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
-              errors.add(path, 'error.invalid_player_name')
-            }
-            return value
-          }
-        })),
+        node: Reference('player_name'),
         change: v => v.name
       },
       {
         type: 'object',
         node: ObjectNode({
-          name: Opt(Mod(SizeLimitedString({ maxLength: 16 }), node => ({
-            validate: (path, value, errors, options) => {
-              value = node.validate(path, value, errors, options)
-              if (typeof value === 'string' && !value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
-                errors.add(path, 'error.invalid_player_name')
-              }
-              return value
-            }
-          }))),
+          name: Opt(Reference('player_name')),
           id: ListNode(
             NumberNode({ integer: true }),
             { minLength: 4, maxLength: 4 },

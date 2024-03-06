@@ -213,7 +213,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     stepping_on: Opt(Reference('location_predicate')),
     distance: Opt(Reference('distance_predicate')),
     slots: Opt(MapNode(
-      StringNode({ enum: 'slot', additional: true }),
+      StringNode({ enum: 'slot_range', additional: true }),
       Reference('item_predicate')
     )),
     flags: Opt(ObjectNode({

@@ -1,6 +1,7 @@
 import { CollectionRegistry, SchemaRegistry } from '@mcschema/core'
 import { initAdvancementSchemas } from './Advancement'
 import { initAssetsSchemas } from './assets'
+import { initBannerPatternSchema } from './BannerPattern'
 import { initChatTypeSchemas } from './ChatType'
 import { initCommonSchemas } from './Common'
 import { initConditionSchemas } from './Condition'
@@ -26,6 +27,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initChatTypeSchemas(schemas, collections)
     initAdvancementSchemas(schemas, collections)
     initAssetsSchemas(schemas, collections)
+    initBannerPatternSchema(schemas, collections)
     initConditionSchemas(schemas, collections)
     initDamageTypeSchemas(schemas, collections)
     initDimensionTypeSchemas(schemas, collections)

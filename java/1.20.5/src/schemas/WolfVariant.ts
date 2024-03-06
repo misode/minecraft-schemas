@@ -16,7 +16,7 @@ export function initWolfVariantSchemas(schemas: SchemaRegistry, collections: Col
 		angry_texture: StringNode(),
 		tame_texture: StringNode(),
 		biomes: Tag({ resource: '$worldgen/biome' }),
-	}, { context: 'banner_pattern' }), {
+	}, { context: 'wolf_variant' }), {
 		default: () => ({
 			texture: 'minecraft:textures/entity/wolf/wolf.png',
 			tame_texture: 'minecraft:textures/entity/wolf/wolf_tame.png',

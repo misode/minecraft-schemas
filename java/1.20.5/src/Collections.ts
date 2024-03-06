@@ -38,6 +38,19 @@ export function initCollections(collections: CollectionRegistry) {
   ])
 
   collections.register('slot', [
+    'container.*',
+    'hotbar.*',
+    'inventory.*',
+    'enderchest.*',
+    'villager.*',
+    'horse.*',
+    'weapon.*',
+    'armor.*',
+    'player.cursor',
+    'player.crafting.*',
+  ])
+
+  collections.register('equipment_slot', [
     'mainhand',
     'offhand',
     'head',

@@ -19,13 +19,27 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  schemas.register('enchantments_component', ObjectNode({
-    levels: MapNode(
-      StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
-      NumberNode({ integer: true, min: 0, max: 255 }),
-    ),
-    show_in_tooltip: Opt(BooleanNode()),
-  }, { context: 'enchantments' }))
+  schemas.register('enchantments_component', ChoiceNode([
+    {
+      type: 'object',
+      node: ObjectNode({
+        levels: MapNode(
+          StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+          NumberNode({ integer: true, min: 0, max: 255 }),
+        ),
+        show_in_tooltip: Opt(BooleanNode()),
+      }),
+      change: v => ({ levels: v })
+    },
+    {
+      type: 'map',
+      node: MapNode(
+        StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+        NumberNode({ integer: true, min: 0, max: 255 }),
+      ),
+      change: v => v.levels
+    }
+  ], { context: 'enchantments' }))
 
   schemas.register('adventure_mode_predicate', ChoiceNode([
     {
@@ -155,19 +169,39 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:enchantments': Reference('enchantments_component'),
     'minecraft:can_place_on': Reference('adventure_mode_predicate'),
     'minecraft:can_break': Reference('adventure_mode_predicate'),
-    'minecraft:attribute_modifiers': ObjectNode({
-      modifiers: ListNode(
-        ObjectNode({
-          type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
-          uuid: StringNode({ validator: 'uuid' }),
-          name: StringNode(),
-          amount: NumberNode(),
-          operation: StringNode({ enum: 'attribute_modifier_operation' }),
-          slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
-        }, { context: 'attribute_modifier' }),
-      ),
-      show_in_tooltip: Opt(BooleanNode()),
-    }, { context: 'data_component.attribute_modifiers' }),
+    'minecraft:attribute_modifiers': ChoiceNode([
+      {
+        type: 'object',
+        node: ObjectNode({
+          modifiers: ListNode(
+            ObjectNode({
+              type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
+              uuid: StringNode({ validator: 'uuid' }),
+              name: StringNode(),
+              amount: NumberNode(),
+              operation: StringNode({ enum: 'attribute_modifier_operation' }),
+              slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
+            }, { context: 'attribute_modifier' }),
+          ),
+          show_in_tooltip: Opt(BooleanNode()),
+        }),
+        change: v => ({ modifiers: v })
+      },
+      {
+        type: 'list',
+        node: ListNode(
+          ObjectNode({
+            type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
+            uuid: StringNode({ validator: 'uuid' }),
+            name: StringNode(),
+            amount: NumberNode(),
+            operation: StringNode({ enum: 'attribute_modifier_operation' }),
+            slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
+          }, { context: 'attribute_modifier' }),
+        ),
+        change: v => v.modifiers
+      }
+    ], { context: 'data_component.attribute_modifiers' }),
     'minecraft:custom_model_data': NumberNode({ integer: true }),
     'minecraft:hide_additional_tooltip': ObjectNode({}),
     'minecraft:repair_cost': NumberNode({ integer: true, min: 0 }),

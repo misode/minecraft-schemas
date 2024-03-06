@@ -150,7 +150,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:custom_name': StringNode(), // text component
     'minecraft:lore': ListNode(
       StringNode(), // text component
-      { context: 'data_component.lore', maxLength: 64 },
+      { context: 'data_component.lore', maxLength: 256 },
     ),
     'minecraft:enchantments': Reference('enchantments_component'),
     'minecraft:can_place_on': Reference('adventure_mode_predicate'),
@@ -264,21 +264,23 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
       { context: 'data_component.recipes' },
     ),
-    'minecraft:lodestone_target': ObjectNode({
-      dimension: StringNode({ validator: 'resource', params: { pool: '$dimension' } }),
-      pos: Reference('block_pos'),
+    'minecraft:lodestone_tracker': ObjectNode({
+      tracker: Opt(ObjectNode({
+        dimension: StringNode({ validator: 'resource', params: { pool: '$dimension' } }),
+        pos: Reference('block_pos'),
+      })),
       tracked: Opt(BooleanNode()),
-    }, { context: 'data_component.lodestone_target' }),
+    }, { context: 'data_component.lodestone_tracker' }),
     'minecraft:firework_explosion': Reference('firework_explosion'),
     'minecraft:fireworks': ObjectNode({
       flight_duration: Opt(NumberNode({ integer: true, min: 0, max: 255 })),
       explosions: ListNode(
         Reference('firework_explosion'),
-        { maxLength: 16 },
+        { maxLength: 256 },
       ),
     }, { context: 'data_component.fireworks' }),
     'minecraft:profile': ObjectNode({
-      name: Mod(SizeLimitedString({ maxLength: 16 }), node => ({
+      name: Opt(Mod(SizeLimitedString({ maxLength: 16 }), node => ({
         validate: (path, value, errors, options) => {
           value = node.validate(path, value, errors, options)
           if (typeof value === 'string' && !value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
@@ -286,7 +288,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
           }
           return value
         }
-      })),
+      }))),
       id: ListNode(
         NumberNode({ integer: true }),
         { minLength: 4, maxLength: 4 },

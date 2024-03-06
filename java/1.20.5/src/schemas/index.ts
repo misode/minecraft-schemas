@@ -16,6 +16,7 @@ import { initRecipeSchemas } from './Recipe'
 import { initTagsSchemas } from './Tags'
 import { initTextComponentSchemas } from './TextComponent'
 import { initTrimsSchemas } from './Trims'
+import { initWolfVariantSchema } from './WolfVariant'
 import { initWorldgenSchemas } from './worldgen'
 import { initWorldSettingsSchemas } from './WorldSettings'
 import { initComponentsSchemas } from './Components'
@@ -40,6 +41,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initTagsSchemas(schemas, collections)
     initTextComponentSchemas(schemas, collections)
     initTrimsSchemas(schemas, collections)
+    initWolfVariantSchema(schemas, collections)
     initWorldgenSchemas(schemas, collections)
     initWorldSettingsSchemas(schemas, collections)
 }

@@ -30,12 +30,12 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
           StringNode(), // TODO: add validation
           Reference('recipe_ingredient')
         ),
-        result: Reference('recipe_result')
+        result: Reference('item_stack')
       },
       'minecraft:crafting_shapeless': {
         group: Opt(StringNode()),
         ingredients: ListNode(Reference('recipe_ingredient')),
-        result: Reference('recipe_result')
+        result: Reference('item_stack')
       },
       'minecraft:smelting': {
         group: Opt(StringNode()),
@@ -68,19 +68,13 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:stonecutting': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Reference('recipe_result')
-      },
-      'minecraft:smithing': {
-        group: Opt(StringNode()),
-        base: Reference('recipe_ingredient_object'),
-        addition: Reference('recipe_ingredient_object'),
-        result: Reference('recipe_result')
+        result: Reference('item_stack')
       },
       'minecraft:smithing_transform': {
         template: Reference('recipe_ingredient_object'),
         base: Reference('recipe_ingredient_object'),
         addition: Reference('recipe_ingredient_object'),
-        result: Reference('recipe_result')
+        result: Reference('item_stack')
       },
       'minecraft:smithing_trim': {
         template: Reference('recipe_ingredient_object'),
@@ -122,16 +116,6 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
 
   schemas.register('cooking_recipe_result', Mod(ObjectNode({
     id: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-    components: Opt(Reference('data_component_predicate'))
-  }), {
-    default: () => ({
-      id: 'minecraft:stone'
-    })
-  }))
-
-  schemas.register('recipe_result', Mod(ObjectNode({
-    id: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-    count: Opt(Mod(NumberNode({ integer: true }), { default: () => 1 })),
     components: Opt(Reference('data_component_predicate'))
   }), {
     default: () => ({

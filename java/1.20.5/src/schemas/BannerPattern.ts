@@ -6,7 +6,7 @@ import {
   CollectionRegistry
 } from '@mcschema/core'
 
-export function initBannerPatternSchema(schemas: SchemaRegistry, collections: CollectionRegistry) {
+export function initBannerPatternSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
 
 	schemas.register('banner_pattern', Mod(ObjectNode({

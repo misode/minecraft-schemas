@@ -8,14 +8,14 @@ import {
 } from '@mcschema/core'
 import { Tag } from './Common'
 
-export function initWolfVariantSchema(schemas: SchemaRegistry, collections: CollectionRegistry) {
+export function initWolfVariantSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
 
 	schemas.register('wolf_variant', Mod(ObjectNode({
 		texture: StringNode(),
 		angry_texture: StringNode(),
 		tame_texture: StringNode(),
-		biomes: Opt(Tag({ resource: '$worldgen/biome' })),
+		biomes: Tag({ resource: '$worldgen/biome' }),
 	}, { context: 'banner_pattern' }), {
 		default: () => ({
 			texture: 'minecraft:textures/entity/wolf/wolf.png',

@@ -13,6 +13,7 @@ import {
   SwitchNode,
   INode,
   Mod,
+  ModelPath,
 } from '@mcschema/core'
 
 export function initComponentsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -171,7 +172,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   schemas.register('player_name', Mod(SizeLimitedString({ maxLength: 16 }), node => ({
     validate: (path, value, errors, options) => {
       value = node.validate(path, value, errors, options)
-      if (typeof value === 'string' && !value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
+      if (typeof value === 'string' && value.split('').map(c => c.charCodeAt(0)).some(c => c <= 32 || c >= 127)) {
         errors.add(path, 'error.invalid_player_name')
       }
       return value
@@ -353,14 +354,44 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         type: 'object',
         node: ObjectNode({
           name: Opt(Reference('player_name')),
-          id: ListNode(
+          id: Opt(ListNode(
             NumberNode({ integer: true }),
             { minLength: 4, maxLength: 4 },
-          ),
-          properties: MapNode( // TODO
-            StringNode(),
-            StringNode(),
-          ),
+          )),
+          properties: Opt(ChoiceNode([
+            {
+              type: 'list',
+              node: ListNode(ObjectNode({
+                name: StringNode(),
+                value: StringNode(),
+                signature: Opt(StringNode()),
+              })),
+              change: v => {
+                const result: Record<string, string>[] = []
+                if (typeof v !== 'object' || v === null) return result
+                for (const [name, values] of Object.entries(v)) {
+                  if (!Array.isArray(values)) continue
+                  result.push(...values.map(value => ({ name, value })))
+                }
+                return result
+              }
+            },
+            {
+              type: 'object',
+              node: MapNode(
+                StringNode(),
+                ListNode(StringNode()),
+              ),
+              change: v => {
+                const result: Record<string, string[]> = {}
+                for (const e of Array.isArray(v) ? v : []) {
+                  if (typeof e !== 'object' || e === null) continue
+                  result[e.name ?? ''] = [...(result[e.name ?? ''] ?? []), e.value ?? '']
+                }
+                return result
+              },
+            }
+          ])),
         }),
         change: v => ({ name: v })
       }
@@ -407,16 +438,17 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     }, { context: 'data_component.container_loot' }),
   }
 
+  const keyMatches = (key: string) => (path: ModelPath) => {
+    let last = path.last().toString()
+    if (!last.startsWith('minecraft:')) last = 'minecraft:' + last
+    return last === key
+  }
+
   schemas.register('data_component_predicate', MapNode(
     StringNode({ validator: 'resource', params: { pool: 'data_component_type' } }),
     SwitchNode([
       ...Object.entries(Components).map(([key, value]) => ({
-        match: (path: any) => {
-          let last = path.last()
-          if (typeof last !== 'string') return false
-          if (!last.startsWith('minecraft:')) last = 'minecraft:' + last
-          return last === key
-        },
+        match: keyMatches(key),
         node: value,
       })),
       {
@@ -433,14 +465,12 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       ...collections.get('data_component_type').map(k => '!' + k),
     ] }),
     SwitchNode([
+      {
+        match: (path: ModelPath) => path.last().toString().startsWith('!'),
+        node: ObjectNode({}),
+      },
       ...Object.entries(Components).map(([key, value]) => ({
-        match: (path: any) => {
-          let last = path.last()
-          if (typeof last !== 'string') return false
-          if (last.startsWith('!')) last = last.slice(1)
-          if (!last.startsWith('minecraft:')) last = 'minecraft:' + last
-          return last === key
-        },
+        match: keyMatches(key),
         node: value,
       })),
       {

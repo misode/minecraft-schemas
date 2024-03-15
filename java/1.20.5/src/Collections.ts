@@ -59,17 +59,33 @@ export function initCollections(collections: CollectionRegistry) {
     'armor',
   ])
 
+  const slotRange = (prefix: string, size: number) => [
+    `${prefix}.*`,
+    ...[...Array(size)].map(i => `${prefix}.${i}`),
+  ]
+
   collections.register('slot_range', [
-    'container.*',
-    'hotbar.*',
-    'inventory.*',
-    'enderchest.*',
-    'villager.*',
-    'horse.*',
+    'contents',
+    ...slotRange('container', 54),
+    ...slotRange('hotbar', 9),
+    ...slotRange('inventory', 27),
+    ...slotRange('enderchest', 27),
+    ...slotRange('villager', 8),
+    ...slotRange('horse', 15),
+    'weapon',
+    'weapon.mainhand',
+    'weapon.offhand',
     'weapon.*',
+    'armor.head',
+    'armor.chest',
+    'armor.legs',
+    'armor.feet',
+    'armor.body',
     'armor.*',
+    'horse.saddle',
+    'horse.chest',
     'player.cursor',
-    'player.crafting.*',
+    ...slotRange('player.crafting', 4),
   ])
 
   collections.register('gamemode', [
@@ -418,7 +434,6 @@ export function initCollections(collections: CollectionRegistry) {
   ])
 
   collections.register('type_specific_type', [
-    'any',
     'axolotl',
     'boat',
     'cat',
@@ -574,5 +589,12 @@ export function initCollections(collections: CollectionRegistry) {
     'star',
     'creeper',
     'burst',
+  ])
+
+  collections.register('list_operation', [
+    'replace_all',
+    'replace_section',
+    'insert',
+    'append',
   ])
 }

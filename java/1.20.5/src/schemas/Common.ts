@@ -114,6 +114,14 @@ type TagConfig = {
 }
 export let Tag: (config: TagConfig) => INode
 
+export let Filterable: (node: INode) => INode
+
+type SizeLimitedStringConfig = {
+  minLength?: number,
+  maxLength?: number,
+}
+export let SizeLimitedString: (config: SizeLimitedStringConfig) => INode
+
 export function initCommonSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)
   const Reference = RawReference.bind(undefined, schemas)
@@ -481,6 +489,50 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     },
   ], { choiceContext: 'tag' })
 
+  Filterable = (node: INode) => ChoiceNode([
+    {
+      type: 'simple',
+      match: () => true,
+      node: node,
+    },
+    {
+      type: 'filtered',
+      match: v => typeof v === 'object' && v !== null,
+      priority: 1,
+      node: ObjectNode({
+        text: node,
+        filtered: Opt(node),
+      }),
+    },
+  ], { context: 'filterable' })
+
+  SizeLimitedString = ({ minLength, maxLength }: SizeLimitedStringConfig) => Mod(StringNode(), node => ({
+    validate: (path, value, errors, options) => {
+      value = node.validate(path, value, errors, options)
+      if (minLength !== undefined && typeof value === 'string' && value.length < minLength) {
+        errors.add(path, 'error.invalid_string_range.smaller', value.length, minLength)
+      }
+      if (maxLength !== undefined && typeof value === 'string' && value.length > maxLength) {
+        errors.add(path, 'error.invalid_string_range.larger', value.length, maxLength)
+      }
+      return value
+    }
+  }))
+
+  const ListOperationFields = {
+    mode: StringNode({ enum: 'list_operation' }),
+    [Switch]: [{ push: 'mode' }],
+    [Case]: {
+      'insert': {
+        offset: Opt(NumberNode({ integer: true, min: 0 })),
+      },
+      'replace_section': {
+        offset: Opt(NumberNode({ integer: true, min: 0 })),
+        size: Opt(NumberNode({ integer: true, min: 0 })),
+      },
+    }
+  }
+
   ConditionCases = (entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({
     'minecraft:all_of': {
       terms: ListNode(
@@ -646,6 +698,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         ),
         append: Opt(BooleanNode())
       },
+      'minecraft:set_book_cover': {
+        title: Opt(Filterable(SizeLimitedString({ maxLength: 32 }))),
+        author: Opt(StringNode()),
+        generation: Opt(NumberNode({ integer: true, min: 0, max: 3 })),
+      },
       'minecraft:set_components': {
         components: Reference('data_component_patch'),
       },
@@ -672,6 +729,25 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           Reference('number_provider')
         ),
         add: Opt(BooleanNode())
+      },
+      'minecraft:set_fireworks': {
+        explosions: Opt(ListNode(
+          Reference('firework_explosion'),
+          { maxLength: 256 },
+        )),
+        ...ListOperationFields,
+        flight_duration: Opt(NumberNode({ integer: true, min: 0, max: 255 })),
+      },
+      'minecraft:set_firework_explosion': {
+        shape: Opt(StringNode({ enum: 'firework_explosion_shape' })),
+        colors: Opt(ListNode(
+          NumberNode({ color: true }),
+        )),
+        fade_colors: Opt(ListNode(
+          NumberNode({ color: true }),
+        )),
+        trail: Opt(BooleanNode()),
+        twinkle: Opt(BooleanNode()),
       },
       'minecraft:set_instrument': {
         options: StringNode({ validator: 'resource', params: { pool: 'instrument', requireTag: true } })
@@ -702,6 +778,20 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             duration: Reference('number_provider')
           })
         ))
+      },
+      'minecraft:set_writable_book_pages': {
+        pages: Opt(ListNode(
+          Filterable(SizeLimitedString({ maxLength: 1024 })),
+          { maxLength: 100 },
+        )),
+        ...ListOperationFields,
+      },
+      'minecraft:set_written_book_pages': {
+        pages: Opt(ListNode(
+          Filterable(SizeLimitedString({ maxLength: 32767 })), // text component
+          { maxLength: 100 },
+        )),
+        ...ListOperationFields,
       }
     }
     const res: NestedNodeChildren = {}

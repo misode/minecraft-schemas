@@ -15,6 +15,7 @@ import {
   Mod,
   ModelPath,
 } from '@mcschema/core'
+import { Filterable, SizeLimitedString } from './Common'
 
 export function initComponentsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
@@ -122,40 +123,6 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     id: StringNode({ validator: 'resource', params: { pool: 'mob_effect' } }),
     duration: NumberNode({ integer: true }),
   }, { context: 'suspicious_stew_effect_instance' }))
-
-  function Filterable(node: INode) {
-    return ChoiceNode([
-      {
-        type: 'simple',
-        match: () => true,
-        node: node,
-      },
-      {
-        type: 'filtered',
-        match: v => typeof v === 'object' && v !== null,
-        priority: 1,
-        node: ObjectNode({
-          text: node,
-          filtered: Opt(node),
-        }),
-      },
-    ], { context: 'filterable' })
-  }
-
-  function SizeLimitedString({ minLength, maxLength }: { minLength?: number, maxLength?: number}) {
-    return Mod(StringNode(), node => ({
-      validate: (path, value, errors, options) => {
-        value = node.validate(path, value, errors, options)
-        if (minLength !== undefined && typeof value === 'string' && value.length < minLength) {
-          errors.add(path, 'error.invalid_string_range.smaller', value.length, minLength)
-        }
-        if (maxLength !== undefined && typeof value === 'string' && value.length > maxLength) {
-          errors.add(path, 'error.invalid_string_range.larger', value.length, maxLength)
-        }
-        return value
-      }
-    }))
-  }
 
   schemas.register('firework_explosion', ObjectNode({
     shape: StringNode({ enum: 'firework_explosion_shape' }),

@@ -15,7 +15,7 @@ import {
   Mod,
   ModelPath,
 } from '@mcschema/core'
-import { Filterable, SizeLimitedString } from './Common'
+import { Filterable, SizeLimitedString, Tag } from './Common'
 
 export function initComponentsSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
@@ -147,6 +147,9 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   })))
 
   const Components: Record<string, INode> = {
+    'minecraft:custom_data': ObjectNode({}), // TODO: any unsafe data
+    'minecraft:max_stack_size': NumberNode({ integer: true, min: 0, max: 99 }),
+    'minecraft:max_damage': NumberNode({ integer: true, min: 1 }),
     'minecraft:damage': NumberNode({ integer: true, min: 0 }),
     'minecraft:unbreakable': ObjectNode({
       show_in_tooltip: Opt(BooleanNode())
@@ -156,6 +159,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       StringNode(), // text component
       { context: 'data_component.lore', maxLength: 256 },
     ),
+    'minecraft:rarity': StringNode({ enum: 'rarity' }),
     'minecraft:enchantments': Reference('enchantments_component'),
     'minecraft:can_place_on': Reference('adventure_mode_predicate'),
     'minecraft:can_break': Reference('adventure_mode_predicate'),
@@ -180,9 +184,34 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     ], { context: 'data_component.attribute_modifiers' }),
     'minecraft:custom_model_data': NumberNode({ integer: true }),
     'minecraft:hide_additional_tooltip': ObjectNode({}),
+    'minecraft:hide_tooltip': ObjectNode({}),
     'minecraft:repair_cost': NumberNode({ integer: true, min: 0 }),
     'minecraft:enchantment_glint_override': BooleanNode(),
     'minecraft:intangible_projectile': ObjectNode({}),
+    'minecraft:food': ObjectNode({
+      nutrition: NumberNode({ integer: true, min: 0 }),
+      saturation_modifier: NumberNode(),
+      can_always_eat: Opt(BooleanNode()),
+      eat_seconds: Opt(NumberNode()),
+      effects: Opt(ListNode(
+        ObjectNode({
+          effect: Reference('mob_effect_instance'),
+          probability: Opt(NumberNode({ min: 0, max: 1 })),
+        }),
+      )),
+    }, { context: 'data_component.food' }),
+    'minecraft:fire_resistant': ObjectNode({}),
+    'minecraft:tool': ObjectNode({
+      rules: ListNode(
+        ObjectNode({
+          blocks: Tag({ resource: 'block' }),
+          speed: Opt(NumberNode({ min: 1 })),
+          correct_for_drops: Opt(BooleanNode()),
+        }),
+      ),
+      default_mining_speed: Opt(NumberNode()),
+      damage_per_block: Opt(NumberNode({ integer: true, min: 0 })),
+    }),
     'minecraft:stored_enchantments': Reference('enchantments_component'),
     'minecraft:dyed_color': ChoiceNode([
       {

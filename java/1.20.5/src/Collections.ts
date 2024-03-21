@@ -597,4 +597,22 @@ export function initCollections(collections: CollectionRegistry) {
     'insert',
     'append',
   ])
+
+  collections.register('toggleable_data_component_type', [
+    'minecraft:trim',
+    'minecraft:dyed_color',
+    'minecraft:enchantments',
+    'minecraft:stored_enchantments',
+    'minecraft:unbreakable',
+    'minecraft:can_break',
+    'minecraft:can_place_on',
+    'minecraft:attribute_modifiers',
+  ])
+
+  collections.register('rarity', [
+    'common',
+    'uncommon',
+    'rare',
+    'epic',
+  ])
 }

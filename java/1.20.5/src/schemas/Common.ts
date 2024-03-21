@@ -269,6 +269,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         target: Reference('scoreboard_name_provider'),
         score: StringNode({ validator: 'objective' }),
         scale: Opt(NumberNode())
+      },
+      'minecraft:storage': {
+        storage: StringNode({ validator: 'resource', params: { pool: '$storage' } }),
+        path: StringNode({ validator: 'nbt_path' }),
       }
     }))
 
@@ -497,7 +501,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     },
     {
       type: 'filtered',
-      match: v => typeof v === 'object' && v !== null,
+      match: v => typeof v === 'object' && v !== null && v.text !== undefined,
       priority: 1,
       node: ObjectNode({
         text: node,
@@ -519,7 +523,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     }
   }))
 
-  const ListOperationFields = {
+  const ListOperationFields = ({ maxLength }: { maxLength: number }) => ({
     mode: StringNode({ enum: 'list_operation' }),
     [Switch]: [{ push: 'mode' }],
     [Case]: {
@@ -528,10 +532,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       },
       'replace_section': {
         offset: Opt(NumberNode({ integer: true, min: 0 })),
-        size: Opt(NumberNode({ integer: true, min: 0 })),
+        size: Opt(NumberNode({ integer: true, min: 0, max: maxLength })),
       },
     }
-  }
+  })
 
   ConditionCases = (entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({
     'minecraft:all_of': {
@@ -735,7 +739,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
           Reference('firework_explosion'),
           { maxLength: 256 },
         )),
-        ...ListOperationFields,
+        ...ListOperationFields({ maxLength: 256 }),
         flight_duration: Opt(NumberNode({ integer: true, min: 0, max: 255 })),
       },
       'minecraft:set_firework_explosion': {
@@ -760,9 +764,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:set_lore': {
         entity: Opt(entitySourceNode),
         lore: ListNode(
-          Reference('text_component')
+          Reference('text_component'),
+          { maxLength: 256 },
         ),
-        replace: Opt(BooleanNode())
+        ...ListOperationFields({ maxLength: 256 }),
       },
       'minecraft:set_name': {
         entity: Opt(entitySourceNode),
@@ -780,19 +785,25 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         ))
       },
       'minecraft:set_writable_book_pages': {
-        pages: Opt(ListNode(
+        pages: ListNode(
           Filterable(SizeLimitedString({ maxLength: 1024 })),
           { maxLength: 100 },
-        )),
-        ...ListOperationFields,
+        ),
+        ...ListOperationFields({ maxLength: 100 }),
       },
       'minecraft:set_written_book_pages': {
-        pages: Opt(ListNode(
-          Filterable(SizeLimitedString({ maxLength: 32767 })), // text component
+        pages: ListNode(
+          Filterable(Reference('text_component')),
           { maxLength: 100 },
-        )),
-        ...ListOperationFields,
-      }
+        ),
+        ...ListOperationFields({ maxLength: 100 }),
+      },
+      'minecraft:toggle_tooltips': {
+        toggles: MapNode(
+          StringNode({ validator: 'resource', params: { pool: collections.get('toggleable_data_component_type') }}),
+          BooleanNode(),
+        ),
+      },
     }
     const res: NestedNodeChildren = {}
     collections.get('loot_function_type').forEach(f => {

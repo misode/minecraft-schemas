@@ -269,6 +269,7 @@ export type ResourceType =
   | '$texture'
   | '$trim_material'
   | '$trim_pattern'
+  | '$wolf_variant'
   | '$worldgen/biome'
   | '$worldgen/configured_carver'
   | '$worldgen/configured_decorator'

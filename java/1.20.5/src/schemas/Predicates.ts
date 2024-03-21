@@ -29,7 +29,16 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       StringNode({ validator: 'resource', params: { pool: 'item_sub_predicate_type' } }),
       SwitchNode([
         ...Object.entries<INode>({
-          'minecraft:custom_data': Opt(StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', 'pop', { push: 'item' }] } } })),
+          'minecraft:custom_data': ChoiceNode([
+            {
+              type: 'string',
+              node: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', 'pop', { push: 'item' }] } } }),
+            },
+            {
+              type: 'object',
+              node: ObjectNode({}) // TODO: any unsafe data
+            },
+          ]),
           'minecraft:damage': ObjectNode({
             durability: Opt(Reference('int_bounds')),
             damage: Opt(Reference('int_bounds')),
@@ -161,7 +170,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
           variant: Opt(StringNode({ enum: 'boat_variant' }))
         },
         'minecraft:cat': {
-          variant: Opt(StringNode({ validator: 'resource', params: { pool: 'cat_variant' } }))
+          variant: Opt(Tag({ resource: 'cat_variant' }))
         },
         'minecraft:fishing_hook': {
           in_open_water: Opt(BooleanNode())
@@ -170,7 +179,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
           variant: Opt(StringNode({ enum: 'fox_variant' }))
         },
         'minecraft:frog': {
-          variant: Opt(StringNode({ validator: 'resource', params: { pool: 'frog_variant' } }))
+          variant: Opt(Tag({ resource: 'frog_variant' }))
         },
         'minecraft:horse': {
           variant: Opt(StringNode({ enum: 'horse_variant' }))
@@ -186,7 +195,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
           variant: Opt(StringNode({ enum: 'mooshroom_variant' }))
         },
         'minecraft:painting': {
-          variant: Opt(StringNode({ validator: 'resource', params: { pool: 'painting_variant' } }))
+          variant: Opt(Tag({ resource: 'painting_variant' }))
         },
         'minecraft:parrot': {
           variant: Opt(StringNode({ enum: 'parrot_variant' }))
@@ -231,6 +240,9 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
         },
         'minecraft:villager': {
           variant: Opt(StringNode({ validator: 'resource', params: { pool: 'villager_type' } }))
+        },
+        'minecraft:wolf': {
+          variant: Opt(Tag({ resource: '$wolf_variant' })),
         },
       }
     })),

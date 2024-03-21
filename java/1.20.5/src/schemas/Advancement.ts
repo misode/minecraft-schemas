@@ -127,6 +127,12 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         'minecraft:consume_item': {
           item: Opt(Reference('item_predicate'))
         },
+        'minecraft:crafter_recipe_crafted': {
+          recipe_id: StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
+          ingredients: Opt(ListNode(
+            Reference('item_predicate')
+          ))
+        },
         'minecraft:cured_zombie_villager': {
           villager: EntityPredicate,
           zombie: EntityPredicate
@@ -159,6 +165,11 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         'minecraft:entity_killed_player': {
           entity: EntityPredicate,
           killing_blow: Opt(Reference('damage_source_predicate'))
+        },
+        'minecraft:fall_after_explosion': {
+          start_position: Reference('location_predicate'),
+          distance: Reference('distance_predicate'),
+          cause: EntityPredicate,
         },
         'minecraft:fall_from_height': {
           start_position: Opt(Reference('location_predicate')),

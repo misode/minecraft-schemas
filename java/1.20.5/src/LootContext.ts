@@ -25,6 +25,7 @@ export const LootTableTypes = new Map<string, LootContextRegistration>([
     ['minecraft:command', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:empty', { requires: [], allows: [] }],
     ['minecraft:entity', { requires: [LootContext.DamageSource, LootContext.Origin, LootContext.ThisEntity], allows: [LootContext.DirectKillerEntity, LootContext.KillerEntity, LootContext.LastDamagePlayer] }],
+    ['minecraft:equipment', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] } ],
     ['minecraft:fishing', { requires: [LootContext.Origin, LootContext.Tool], allows: [LootContext.ThisEntity] }],
     ['minecraft:generic', { requires: [LootContext.DamageSource, LootContext.BlockEntity, LootContext.BlockState, LootContext.DirectKillerEntity, LootContext.ExplosionRadius, LootContext.KillerEntity, LootContext.LastDamagePlayer, LootContext.Origin, LootContext.ThisEntity, LootContext.Tool], allows: [] }],
     ['minecraft:gift', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],

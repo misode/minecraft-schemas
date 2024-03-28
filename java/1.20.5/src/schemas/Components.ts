@@ -155,6 +155,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       show_in_tooltip: Opt(BooleanNode())
     }, { context: 'data_component.unbreakable' }),
     'minecraft:custom_name': StringNode(), // text component
+    'minecraft:item_name': StringNode(), // text component
     'minecraft:lore': ListNode(
       StringNode(), // text component
       { context: 'data_component.lore', maxLength: 256 },
@@ -321,6 +322,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       // TODO: any unsafe data
     }, { context: 'data_component.block_entity_data' }),
     'minecraft:instrument': StringNode({ validator: 'resource', params: { pool: 'instrument' } }),
+    'minecraft:ominous_bottle_amplifier': NumberNode({ integer: true, min: 0, max: 4 }),
     'minecraft:recipes': ListNode(
       StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
       { context: 'data_component.recipes' },

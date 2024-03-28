@@ -315,25 +315,19 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         value: NumberNode(config)
       },
       'minecraft:uniform': {
-        value: ObjectNode({
-          min_inclusive: NumberNode(config),
-          max_exclusive: NumberNode(config)
-        })
+        min_inclusive: NumberNode(config),
+        max_exclusive: NumberNode(config)
       },
       'minecraft:clamped_normal': {
-        value: ObjectNode({
-          min: NumberNode(),
-          max: NumberNode(),
-          mean: NumberNode(),
-          deviation: NumberNode()
-        })
+        min: NumberNode(),
+        max: NumberNode(),
+        mean: NumberNode(),
+        deviation: NumberNode()
       },
       'minecraft:trapezoid': {
-        value: ObjectNode({
-          min: NumberNode(),
-          max: NumberNode(),
-          plateau: NumberNode()
-        })
+        min: NumberNode(),
+        max: NumberNode(),
+        plateau: NumberNode()
       }
     }
   )
@@ -350,31 +344,23 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         value: NumberNode({ integer: true, ...config })
       },
       'minecraft:uniform': {
-        value: ObjectNode({
-          min_inclusive: NumberNode({ integer: true, ...config }),
-          max_inclusive: NumberNode({ integer: true, ...config })
-        })
+        min_inclusive: NumberNode({ integer: true, ...config }),
+        max_inclusive: NumberNode({ integer: true, ...config })
       },
       'minecraft:biased_to_bottom': {
-        value: ObjectNode({
-          min_inclusive: NumberNode({ integer: true, ...config }),
-          max_inclusive: NumberNode({ integer: true, ...config })
-        })
+        min_inclusive: NumberNode({ integer: true, ...config }),
+        max_inclusive: NumberNode({ integer: true, ...config })
       },
       'minecraft:clamped': {
-        value: ObjectNode({
-          min_inclusive: NumberNode({ integer: true, ...config }),
-          max_inclusive: NumberNode({ integer: true, ...config }),
-          source: Reference('int_provider')
-        })
+        min_inclusive: NumberNode({ integer: true, ...config }),
+        max_inclusive: NumberNode({ integer: true, ...config }),
+        source: Reference('int_provider')
       },
       'minecraft:clamped_normal': {
-        value: ObjectNode({
-          min_inclusive: NumberNode({ integer: true, ...config }),
-          max_inclusive: NumberNode({ integer: true, ...config }),
-          mean: NumberNode(),
-          deviation: NumberNode()
-        })
+        min_inclusive: NumberNode({ integer: true, ...config }),
+        max_inclusive: NumberNode({ integer: true, ...config }),
+        mean: NumberNode(),
+        deviation: NumberNode()
       },
       'minecraft:weighted_list': {
         distribution: ListNode(
@@ -636,9 +622,12 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       },
       'minecraft:copy_components': {
         source: StringNode({ enum: ['block_entity'] }),
-        components: ListNode(
+        include: Opt(ListNode(
           StringNode({ validator: 'resource', params: { pool: 'data_component_type' } }),
-        ),
+        )),
+        exclude: Opt(ListNode(
+          StringNode({ validator: 'resource', params: { pool: 'data_component_type' } }),
+        )),
       },
       'minecraft:copy_custom_data': {
         source: Reference('nbt_provider'),
@@ -771,10 +760,14 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       },
       'minecraft:set_name': {
         entity: Opt(entitySourceNode),
+        target: Opt(StringNode({ enum: ['custom_name', 'item_name'] })),
         name: Opt(Reference('text_component'))
       },
       'minecraft:set_potion': {
         id: StringNode({ validator: 'resource', params: { pool: 'potion' } })
+      },
+      'minecraft:ominous_bottle_amplifier': {
+        amplifier: Reference('number_provider')
       },
       'minecraft:set_stew_effect': {
         effects: Opt(ListNode(

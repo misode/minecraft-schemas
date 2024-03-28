@@ -232,6 +232,10 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
         'minecraft:rabbit': {
           variant: Opt(StringNode({ enum: 'rabbit_variant' }))
         },
+        'minecraft:raider': {
+          has_raid: Opt(BooleanNode()),
+          is_captain: Opt(BooleanNode()),
+        },
         'minecraft:slime': {
           size: Reference('int_bounds')
         },

@@ -72,7 +72,10 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
 
   schemas.register('attribute_modifiers_entry', ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
-    uuid: StringNode({ validator: 'uuid' }),
+    uuid: ListNode(
+      NumberNode({ integer: true }),
+      { minLength: 4, maxLength: 4 },
+    ),
     name: StringNode(),
     amount: NumberNode(),
     operation: StringNode({ enum: 'attribute_modifier_operation' }),

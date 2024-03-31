@@ -106,51 +106,53 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
     })
   }))
 
-  const weightMod: Partial<INode> = {
-    enabled: path => path.pop().get()?.length > 1
-      && !['minecraft:alternatives', 'minecraft:group', 'minecraft:sequence'].includes(path.push('type').get())
+  const singletonFields: NodeChildren = {
+    weight: Opt(NumberNode({ integer: true })),
+    quality: Opt(NumberNode({ integer: true })),
+    ...functionsAndConditions,
   }
 
   schemas.register('loot_entry', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'loot_pool_entry_type' } }),
-    weight: Opt(Mod(NumberNode({ integer: true }), weightMod)),
-    quality: Opt(Mod(NumberNode({ integer: true }), weightMod)),
     [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:alternatives': {
         children: ListNode(
           Reference('loot_entry')
         ),
-        ...functionsAndConditions
+        ...conditions
       },
       'minecraft:dynamic': {
         name: StringNode(),
-        ...functionsAndConditions
+        ...singletonFields
+      },
+      'minecraft:empty': {
+        ...singletonFields
       },
       'minecraft:group': {
         children: ListNode(
           Reference('loot_entry')
         ),
-        ...functionsAndConditions
+        ...conditions
       },
       'minecraft:item': {
         name: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-        ...functionsAndConditions
+        ...singletonFields
       },
       'minecraft:loot_table': {
         name: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
-        ...functionsAndConditions
+        ...singletonFields
       },
       'minecraft:sequence': {
         children: ListNode(
           Reference('loot_entry')
         ),
-        ...functionsAndConditions
+        ...conditions
       },
       'minecraft:tag': {
         name: StringNode({ validator: 'resource', params: { pool: '$tag/item' } }),
         expand: BooleanNode(),
-        ...functionsAndConditions
+        ...singletonFields
       }
     }
   }, { context: 'loot_entry' }), {

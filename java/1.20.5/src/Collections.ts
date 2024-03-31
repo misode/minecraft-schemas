@@ -272,14 +272,18 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:selector',
     'minecraft:fishing',
     'minecraft:entity',
+    'minecraft:equipment',
     'minecraft:archaeology',
     'minecraft:gift',
     'minecraft:barter',
+    'minecraft:vault',
     'minecraft:advancement_reward',
     'minecraft:advancement_entity',
     'minecraft:advancement_location',
+    'minecraft:block_use',
     'minecraft:generic',
-    'minecraft:block'
+    'minecraft:block',
+    'minecraft:shearing',
   ])
 
   collections.register('banner_pattern', [

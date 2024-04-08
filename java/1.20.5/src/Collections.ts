@@ -61,7 +61,7 @@ export function initCollections(collections: CollectionRegistry) {
 
   const slotRange = (prefix: string, size: number) => [
     `${prefix}.*`,
-    ...[...Array(size)].map(i => `${prefix}.${i}`),
+    ...[...Array(size)].map((_, i) => `${prefix}.${i}`),
   ]
 
   collections.register('slot_range', [

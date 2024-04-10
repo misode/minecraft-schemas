@@ -778,6 +778,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         target: Opt(StringNode({ enum: ['custom_name', 'item_name'] })),
         name: Opt(Reference('text_component'))
       },
+      'minecraft:set_ominous_bottle_amplifier': {
+        amplifier: Reference('number_provider'),
+      },
       'minecraft:set_potion': {
         id: StringNode({ validator: 'resource', params: { pool: 'potion' } })
       },

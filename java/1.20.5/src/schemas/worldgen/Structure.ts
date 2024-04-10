@@ -32,7 +32,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         spawns: MobCategorySpawnSettings,
       })
     ),
-    terrain_adaptation: Opt(StringNode({ enum: ['none', 'beard_thin', 'beard_box', 'bury'] })),
+    terrain_adaptation: Opt(StringNode({ enum: ['none', 'beard_thin', 'beard_box', 'bury', 'encapsulate'] })),
     [Switch]: [{ push: 'type' }],
     [Case]: {
       'minecraft:jigsaw': {

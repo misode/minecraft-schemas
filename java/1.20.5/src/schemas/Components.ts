@@ -194,7 +194,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:intangible_projectile': ObjectNode({}),
     'minecraft:food': ObjectNode({
       nutrition: NumberNode({ integer: true, min: 0 }),
-      saturation_modifier: NumberNode(),
+      saturation: NumberNode(),
       can_always_eat: Opt(BooleanNode()),
       eat_seconds: Opt(NumberNode()),
       effects: Opt(ListNode(
@@ -272,7 +272,6 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:writable_book_content': ObjectNode({
       pages: Opt(ListNode(
         Filterable(SizeLimitedString({ maxLength: 1024 })),
-        { maxLength: 100 },
       )),
     }, { context: 'data_component.writable_book_content' }),
     'minecraft:written_book_content': ObjectNode({
@@ -281,7 +280,6 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       generation: Opt(NumberNode({ integer: true, min: 0, max: 3 })),
       pages: Opt(ListNode(
         Filterable(SizeLimitedString({ maxLength: 32767 })), // text component
-        { maxLength: 100 },
       )),
       resolved: Opt(BooleanNode()),
     }, { context: 'data_component.written_book_content' }),

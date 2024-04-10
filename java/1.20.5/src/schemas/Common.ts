@@ -161,7 +161,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     default: () => [0, 0, 0]
   }))
 
-  const Bounds = (integer?: boolean) => Opt(ChoiceNode([
+  const Bounds = (integer?: boolean) => ChoiceNode([
     {
       type: 'number',
       node: NumberNode({ integer }),
@@ -178,7 +178,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         max: v ?? 0
       })
     }
-  ]))
+  ], { context: 'range' })
 
   schemas.register('int_bounds', Bounds(true))
 
@@ -667,12 +667,20 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:fill_player_head': {
         entity: entitySourceNode
       },
+      'minecraft:filtered': {
+        item_filter: Reference('item_predicate'),
+        modifier: Reference('item_modifier'),
+      },
       'minecraft:limit_count': {
         limit: Reference('int_range')
       },
       'minecraft:looting_enchant': {
         count: Reference('number_provider'),
         limit: Opt(NumberNode({ integer: true }))
+      },
+      'minecraft:modify_contents': {
+        component: StringNode({ validator: 'resource', params: { pool: collections.get('container_component_manipulators') } }),
+        modifier: Reference('item_modifier'),
       },
       'minecraft:reference': {
         name: StringNode({ validator: 'resource', params: { pool: '$item_modifier' } })
@@ -700,7 +708,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         components: Reference('data_component_patch'),
       },
       'minecraft:set_contents': {
-        type: StringNode({ validator: 'resource', params: { pool: 'block_entity_type' } }),
+        component: StringNode({ validator: 'resource', params: { pool: collections.get('container_component_manipulators') } }),
         entries: ListNode(
           Reference('loot_entry')
         )
@@ -710,7 +718,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         add: Opt(BooleanNode())
       },
       'minecraft:set_custom_data': {
+        // TODO: support any unsafe data
         tag: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item' } } })
+      },
+      'minecraft:set_custom_model_data': {
+        value: Reference('number_provider'),
       },
       'minecraft:set_damage': {
         damage: Reference('number_provider'),
@@ -744,6 +756,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       },
       'minecraft:set_instrument': {
         options: StringNode({ validator: 'resource', params: { pool: 'instrument', requireTag: true } })
+      },
+      'minecraft:set_item': {
+        item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
       },
       'minecraft:set_loot_table': {
         type: StringNode({ validator: 'resource', params: { pool: 'block_entity_type' } }),

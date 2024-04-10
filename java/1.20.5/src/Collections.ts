@@ -613,6 +613,12 @@ export function initCollections(collections: CollectionRegistry) {
     'minecraft:attribute_modifiers',
   ])
 
+  collections.register('container_component_manipulators', [
+    'minecraft:container',
+    'minecraft:bundle_contents',
+    'minecraft:charged_projectiles',
+  ])
+
   collections.register('rarity', [
     'common',
     'uncommon',

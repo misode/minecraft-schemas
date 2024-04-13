@@ -101,7 +101,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
         },
         'minecraft:bee_nest_destroyed': {
           block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
-          num_bees_inside: Opt(NumberNode({ integer: true })),
+          num_bees_inside: Opt(Reference('int_bounds')),
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:bred_animals': {

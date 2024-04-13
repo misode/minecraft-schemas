@@ -511,16 +511,12 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
 
   const ListOperationFields = ({ maxLength }: { maxLength: number }) => ({
     mode: StringNode({ enum: 'list_operation' }),
-    [Switch]: [{ push: 'mode' }],
-    [Case]: {
-      'insert': {
-        offset: Opt(NumberNode({ integer: true, min: 0 })),
-      },
-      'replace_section': {
-        offset: Opt(NumberNode({ integer: true, min: 0 })),
-        size: Opt(NumberNode({ integer: true, min: 0, max: maxLength })),
-      },
-    }
+    offset: Opt(Mod(NumberNode({ integer: true, min: 0 }), {
+      enabled: (path) => ['insert', 'replace_section'].includes(path.push("mode").get())
+    })),
+    size: Opt(Mod(NumberNode({ integer: true, min: 0, max: maxLength }), {
+      enabled: (path) => ['replace_section'].includes(path.push("mode").get())
+    })),
   })
 
   ConditionCases = (entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({

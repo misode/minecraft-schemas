@@ -519,6 +519,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     })),
   })
 
+  const ListOperation = ({ node, maxLength }: { node: INode, maxLength: number }) => ObjectNode({
+    values: node,
+    ...ListOperationFields({ maxLength })
+  }, { context: 'list_operation'})
+
   ConditionCases = (entitySourceNode: INode<any> = StringNode({ enum: 'entity_source' })) => ({
     'minecraft:all_of': {
       terms: ListNode(
@@ -580,7 +585,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     'minecraft:table_bonus': {
       enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
       chances: ListNode(
-        NumberNode({ min: 0, max: 1 })
+        NumberNode({ min: 0, max: 1 }),
+        { minLength: 1 },
       )
     },
     'minecraft:time_check': {
@@ -732,11 +738,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         add: Opt(BooleanNode())
       },
       'minecraft:set_fireworks': {
-        explosions: Opt(ListNode(
-          Reference('firework_explosion'),
-          { maxLength: 256 },
-        )),
-        ...ListOperationFields({ maxLength: 256 }),
+        explosions: Opt(ListOperation({
+          node: Reference('firework_explosion'),
+          maxLength: 256,
+        })),
         flight_duration: Opt(NumberNode({ integer: true, min: 0, max: 255 })),
       },
       'minecraft:set_firework_explosion': {

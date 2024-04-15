@@ -50,7 +50,7 @@ export function initFontSchemas(schemas: SchemaRegistry, collections: Collection
 				size: Opt(NumberNode()),
 				oversample: Opt(NumberNode()),
 				shift: Opt(ListNode(
-					NumberNode(),
+					NumberNode({ min: -100, max: 100 }),
 					{ minLength: 2, maxLength: 2 }
 				)),
 				skip: Opt(StringOrList(

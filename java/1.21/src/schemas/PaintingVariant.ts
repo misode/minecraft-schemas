@@ -2,12 +2,10 @@ import {
   StringNode as RawStringNode,
   Mod,
   ObjectNode,
-  Opt,
   SchemaRegistry,
   CollectionRegistry,
   NumberNode
 } from '@mcschema/core'
-import { Tag } from './Common'
 
 export function initPaintingVariantSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const StringNode = RawStringNode.bind(undefined, collections)

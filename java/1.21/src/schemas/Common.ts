@@ -154,12 +154,38 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     })
   }))
 
+  schemas.register('vec3', Mod(ListNode(
+    NumberNode(),
+    { minLength: 3, maxLength: 3 }
+  ), {
+    default: () => [0, 0, 0]
+  }))
+
   schemas.register('block_pos', Mod(ListNode(
     NumberNode({ integer: true }),
     { minLength: 3, maxLength: 3 }
   ), {
     default: () => [0, 0, 0]
   }))
+
+  schemas.register('particle', ObjectNode({
+		type: StringNode({ validator: 'resource', params: { pool: 'particle_type' }}),
+    // TODO
+	}, { context: 'particle' }))
+
+  schemas.register('sound_event', ChoiceNode([
+    {
+      type: 'string',
+      node: StringNode()
+    },
+    {
+      type: 'object',
+      node: ObjectNode({
+        sound_id: StringNode(),
+        range: Opt(NumberNode()),
+      })
+    },
+  ], { context: 'sound_event' }))
 
   const Bounds = (integer?: boolean) => ChoiceNode([
     {

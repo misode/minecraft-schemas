@@ -1,5 +1,6 @@
 import {
   BooleanNode,
+  Reference as RawReference,
   StringNode as RawStringNode,
   ListNode,
   MapNode,
@@ -16,6 +17,7 @@ import { Tag } from '../Common'
 export let MobCategorySpawnSettings: INode
 
 export function initBiomeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
+  const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
   MobCategorySpawnSettings = Mod(ListNode(
@@ -47,27 +49,25 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
       grass_color: Opt(NumberNode({ color: true })),
       foliage_color: Opt(NumberNode({ color: true })),
       grass_color_modifier: Opt(StringNode({ enum: ['none', 'dark_forest', 'swamp'] })),
-      ambient_sound: Opt(StringNode()),
+      ambient_sound: Opt(Reference('sound_event')),
       mood_sound: Opt(ObjectNode({
-        sound: StringNode(),
+        sound: Reference('sound_event'),
         tick_delay: NumberNode({ integer: true }),
         block_search_extent: NumberNode({ integer: true }),
         offset: NumberNode()
       })),
       additions_sound: Opt(ObjectNode({
-        sound: StringNode(),
+        sound: Reference('sound_event'),
         tick_chance: NumberNode({ min: 0, max: 1 })
       })),
       music: Opt(ObjectNode({
-        sound: StringNode(),
+        sound: Reference('sound_event'),
         min_delay: NumberNode({ integer: true, min: 0 }),
         max_delay: NumberNode({ integer: true, min: 0 }),
         replace_current_music: BooleanNode()
       })),
       particle: Opt(ObjectNode({
-        options: ObjectNode({
-          type: StringNode()
-        }),
+        options: Reference('particle'),
         probability: NumberNode({ min: 0, max: 1 })
       }))
     }),

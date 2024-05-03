@@ -21,6 +21,7 @@ import { initWorldgenSchemas } from './worldgen'
 import { initWorldSettingsSchemas } from './WorldSettings'
 import { initComponentsSchemas } from './Components'
 import { initPaintingVariantSchemas } from './PaintingVariant'
+import { initEnchantmentSchemas } from './Enchantment'
 
 export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
     // `Common.ts` is the only file that has exports. It should be initialized first. 
@@ -34,6 +35,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initDamageTypeSchemas(schemas, collections)
     initDimensionTypeSchemas(schemas, collections)
     initDimensionSchemas(schemas, collections)
+    initEnchantmentSchemas(schemas, collections)
     initItemModifierSchemas(schemas, collections)
     initLootTableSchemas(schemas, collections)
     initPackMcmetaSchemas(schemas, collections)

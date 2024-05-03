@@ -627,4 +627,18 @@ export function initCollections(collections: CollectionRegistry) {
     'rare',
     'epic',
   ])
+
+  collections.register('enchantment_target', [
+    'attacker',
+    'damaging_entity',
+    'victim',
+  ])
+
+  collections.register('explosion_interaction', [
+    'none',
+    'block',
+    'mob',
+    'tnt',
+    'trigger',
+  ])
 }

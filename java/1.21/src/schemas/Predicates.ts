@@ -368,7 +368,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       StringNode({ enum: 'equipment_slot' }),
       Reference('item_predicate')
     )),
-    periodic_tick: NumberNode({ integer: true, min: 1 }),
+    periodic_tick: Opt(NumberNode({ integer: true, min: 1 })),
     vehicle: Opt(Reference('entity_predicate')),
     passenger: Opt(Reference('entity_predicate')),
     targeted_entity: Opt(Reference('entity_predicate')),

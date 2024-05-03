@@ -145,7 +145,7 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
   }
 
   schemas.register('enchantment_location_effect', ObjectNode({
-    type: StringNode({ validator: 'resource', params: { pool: 'enchantment_value_effect_type' } }),
+    type: StringNode({ validator: 'resource', params: { pool: 'enchantment_location_based_effect_type' } }),
     [Switch]: [{ push: 'type' }],
     [Case]: {
       ...SharedEffects,
@@ -161,7 +161,7 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
   }, { context: 'enchantment_effect' }))
 
   schemas.register('enchantment_entity_effect', ObjectNode({
-    type: StringNode({ validator: 'resource', params: { pool: 'enchantment_value_effect_type' } }),
+    type: StringNode({ validator: 'resource', params: { pool: 'enchantment_entity_effect_type' } }),
     [Switch]: [{ push: 'type' }],
     [Case]: {
       ...SharedEffects,
@@ -180,9 +180,13 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
     )),
   })
 
-  const TargetedConditionalEffect = (effect: INode) => ObjectNode({
-    enchanted: StringNode({ enum: 'enchantment_target' }),
-    affected: StringNode({ enum: 'enchantment_target' }),
+  const TargetedConditionalEffect = (effect: INode, equipmentDrops?: boolean) => ObjectNode({
+    ...equipmentDrops ? {
+        enchanted: StringNode({ enum: ['attacker', 'victim'] })
+      } : {
+        enchanted: StringNode({ enum: 'enchantment_target' }),
+        affected: StringNode({ enum: 'enchantment_target' }),
+      },
     effect: effect,
     requirements: Opt(ObjectOrList(
       Reference('condition'), { choiceContext: 'condition' }
@@ -190,41 +194,96 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
   })
 
   const EffectComponents: Record<string, INode> = {
-    'minecraft:damage_protection': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:damage_immunity': ObjectNode({}),
-    'minecraft:damage': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:smash_damage_per_fallen_block': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:knockback': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:armor_effectiveness': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:post_attack': TargetedConditionalEffect(Reference('enchantment_entity_effect')),
-    'minecraft:hit_block': ConditionalEffect(Reference('enchantment_entity_effect')),
-    'minecraft:item_damage': ConditionalEffect(Reference('enchantment_value_effect')),
+    'minecraft:damage_protection': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:damage_immunity': ListNode(
+      ConditionalEffect(ObjectNode({}))
+    ),
+    'minecraft:damage': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:smash_damage_per_fallen_block': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:knockback': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:armor_effectiveness': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:post_attack': ListNode(
+      TargetedConditionalEffect(Reference('enchantment_entity_effect'))
+    ),
+    'minecraft:hit_block': ListNode(
+      ConditionalEffect(Reference('enchantment_entity_effect'))
+    ),
+    'minecraft:item_damage': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
     'minecraft:attributes': ListNode(
       ObjectNode(attributeEffectFields),
     ),
-    'minecraft:equipment_drops': TargetedConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:location_changed': ConditionalEffect(Reference('enchantment_location_effect')),
-    'minecraft:tick': ConditionalEffect(Reference('enchantment_entity_effect')),
-    'minecraft:ammo_use': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:projectile_piercing': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:projectile_spawned': ConditionalEffect(Reference('enchantment_entity_effect')),
-    'minecraft:projectile_spread': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:projectile_count': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:crossbow_charge_time': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:trident_return_acceleration': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:fishing_time_reduction': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:fishing_luck_bonus': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:block_experience': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:mob_experience': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:trident_spin_attack_strength': ConditionalEffect(Reference('enchantment_value_effect')),
-    'minecraft:repair_with_xp': ConditionalEffect(Reference('enchantment_value_effect')),
+    'minecraft:equipment_drops': ListNode(
+      TargetedConditionalEffect(Reference('enchantment_value_effect'), true)
+    ),
+    'minecraft:location_changed': ListNode(
+      ConditionalEffect(Reference('enchantment_location_effect'))
+    ),
+    'minecraft:tick': ListNode(
+      ConditionalEffect(Reference('enchantment_entity_effect'))
+    ),
+    'minecraft:ammo_use': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:projectile_piercing': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:projectile_spawned': ListNode(
+      ConditionalEffect(Reference('enchantment_entity_effect'))
+    ),
+    'minecraft:projectile_spread': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:projectile_count': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:crossbow_charge_time': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:trident_return_acceleration': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:fishing_time_reduction': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:fishing_luck_bonus': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:block_experience': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:mob_experience': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:trident_spin_attack_strength': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
+    'minecraft:repair_with_xp': ListNode(
+      ConditionalEffect(Reference('enchantment_value_effect'))
+    ),
     'minecraft:crossbow_charging_sounds': ListNode(
       ObjectNode({
-        start: Reference('sound_event'),
-        mid: Reference('sound_event'),
-        end: Reference('sound_event'),
+        start: Opt(Reference('sound_event')),
+        mid: Opt(Reference('sound_event')),
+        end: Opt(Reference('sound_event')),
       }),
     ),
+    'minecraft:trident_sound': ListNode(
+      Reference('sound_event'),
+    ),
+    'minecraft:prevent_equipment_drop': ObjectNode({}),
+    'minecraft:prevent_armor_change': ObjectNode({}),
   }
 
   const keyMatches = (key: string) => (path: ModelPath) => {
@@ -269,4 +328,28 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
 
 		})
 	}))
+
+  schemas.register('enchantment_provider', Mod(ObjectNode({
+    type: StringNode({ validator: 'resource', params: { pool: 'enchantment_provider_type' } }),
+    [Switch]: [{ push: 'type' }],
+    [Case]: {
+      'minecraft:by_cost': {
+        enchantments: Tag({ resource: 'enchantment' }),
+        cost: Reference('int_provider'),
+      },
+      'minecraft:by_cost_with_difficulty': {
+        enchantments: Tag({ resource: 'enchantment' }),
+        min_cost: NumberNode({ integer: true, min: 1 }),
+        max_cost_span: NumberNode({ integer: true, min: 0 }),
+      },
+      'minecraft:single': {
+        enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+        level: Reference('int_provider'),
+      }
+    },
+  }, { context: 'enchantment_provider' }), {
+    default: () => ({
+
+    })
+  }))
 }

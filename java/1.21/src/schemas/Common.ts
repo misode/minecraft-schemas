@@ -649,7 +649,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   })
 
   const ListOperation = ({ node, maxLength }: { node: INode, maxLength: number }) => ObjectNode({
-    values: node,
+    values: ListNode(node),
     ...ListOperationFields({ maxLength })
   }, { context: 'list_operation'})
 

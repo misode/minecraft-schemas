@@ -663,6 +663,9 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
       'minecraft:not': {
         predicate: Reference('block_predicate_worldgen')
       },
+      'minecraft:unobstructed': {
+        ...Offset,
+      },
       'minecraft:would_survive': {
         ...Offset,
         state: Reference('block_state')

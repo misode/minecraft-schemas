@@ -273,6 +273,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:storage': {
         storage: StringNode({ validator: 'resource', params: { pool: '$storage' } }),
         path: StringNode({ validator: 'nbt_path' }),
+      },
+      'minecraft:enchantment_level': {
+        amount: Reference('level_based_value'),
       }
     }))
 
@@ -304,6 +307,36 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       }
     }
   ))
+
+  schemas.register('level_based_value', ObjectWithType(
+    'enchantment_level_based_value_type',
+    'number', 'value', 'minecraft:constant',
+    null,
+    'level_based_value',
+    {
+      'minecraft:constant': { // TODO: doesn't actually exist in this form?
+        value: NumberNode(),
+      },
+      'minecraft:clamped': {
+        value: Reference('level_based_value'),
+        min: NumberNode(),
+        max: NumberNode(),
+      },
+      'minecraft:context': {
+        target: Mod(StringNode({ enum: 'entity_source' }), { default: () => 'this' })
+      },
+      'minecraft:fraction': {
+        numerator: Reference('level_based_value'),
+        denominator: Reference('level_based_value'),
+      },
+      'minecraft:levels_squared': {
+        added: NumberNode(),
+      },
+      'minecraft:linear': {
+        base: NumberNode(),
+        per_level_above_first: NumberNode(),
+      },
+    }))
 
   FloatProvider = (config?: MinMaxConfig) => ObjectWithType(
     'float_provider_type',
@@ -546,6 +579,9 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     'minecraft:damage_source_properties': {
       predicate: Reference('damage_source_predicate')
     },
+    'minecraft:enchantment_active_check': {
+      active: BooleanNode(),
+    },
     'minecraft:entity_properties': {
       entity: entitySourceNode,
       predicate: Reference('entity_predicate')
@@ -573,11 +609,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       predicate: Reference('item_predicate')
     },
     'minecraft:random_chance': {
-      chance: NumberNode({ min: 0, max: 1 })
+      chance: Reference('number_provider')
     },
-    'minecraft:random_chance_with_looting': {
-      chance: NumberNode({ min: 0, max: 1 }),
-      looting_multiplier: NumberNode()
+    'minecraft:random_chance_with_enchanted_bonus': {
+      enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
+      chance: Reference('level_based_value'),
     },
     'minecraft:reference': {
       name: StringNode({ validator: 'resource', params: { pool: '$predicate' } })
@@ -651,13 +687,17 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         )
       },
       'minecraft:enchant_randomly': {
-        enchantments: Opt(ListNode(
-          StringNode({ validator: 'resource', params: { pool: 'enchantment' } })
-        ))
+        options: Opt(Tag({ resource: 'enchantment' })),
+        only_compatible: Opt(BooleanNode()),
       },
       'minecraft:enchant_with_levels': {
         levels: Reference('number_provider'),
-        treasure: Opt(BooleanNode())
+        options: Opt(Tag({ resource: 'enchantment' })),
+      },
+      'minecraft:enchanted_count_increase': {
+        enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' }}),
+        count: Reference('number_provider'),
+        limit: Opt(NumberNode({ integer: true }))
       },
       'minecraft:exploration_map': {
         destination: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/worldgen/structure' } })),
@@ -675,10 +715,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       },
       'minecraft:limit_count': {
         limit: Reference('int_range')
-      },
-      'minecraft:looting_enchant': {
-        count: Reference('number_provider'),
-        limit: Opt(NumberNode({ integer: true }))
       },
       'minecraft:modify_contents': {
         component: StringNode({ validator: 'resource', params: { pool: collections.get('container_component_manipulators') } }),

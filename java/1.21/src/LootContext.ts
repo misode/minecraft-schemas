@@ -1,10 +1,12 @@
 export const enum LootContext {
+    AttackingEntity,
     BlockEntity,
     BlockState,
     DamageSource,
-    DirectKillerEntity,
+    DirectAttackingEntity,
+    EnchantmentLevel,
+    EnchantmentActive,
     ExplosionRadius,
-    KillerEntity,
     LastDamagePlayer,
     Origin,
     ThisEntity,
@@ -24,10 +26,14 @@ export const LootTableTypes = new Map<string, LootContextRegistration>([
     ['minecraft:chest', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:command', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:empty', { requires: [], allows: [] }],
-    ['minecraft:entity', { requires: [LootContext.DamageSource, LootContext.Origin, LootContext.ThisEntity], allows: [LootContext.DirectKillerEntity, LootContext.KillerEntity, LootContext.LastDamagePlayer] }],
+    ['minecraft:enchanted_damage', { requires: [LootContext.ThisEntity, LootContext.EnchantmentLevel, LootContext.Origin, LootContext.DamageSource], allows: [LootContext.DirectAttackingEntity, LootContext.AttackingEntity] }],
+    ['minecraft:enchanted_item', { requires: [LootContext.Tool, LootContext.EnchantmentLevel], allows: [] }],
+    ['minecraft:enchanted_location', { requires: [LootContext.ThisEntity, LootContext.EnchantmentLevel, LootContext.Origin, LootContext.EnchantmentActive], allows: [] }],
+    ['minecraft:enchanted_entity', { requires: [LootContext.ThisEntity, LootContext.EnchantmentLevel, LootContext.Origin], allows: [] }],
+    ['minecraft:entity', { requires: [LootContext.DamageSource, LootContext.Origin, LootContext.ThisEntity], allows: [LootContext.DirectAttackingEntity, LootContext.AttackingEntity, LootContext.LastDamagePlayer] }],
     ['minecraft:equipment', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] } ],
     ['minecraft:fishing', { requires: [LootContext.Origin, LootContext.Tool], allows: [LootContext.ThisEntity] }],
-    ['minecraft:generic', { requires: [LootContext.DamageSource, LootContext.BlockEntity, LootContext.BlockState, LootContext.DirectKillerEntity, LootContext.ExplosionRadius, LootContext.KillerEntity, LootContext.LastDamagePlayer, LootContext.Origin, LootContext.ThisEntity, LootContext.Tool], allows: [] }],
+    ['minecraft:generic', { requires: [LootContext.DamageSource, LootContext.BlockEntity, LootContext.BlockState, LootContext.DirectAttackingEntity, LootContext.ExplosionRadius, LootContext.AttackingEntity, LootContext.LastDamagePlayer, LootContext.Origin, LootContext.ThisEntity, LootContext.Tool], allows: [] }],
     ['minecraft:gift', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
     ['minecraft:selector', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
     ['minecraft:shearing', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
@@ -38,9 +44,9 @@ export const LootTableTypes = new Map<string, LootContextRegistration>([
  * A map from loot entity sources to an array of their required context.
  */
 export const LootEntitySources = new Map<string, LootContext[]>([
-    ['direct_killer', [LootContext.DirectKillerEntity]],
-    ['killer', [LootContext.KillerEntity]],
-    ['killer_player', [LootContext.KillerEntity]],
+    ['direct_killer', [LootContext.DirectAttackingEntity]],
+    ['killer', [LootContext.AttackingEntity]],
+    ['killer_player', [LootContext.AttackingEntity]],
     ['this', [LootContext.ThisEntity]]
 ])
 
@@ -49,8 +55,8 @@ export const LootEntitySources = new Map<string, LootContext[]>([
  */
 export const LootCopySources = new Map<string, LootContext[]>([
     ['block_entity', [LootContext.BlockEntity]],
-    ['killer', [LootContext.KillerEntity]],
-    ['killer_player', [LootContext.KillerEntity]],
+    ['killer', [LootContext.AttackingEntity]],
+    ['killer_player', [LootContext.AttackingEntity]],
     ['this', [LootContext.ThisEntity]]
 ])
 
@@ -61,6 +67,7 @@ export const LootConditions = new Map<string, LootContext[]>([
     ['minecraft:alternative', []],
     ['minecraft:block_state_property', [LootContext.BlockState]],
     ['minecraft:damage_source_properties', [LootContext.DamageSource]],
+    ['minecraft:enchantment_active_check', [LootContext.EnchantmentActive]],
     ['minecraft:entity_properties', [LootContext.Origin]],
     ['minecraft:entity_scores', []],
     ['minecraft:inverted', []],
@@ -68,7 +75,7 @@ export const LootConditions = new Map<string, LootContext[]>([
     ['minecraft:location_check', []],
     ['minecraft:match_tool', [LootContext.Tool]],
     ['minecraft:random_chance', []],
-    ['minecraft:random_chance_with_looting', [LootContext.KillerEntity]],
+    ['minecraft:random_chance_with_looting', [LootContext.AttackingEntity]],
     ['minecraft:reference', []],
     ['minecraft:survives_explosion', [LootContext.ExplosionRadius]],
     ['minecraft:table_bonus', [LootContext.Tool]],
@@ -91,7 +98,7 @@ export const LootFunctions = new Map<string, LootContext[]>([
     ['minecraft:fill_player_head', []],
     ['minecraft:furnace_smelt', []],
     ['minecraft:limit_count', []],
-    ['minecraft:looting_enchant', [LootContext.KillerEntity]],
+    ['minecraft:looting_enchant', [LootContext.AttackingEntity]],
     ['minecraft:set_attributes', []],
     ['minecraft:set_banner_pattern', []],
     ['minecraft:set_contents', []],

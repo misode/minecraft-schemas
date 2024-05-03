@@ -95,18 +95,20 @@ export function initCollections(collections: CollectionRegistry) {
     'spectator'
   ])
 
+  // LootContext.EntityTarget
   collections.register('entity_source', [
     'this',
-    'killer',
-    'direct_killer',
-    'killer_player'
+    'attacker',
+    'direct_attacker',
+    'attacking_player'
   ])
 
+  // CopyNameFunction.NameSource
   collections.register('copy_source', [
     'block_entity',
     'this',
-    'killer',
-    'killer_player'
+    'attacking_entity',
+    'last_damage_player'
   ])
 
   collections.register('loot_table_apply_bonus_formula', [

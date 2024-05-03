@@ -20,6 +20,7 @@ import { initWolfVariantSchemas } from './WolfVariant'
 import { initWorldgenSchemas } from './worldgen'
 import { initWorldSettingsSchemas } from './WorldSettings'
 import { initComponentsSchemas } from './Components'
+import { initPaintingVariantSchemas } from './PaintingVariant'
 
 export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
     // `Common.ts` is the only file that has exports. It should be initialized first. 
@@ -36,6 +37,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initItemModifierSchemas(schemas, collections)
     initLootTableSchemas(schemas, collections)
     initPackMcmetaSchemas(schemas, collections)
+    initPaintingVariantSchemas(schemas, collections)
     initPredicatesSchemas(schemas, collections)
     initRecipeSchemas(schemas, collections)
     initTagsSchemas(schemas, collections)

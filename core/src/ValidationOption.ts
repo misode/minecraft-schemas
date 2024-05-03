@@ -296,6 +296,7 @@ export type ResourceType =
   | 'custom_stat'
   | 'data_component_type'
   | 'enchantment'
+  | 'enchantment_level_based_value_type'
   | 'entity_sub_predicate_type'
   | 'entity_type'
   | 'float_provider_type'

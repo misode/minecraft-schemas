@@ -168,9 +168,79 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     default: () => [0, 0, 0]
   }))
 
+  const blockParticleFields = {
+    block_state: ChoiceNode([
+      {
+        type: 'string',
+        node: StringNode({ validator: 'resource', params: { pool: 'block' } }),
+        change: v => typeof v === 'object' && v !== null ? v.Name ?? '' : ''
+      },
+      {
+        type: 'object',
+        node: Reference('block_state'),
+        change: v => ({ Name: v }),
+      }
+    ])
+  }
+
   schemas.register('particle', ObjectNode({
 		type: StringNode({ validator: 'resource', params: { pool: 'particle_type' }}),
-    // TODO
+    [Switch]: [{ push: 'type' }],
+    [Case]: {
+      'minecraft:block': blockParticleFields,
+      'minecraft:block_marker': blockParticleFields,
+      'minecraft:dust': {
+        color: Reference('vec3'),
+        scale: NumberNode({ min: 0.01, max: 4 }),
+      },
+      'minecraft:dust_color_transition': {
+        from_color: Reference('vec3'),
+        to_color: Reference('vec3'),
+        scale: NumberNode({ min: 0.01, max: 4 }),
+      },
+      'minecraft:dust_pillar': blockParticleFields,
+      'minecraft:entity_effect': {
+        color: ChoiceNode([
+          {
+            type: 'number',
+            node: NumberNode({ integer: true })
+          },
+          {
+            type: 'list',
+            node: ListNode(
+              NumberNode({ min: 0, max: 1 }),
+              { minLength: 4, maxLength: 4 }
+            )
+          },
+        ])
+      },
+      'minecraft:item': {
+        item: ChoiceNode([
+          {
+            type: 'string',
+            node: Reference('item_non_air'),
+          },
+          {
+            type: 'object',
+            node: Reference('item_stack'),
+          },
+        ]),
+      },
+      'minecraft:falling_dust': blockParticleFields,
+      'minecraft:sculk_charge': {
+        roll: NumberNode(),
+      },
+      'minecraft:vibration': {
+        destination: ObjectNode({
+          type: StringNode({ enum: ['block'] }),
+          pos: Reference('block_pos'),
+        }),
+        arrival_in_ticks: NumberNode({ integer: true }),
+      },
+      'minecraft:shriek': {
+        delay: NumberNode({ integer: true }),
+      },
+    }
 	}, { context: 'particle' }))
 
   schemas.register('sound_event', ChoiceNode([

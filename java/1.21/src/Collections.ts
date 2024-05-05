@@ -57,6 +57,7 @@ export function initCollections(collections: CollectionRegistry) {
     'legs',
     'feet',
     'armor',
+    'body',
   ])
 
   const slotRange = (prefix: string, size: number) => [

@@ -418,9 +418,6 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         min: NumberNode(),
         max: NumberNode(),
       },
-      'minecraft:context': {
-        target: Mod(StringNode({ enum: 'entity_source' }), { default: () => 'this' })
-      },
       'minecraft:fraction': {
         numerator: Reference('level_based_value'),
         denominator: Reference('level_based_value'),

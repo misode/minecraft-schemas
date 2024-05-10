@@ -87,16 +87,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
               Reference('item_predicate')
             ))
           }),
-          'minecraft:custom_data': ChoiceNode([
-            {
-              type: 'string',
-              node: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', 'pop', { push: 'item' }] } } }),
-            },
-            {
-              type: 'object',
-              node: ObjectNode({}) // TODO: any unsafe data
-            },
-          ]),
+          'minecraft:custom_data': Reference('custom_data_component'),
           'minecraft:damage': ObjectNode({
             durability: Opt(Reference('int_bounds')),
             damage: Opt(Reference('int_bounds')),
@@ -386,7 +377,8 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       }, { context: 'tag_predicate' }),
     )),
     source_entity: Opt(Reference('entity_predicate')),
-    direct_entity: Opt(Reference('entity_predicate'))
+    direct_entity: Opt(Reference('entity_predicate')),
+    is_direct: Opt(BooleanNode()),
   }, { context: 'damage_source' }))
 
   schemas.register('damage_predicate', ObjectNode({

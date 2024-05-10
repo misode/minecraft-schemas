@@ -154,6 +154,30 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     })
   }))
 
+  schemas.register('item_non_air', Mod(StringNode({ validator: 'resource', params: { pool: 'item' } }), node => ({
+    validate: (path, value, errors, options) => {
+      if (typeof value === 'string' && value?.replace(/^minecraft:/, '') === 'air') {
+        errors.add(path, 'error.item_stack_not_air')
+      }
+      return node.validate(path, value, errors, options)
+    }
+  })))
+
+  schemas.register('item_stack', ObjectNode({
+    id: Reference('item_non_air'),
+    count: Opt(NumberNode({ integer: true, min: 1 })),
+    components: Opt(Reference('data_component_patch')),
+  }, { context: 'item_stack' }))
+
+  schemas.register('single_item_stack', Mod(ObjectNode({
+    id: Reference('item_non_air'),
+    components: Opt(Reference('data_component_patch'))
+  }), {
+    default: () => ({
+      id: 'minecraft:stone'
+    })
+  }))
+
   schemas.register('vec3', Mod(ListNode(
     NumberNode(),
     { minLength: 3, maxLength: 3 }
@@ -849,8 +873,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         add: Opt(BooleanNode())
       },
       'minecraft:set_custom_data': {
-        // TODO: support any unsafe data
-        tag: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item' } } })
+        tag: Reference('custom_data_component'),
       },
       'minecraft:set_custom_model_data': {
         value: Reference('number_provider'),

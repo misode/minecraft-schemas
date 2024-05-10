@@ -21,6 +21,17 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
+  schemas.register('custom_data_component', ChoiceNode([
+    {
+      type: 'string',
+      node: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', 'pop', { push: 'item' }] } } }),
+    },
+    {
+      type: 'object',
+      node: ObjectNode({}) // TODO: any unsafe data
+    },
+  ], { context: 'custom_data' }))
+
   schemas.register('enchantments_component', ChoiceNode([
     {
       type: 'simple',
@@ -89,21 +100,6 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     rotation: NumberNode(),
   }, { context: 'map_decoration' }))
 
-  schemas.register('item_non_air', Mod(StringNode({ validator: 'resource', params: { pool: 'item' } }), node => ({
-    validate: (path, value, errors, options) => {
-      if (typeof value === 'string' && value?.replace(/^minecraft:/, '') === 'air') {
-        errors.add(path, 'error.item_stack_not_air')
-      }
-      return node.validate(path, value, errors, options)
-    }
-  })))
-
-  schemas.register('item_stack', ObjectNode({
-    id: Reference('item_non_air'),
-    count: Opt(NumberNode({ integer: true, min: 1 })),
-    components: Opt(Reference('data_component_patch')),
-  }, { context: 'item_stack' }))
-
   const MobEffectDetails = {
     amplifier: Opt(NumberNode({ integer: true, min: 0, max: 255 })),
     duration: Opt(NumberNode({ integer: true })),
@@ -150,7 +146,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   })))
 
   const Components: Record<string, INode> = {
-    'minecraft:custom_data': ObjectNode({}), // TODO: any unsafe data
+    'minecraft:custom_data': Reference('custom_data_component'),
     'minecraft:max_stack_size': NumberNode({ integer: true, min: 0, max: 99 }),
     'minecraft:max_damage': NumberNode({ integer: true, min: 1 }),
     'minecraft:damage': NumberNode({ integer: true, min: 0 }),
@@ -197,6 +193,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       saturation: NumberNode(),
       can_always_eat: Opt(BooleanNode()),
       eat_seconds: Opt(NumberNode()),
+      using_converts_to: Opt(Reference('single_item_stack')),
       effects: Opt(ListNode(
         ObjectNode({
           effect: Reference('mob_effect_instance'),

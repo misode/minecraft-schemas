@@ -633,14 +633,16 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     {
       type: 'simple',
       match: () => true,
+      change: v => typeof v === 'object' && v?.raw ? v.raw : undefined,
       node: node,
     },
     {
       type: 'filtered',
-      match: v => typeof v === 'object' && v !== null && v.text !== undefined,
+      match: v => typeof v === 'object' && v !== null && v.raw !== undefined,
+      change: v => ({ raw: v }),
       priority: 1,
       node: ObjectNode({
-        text: node,
+        raw: node,
         filtered: Opt(node),
       }),
     },

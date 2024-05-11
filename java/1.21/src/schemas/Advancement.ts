@@ -167,8 +167,8 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           killing_blow: Opt(Reference('damage_source_predicate'))
         },
         'minecraft:fall_after_explosion': {
-          start_position: Reference('location_predicate'),
-          distance: Reference('distance_predicate'),
+          start_position: Opt(Reference('location_predicate')),
+          distance: Opt(Reference('distance_predicate')),
           cause: EntityPredicate,
         },
         'minecraft:fall_from_height': {

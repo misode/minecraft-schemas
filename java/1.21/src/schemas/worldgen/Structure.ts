@@ -13,6 +13,7 @@ import {
   Opt,
   MapNode,
   ListNode,
+  ChoiceNode,
 } from '@mcschema/core'
 import { Tag } from '../Common'
 import { MobCategorySpawnSettings } from './Biome'
@@ -84,10 +85,21 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
     })
   }))
 
-  schemas.register('dimension_padding', ObjectNode({
-    bottom: Opt(NumberNode({ integer: true, min: 0 })),
-    top: Opt(NumberNode({ integer: true, min: 0 })),
-  }, { context: 'dimension_padding' }))
+  schemas.register('dimension_padding', ChoiceNode([
+    {
+      type: 'number',
+      node: NumberNode({ integer: true, min: 0 }),
+      change: (v) => typeof v === 'object' ? (v?.bottom ?? v?.top ?? 0) : 0,
+    },
+    {
+      type: 'object',
+      node: ObjectNode({
+        bottom: Opt(NumberNode({ integer: true, min: 0 })),
+        top: Opt(NumberNode({ integer: true, min: 0 })),
+      }),
+      change: (v) => typeof v === 'number' ? ({ bottom: v, top: v }) : ({}),
+    }
+  ], { context: 'dimension_padding' }))
 
   schemas.register('pool_alias_binding', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/pool_alias_binding' } }),

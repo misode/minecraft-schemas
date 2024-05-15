@@ -77,6 +77,7 @@ export function initTagsSchemas(schemas: SchemaRegistry, collections: Collection
 
   schemas.register('banner_pattern_tag', TagBase('banner_pattern'))
   schemas.register('cat_variant_tag', TagBase('cat_variant'))
+  schemas.register('enchantment_tag', TagBase('enchantment'))
   schemas.register('instrument_tag', TagBase('instrument'))
   schemas.register('painting_variant_tag', TagBase('painting_variant'))
   schemas.register('point_of_interest_type_tag', TagBase('point_of_interest_type'))

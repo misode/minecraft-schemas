@@ -43,7 +43,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         project_start_to_heightmap: Opt(StringNode({ enum: 'heightmap_type' })),
         max_distance_from_center: Mod(NumberNode({ integer: true, min: 1, max: 128 }), { default: () => 80 }),
         use_expansion_hack: BooleanNode(),
-        dimension_padding: Opt(NumberNode({ integer: true, min: 0 })),
+        dimension_padding: Opt(Reference('dimension_padding')),
         pool_aliases: Opt(ListNode(Reference('pool_alias_binding')))
       },
       'minecraft:mineshaft': {
@@ -83,6 +83,11 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
       max_distance_from_center: 80,
     })
   }))
+
+  schemas.register('dimension_padding', ObjectNode({
+    bottom: Opt(NumberNode({ integer: true, min: 0 })),
+    top: Opt(NumberNode({ integer: true, min: 0 })),
+  }, { context: 'dimension_padding' }))
 
   schemas.register('pool_alias_binding', Mod(ObjectNode({
     type: StringNode({ validator: 'resource', params: { pool: 'worldgen/pool_alias_binding' } }),

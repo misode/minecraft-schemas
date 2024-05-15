@@ -340,6 +340,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     team: Opt(StringNode({ validator: 'team' })),
     location: Opt(Reference('location_predicate')),
     movement: Opt(Reference('movement_predicate')),
+    movement_affected_by: Opt(Reference('location_predicate')),
     stepping_on: Opt(Reference('location_predicate')),
     distance: Opt(Reference('distance_predicate')),
     slots: Opt(MapNode(

@@ -329,7 +329,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       { context: 'data_component.recipes' },
     ),
     'minecraft:lodestone_tracker': ObjectNode({
-      tracker: Opt(ObjectNode({
+      target: Opt(ObjectNode({
         dimension: StringNode({ validator: 'resource', params: { pool: '$dimension' } }),
         pos: Reference('block_pos'),
       })),

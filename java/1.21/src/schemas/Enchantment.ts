@@ -64,11 +64,10 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
   }, { context: 'particle_velocity_source' })
 
   const attributeEffectFields = {
-    name: StringNode(),
+    id: StringNode(),
     attribute: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
     amount: Reference('level_based_value'),
     operation: StringNode({ enum: 'attribute_modifier_operation' }),
-    uuid: StringNode({ validator: 'uuid' }),
   }
 
   const SharedEffects = {

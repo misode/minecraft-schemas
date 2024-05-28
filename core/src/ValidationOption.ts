@@ -315,6 +315,7 @@ export type ResourceType =
   | 'int_provider_type'
   | 'item'
   | 'item_sub_predicate_type'
+  | 'jukebox_song'
   | 'loot_condition_type'
   | 'loot_function_type'
   | 'loot_nbt_provider_type'

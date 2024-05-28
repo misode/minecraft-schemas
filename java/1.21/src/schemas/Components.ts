@@ -82,12 +82,8 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   ], { context: 'adventure_mode_predicate' }))
 
   schemas.register('attribute_modifiers_entry', ObjectNode({
+    id: StringNode(),
     type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
-    uuid: ListNode(
-      NumberNode({ integer: true }),
-      { minLength: 4, maxLength: 4 },
-    ),
-    name: StringNode(),
     amount: NumberNode(),
     operation: StringNode({ enum: 'attribute_modifier_operation' }),
     slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
@@ -321,6 +317,10 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     }, { context: 'data_component.block_entity_data' }),
     'minecraft:instrument': StringNode({ validator: 'resource', params: { pool: 'instrument' } }),
     'minecraft:ominous_bottle_amplifier': NumberNode({ integer: true, min: 0, max: 4 }),
+    'minecraft:jukebox_playable': ObjectNode({
+      song: StringNode({ validator: 'resource', params: { pool: 'jukebox_song' } }),
+      show_in_tooltip: Opt(BooleanNode()),
+    }, { context: 'data_component.jukebox_playable' }),
     'minecraft:recipes': ListNode(
       StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
       { context: 'data_component.recipes' },

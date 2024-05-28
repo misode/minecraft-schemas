@@ -196,18 +196,16 @@ export function initLootTableSchemas(schemas: SchemaRegistry, collections: Colle
   }))
 
   schemas.register('attribute_modifier', Mod(ObjectNode({
+    id: StringNode(),
     attribute: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
-    name: StringNode(),
     amount: Reference('number_provider'),
     operation: StringNode({ enum: 'attribute_modifier_operation' }),
-    id: Opt(StringNode({ validator: 'uuid' })),
     slot: StringOrList(
       StringNode({ enum: 'equipment_slot_group' })
     )
   }, { context: 'attribute_modifier' }), {
     default: () => ({
       attribute: 'minecraft:generic.max_health',
-      name: '',
       amount: 1,
       operation: 'addition',
       slot: 'mainhand'

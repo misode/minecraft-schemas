@@ -52,7 +52,7 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
     offset: Opt(NumberNode()),
     [Switch]: [{ push: 'type' }],
     [Case]: {
-      'entity_position': {
+      'in_bounding_box': {
         scale: Opt(NumberNode({ min: 0 })) // TODO: 0 is not valid
       }
     },

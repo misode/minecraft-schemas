@@ -395,7 +395,16 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:note_block_sound': StringNode({ validator: 'resource', params: { pool: [], allowUnknown: true } }),
     'minecraft:banner_patterns': ListNode(
       ObjectNode({
-        pattern: StringNode({ validator: 'resource', params: { pool: 'banner_pattern' } }),
+        pattern: ChoiceNode([
+          {
+            type: 'string',
+            node: StringNode({ validator: 'resource', params: { pool: 'banner_pattern' } }),
+          },
+          {
+            type: 'object',
+            node: Reference('banner_pattern')
+          },
+        ]),
         color: StringNode({ enum: 'dye_color' }),
       }),
       { context: 'data_component.banner_patterns' },

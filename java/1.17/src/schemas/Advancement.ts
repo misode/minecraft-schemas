@@ -157,6 +157,7 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           item: Opt(Reference('item_predicate'))
         },
         'minecraft:fishing_rod_hooked': {
+          rod: Opt(Reference('item_predicate')),
           entity: EntityPredicate,
           item: Opt(Reference('item_predicate'))
         },

@@ -406,6 +406,7 @@
   "criterion.filled_bucket.item": "Item",
   "criterion.fishing_rod_hooked.entity": "Pulled entity",
   "criterion.fishing_rod_hooked.item": "Item",
+  "criterion.fishing_rod_hooked.rod": "Rod",
   "criterion.hero_of_the_village.location": "Location",
   "criterion.inventory_changed.items": "Items",
   "criterion.inventory_changed.items.entry": "Item",

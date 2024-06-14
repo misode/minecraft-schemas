@@ -113,7 +113,7 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
       offset: Opt(Reference('block_pos')),
       trigger_game_event: Opt(StringNode({ validator: 'resource', params: { pool: 'game_event' } })),
     },
-    'minecraft:replace_disc': {
+    'minecraft:replace_disk': {
       block_state: Reference('block_state_provider'),
       predicate: Opt(Reference('block_predicate_worldgen')),
       radius: Reference('level_based_value'),

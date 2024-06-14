@@ -64,6 +64,7 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
       'minecraft:legacy_single_pool_element': {
         projection: StringNode({ enum: ['rigid', 'terrain_matching'] }),
         location: StringNode({ validator: 'resource', params: { pool: '$structure' }}),
+        override_liquid_settings: StringNode({ enum: ['apply_waterlogging', 'ignore_waterlogging'] }),
         processors: Processors
       },
       'minecraft:list_pool_element': {
@@ -75,6 +76,7 @@ export function initTemplatePoolSchemas(schemas: SchemaRegistry, collections: Co
       'minecraft:single_pool_element': {
         projection: StringNode({ enum: ['rigid', 'terrain_matching'] }),
         location: StringNode({ validator: 'resource', params: { pool: '$structure' }}),
+        override_liquid_settings: StringNode({ enum: ['apply_waterlogging', 'ignore_waterlogging'] }),
         processors: Processors
       }
     }

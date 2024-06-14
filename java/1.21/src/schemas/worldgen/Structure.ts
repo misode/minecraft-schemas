@@ -45,6 +45,7 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         max_distance_from_center: Mod(NumberNode({ integer: true, min: 1, max: 128 }), { default: () => 80 }),
         use_expansion_hack: BooleanNode(),
         dimension_padding: Opt(Reference('dimension_padding')),
+        liquid_settings: StringNode({ enum: ['apply_waterlogging', 'ignore_waterlogging'] }),
         pool_aliases: Opt(ListNode(Reference('pool_alias_binding')))
       },
       'minecraft:mineshaft': {
@@ -123,7 +124,10 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         )
       },
       'minecraft:random_group': {
-        groups: ListNode(Reference('pool_alias_binding'))
+        groups: ListNode(ObjectNode({
+          weight: NumberNode({ integer: true }),
+          data: Reference('pool_alias_binding'),
+        }))
       }
     }
   }, { context: 'pool_alias_binding' }), {

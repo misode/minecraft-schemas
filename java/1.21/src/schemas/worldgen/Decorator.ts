@@ -8,6 +8,7 @@ import {
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  ListNode,
 } from '@mcschema/core'
 import { IntProvider } from '../Common'
 
@@ -59,6 +60,12 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
       'minecraft:random_offset': {
         xz_spread: IntProvider({ min: -16, max: 16 }),
         y_spread: IntProvider({ min: -16, max: 16 }),
+      },
+      'minecraft:fixed_placement': {
+        positions: ListNode(ListNode(
+          NumberNode({ integer: true }),
+          { minLength: 3, maxLength: 3 }
+        ))
       },
       'minecraft:surface_relative_threshold_filter': {
         heightmap: StringNode({ enum: 'heightmap_type' }),

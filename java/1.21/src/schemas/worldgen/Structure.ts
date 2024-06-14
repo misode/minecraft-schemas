@@ -123,7 +123,10 @@ export function initStructureSchemas(schemas: SchemaRegistry, collections: Colle
         )
       },
       'minecraft:random_group': {
-        groups: ListNode(Reference('pool_alias_binding'))
+        groups: ListNode(ObjectNode({
+          weight: NumberNode({ integer: true }),
+          data: Reference('pool_alias_binding'),
+        }))
       }
     }
   }, { context: 'pool_alias_binding' }), {

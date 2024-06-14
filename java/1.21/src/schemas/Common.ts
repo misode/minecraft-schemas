@@ -736,7 +736,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     },
     'minecraft:random_chance_with_enchanted_bonus': {
       enchantment: StringNode({ validator: 'resource', params: { pool: 'enchantment' } }),
-      chance: Reference('level_based_value'),
+      unenchanted_chance: NumberNode({ min: 0, max: 1}),
+      enchanted_chance: Reference('level_based_value'),
     },
     'minecraft:reference': {
       name: StringNode({ validator: 'resource', params: { pool: '$predicate' } })

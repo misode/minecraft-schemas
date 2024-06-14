@@ -453,6 +453,10 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         base: NumberNode(),
         per_level_above_first: NumberNode(),
       },
+      'minecraft:lookup': {
+        values: ListNode(NumberNode()),
+        fallback: Reference('level_based_value')
+      }
     }))
 
   FloatProvider = (config?: MinMaxConfig) => ObjectWithType(

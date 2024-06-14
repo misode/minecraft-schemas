@@ -64,11 +64,10 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
   }, { context: 'particle_velocity_source' })
 
   const attributeEffectFields = {
-    name: StringNode(),
+    id: StringNode(),
     attribute: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
     amount: Reference('level_based_value'),
     operation: StringNode({ enum: 'attribute_modifier_operation' }),
-    uuid: StringNode({ validator: 'uuid' }),
   }
 
   const SharedEffects = {
@@ -112,6 +111,7 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
       block_state: Reference('block_state_provider'),
       predicate: Opt(Reference('block_predicate_worldgen')),
       offset: Opt(Reference('block_pos')),
+      trigger_game_event: Opt(StringNode({ validator: 'resource', params: { pool: 'game_event' } })),
     },
     'minecraft:replace_disc': {
       block_state: Reference('block_state_provider'),
@@ -119,6 +119,7 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
       radius: Reference('level_based_value'),
       height: Reference('level_based_value'),
       offset: Opt(Reference('block_pos')),
+      trigger_game_event: Opt(StringNode({ validator: 'resource', params: { pool: 'game_event' } })),
     },
     'minecraft:run_function': {
       function: StringNode(),
@@ -129,6 +130,7 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
         StringNode(),
       ),
       offset: Opt(Reference('block_pos')),
+      trigger_game_event: Opt(StringNode({ validator: 'resource', params: { pool: 'game_event' } })),
     },
     'minecraft:spawn_particles': {
       particle: Reference('particle'),
@@ -302,8 +304,8 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
     exclusive_set: Opt(Tag({ resource: 'enchantment' })),
     supported_items: Tag({ resource: 'item' }),
     primary_items: Opt(Tag({ resource: 'item' })),
-    weight: NumberNode({ integer: true, min: 1 }),
-    max_level: NumberNode({ integer: true, min: 1 }),
+    weight: NumberNode({ integer: true, min: 1, max: 1024 }),
+    max_level: NumberNode({ integer: true, min: 1, max: 255 }),
     min_cost: Reference('enchantment_cost'),
     max_cost: Reference('enchantment_cost'),
     anvil_cost: NumberNode({ integer: true, min: 0 }),

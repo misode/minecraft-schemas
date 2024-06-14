@@ -40,28 +40,28 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:smelting': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Reference('cooking_recipe_result'),
+        result: Reference('single_item_stack'),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 200 }))
       },
       'minecraft:blasting': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Reference('cooking_recipe_result'),
+        result: Reference('single_item_stack'),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:smoking': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Reference('cooking_recipe_result'),
+        result: Reference('single_item_stack'),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
       'minecraft:campfire_cooking': {
         group: Opt(StringNode()),
         ingredient: Reference('recipe_ingredient'),
-        result: Reference('cooking_recipe_result'),
+        result: Reference('single_item_stack'),
         experience: Opt(NumberNode()),
         cookingtime: Opt(Mod(NumberNode({ integer: true }), { default: () => 100 }))
       },
@@ -111,15 +111,6 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
   }, { context: 'recipe_ingredient' }), {
     default: () => ({
       item: 'minecraft:stone'
-    })
-  }))
-
-  schemas.register('cooking_recipe_result', Mod(ObjectNode({
-    id: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-    components: Opt(Reference('data_component_predicate'))
-  }), {
-    default: () => ({
-      id: 'minecraft:stone'
     })
   }))
 }

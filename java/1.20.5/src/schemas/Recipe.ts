@@ -116,7 +116,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
 
   schemas.register('cooking_recipe_result', Mod(ObjectNode({
     id: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-    components: Opt(Reference('data_component_predicate'))
+    components: Opt(Reference('data_component_patch'))
   }), {
     default: () => ({
       id: 'minecraft:stone'

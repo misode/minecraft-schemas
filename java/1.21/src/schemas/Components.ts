@@ -21,6 +21,17 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
+  schemas.register('custom_data_component', ChoiceNode([
+    {
+      type: 'string',
+      node: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', 'pop', { push: 'item' }] } } }),
+    },
+    {
+      type: 'object',
+      node: ObjectNode({}) // TODO: any unsafe data
+    },
+  ], { context: 'custom_data' }))
+
   schemas.register('enchantments_component', ChoiceNode([
     {
       type: 'simple',
@@ -71,12 +82,8 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   ], { context: 'adventure_mode_predicate' }))
 
   schemas.register('attribute_modifiers_entry', ObjectNode({
+    id: StringNode(),
     type: StringNode({ validator: 'resource', params: { pool: 'attribute' } }),
-    uuid: ListNode(
-      NumberNode({ integer: true }),
-      { minLength: 4, maxLength: 4 },
-    ),
-    name: StringNode(),
     amount: NumberNode(),
     operation: StringNode({ enum: 'attribute_modifier_operation' }),
     slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
@@ -88,21 +95,6 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     z: NumberNode(),
     rotation: NumberNode(),
   }, { context: 'map_decoration' }))
-
-  schemas.register('item_non_air', Mod(StringNode({ validator: 'resource', params: { pool: 'item' } }), node => ({
-    validate: (path, value, errors, options) => {
-      if (typeof value === 'string' && value?.replace(/^minecraft:/, '') === 'air') {
-        errors.add(path, 'error.item_stack_not_air')
-      }
-      return node.validate(path, value, errors, options)
-    }
-  })))
-
-  schemas.register('item_stack', ObjectNode({
-    id: Reference('item_non_air'),
-    count: Opt(NumberNode({ integer: true, min: 1 })),
-    components: Opt(Reference('data_component_patch')),
-  }, { context: 'item_stack' }))
 
   const MobEffectDetails = {
     amplifier: Opt(NumberNode({ integer: true, min: 0, max: 255 })),
@@ -150,7 +142,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
   })))
 
   const Components: Record<string, INode> = {
-    'minecraft:custom_data': ObjectNode({}), // TODO: any unsafe data
+    'minecraft:custom_data': Reference('custom_data_component'),
     'minecraft:max_stack_size': NumberNode({ integer: true, min: 0, max: 99 }),
     'minecraft:max_damage': NumberNode({ integer: true, min: 1 }),
     'minecraft:damage': NumberNode({ integer: true, min: 0 }),
@@ -197,6 +189,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       saturation: NumberNode(),
       can_always_eat: Opt(BooleanNode()),
       eat_seconds: Opt(NumberNode()),
+      using_converts_to: Opt(Reference('single_item_stack')),
       effects: Opt(ListNode(
         ObjectNode({
           effect: Reference('mob_effect_instance'),
@@ -324,12 +317,16 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     }, { context: 'data_component.block_entity_data' }),
     'minecraft:instrument': StringNode({ validator: 'resource', params: { pool: 'instrument' } }),
     'minecraft:ominous_bottle_amplifier': NumberNode({ integer: true, min: 0, max: 4 }),
+    'minecraft:jukebox_playable': ObjectNode({
+      song: StringNode({ validator: 'resource', params: { pool: 'jukebox_song' } }),
+      show_in_tooltip: Opt(BooleanNode()),
+    }, { context: 'data_component.jukebox_playable' }),
     'minecraft:recipes': ListNode(
       StringNode({ validator: 'resource', params: { pool: '$recipe' } }),
       { context: 'data_component.recipes' },
     ),
     'minecraft:lodestone_tracker': ObjectNode({
-      tracker: Opt(ObjectNode({
+      target: Opt(ObjectNode({
         dimension: StringNode({ validator: 'resource', params: { pool: '$dimension' } }),
         pos: Reference('block_pos'),
       })),

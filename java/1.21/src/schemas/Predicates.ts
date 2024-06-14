@@ -38,21 +38,8 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
   }
 
   schemas.register('attribute_modifiers_entry_predicate', ObjectNode({
+    id: StringNode(),
     attribute: Opt(Tag({ resource: 'attribute' })),
-    uuid: Opt(ChoiceNode([
-      {
-        type: 'list',
-        node: ListNode(
-          NumberNode({ integer: true }),
-          { minLength: 4, maxLength: 4 },
-        ),
-      },
-      {
-        type: 'string',
-        node: StringNode({ validator: 'uuid' }),
-      },
-    ])),
-    name: Opt(StringNode()),
     amount: Opt(Reference('float_bounds')),
     operation: Opt(StringNode({ enum: 'attribute_modifier_operation' })),
     slot: Opt(StringNode({ enum: 'equipment_slot_group' })),
@@ -87,16 +74,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
               Reference('item_predicate')
             ))
           }),
-          'minecraft:custom_data': ChoiceNode([
-            {
-              type: 'string',
-              node: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:item', id: ['pop', 'pop', { push: 'item' }] } } }),
-            },
-            {
-              type: 'object',
-              node: ObjectNode({}) // TODO: any unsafe data
-            },
-          ]),
+          'minecraft:custom_data': Reference('custom_data_component'),
           'minecraft:damage': ObjectNode({
             durability: Opt(Reference('int_bounds')),
             damage: Opt(Reference('int_bounds')),
@@ -110,6 +88,9 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
               Reference('firework_explosion_predicate')
             )),
             flight_duration: Opt(Reference('int_bounds')),
+          }),
+          'minecraft:jukebox_playable': ObjectNode({
+            song: Opt(Tag({ resource: 'jukebox_song' })),
           }),
           'minecraft:potion_contents': Tag({ resource: 'potion' }),
           'minecraft:stored_enchantments': ListNode(
@@ -295,7 +276,9 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
           variant: Opt(StringNode({ enum: 'parrot_variant' }))
         },
         'minecraft:player': {
-          gamemode: Opt(StringNode({ enum: 'gamemode' })),
+          gamemode: Opt(ListNode(
+            StringNode({ enum: 'gamemode' })
+          )),
           level: Opt(Reference('int_bounds')),
           advancements: Opt(MapNode(
             StringNode({ validator: 'resource', params: { pool: '$advancement' } }),
@@ -349,6 +332,7 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
     team: Opt(StringNode({ validator: 'team' })),
     location: Opt(Reference('location_predicate')),
     movement: Opt(Reference('movement_predicate')),
+    movement_affected_by: Opt(Reference('location_predicate')),
     stepping_on: Opt(Reference('location_predicate')),
     distance: Opt(Reference('distance_predicate')),
     slots: Opt(MapNode(
@@ -386,7 +370,8 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
       }, { context: 'tag_predicate' }),
     )),
     source_entity: Opt(Reference('entity_predicate')),
-    direct_entity: Opt(Reference('entity_predicate'))
+    direct_entity: Opt(Reference('entity_predicate')),
+    is_direct: Opt(BooleanNode()),
   }, { context: 'damage_source' }))
 
   schemas.register('damage_predicate', ObjectNode({

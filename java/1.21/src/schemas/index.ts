@@ -22,6 +22,7 @@ import { initWorldSettingsSchemas } from './WorldSettings'
 import { initComponentsSchemas } from './Components'
 import { initPaintingVariantSchemas } from './PaintingVariant'
 import { initEnchantmentSchemas } from './Enchantment'
+import { initJukeboxSongSchemas } from './JukeboxSong'
 
 export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
     // `Common.ts` is the only file that has exports. It should be initialized first. 
@@ -37,6 +38,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initDimensionSchemas(schemas, collections)
     initEnchantmentSchemas(schemas, collections)
     initItemModifierSchemas(schemas, collections)
+    initJukeboxSongSchemas(schemas, collections)
     initLootTableSchemas(schemas, collections)
     initPackMcmetaSchemas(schemas, collections)
     initPaintingVariantSchemas(schemas, collections)

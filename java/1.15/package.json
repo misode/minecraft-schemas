@@ -1,6 +1,6 @@
 {
   "name": "@mcschema/java-1.15",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "description": "Schemas for Java Edition 1.15",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -22,17 +22,6 @@ export function initStructureSetSchemas(schemas: SchemaRegistry, collections: Co
   const StringNode = RawStringNode.bind(undefined, collections)
   const Reference = RawReference.bind(undefined, schemas)
 
-  const StructureSet = ChoiceNode([
-    {
-      type: 'string',
-      node: StringNode({ validator: 'resource', params: { pool: '$worldgen/structure_set' } })
-    },
-    {
-      type: 'object',
-      node: Reference('structure_set')
-    }
-  ], { choiceContext: 'structure_set' })
-
 	schemas.register('structure_set', ObjectNode({
 		structures: ListNode(
 			ObjectNode({

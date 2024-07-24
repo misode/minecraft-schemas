@@ -49,7 +49,7 @@ export function initStructureSetSchemas(schemas: SchemaRegistry, collections: Co
     frequency_reduction_method: Opt(StringNode({ enum: ['default', 'legacy_type_1', 'legacy_type_2', 'legacy_type_3'] })),
     frequency: Opt(NumberNode({ min: 0, max: 1 })),
     exclusion_zone: Opt(ObjectNode({
-      other_set: StructureSet,
+      other_set: StringNode({ validator: 'resource', params: { pool: '$worldgen/structure_set' } }),
       chunk_count: NumberNode({ integer: true, min: 1, max: 16 })
     })),
     locate_offset: Opt(ListNode(

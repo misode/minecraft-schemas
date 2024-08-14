@@ -691,7 +691,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       },
       'minecraft:sequence': {
         functions: ListNode(
-          Reference('item_modifier')
+          Reference('function')
         ),
       },
       'minecraft:set_attributes': {

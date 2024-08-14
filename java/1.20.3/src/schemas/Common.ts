@@ -626,6 +626,11 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:reference': {
         name: StringNode({ validator: 'resource', params: { pool: '$item_modifier' } })
       },
+      'minecraft:sequence': {
+        functions: ListNode(
+          Reference('item_modifier')
+        ),
+      },
       'minecraft:set_attributes': {
         modifiers: ListNode(
           Reference('attribute_modifier')

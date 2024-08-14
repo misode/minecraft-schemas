@@ -315,10 +315,32 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       id: StringNode({ validator: 'resource', params: { pool: 'block_entity_type' } }),
       // TODO: any unsafe data
     }, { context: 'data_component.block_entity_data' }),
-    'minecraft:instrument': StringNode({ validator: 'resource', params: { pool: 'instrument' } }),
+    'minecraft:instrument': ChoiceNode([
+      {
+        type: 'string',
+        node: StringNode({ validator: 'resource', params: { pool: 'instrument' } }),
+      },
+      {
+        type: 'object',
+        node: ObjectNode({
+          sound_event: StringNode(),
+          use_duration: NumberNode({ integer: true, min: 1 }),
+          range: NumberNode({ min: 1 }),
+        }, { context: 'instrument' }),
+      },
+    ], { context: 'data_component.instrument' }),
     'minecraft:ominous_bottle_amplifier': NumberNode({ integer: true, min: 0, max: 4 }),
     'minecraft:jukebox_playable': ObjectNode({
-      song: StringNode({ validator: 'resource', params: { pool: 'jukebox_song' } }),
+      song: ChoiceNode([
+        {
+          type: 'string',
+          node: StringNode({ validator: 'resource', params: { pool: 'jukebox_song' } }),
+        },
+        {
+          type: 'object',
+          node: Reference('jukebox_song'),
+        },
+      ]),
       show_in_tooltip: Opt(BooleanNode()),
     }, { context: 'data_component.jukebox_playable' }),
     'minecraft:recipes': ListNode(

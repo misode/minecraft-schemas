@@ -12,6 +12,7 @@ import {
   SchemaRegistry,
   CollectionRegistry,
   Opt,
+  BooleanNode,
 } from '@mcschema/core'
 
 export function initRecipeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
@@ -30,7 +31,8 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
           StringNode(), // TODO: add validation
           Reference('recipe_ingredient')
         ),
-        result: Reference('recipe_result')
+        result: Reference('recipe_result'),
+        show_notification: Opt(BooleanNode()),
       },
       'minecraft:crafting_shapeless': {
         group: Opt(StringNode()),

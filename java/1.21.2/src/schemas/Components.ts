@@ -209,6 +209,12 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       default_mining_speed: Opt(NumberNode()),
       damage_per_block: Opt(NumberNode({ integer: true, min: 0 })),
     }),
+    'minecraft:enchantable': ObjectNode({
+      value: NumberNode({ integer: true, min: 1 }),
+    }),
+    'minecraft:repairable': ObjectNode({
+      items: Tag({ resource: 'item' }),
+    }),
     'minecraft:stored_enchantments': Reference('enchantments_component'),
     'minecraft:dyed_color': ChoiceNode([
       {

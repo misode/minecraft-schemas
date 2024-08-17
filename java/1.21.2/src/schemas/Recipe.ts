@@ -14,6 +14,7 @@ import {
   Opt,
   BooleanNode,
 } from '@mcschema/core'
+import { Tag } from './Common'
 
 export function initRecipeSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
@@ -73,15 +74,15 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
         result: Reference('item_stack')
       },
       'minecraft:smithing_transform': {
-        template: Reference('recipe_ingredient_object'),
-        base: Reference('recipe_ingredient_object'),
-        addition: Reference('recipe_ingredient_object'),
+        template: Opt(Reference('recipe_ingredient')),
+        base: Opt(Reference('recipe_ingredient')),
+        addition: Opt(Reference('recipe_ingredient')),
         result: Reference('item_stack')
       },
       'minecraft:smithing_trim': {
-        template: Reference('recipe_ingredient_object'),
-        base: Reference('recipe_ingredient_object'),
-        addition: Reference('recipe_ingredient_object')
+        template: Opt(Reference('recipe_ingredient')),
+        base: Opt(Reference('recipe_ingredient')),
+        addition: Opt(Reference('recipe_ingredient'))
       }
     }
   }, { context: 'recipe', disableSwitchContext: true }), {
@@ -90,27 +91,7 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
     })
   }))
 
-  schemas.register('recipe_ingredient', Mod(ChoiceNode([
-    {
-      type: 'object',
-      node: Reference('recipe_ingredient_object'),
-      change: v => v[0]
-    },
-    {
-      type: 'list',
-      node: ListNode(Reference('recipe_ingredient_object')),
-      change: v => [v]
-    }
-  ]), {
-    default: () => ({
-      item: 'minecraft:stone'
-    })
-  }))
-
-  schemas.register('recipe_ingredient_object', Mod(ObjectNode({
-    item: Opt(StringNode({ validator: 'resource', params: { pool: 'item' } })),
-    tag: Opt(StringNode({ validator: 'resource', params: { pool: '$tag/item' } }))
-  }, { context: 'recipe_ingredient' }), {
+  schemas.register('recipe_ingredient', Mod(Tag({ resource: 'item' }), {
     default: () => ({
       item: 'minecraft:stone'
     })

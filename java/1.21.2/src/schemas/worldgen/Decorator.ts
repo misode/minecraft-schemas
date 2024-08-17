@@ -23,9 +23,6 @@ export function initDecoratorSchemas(schemas: SchemaRegistry, collections: Colle
       'minecraft:block_predicate_filter': {
         predicate: Reference('block_predicate_worldgen')
       },
-      'minecraft:carving_mask': {
-        step: StringNode({ enum: 'generation_step' })
-      },
       'minecraft:rarity_filter': {
         chance: NumberNode({ integer: true, min: 0 })
       },

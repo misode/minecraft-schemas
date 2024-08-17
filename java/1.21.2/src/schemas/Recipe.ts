@@ -92,8 +92,6 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
   }))
 
   schemas.register('recipe_ingredient', Mod(Tag({ resource: 'item' }), {
-    default: () => ({
-      item: 'minecraft:stone'
-    })
+    default: () => 'minecraft:stone'
   }))
 }

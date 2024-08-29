@@ -642,4 +642,17 @@ export function initCollections(collections: CollectionRegistry) {
     'tnt',
     'trigger',
   ])
+
+  collections.register('use_animation', [
+    'none',
+    'eat',
+    'drink',
+    'block',
+    'bow',
+    'spear',
+    'crossbow',
+    'spyglass',
+    'toot_horn',
+    'brush',
+  ])
 }

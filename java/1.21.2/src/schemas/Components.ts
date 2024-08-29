@@ -1,5 +1,6 @@
 import {
   BooleanNode,
+  Case,
   StringNode as RawStringNode,
   ListNode,
   MapNode,
@@ -10,6 +11,7 @@ import {
   ChoiceNode,
   CollectionRegistry,
   NumberNode,
+  Switch,
   SwitchNode,
   INode,
   Mod,
@@ -141,8 +143,40 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     }
   })))
 
+  schemas.register('consume_effect', ObjectNode({
+    type: StringNode({ validator: 'resource', params: { pool: 'consume_effect_type' } }),
+    [Switch]: [{ push: 'type' }],
+    [Case]: {
+      'minecraft:apply_effects': {
+        effects: ListNode(Reference('mob_effect_instance')),
+        probability: Opt(NumberNode({ min: 0, max: 1 })),
+      },
+      'minecraft:remove_effects': {
+        effects: Tag({ resource: 'mob_effect' })
+      },
+      'minecraft:teleport_randomly': {
+        diameter: NumberNode({ min: 0 }),
+      },
+      'minecraft:play_sound': {
+        sound: Reference('sound_event'),
+      },
+    }
+  }))
+
   const Components: Record<string, INode> = {
     'minecraft:custom_data': Reference('custom_data_component'),
+    'minecraft:use_remainder': Reference('item_stack'),
+    'minecraft:use_cooldown': ObjectNode({
+      seconds: NumberNode({ min: 0 }),
+      cooldown_group: StringNode(),
+    }),
+    'minecraft:consumable': ObjectNode({
+      consume_seconds: Opt(NumberNode({ min: 0 })),
+      animation: Opt(StringNode({ enum: 'use_animation' })),
+      sound: Opt(Reference('sound_event')),
+      has_consume_particles: Opt(BooleanNode()),
+      on_consume_effects: Opt(ListNode(Reference('consume_effect')))
+    }),
     'minecraft:max_stack_size': NumberNode({ integer: true, min: 0, max: 99 }),
     'minecraft:max_damage': NumberNode({ integer: true, min: 1 }),
     'minecraft:damage': NumberNode({ integer: true, min: 0 }),
@@ -188,14 +222,6 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       nutrition: NumberNode({ integer: true, min: 0 }),
       saturation: NumberNode(),
       can_always_eat: Opt(BooleanNode()),
-      eat_seconds: Opt(NumberNode()),
-      using_converts_to: Opt(Reference('single_item_stack')),
-      effects: Opt(ListNode(
-        ObjectNode({
-          effect: Reference('mob_effect_instance'),
-          probability: Opt(NumberNode({ min: 0, max: 1 })),
-        }),
-      )),
     }, { context: 'data_component.food' }),
     'minecraft:fire_resistant': ObjectNode({}),
     'minecraft:tool': ObjectNode({

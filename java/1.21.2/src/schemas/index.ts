@@ -15,6 +15,7 @@ import { initPredicatesSchemas } from './Predicates'
 import { initRecipeSchemas } from './Recipe'
 import { initTagsSchemas } from './Tags'
 import { initTextComponentSchemas } from './TextComponent'
+import { initTrialSpawnersSchemas } from './TrialSpawner'
 import { initTrimsSchemas } from './Trims'
 import { initWolfVariantSchemas } from './WolfVariant'
 import { initWorldgenSchemas } from './worldgen'
@@ -48,6 +49,7 @@ export function initSchemas(schemas: SchemaRegistry, collections: CollectionRegi
     initRecipeSchemas(schemas, collections)
     initTagsSchemas(schemas, collections)
     initTextComponentSchemas(schemas, collections)
+    initTrialSpawnersSchemas(schemas, collections)
     initTrimsSchemas(schemas, collections)
     initWolfVariantSchemas(schemas, collections)
     initWorldgenSchemas(schemas, collections)

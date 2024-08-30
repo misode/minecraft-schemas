@@ -87,12 +87,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
         })
       })
     ),
-    carvers: MapNode(
-      StringNode({ enum: ['air', 'liquid'] }),
-      Mod(Tag({ resource: '$worldgen/configured_carver', inlineSchema: 'configured_carver' }), {
-        default: () => ['minecraft:cave']
-      })
-    ),
+    carvers: Tag({ resource: '$worldgen/configured_carver', inlineSchema: 'configured_carver' }),
     features: ListNode(
       Mod(Tag({ resource: '$worldgen/placed_feature', inlineSchema: 'placed_feature' }), { category: () => 'predicate' }),
       { maxLength: 11 }

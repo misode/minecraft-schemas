@@ -40,15 +40,18 @@ export function initTrialSpawnerSchemas(schemas: SchemaRegistry, collections: Co
 
 	schemas.register('trial_spawner', Mod(ObjectNode({
 		spawn_range: Opt(NumberNode({ integer: true, min: 1, max: 128 })),
-		total_mobs: NumberNode({ min: 0 }),
-		simultaneous_mobs: NumberNode({ min: 0 }),
-		total_mobs_added_per_player: NumberNode({ min: 0 }),
-		simultaneous_mobs_added_per_player: NumberNode({ min: 0 }),
+		total_mobs: Opt(NumberNode({ min: 0 })),
+		simultaneous_mobs: Opt(NumberNode({ min: 0 })),
+		total_mobs_added_per_player: Opt(NumberNode({ min: 0 })),
+		simultaneous_mobs_added_per_player: Opt(NumberNode({ min: 0 })),
 		ticks_between_spawn: Opt(NumberNode({ integer: true, min: 0 })),
     spawn_potentials: Opt(ListNode(ObjectNode({
       weight: NumberNode({ integer: true, min: 1 }),
       data: ObjectNode({
-        entity: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:entity', id: ['pop', { push: 'type' }] } } }),
+        entity: ObjectNode({
+          id: StringNode({ validator: 'nbt', params: { registry: { category: 'minecraft:entity', id: ['pop', { push: 'type' }] } } }),
+          // TODO: any data
+        }),
         custom_spawn_rules: Opt(ObjectNode({
           block_light_limit: Opt(Reference('light_limit')),
           sky_light_limit: Opt(Reference('light_limit')),
@@ -71,10 +74,12 @@ export function initTrialSpawnerSchemas(schemas: SchemaRegistry, collections: Co
         }))
       }),
     }))),
-    loot_tables_to_eject: Opt(ListNode(ObjectNode({
-      weight: NumberNode({ integer: true, min: 1 }),
-      data: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
-    }))),
+    loot_tables_to_eject: Opt(ListNode(
+      ObjectNode({
+        weight: NumberNode({ integer: true, min: 1 }),
+        data: StringNode({ validator: 'resource', params: { pool: '$loot_table' } }),
+      })
+    )),
     items_to_drop_when_ominous: Opt(StringNode({ validator: 'resource', params: { pool: '$loot_table' } })),
 	}, { context: 'instrument' }), {
 		default: () => ({

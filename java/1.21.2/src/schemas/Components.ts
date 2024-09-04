@@ -285,7 +285,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     }, { context: 'data_component.entity_data' }),
     'minecraft:equippable': ObjectNode({
       slot: StringNode({ enum: 'equipment_slot' }),
-      equip_sound: Opt(Opt(Reference('sound_event'))),
+      equip_sound: Opt(Reference('sound_event')),
       model: Opt(StringNode()),
       allowed_entities: Opt(Tag({ resource: 'entity_type' })),
       dispensable: Opt(BooleanNode()),

@@ -280,6 +280,15 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
             StringNode({ enum: 'gamemode' })
           )),
           level: Opt(Reference('int_bounds')),
+          input: Opt(ObjectNode({
+            forward: Opt(BooleanNode()),
+            backward: Opt(BooleanNode()),
+            left: Opt(BooleanNode()),
+            right: Opt(BooleanNode()),
+            jump: Opt(BooleanNode()),
+            sneak: Opt(BooleanNode()),
+            sprint: Opt(BooleanNode()),
+          })),
           advancements: Opt(MapNode(
             StringNode({ validator: 'resource', params: { pool: '$advancement' } }),
             ChoiceNode([
@@ -312,6 +321,10 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
         'minecraft:raider': {
           has_raid: Opt(BooleanNode()),
           is_captain: Opt(BooleanNode()),
+        },
+        'minecraft:sheep': {
+          sheared: Opt(BooleanNode()),
+          color: Opt(StringNode({ enum: 'dye_color' })),
         },
         'minecraft:slime': {
           size: Opt(Reference('int_bounds'))

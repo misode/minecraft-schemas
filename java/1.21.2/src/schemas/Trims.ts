@@ -21,7 +21,7 @@ export function initTrimsSchemas(schemas: SchemaRegistry, collections: Collectio
 		ingredient: StringNode({ validator: 'resource', params: { pool: 'item' } }),
 		item_model_index: NumberNode(),
 		override_armor_materials: Opt(MapNode(
-			StringNode({ enum: 'armor_material' }),
+			StringNode(),
 			StringNode(),
 		)),
 	}, { context: 'trim_material' }), {

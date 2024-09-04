@@ -13,7 +13,7 @@ import {
 } from '@mcschema/core'
 import { InclusiveRange } from './Common'
 
-export function initTrialSpawnersSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
+export function initTrialSpawnerSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
 
 
@@ -98,4 +98,3 @@ export function initTrialSpawnersSchemas(schemas: SchemaRegistry, collections: C
 		})
 	}))
 }
-

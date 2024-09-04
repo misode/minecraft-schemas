@@ -1,5 +1,6 @@
 import {
   Reference as RawReference,
+  StringNode as RawStringNode,
   ChoiceNode,
   ListNode,
   MapNode,
@@ -7,7 +8,6 @@ import {
   ObjectNode,
   Opt,
   SchemaRegistry,
-  StringNode,
   CollectionRegistry,
   NumberNode
 } from '@mcschema/core'
@@ -15,7 +15,7 @@ import { InclusiveRange } from './Common'
 
 export function initTrialSpawnerSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
-
+  const StringNode = RawStringNode.bind(undefined, collections)
 
   schemas.register('light_limit', ChoiceNode([
     {

@@ -697,7 +697,8 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:set_attributes': {
         modifiers: ListNode(
           Reference('attribute_modifier')
-        )
+        ),
+        replace: Opt(BooleanNode()),
       },
       'minecraft:set_banner_pattern': {
         patterns: ListNode(

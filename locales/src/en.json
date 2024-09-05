@@ -1426,6 +1426,7 @@
   "function.sequence.functions": "Functions",
   "function.set_attributes.modifiers": "Modifiers",
   "function.set_attributes.modifiers.entry": "Modifier",
+  "function.set_attributes.replace": "Replace",
   "function.set_banner_pattern.append": "Append",
   "function.set_banner_pattern.patterns": "Patterns",
   "function.set_book_cover.title": "Title",

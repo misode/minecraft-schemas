@@ -984,7 +984,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     }
     const res: NestedNodeChildren = {}
     collections.get('loot_function_type').forEach(f => {
-      res[f] = {...cases[f], ...conditions }
+      res[f] = {...cases[f], ...(f === 'minecraft:sequence' ? {} : conditions) }
     })
     return res
   }

@@ -865,7 +865,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             color: StringNode({ enum: 'dye_color' })
           })
         ),
-        append: Opt(BooleanNode())
+        append: BooleanNode()
       },
       'minecraft:set_book_cover': {
         title: Opt(Filterable(SizeLimitedString({ maxLength: 32 }))),

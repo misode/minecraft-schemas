@@ -529,7 +529,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
             color: StringNode({ enum: 'dye_color' })
           })
         ),
-        append: Opt(BooleanNode())
+        append: BooleanNode()
       },
       'minecraft:set_contents': {
         entries: ListNode(

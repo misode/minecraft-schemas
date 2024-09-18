@@ -655,4 +655,10 @@ export function initCollections(collections: CollectionRegistry) {
     'toot_horn',
     'brush',
   ])
+
+  collections.register('salmon_variant', [
+    'small',
+    'medium',
+    'large',
+  ])
 }

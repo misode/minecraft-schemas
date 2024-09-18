@@ -205,8 +205,9 @@ export function initAdvancementSchemas(schemas: SchemaRegistry, collections: Col
           entity: EntityPredicate,
           killing_blow: Opt(Reference('damage_source_predicate'))
         },
-        'minecraft:killed_by_crossbow': {
+        'minecraft:killed_by_arrow': {
           unique_entity_types: Opt(Reference('int_bounds')),
+          fired_from_weapon: Opt(Reference('item_predicate')),
           victims: Opt(ListNode(
             EntityPredicate
           ))

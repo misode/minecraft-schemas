@@ -322,6 +322,9 @@ export function initPredicatesSchemas(schemas: SchemaRegistry, collections: Coll
           has_raid: Opt(BooleanNode()),
           is_captain: Opt(BooleanNode()),
         },
+        'minecraft:salmon': {
+          variant: Opt(StringNode({ enum: 'salmon_variant' })),
+        },
         'minecraft:sheep': {
           sheared: Opt(BooleanNode()),
           color: Opt(StringNode({ enum: 'dye_color' })),

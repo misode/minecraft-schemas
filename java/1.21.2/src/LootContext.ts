@@ -19,7 +19,7 @@ export const LootTableTypes = new Map<string, LootContextRegistration>([
     ['minecraft:advancement_entity', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
     ['minecraft:advancement_location', { requires: [LootContext.Origin, LootContext.ThisEntity, LootContext.Tool, LootContext.BlockState], allows: [] }],
     ['minecraft:advancement_reward', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
-    ['minecraft:archaeology', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
+    ['minecraft:archaeology', { requires: [LootContext.Origin, LootContext.ThisEntity, LootContext.Tool], allows: [] }],
     ['minecraft:barter', { requires: [LootContext.ThisEntity], allows: [] }],
     ['minecraft:block', { requires: [LootContext.BlockState, LootContext.Origin, LootContext.Tool], allows: [LootContext.BlockEntity, LootContext.ExplosionRadius, LootContext.ThisEntity] }],
     ['minecraft:block_use', { requires: [LootContext.ThisEntity, LootContext.Origin, LootContext.BlockState], allows: [] }],
@@ -36,8 +36,8 @@ export const LootTableTypes = new Map<string, LootContextRegistration>([
     ['minecraft:generic', { requires: [LootContext.DamageSource, LootContext.BlockEntity, LootContext.BlockState, LootContext.DirectAttackingEntity, LootContext.ExplosionRadius, LootContext.AttackingEntity, LootContext.LastDamagePlayer, LootContext.Origin, LootContext.ThisEntity, LootContext.Tool], allows: [] }],
     ['minecraft:gift', { requires: [LootContext.Origin, LootContext.ThisEntity], allows: [] }],
     ['minecraft:selector', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
-    ['minecraft:shearing', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }],
-    ['minecraft:vault', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity] }]
+    ['minecraft:shearing', { requires: [LootContext.Origin, LootContext.ThisEntity, LootContext.Tool], allows: [] }],
+    ['minecraft:vault', { requires: [LootContext.Origin], allows: [LootContext.ThisEntity, LootContext.Tool] }]
 ])
 
 /**

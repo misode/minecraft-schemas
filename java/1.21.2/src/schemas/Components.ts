@@ -254,6 +254,12 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
     'minecraft:custom_model_data': NumberNode({ integer: true }),
     'minecraft:custom_name': StringNode(), // text component
     'minecraft:damage': NumberNode({ integer: true, min: 0 }),
+    'minecraft:damage_resistant': ObjectNode({
+      types: StringNode({ validator: 'resource', params: { pool: '$damage_type', requireTag: true } })
+    }),
+    'minecraft:death_protection': ObjectNode({
+      death_effects: Opt(ListNode(Reference('consume_effect'))),
+    }),
     'minecraft:debug_stick_state': MapNode(
       StringNode({ validator: 'resource', params: { pool: 'block' } }),
       StringNode(), // TODO: block state key validation
@@ -289,8 +295,9 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       model: Opt(StringNode()),
       allowed_entities: Opt(Tag({ resource: 'entity_type' })),
       dispensable: Opt(BooleanNode()),
+      swappable: Opt(BooleanNode()),
+      damage_on_hurt: Opt(BooleanNode()),
     }),
-    'minecraft:fire_resistant': ObjectNode({}),
     'minecraft:firework_explosion': Reference('firework_explosion'),
     'minecraft:fireworks': ObjectNode({
       flight_duration: Opt(NumberNode({ integer: true, min: 0, max: 255 })),
@@ -376,6 +383,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
         node: ObjectNode({
           potion: Opt(StringNode({ validator: 'resource', params: { pool: 'potion' } })),
           custom_color: Opt(NumberNode({ color: true })),
+          custom_name: Opt(StringNode()),
           custom_effects: Opt(ListNode(
             Reference('mob_effect_instance'),
           )),

@@ -42,8 +42,8 @@ export function initRecipeSchemas(schemas: SchemaRegistry, collections: Collecti
       },
       'minecraft:crafting_transmute': {
         group: Opt(StringNode()),
-        input: ListNode(Reference('recipe_ingredient')),
-        material: ListNode(Reference('recipe_ingredient')),
+        input: Reference('recipe_ingredient'),
+        material: Reference('recipe_ingredient'),
         result: StringNode({ validator: 'resource', params: { pool: 'item' } })
       },
       'minecraft:smelting': {

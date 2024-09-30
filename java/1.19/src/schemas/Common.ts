@@ -471,7 +471,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         if (typeof v === 'string' && !v.startsWith('#')) {
           return [v]
         }
-        return []
+        return [""]
       }
     },
   ], { choiceContext: 'tag' })

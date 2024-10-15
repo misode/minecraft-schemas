@@ -330,9 +330,9 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       {
         type: 'object',
         node: ObjectNode({
-          sound_event: StringNode(),
+          sound_event: Reference('sound_event'),
           use_duration: NumberNode({ integer: true, min: 1 }),
-          range: NumberNode({ min: 1 }),
+          range: NumberNode({ min: 0 }),
         }, { context: 'instrument' }),
       },
     ], { context: 'data_component.instrument' }),

@@ -321,12 +321,7 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       },
       {
         type: 'object',
-        node: ObjectNode({
-          sound_event: StringNode(),
-          duration: Reference('text_component'),
-          use_duration: NumberNode({ min: 0 }),
-          range: NumberNode({ min: 0 }),
-        }, { context: 'instrument' }),
+        node: Reference('instrument'),
       },
     ], { context: 'data_component.instrument' }),
     'minecraft:intangible_projectile': ObjectNode({}),

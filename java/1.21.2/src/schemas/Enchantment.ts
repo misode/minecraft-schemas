@@ -83,7 +83,7 @@ export function initEnchantmentSchemas(schemas: SchemaRegistry, collections: Col
       min_damage: Reference('level_based_value'),
       max_damage: Reference('level_based_value'),
     },
-    'minecraft:damage_item': {
+    'minecraft:change_item_damage': {
       amount: Reference('level_based_value'),
     },
     'minecraft:explode': {

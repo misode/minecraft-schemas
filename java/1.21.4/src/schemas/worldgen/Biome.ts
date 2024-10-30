@@ -71,7 +71,7 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
           })
         })
       )),
-      music_volume: Opt(BooleanNode()),
+      music_volume: Opt(NumberNode()),
       particle: Opt(ObjectNode({
         options: Reference('particle'),
         probability: NumberNode({ min: 0, max: 1 })

@@ -312,7 +312,8 @@ export function initFeatureSchemas(schemas: SchemaRegistry, collections: Collect
           probability: NumberNode({ min: 0, max: 1 })
         },
         'minecraft:simple_block': {
-          to_place: Reference('block_state_provider')
+          to_place: Reference('block_state_provider'),
+          schedule_tick: Opt(BooleanNode()),
         },
         'minecraft:simple_random_selector': {
           features: Tag({ resource: '$worldgen/placed_feature', inlineSchema: 'placed_feature' }),

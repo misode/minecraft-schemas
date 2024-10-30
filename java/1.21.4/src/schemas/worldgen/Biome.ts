@@ -60,12 +60,18 @@ export function initBiomeSchemas(schemas: SchemaRegistry, collections: Collectio
         sound: Reference('sound_event'),
         tick_chance: NumberNode({ min: 0, max: 1 })
       })),
-      music: Opt(ObjectNode({
-        sound: Reference('sound_event'),
-        min_delay: NumberNode({ integer: true, min: 0 }),
-        max_delay: NumberNode({ integer: true, min: 0 }),
-        replace_current_music: BooleanNode()
-      })),
+      music: Opt(ListNode(
+        ObjectNode({
+          weight: NumberNode({ integer: true, min: 1 }),
+          data: ObjectNode({
+            sound: Reference('sound_event'),
+            min_delay: NumberNode({ integer: true, min: 0 }),
+            max_delay: NumberNode({ integer: true, min: 0 }),
+            replace_current_music: BooleanNode()
+          })
+        })
+      )),
+      music_volume: Opt(BooleanNode()),
       particle: Opt(ObjectNode({
         options: Reference('particle'),
         probability: NumberNode({ min: 0, max: 1 })

@@ -427,9 +427,9 @@ export function initCollections(collections: CollectionRegistry) {
 
   collections.register('feature_flags', [
     'vanilla',
-    'bundle',
     'trade_rebalance',
-    'update_1_21',
+    'redstone_experiments',
+    'minecart_improvements',
   ])
 
   collections.register('sprite_source_type', [

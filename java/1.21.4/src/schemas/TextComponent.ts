@@ -47,6 +47,19 @@ export function initTextComponentSchemas(schemas: SchemaRegistry, collections: C
 
   const StyleFields: NodeChildren = {
     color: Opt(StringNode()) /* TODO */,
+    shadow_color: Opt(ChoiceNode([
+      {
+        type: 'number',
+        node: NumberNode({ integer: true })
+      },
+      {
+        type: 'list',
+        node: ListNode(
+          NumberNode({ min: 0, max: 1 }),
+          { minLength: 4, maxLength: 4 },
+        )
+      }
+    ])),
     font: Opt(StringNode({ validator: 'resource', params: { pool: 'font' } })),
     bold: Opt(BooleanNode()),
     italic: Opt(BooleanNode()),

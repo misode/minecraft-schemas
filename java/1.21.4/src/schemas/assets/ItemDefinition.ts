@@ -44,29 +44,23 @@ export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: 
         },
         'minecraft:condition': {
           property: StringNode({ validator: 'resource', params: { pool: collections.get('model_condition_type') } }),
-          [Switch]: [{ push: 'property' }],
-          [Case]: {
-            'minecraft:has_component': {
-              component: StringNode({ validator: 'resource', params: { pool: 'data_component_type' } })
-            },
-            'minecraft:custom_model_data': {
-              index: Opt(NumberNode({ integer: true }))
-            }
-          },
+          component: Mod(StringNode({ validator: 'resource', params: { pool: 'data_component_type' } }), {
+            enabled: path => path.push('property').get() === 'minecraft:has_component'
+          }),
+          index: Mod(Opt(NumberNode({ integer: true })), {
+            enabled: path => path.push('property').get() === 'minecraft:custom_model_data'
+          }),
           on_true: Reference('item_model'),
           on_false: Reference('item_model')
         },
         'minecraft:select': {
           property: StringNode({ validator: 'resource', params: { pool: collections.get('select_model_property_type') } }),
-          [Switch]: [{ push: 'property' }],
-          [Case]: {
-            'minecraft:block_state': {
-              'block_state_property': StringNode()
-            },
-            'minecraft:custom_model_data': {
-              index: Opt(NumberNode({ integer: true }))
-            }
-          },
+          block_state_property: Mod(StringNode(), {
+            enabled: path => path.push('property').get() === 'minecraft:block_state'
+          }),
+          index: Mod(NumberNode({ integer: true }), {
+            enabled: path => path.push('property').get() === 'minecraft:custom_model_data'
+          }),
           cases: ObjectNode({
             when: StringNode(),
             model: Reference('item_model')
@@ -75,37 +69,34 @@ export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: 
         },
         'minecraft:range_dispatch': {
           property: StringNode({ validator: 'resource', params: { pool: collections.get('numeric_model_property_type') } }),
-          [Switch]: [{ push: 'property' }],
-          [Case]: {
-            'minecraft:custom_model_data': {
-              index: Opt(NumberNode({ integer: true }))
-            },
-            'minecraft:damage': {
-              normalize: Opt(BooleanNode())
-            },
-            'minecraft:count': {
-              normalize: Opt(BooleanNode())
-            },
-            'minecraft:time': {
-              wobble: Opt(BooleanNode()),
-              natural_only: Opt(BooleanNode())
-            },
-            'minecraft:compass': {
-              target: StringNode({ enum: ['spawn', 'lodestone', 'recovery'] }),
-              wobble: Opt(BooleanNode())
-            },
-            'minecraft:use_duration': {
-              remaining: Opt(BooleanNode())
-            },
-            'minecraft:use_cycle': {
-              period: Opt(NumberNode())
-            }
-          },
-          scale: Opt(NumberNode()),
-          entries: ObjectNode({
-            threshold: NumberNode(),
-            model: Reference('item_model')
+          index: Mod(Opt(NumberNode({ integer: true })), {
+            enabled: path => path.push('property').get() === 'minecraft:custom_model_data'
           }),
+          normalize: Mod(Opt(BooleanNode()), {
+            enabled: path => path.push('property').get() === 'minecraft:damage' || path.push('property').get() === 'minecraft:count'
+          }),
+          natural_only: Mod(Opt(BooleanNode()), {
+            enabled: path => path.push('property').get() === 'minecraft:time'
+          }),
+          target: Mod(StringNode({ enum: ['spawn', 'lodestone', 'recovery'] }), {
+            enabled: path => path.push('property').get() === 'minecraft:compass'
+          }),
+          wobble: Mod(Opt(BooleanNode()), {
+            enabled: path => path.push('property').get() === 'minecraft:time' || path.push('property').get() === 'minecraft:compass'
+          }),
+          remaining: Mod(Opt(BooleanNode()), {
+            enabled: path => path.push('property').get() === 'minecraft:use_duration'
+          }),
+          period: Mod(Opt(NumberNode()), {
+            enabled: path => path.push('property').get() === 'minecraft:use_cycle'
+          }),
+          scale: Opt(NumberNode()),
+          entries: ListNode(
+            ObjectNode({
+              threshold: NumberNode(),
+              model: Reference('item_model')
+            }),
+          ),
           fallback: Opt(Reference('item_model'))
         }
       }

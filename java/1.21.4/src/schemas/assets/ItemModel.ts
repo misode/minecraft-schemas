@@ -25,7 +25,7 @@ export function initItemModelSchemas(schemas: SchemaRegistry, collections: Colle
         'minecraft:model': {
           model: StringNode({ validator: 'resource', params: { pool: '$model' } }),
           tints: Opt(ListNode(ObjectNode({
-            type: StringNode({ enum: 'tint_source_type' }),
+            type: StringNode({ validator: 'resource', params: { pool: collections.get('tint_source_type') } }),
             [Switch]: [{ push: 'type' }],
             [Case]: {
               'minecraft:constant': {
@@ -56,7 +56,7 @@ export function initItemModelSchemas(schemas: SchemaRegistry, collections: Colle
         'minecraft:special': {
           base: StringNode({ validator: 'resource', params: { pool: '$model' } }),
           model: ObjectNode({
-            type: StringNode({ enum: 'special_model_type' }),
+            type: StringNode({ validator: 'resource', params: { pool: collections.get('special_model_type') } }),
             [Switch]: [{ push: 'type' }],
             [Case]: {
               'minecraft:bed': {
@@ -84,7 +84,7 @@ export function initItemModelSchemas(schemas: SchemaRegistry, collections: Colle
           models: ListNode(Reference('item_model'))
         },
         'minecraft:condition': {
-          property: StringNode({ enum: 'model_condition_type' }),
+          property: StringNode({ validator: 'resource', params: { pool: collections.get('model_condition_type') } }),
           [Switch]: [{ push: 'property' }],
           [Case]: {
             'minecraft:has_component': {
@@ -98,7 +98,7 @@ export function initItemModelSchemas(schemas: SchemaRegistry, collections: Colle
           on_false: Reference('item_model')
         },
         'minecraft:select': {
-          property: StringNode({ enum: 'select_model_property_type' }),
+          property: StringNode({ validator: 'resource', params: { pool: collections.get('select_model_property_type') } }),
           [Switch]: [{ push: 'property' }],
           [Case]: {
             'minecraft:block_state': {
@@ -115,7 +115,7 @@ export function initItemModelSchemas(schemas: SchemaRegistry, collections: Colle
           fallback: Opt(Reference('item_model'))
         },
         'minecraft:range_dispatch': {
-          property: StringNode({ enum: 'numeric_model_property_type' }),
+          property: StringNode({ validator: 'resource', params: { pool: collections.get('numeric_model_property_type') } }),
           [Switch]: [{ push: 'property' }],
           [Case]: {
             'minecraft:custom_model_data': {
@@ -151,5 +151,7 @@ export function initItemModelSchemas(schemas: SchemaRegistry, collections: Colle
         }
       }
     })
-  })))
+  }), { default: () => ({
+    type: 'minecraft:model',
+  })}))
 }

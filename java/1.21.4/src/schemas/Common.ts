@@ -210,7 +210,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
   schemas.register('color_rgb', ChoiceNode([
     {
       type: 'number',
-      node: NumberNode({ integer: true })
+      node: NumberNode({ integer: true, color: true })
     },
     {
       type: 'list',
@@ -919,19 +919,19 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       'minecraft:set_custom_model_data': {
         floats: Opt(ListOperation({
           node: Reference('number_provider'),
-          maxLength: Number.MAX_VALUE,
+          maxLength: 2147483647,
         })),
         flags: Opt(ListOperation({
           node: BooleanNode(),
-          maxLength: Number.MAX_VALUE,
+          maxLength: 2147483647,
         })),
         strings: Opt(ListOperation({
           node: StringNode(),
-          maxLength: Number.MAX_VALUE,
+          maxLength: 2147483647,
         })),
         colors: Opt(ListOperation({
           node: Reference('color_rgb'),
-          maxLength: Number.MAX_VALUE,
+          maxLength: 2147483647,
         })),
       },
       'minecraft:set_damage': {

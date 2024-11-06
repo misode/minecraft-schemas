@@ -372,6 +372,84 @@ export function initCollections(collections: CollectionRegistry) {
     'z'
   ])
 
+  collections.register('skull_kind', [
+    'skeleton',
+    'wither_skeleton',
+    'player',
+    'zombie',
+    'creeper',
+    'piglin',
+    'dragon'
+  ])
+
+  collections.register('item_model_type', [
+    'model',
+    'special',
+    'composite',
+    'condition',
+    'select',
+    'range_dispatch',
+    'bundle/selected_item'
+  ])
+
+  collections.register('tint_source_type', [
+    'custom_model_data',
+    'constant',
+    'dye',
+    'grass',
+    'firework',
+    'potion',
+    'map_color',
+  ])
+
+  collections.register('special_model_type', [
+    'bed',
+    'banner',
+    'conduit',
+    'chest',
+    'head',
+    'shulker_box',
+    'shield',
+    'trident',
+    'decorated_pot',    
+  ])
+
+  collections.register('model_condition_type', [
+    'using_item',
+    'broken',
+    'damaged',
+    'has_component',
+    'fishing_rod/cast',
+    'bundle/has_selected_item',
+    'xmas',
+    'selected',
+    'carried',
+    'shift_down',
+    'custom_model_data'
+  ])
+
+  collections.register('select_model_property_type', [
+    'main_hand',
+    'charge_type',
+    'trim_material',
+    'block_state',
+    'display_context',
+    'custom_model_data'
+  ])
+
+  collections.register('numeric_model_property_type', [
+    'custom_model_data',
+    'bundle/fullness',
+    'damage',
+    'count',
+    'cooldown',
+    'time',
+    'compass',
+    'crossbow/pull',
+    'use_duration',
+    'use_cycle'
+  ])
+
   collections.register('display_position', [
     'firstperson_righthand',
     'firstperson_lefthand',

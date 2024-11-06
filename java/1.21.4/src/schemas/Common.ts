@@ -207,6 +207,34 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
     ])
   }
 
+  schemas.register('color_rgb', ChoiceNode([
+    {
+      type: 'number',
+      node: NumberNode({ integer: true, color: true })
+    },
+    {
+      type: 'list',
+      node: ListNode(
+        NumberNode({ min: 0, max: 1 }),
+        { minLength: 4, maxLength: 4 },
+      )
+    }
+  ]))
+
+  schemas.register('color_argb', ChoiceNode([
+    {
+      type: 'number',
+      node: NumberNode({ integer: true })
+    },
+    {
+      type: 'list',
+      node: ListNode(
+        NumberNode({ min: 0, max: 1 }),
+        { minLength: 4, maxLength: 4 },
+      )
+    }
+  ]))
+
   schemas.register('particle', ObjectNode({
 		type: StringNode({ validator: 'resource', params: { pool: 'particle_type' }}),
     [Switch]: [{ push: 'type' }],
@@ -889,7 +917,22 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
         tag: Reference('custom_data_component'),
       },
       'minecraft:set_custom_model_data': {
-        value: Reference('number_provider'),
+        floats: Opt(ListOperation({
+          node: Reference('number_provider'),
+          maxLength: 2147483647,
+        })),
+        flags: Opt(ListOperation({
+          node: BooleanNode(),
+          maxLength: 2147483647,
+        })),
+        strings: Opt(ListOperation({
+          node: StringNode(),
+          maxLength: 2147483647,
+        })),
+        colors: Opt(ListOperation({
+          node: Reference('color_rgb'),
+          maxLength: 2147483647,
+        })),
       },
       'minecraft:set_damage': {
         damage: Reference('number_provider'),

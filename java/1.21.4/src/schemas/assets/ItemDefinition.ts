@@ -61,10 +61,12 @@ export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: 
           index: Mod(NumberNode({ integer: true }), {
             enabled: path => path.push('property').get() === 'minecraft:custom_model_data'
           }),
-          cases: ObjectNode({
-            when: StringNode(),
-            model: Reference('item_model')
-          }),
+          cases: ListNode(
+            ObjectNode({
+              when: StringNode(),
+              model: Reference('item_model')
+            })
+          ),
           fallback: Opt(Reference('item_model'))
         },
         'minecraft:range_dispatch': {
@@ -151,7 +153,7 @@ export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: 
         openness: Opt(NumberNode({ min: 0, max: 1}))
       },
       'minecraft:head': {
-        color: StringNode({ enum: 'skull_kind' })
+        kind: StringNode({ enum: 'skull_kind' })
       },
       'minecraft:shulker_box': {
         texture: StringNode(),

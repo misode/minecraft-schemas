@@ -251,7 +251,12 @@ export function initComponentsSchemas(schemas: SchemaRegistry, collections: Coll
       seed: Opt(NumberNode({ integer: true })),
     }, { context: 'data_component.container_loot' }),
     'minecraft:custom_data': Reference('custom_data_component'),
-    'minecraft:custom_model_data': NumberNode({ integer: true }),
+    'minecraft:custom_model_data': ObjectNode({
+      floats: Opt(ListNode(NumberNode())),
+      flags: Opt(ListNode(BooleanNode())),
+      strings: Opt(ListNode(StringNode())),
+      colors: Opt(Reference('color_rgb')),
+    }),
     'minecraft:custom_name': StringNode(), // text component
     'minecraft:damage': NumberNode({ integer: true, min: 0 }),
     'minecraft:damage_resistant': ObjectNode({

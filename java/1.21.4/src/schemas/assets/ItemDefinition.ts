@@ -13,72 +13,31 @@ import {
   ListNode,
 } from '@mcschema/core'
 
-export function initItemModelSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
+export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: CollectionRegistry) {
   const Reference = RawReference.bind(undefined, schemas)
   const StringNode = RawStringNode.bind(undefined, collections)
 
-  schemas.register('item_model', Mod(ObjectNode({
-    models: ObjectNode({
+  schemas.register('item_definition', Mod(ObjectNode({
+    model: Reference('item_model'),
+  }, { context: 'item_definition' }), { default: () => ({
+    model: {
+      type: 'minecraft:model',
+    },
+  })}))
+
+  schemas.register('item_model', ObjectNode({
       type: StringNode({ enum: 'item_model_type' }),
       [Switch]: [{ push: 'type' }],
       [Case]: {
         'minecraft:model': {
           model: StringNode({ validator: 'resource', params: { pool: '$model' } }),
-          tints: Opt(ListNode(ObjectNode({
-            type: StringNode({ validator: 'resource', params: { pool: collections.get('tint_source_type') } }),
-            [Switch]: [{ push: 'type' }],
-            [Case]: {
-              'minecraft:constant': {
-                value: Reference('color_rgb')
-              },
-              'minecraft:dye': {
-                default: Reference('color_rgb')
-              },
-              'minecraft:firework': {
-                default: Reference('color_rgb')
-              },
-              'minecrat:grass': {
-                temperature: NumberNode({ min: 0, max: 1}), 
-                downfall : NumberNode({ min: 0, max: 1}), 
-              },
-              'minecraft:potion': {
-                default: Reference('color_rgb')
-              },
-              'minecraft:map_color': {
-                default: Reference('color_rgb')
-              },
-              'minecraft:custom_model_data': {
-                index: Opt(NumberNode({ integer: true }))
-              },
-            }
-          })))
+          tints: Opt(ListNode(
+            Reference('tint_source'),
+          ))
         },
         'minecraft:special': {
           base: StringNode({ validator: 'resource', params: { pool: '$model' } }),
-          model: ObjectNode({
-            type: StringNode({ validator: 'resource', params: { pool: collections.get('special_model_type') } }),
-            [Switch]: [{ push: 'type' }],
-            [Case]: {
-              'minecraft:bed': {
-                texture: StringNode()
-              },
-              'minecraft:banner': {
-                color: StringNode({ enum: 'dye_color' })
-              },
-              'minecraft:chest': {
-                texture: StringNode(),
-                openness: Opt(NumberNode({ min: 0, max: 1}))
-              },
-              'minecraft:head': {
-                color: StringNode({ enum: 'skull_kind' })
-              },
-              'minecraft:shulker_box': {
-                texture: StringNode(),
-                openness: Opt(NumberNode({ min: 0, max: 1})),
-                orientation: Opt(StringNode({ enum: 'direction' }))
-              },
-            }
-          })
+          model: Reference('special_item_model'),
         },
         'minecraft:composite': {
           models: ListNode(Reference('item_model'))
@@ -150,8 +109,64 @@ export function initItemModelSchemas(schemas: SchemaRegistry, collections: Colle
           fallback: Opt(Reference('item_model'))
         }
       }
+  }, { context: 'item_model' }))
+
+  schemas.register('tint_source', Mod(ObjectNode({
+    type: StringNode({ validator: 'resource', params: { pool: collections.get('tint_source_type') } }),
+    [Switch]: [{ push: 'type' }],
+    [Case]: {
+      'minecraft:constant': {
+        value: Reference('color_rgb')
+      },
+      'minecraft:dye': {
+        default: Reference('color_rgb')
+      },
+      'minecraft:firework': {
+        default: Reference('color_rgb')
+      },
+      'minecraft:grass': {
+        temperature: NumberNode({ min: 0, max: 1}), 
+        downfall : NumberNode({ min: 0, max: 1}), 
+      },
+      'minecraft:potion': {
+        default: Reference('color_rgb')
+      },
+      'minecraft:map_color': {
+        default: Reference('color_rgb')
+      },
+      'minecraft:custom_model_data': {
+        index: Opt(NumberNode({ integer: true }))
+      },
+    }
+  }, { context: 'tint_source' }), {
+    default: () => ({
+      type: 'minecraft:constant',
+      value: 0,
     })
-  }), { default: () => ({
-    type: 'minecraft:model',
-  })}))
+  }))
+
+  schemas.register('special_item_model', ObjectNode({
+    type: StringNode({ validator: 'resource', params: { pool: collections.get('special_model_type') } }),
+    [Switch]: [{ push: 'type' }],
+    [Case]: {
+      'minecraft:bed': {
+        texture: StringNode()
+      },
+      'minecraft:banner': {
+        color: StringNode({ enum: 'dye_color' })
+      },
+      'minecraft:chest': {
+        texture: StringNode(),
+        openness: Opt(NumberNode({ min: 0, max: 1}))
+      },
+      'minecraft:head': {
+        color: StringNode({ enum: 'skull_kind' })
+      },
+      'minecraft:shulker_box': {
+        texture: StringNode(),
+        openness: Opt(NumberNode({ min: 0, max: 1})),
+        orientation: Opt(StringNode({ enum: 'direction' }))
+      },
+    }
+  }, { context: 'special_item_model' }))
 }

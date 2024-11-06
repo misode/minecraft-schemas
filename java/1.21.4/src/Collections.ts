@@ -383,71 +383,71 @@ export function initCollections(collections: CollectionRegistry) {
   ])
 
   collections.register('item_model_type', [
-    'model',
-    'special',
-    'composite',
-    'condition',
-    'select',
-    'range_dispatch',
-    'bundle/selected_item'
+    'minecraft:model',
+    'minecraft:special',
+    'minecraft:composite',
+    'minecraft:condition',
+    'minecraft:select',
+    'minecraft:range_dispatch',
+    'minecraft:bundle/selected_item'
   ])
 
   collections.register('tint_source_type', [
-    'custom_model_data',
-    'constant',
-    'dye',
-    'grass',
-    'firework',
-    'potion',
-    'map_color',
+    'minecraft:custom_model_data',
+    'minecraft:constant',
+    'minecraft:dye',
+    'minecraft:grass',
+    'minecraft:firework',
+    'minecraft:potion',
+    'minecraft:map_color',
   ])
 
   collections.register('special_model_type', [
-    'bed',
-    'banner',
-    'conduit',
-    'chest',
-    'head',
-    'shulker_box',
-    'shield',
-    'trident',
-    'decorated_pot',    
+    'minecraft:bed',
+    'minecraft:banner',
+    'minecraft:conduit',
+    'minecraft:chest',
+    'minecraft:head',
+    'minecraft:shulker_box',
+    'minecraft:shield',
+    'minecraft:trident',
+    'minecraft:decorated_pot',    
   ])
 
   collections.register('model_condition_type', [
-    'using_item',
-    'broken',
-    'damaged',
-    'has_component',
-    'fishing_rod/cast',
-    'bundle/has_selected_item',
-    'xmas',
-    'selected',
-    'carried',
-    'shift_down',
-    'custom_model_data'
+    'minecraft:using_item',
+    'minecraft:broken',
+    'minecraft:damaged',
+    'minecraft:has_component',
+    'minecraft:fishing_rod/cast',
+    'minecraft:bundle/has_selected_item',
+    'minecraft:xmas',
+    'minecraft:selected',
+    'minecraft:carried',
+    'minecraft:shift_down',
+    'minecraft:custom_model_data'
   ])
 
   collections.register('select_model_property_type', [
-    'main_hand',
-    'charge_type',
-    'trim_material',
-    'block_state',
-    'display_context',
-    'custom_model_data'
+    'minecraft:main_hand',
+    'minecraft:charge_type',
+    'minecraft:trim_material',
+    'minecraft:block_state',
+    'minecraft:display_context',
+    'minecraft:custom_model_data'
   ])
 
   collections.register('numeric_model_property_type', [
-    'custom_model_data',
-    'bundle/fullness',
-    'damage',
-    'count',
-    'cooldown',
-    'time',
-    'compass',
-    'crossbow/pull',
-    'use_duration',
-    'use_cycle'
+    'minecraft:custom_model_data',
+    'minecraft:bundle/fullness',
+    'minecraft:damage',
+    'minecraft:count',
+    'minecraft:cooldown',
+    'minecraft:time',
+    'minecraft:compass',
+    'minecraft:crossbow/pull',
+    'minecraft:use_duration',
+    'minecraft:use_cycle'
   ])
 
   collections.register('display_position', [

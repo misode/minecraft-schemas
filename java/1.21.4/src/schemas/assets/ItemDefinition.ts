@@ -63,7 +63,16 @@ export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: 
           }),
           cases: ListNode(
             ObjectNode({
-              when: StringNode(),
+              when: ChoiceNode([
+                {
+                  type: 'string',
+                  node: StringNode()
+                },
+                {
+                  type: 'list',
+                  node: ListNode(StringNode())
+                }
+              ]),
               model: Reference('item_model')
             })
           ),
@@ -163,3 +172,7 @@ export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: 
     }
   }, { context: 'special_item_model' }))
 }
+function ChoiceNode(arg0: { type: string; node: any }[]) {
+  throw new Error('Function not implemented.')
+}
+

@@ -2,6 +2,7 @@ import {
   StringNode as RawStringNode,
   Mod,
   NumberNode,
+  ChoiceNode,
   ObjectNode,
   SchemaRegistry,
   CollectionRegistry,
@@ -171,8 +172,5 @@ export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: 
       },
     }
   }, { context: 'special_item_model' }))
-}
-function ChoiceNode(arg0: { type: string; node: any }[]) {
-  throw new Error('Function not implemented.')
 }
 

@@ -67,11 +67,13 @@ export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: 
               when: ChoiceNode([
                 {
                   type: 'string',
-                  node: StringNode()
+                  node: StringNode(),
+                  change: v => Array.isArray(v) && v.length > 0 ? v[0] : ""
                 },
                 {
                   type: 'list',
-                  node: ListNode(StringNode())
+                  node: ListNode(StringNode()),
+                  change: v => typeof v === 'string' ? [v] : []
                 }
               ]),
               model: Reference('item_model')
@@ -173,4 +175,3 @@ export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: 
     }
   }, { context: 'special_item_model' }))
 }
-

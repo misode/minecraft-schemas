@@ -2,6 +2,7 @@ import {
   StringNode as RawStringNode,
   Mod,
   NumberNode,
+  ChoiceNode,
   ObjectNode,
   SchemaRegistry,
   CollectionRegistry,
@@ -63,7 +64,18 @@ export function initItemDefinitionSchemas(schemas: SchemaRegistry, collections: 
           }),
           cases: ListNode(
             ObjectNode({
-              when: StringNode(),
+              when: ChoiceNode([
+                {
+                  type: 'string',
+                  node: StringNode(),
+                  change: v => Array.isArray(v) && v.length > 0 ? v[0] : ""
+                },
+                {
+                  type: 'list',
+                  node: ListNode(StringNode()),
+                  change: v => typeof v === 'string' ? [v] : []
+                }
+              ]),
               model: Reference('item_model')
             })
           ),

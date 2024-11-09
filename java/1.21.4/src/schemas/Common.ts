@@ -216,7 +216,7 @@ export function initCommonSchemas(schemas: SchemaRegistry, collections: Collecti
       type: 'list',
       node: ListNode(
         NumberNode({ min: 0, max: 1 }),
-        { minLength: 4, maxLength: 4 },
+        { minLength: 3, maxLength: 3 },
       )
     }
   ]))
